@@ -14,6 +14,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 // App Routes
 import Routes from './Routes';
+import RoutesTemplate from './RoutesTemplate';
 
 // Vendor dependencies
 import "./Vendor";
@@ -23,6 +24,12 @@ import './styles/app.scss'
 
 
 class App extends Component {
+
+  constructor(props) {
+    super(props)
+
+  }
+
   render() {
 
     // specify base href from env varible 'PUBLIC_URL'
@@ -31,10 +38,19 @@ class App extends Component {
     /* global PUBLIC_URL */
     const basename = process.env.NODE_ENV === 'development' ? '/' : (PUBLIC_URL || '/');
 
-    return (
-        <BrowserRouter basename={basename}>
-            <Routes />
+    if (window.location.href.indexOf('/template') >= 0) {
+
+      return (
+        <BrowserRouter basename={"/template"}>
+            <RoutesTemplate />
         </BrowserRouter>
+      );
+    }
+
+    return (
+      <BrowserRouter basename={basename}>
+          <Routes />
+      </BrowserRouter>
     );
 
   }
