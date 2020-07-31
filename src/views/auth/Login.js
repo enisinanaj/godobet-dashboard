@@ -85,7 +85,7 @@ class Login extends Component {
                                             <em className="fa fa-envelope"></em>
                                         </span>
                                     </div>
-                                    { this.hasError('formLogin','email','required') && <span className="invalid-feedback">Inserisci un indirizzo email</span> }
+                                    { this.hasError('formLogin','email','required') && <span className="invalid-feedback">Il campo indirizzo email è obbligatorio</span> }
                                     { this.hasError('formLogin','email','email') && <span className="invalid-feedback">Inserisci un indirizzo email valido</span> }
                                 </div>
                             </div>
@@ -106,7 +106,7 @@ class Login extends Component {
                                             <em className="fa fa-lock"></em>
                                         </span>
                                     </div>
-                                    <span className="invalid-feedback">Field is required</span>
+                                    <span className="invalid-feedback">Il campo password è obbligatorio</span>
                                 </div>
                             </div>
                             <div className="clearfix">
@@ -119,7 +119,7 @@ class Login extends Component {
                                     <Link to="recover" className="text-muted">Password dimenticata?</Link>
                                 </div>
                             </div>
-                            <button className="btn btn-block btn-primary mt-3" type="submit">Entra</button>
+                            <button className="btn btn-block btn-primary mt-3" type="submit">Login</button>
                         </form>
                         <p className="pt-3 text-center">Non hai ancora un account?</p>
                         <Link to="register" className="btn btn-block btn-secondary">Registrati ora</Link>
