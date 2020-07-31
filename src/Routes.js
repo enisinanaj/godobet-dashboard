@@ -3,22 +3,22 @@ import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 /* loader component for Suspense*/
-import PageLoader from './components/Common/PageLoader';
+import PageLoader from './template_components/Common/PageLoader';
 
-import Base from './components/Layout/Base';
-import BasePage from './components/Layout/BasePage';
+import Base from './template_components/Layout/Base';
+import BasePage from './template_components/Layout/BasePage';
 // import BaseHorizontal from './components/Layout/BaseHorizontal';
 
 /* Used to render a lazy component with react-router */
 const waitFor = Tag => props => <Tag {...props}/>;
 
-const Login = lazy(() => import('./components/Pages/Login'));
+const Login = lazy(() => import('./views/auth/Login'));
 const Register = lazy(() => import('./views/auth/Register'));
-const Recover = lazy(() => import('./components/Pages/Recover'));
-const Lock = lazy(() => import('./components/Pages/Lock'));
-const NotFound = lazy(() => import('./components/Pages/NotFound'));
-const Error500 = lazy(() => import('./components/Pages/Error500'));
-const Maintenance = lazy(() => import('./components/Pages/Maintenance'));
+const Recover = lazy(() => import('./template_components/Pages/Recover'));
+const Lock = lazy(() => import('./template_components/Pages/Lock'));
+const NotFound = lazy(() => import('./template_components/Pages/NotFound'));
+const Error500 = lazy(() => import('./template_components/Pages/Error500'));
+const Maintenance = lazy(() => import('./template_components/Pages/Maintenance'));
 
 
 // List of routes that uses the page layout
