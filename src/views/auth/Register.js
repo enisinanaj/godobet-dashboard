@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Input, CustomInput } from 'reactstrap';
 
 import FormValidator from '../../template_components/Forms/FormValidator.js';
+import Footer from '../../components/footer';
 
 class Register extends Component {
 
@@ -156,14 +157,7 @@ class Register extends Component {
                     </div>
                 </div>
                 {/* END card */}
-                <div className="p-3 text-center">
-                    <span className="mr-2">&copy;</span>
-                    <span>2020</span>
-                    <span className="mx-2">-</span>
-                    <span>GodoBet</span>
-                    <br/>
-                    <span>Powered by NewLine Code</span>
-                </div>
+                <Footer />
             </div>
         );
     }
