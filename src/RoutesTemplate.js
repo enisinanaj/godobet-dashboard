@@ -3,100 +3,100 @@ import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 /* loader component for Suspense*/
-import PageLoader from './components/Common/PageLoader';
+import PageLoader from './template_components/Common/PageLoader';
 
-import Base from './components/Layout/Base';
-import BasePage from './components/Layout/BasePage';
-// import BaseHorizontal from './components/Layout/BaseHorizontal';
+import Base from './template_components/Layout/Base';
+import BasePage from './template_components/Layout/BasePage';
+// import BaseHorizontal from './template_components/Layout/BaseHorizontal';
 
 /* Used to render a lazy component with react-router */
 const waitFor = Tag => props => <Tag {...props}/>;
 
-const DashboardV1 = lazy(() => import('./components/Dashboard/DashboardV1'));
-const DashboardV2 = lazy(() => import('./components/Dashboard/DashboardV2'));
-const DashboardV3 = lazy(() => import('./components/Dashboard/DashboardV3'));
+const DashboardV1 = lazy(() => import('./template_components/Dashboard/DashboardV1'));
+const DashboardV2 = lazy(() => import('./template_components/Dashboard/DashboardV2'));
+const DashboardV3 = lazy(() => import('./template_components/Dashboard/DashboardV3'));
 
-const Widgets = lazy(() => import('./components/Widgets/Widgets'));
+const Widgets = lazy(() => import('./template_components/Widgets/Widgets'));
 
-const Buttons = lazy(() => import('./components/Elements/Buttons'));
-const Notifications = lazy(() => import('./components/Elements/Notifications'));
-const SweetAlert = lazy(() => import('./components/Elements/SweetAlert'));
-const BsCarousel = lazy(() => import('./components/Elements/Carousel'));
-const Spinner = lazy(() => import('./components/Elements/Spinner'));
-const DropdownAnimation = lazy(() => import('./components/Elements/DropdownAnimation'));
-const Nestable = lazy(() => import('./components/Elements/Nestable'));
-const Sortable = lazy(() => import('./components/Elements/Sortable'));
-const Cards = lazy(() => import('./components/Elements/Cards'));
-const Grid = lazy(() => import('./components/Elements/Grid'));
-const GridMasonry = lazy(() => import('./components/Elements/GridMasonry'));
-const Typography = lazy(() => import('./components/Elements/Typography'));
-const FontIcons = lazy(() => import('./components/Elements/FontIcons'));
-const WeatherIcons = lazy(() => import('./components/Elements/WeatherIcons'));
-const Colors = lazy(() => import('./components/Elements/Colors'));
+const Buttons = lazy(() => import('./template_components/Elements/Buttons'));
+const Notifications = lazy(() => import('./template_components/Elements/Notifications'));
+const SweetAlert = lazy(() => import('./template_components/Elements/SweetAlert'));
+const BsCarousel = lazy(() => import('./template_components/Elements/Carousel'));
+const Spinner = lazy(() => import('./template_components/Elements/Spinner'));
+const DropdownAnimation = lazy(() => import('./template_components/Elements/DropdownAnimation'));
+const Nestable = lazy(() => import('./template_components/Elements/Nestable'));
+const Sortable = lazy(() => import('./template_components/Elements/Sortable'));
+const Cards = lazy(() => import('./template_components/Elements/Cards'));
+const Grid = lazy(() => import('./template_components/Elements/Grid'));
+const GridMasonry = lazy(() => import('./template_components/Elements/GridMasonry'));
+const Typography = lazy(() => import('./template_components/Elements/Typography'));
+const FontIcons = lazy(() => import('./template_components/Elements/FontIcons'));
+const WeatherIcons = lazy(() => import('./template_components/Elements/WeatherIcons'));
+const Colors = lazy(() => import('./template_components/Elements/Colors'));
 
-const ChartFlot = lazy(() => import('./components/Charts/ChartFlot'));
-const ChartRadial = lazy(() => import('./components/Charts/ChartRadial'));
-const ChartChartJS = lazy(() => import('./components/Charts/ChartChartJS'));
-const ChartMorris = lazy(() => import('./components/Charts/ChartMorris'));
-const ChartChartist = lazy(() => import('./components/Charts/ChartChartist'));
+const ChartFlot = lazy(() => import('./template_components/Charts/ChartFlot'));
+const ChartRadial = lazy(() => import('./template_components/Charts/ChartRadial'));
+const ChartChartJS = lazy(() => import('./template_components/Charts/ChartChartJS'));
+const ChartMorris = lazy(() => import('./template_components/Charts/ChartMorris'));
+const ChartChartist = lazy(() => import('./template_components/Charts/ChartChartist'));
 
-const MapsGoogle = lazy(() => import('./components/Maps/MapsGoogle'));
-const MapsVector = lazy(() => import('./components/Maps/MapsVector'));
+const MapsGoogle = lazy(() => import('./template_components/Maps/MapsGoogle'));
+const MapsVector = lazy(() => import('./template_components/Maps/MapsVector'));
 
-const TableStandard = lazy(() => import('./components/Tables/TableStandard'));
-const TableExtended = lazy(() => import('./components/Tables/TableExtended'));
-const Datatable = lazy(() => import('./components/Tables/DatatableView'));
-const DataGrid = lazy(() => import('./components/Tables/DataGrid'));
+const TableStandard = lazy(() => import('./template_components/Tables/TableStandard'));
+const TableExtended = lazy(() => import('./template_components/Tables/TableExtended'));
+const Datatable = lazy(() => import('./template_components/Tables/DatatableView'));
+const DataGrid = lazy(() => import('./template_components/Tables/DataGrid'));
 
-const FormStandard = lazy(() => import('./components/Forms/FormStandard'));
-const FormExtended = lazy(() => import('./components/Forms/FormExtended'));
-const FormValidation = lazy(() => import('./components/Forms/FormValidation'));
-const FormWizard = lazy(() => import('./components/Forms/FormWizard'));
-const FormUpload = lazy(() => import('./components/Forms/FormUpload'));
-const FormCropper = lazy(() => import('./components/Forms/FormCropper'));
+const FormStandard = lazy(() => import('./template_components/Forms/FormStandard'));
+const FormExtended = lazy(() => import('./template_components/Forms/FormExtended'));
+const FormValidation = lazy(() => import('./template_components/Forms/FormValidation'));
+const FormWizard = lazy(() => import('./template_components/Forms/FormWizard'));
+const FormUpload = lazy(() => import('./template_components/Forms/FormUpload'));
+const FormCropper = lazy(() => import('./template_components/Forms/FormCropper'));
 
-const Login = lazy(() => import('./components/Pages/Login'));
-const Register = lazy(() => import('./components/Pages/Register'));
-const Recover = lazy(() => import('./components/Pages/Recover'));
-const Lock = lazy(() => import('./components/Pages/Lock'));
-const NotFound = lazy(() => import('./components/Pages/NotFound'));
-const Error500 = lazy(() => import('./components/Pages/Error500'));
-const Maintenance = lazy(() => import('./components/Pages/Maintenance'));
+const Login = lazy(() => import('./template_components/Pages/Login'));
+const Register = lazy(() => import('./template_components/Pages/Register'));
+const Recover = lazy(() => import('./template_components/Pages/Recover'));
+const Lock = lazy(() => import('./template_components/Pages/Lock'));
+const NotFound = lazy(() => import('./template_components/Pages/NotFound'));
+const Error500 = lazy(() => import('./template_components/Pages/Error500'));
+const Maintenance = lazy(() => import('./template_components/Pages/Maintenance'));
 
-const Mailbox = lazy(() => import('./components/Extras/Mailbox'));
-const Timeline = lazy(() => import('./components/Extras/Timeline'));
-const Calendar = lazy(() => import('./components/Extras/Calendar'));
-const Invoice = lazy(() => import('./components/Extras/Invoice'));
-const Search = lazy(() => import('./components/Extras/Search'));
-const Todo = lazy(() => import('./components/Extras/Todo'));
-const Profile = lazy(() => import('./components/Extras/Profile'));
-const BugTracker = lazy(() => import('./components/Extras/BugTracker'));
-const ContactDetails = lazy(() => import('./components/Extras/ContactDetails'));
-const Contacts = lazy(() => import('./components/Extras/Contacts'));
-const Faq = lazy(() => import('./components/Extras/Faq'));
-const FileManager = lazy(() => import('./components/Extras/FileManager'));
-const Followers = lazy(() => import('./components/Extras/Followers'));
-const HelpCenter = lazy(() => import('./components/Extras/HelpCenter'));
-const Plans = lazy(() => import('./components/Extras/Plans'));
-const ProjectDetails = lazy(() => import('./components/Extras/ProjectDetails'));
-const Projects = lazy(() => import('./components/Extras/Projects'));
-const Settings = lazy(() => import('./components/Extras/Settings'));
-const SocialBoard = lazy(() => import('./components/Extras/SocialBoard'));
-const TeamViewer = lazy(() => import('./components/Extras/TeamViewer'));
-const VoteLinks = lazy(() => import('./components/Extras/VoteLinks'));
+const Mailbox = lazy(() => import('./template_components/Extras/Mailbox'));
+const Timeline = lazy(() => import('./template_components/Extras/Timeline'));
+const Calendar = lazy(() => import('./template_components/Extras/Calendar'));
+const Invoice = lazy(() => import('./template_components/Extras/Invoice'));
+const Search = lazy(() => import('./template_components/Extras/Search'));
+const Todo = lazy(() => import('./template_components/Extras/Todo'));
+const Profile = lazy(() => import('./template_components/Extras/Profile'));
+const BugTracker = lazy(() => import('./template_components/Extras/BugTracker'));
+const ContactDetails = lazy(() => import('./template_components/Extras/ContactDetails'));
+const Contacts = lazy(() => import('./template_components/Extras/Contacts'));
+const Faq = lazy(() => import('./template_components/Extras/Faq'));
+const FileManager = lazy(() => import('./template_components/Extras/FileManager'));
+const Followers = lazy(() => import('./template_components/Extras/Followers'));
+const HelpCenter = lazy(() => import('./template_components/Extras/HelpCenter'));
+const Plans = lazy(() => import('./template_components/Extras/Plans'));
+const ProjectDetails = lazy(() => import('./template_components/Extras/ProjectDetails'));
+const Projects = lazy(() => import('./template_components/Extras/Projects'));
+const Settings = lazy(() => import('./template_components/Extras/Settings'));
+const SocialBoard = lazy(() => import('./template_components/Extras/SocialBoard'));
+const TeamViewer = lazy(() => import('./template_components/Extras/TeamViewer'));
+const VoteLinks = lazy(() => import('./template_components/Extras/VoteLinks'));
 
-const EcommerceOrder = lazy(() => import('./components/Ecommerce/EcommerceOrders'));
-const EcommerceOrderView = lazy(() => import('./components/Ecommerce/EcommerceOrderView'));
-const EcommerceProduct = lazy(() => import('./components/Ecommerce/EcommerceProducts'));
-const EcommerceProductView = lazy(() => import('./components/Ecommerce/EcommerceProductView'));
-const EcommerceCheckout = lazy(() => import('./components/Ecommerce/EcommerceCheckout'));
+const EcommerceOrder = lazy(() => import('./template_components/Ecommerce/EcommerceOrders'));
+const EcommerceOrderView = lazy(() => import('./template_components/Ecommerce/EcommerceOrderView'));
+const EcommerceProduct = lazy(() => import('./template_components/Ecommerce/EcommerceProducts'));
+const EcommerceProductView = lazy(() => import('./template_components/Ecommerce/EcommerceProductView'));
+const EcommerceCheckout = lazy(() => import('./template_components/Ecommerce/EcommerceCheckout'));
 
-const BlogList = lazy(() => import('./components/Blog/BlogList'));
-const BlogPost = lazy(() => import('./components/Blog/BlogPost'));
-const BlogArticle = lazy(() => import('./components/Blog/BlogArticles'));
-const BlogArticleView = lazy(() => import('./components/Blog/BlogArticleView'));
+const BlogList = lazy(() => import('./template_components/Blog/BlogList'));
+const BlogPost = lazy(() => import('./template_components/Blog/BlogPost'));
+const BlogArticle = lazy(() => import('./template_components/Blog/BlogArticles'));
+const BlogArticleView = lazy(() => import('./template_components/Blog/BlogArticleView'));
 
-const ForumHome = lazy(() => import('./components/Forum/ForumHome'));
+const ForumHome = lazy(() => import('./template_components/Forum/ForumHome'));
 
 
 // List of routes that uses the page layout
