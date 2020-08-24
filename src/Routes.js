@@ -5,7 +5,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 /* loader component for Suspense*/
 import PageLoader from './template_components/Common/PageLoader';
 
-import Base from './template_components/Layout/Base';
+import Base from './template_components/Layout/Base'; 
 import BasePage from './template_components/Layout/BasePage';
 // import BaseHorizontal from './components/Layout/BaseHorizontal';
 
@@ -19,6 +19,7 @@ const Lock = lazy(() => import('./template_components/Pages/Lock'));
 const NotFound = lazy(() => import('./template_components/Pages/NotFound'));
 const Error500 = lazy(() => import('./template_components/Pages/Error500'));
 const Maintenance = lazy(() => import('./template_components/Pages/Maintenance'));
+const Profile = lazy(() => import('./views/profile/Profile'));
 
 
 // List of routes that uses the page layout
@@ -71,7 +72,9 @@ const Routes = ({ location }) => {
                 <CSSTransition key={currentKey} timeout={timeout} classNames={animationName} exit={false}>
                     <div>
                         <Suspense fallback={<PageLoader/>}>
-                            
+                            <Switch location={location}>
+                                <Route path="/profile" component={waitFor(Profile)}/>
+                            </Switch>
                         </Suspense>
                     </div>
                 </CSSTransition>

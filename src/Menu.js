@@ -4,6 +4,11 @@ const Menu = [
         translate: 'sidebar.heading.HEADER'
     },
     {
+        name: 'Profilo',
+        icon: 'user',
+        path: '/profile'
+    },
+    {
         name: 'Dashboard',
         icon: 'icon-speedometer',
         translate: 'sidebar.nav.DASHBOARD',

@@ -47,6 +47,11 @@ class FormValidation extends Component {
             minval: '',
             maxval: '',
             list: ''
+        },
+        formChangePwd: {
+            oldPassword: '',
+            newPassword: '',
+            repeatNewPassword: ''
         }
     }
 
@@ -476,6 +481,65 @@ class FormValidation extends Component {
                             { /* END card */ }
                         </form>
                     </div>
+                </Row>
+                <Row>
+                    <Col lg={ 6 }>
+                        <form onSubmit={this.onSubmit} name="formChangePwd" action="">
+                            { /* START card */ }
+                            <Card className="card-default">
+                                <CardHeader>
+                                    <div className="card-title">Cambia password</div>
+                                </CardHeader>
+                                <CardBody>
+                                    <div className="form-group">
+                                        <label className="col-form-label">Vecchia password</label>
+                                        <Input type="text"
+                                            id="old-password"
+                                            name="oldPassword"
+                                            invalid={this.hasError('formChangePwd','oldPassword','required')}
+                                            onChange={this.validateOnChange}
+                                            data-validate='["required"]'
+                                            value={this.state.formChangePwd.oldPassword}
+                                        />
+                                        <span className="invalid-feedback">Il campo è obbligatorio</span>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="col-form-label">Nuova password</label>
+                                        <Input type="text"
+                                            id="id-new-password"
+                                            name="newPassword"
+                                            invalid={this.hasError('formChangePwd','newPassword','required')}
+                                            onChange={this.validateOnChange}
+                                            data-validate='["required"]'
+                                            value={this.state.formChangePwd.newPassword}
+                                        />
+                                        <span className="invalid-feedback">Il campo è obbligatorio</span>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="col-form-label">Ripeti nuova password</label>
+                                        <Input type="text"
+                                            id="id-repeat-new-password"
+                                            name="repeatNewPassword"
+                                            invalid={this.hasError('formChangePwd','repeatNewPassword','equalto')}
+                                            onChange={this.validateOnChange}
+                                            data-validate='["equalto"]'
+                                            value={this.state.formChangePwd.repeatNewPassword}
+                                            data-param="id-new-password"
+                                        />
+                                        <span className="invalid-feedback">Il campo deve essere uguale al precedente</span>
+                                    </div>
+                                </CardBody>
+                                <CardFooter>
+                                    <div className="d-flex align-items-center">
+                                        <div className="ml-auto">
+                                            <button type="submit" className="btn btn-primary">Cambia</button>
+                                        </div>
+                                    </div>
+                                </CardFooter>
+                            </Card>
+                            { /* END card */ }
+                        </form>
+                    </Col>
                 </Row>
                 { /* END row */ }
             </ContentWrapper>
