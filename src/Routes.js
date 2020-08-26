@@ -20,6 +20,7 @@ const NotFound = lazy(() => import('./template_components/Pages/NotFound'));
 const Error500 = lazy(() => import('./template_components/Pages/Error500'));
 const Maintenance = lazy(() => import('./template_components/Pages/Maintenance'));
 const Profile = lazy(() => import('./views/profile/Profile'));
+const Pool = lazy(() => import('./views/pools/Pool'));
 
 
 // List of routes that uses the page layout
@@ -74,6 +75,7 @@ const Routes = ({ location }) => {
                         <Suspense fallback={<PageLoader/>}>
                             <Switch location={location}>
                                 <Route path="/profile" component={waitFor(Profile)}/>
+                                <Route path="/pool" component={waitFor(Pool)}/>
                             </Switch>
                         </Suspense>
                     </div>
