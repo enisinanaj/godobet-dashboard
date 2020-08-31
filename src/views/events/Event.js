@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ContentWrapper from '../../components/layout/ContentWrapper';
 import { Row, Col, Input, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 class Event extends Component {
