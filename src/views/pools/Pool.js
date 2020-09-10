@@ -118,10 +118,10 @@ class Pool extends Component {
                 </Row>
                 <Row>
                     <Col lg="6">
-                    <EventCard id="1" eventDate="01/02/2019" sport="Calcio" competition="Serie B" sex="M" proposal="1" event="Vicenza - Lecce" quote="1.10" outcome="6,90" notes="vittoria facile facile..." poolId="3" eventCreatedOn="02/04/2018 19:22" eventUpdatedOn="06/07/2018 12:18"/>
+                    <EventCard id="1" eventDate="01/02/2019" sport="Calcio" competition="Serie B" gender="M" proposal="1" event="Vicenza - Lecce" quote="1.10" outcome="6,90" notes="vittoria facile facile..." poolId="3" eventCreatedOn="02/04/2018 19:22" eventUpdatedOn="06/07/2018 12:18"/>
                     </Col>
                     <Col lg="6">
-                    <EventCard id="2" eventDate="01/02/2019" sport="Calcio" competition="Serie A" sex="M" proposal="X" event="Roma - Lazio" quote="2.00" outcome="7,50" notes="-" poolId="3" eventCreatedOn="02/04/2018 19:33" eventUpdatedOn="06/07/2018 12:00"/>
+                    <EventCard id="2" eventDate="01/02/2019" sport="Calcio" competition="Serie A" gender="M" proposal="X" event="Roma - Lazio" quote="2.00" outcome="7,50" notes="-" poolId="3" eventCreatedOn="02/04/2018 19:33" eventUpdatedOn="06/07/2018 12:00"/>
                     </Col>
                 </Row>
             </ContentWrapper>

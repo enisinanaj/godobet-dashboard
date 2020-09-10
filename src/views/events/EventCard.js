@@ -8,7 +8,7 @@ class EventCard extends Component {
         eventDate: PropTypes.string,
         sport: PropTypes.string,
         competition: PropTypes.string,
-        sex: PropTypes.string,
+        gender: PropTypes.string,
         proposal: PropTypes.string,
         event: PropTypes.string,
         quote: PropTypes.string,
@@ -33,7 +33,7 @@ class EventCard extends Component {
                                 </Col>
                                 <Col md="4">Sesso:</Col>
                                 <Col md="8">
-                                    <strong>{this.props.sex}</strong>
+                                    <strong>{this.props.gender}</strong>
                                 </Col>
                                 <Col md="4">Evento:</Col>
                                 <Col md="8">
