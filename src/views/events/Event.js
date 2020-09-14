@@ -11,12 +11,13 @@ class Event extends Component {
     constructor(props, context) {
         super(props, context);
         this.toggleModal = this.toggleModal.bind(this);
+        this.handleGenderChange = this.handleGenderChange.bind(this);
         this.state = {
             modal: false,
             eventDate: moment(),
             sport: 'calcio',
             competition: 'Serie A',
-            gender: 'M',
+            gender: 'http://localhost:5005/items/1',
             proposal: 'over 2.5',
             event: 'Roma - Parma',
             quote: '1.40',
@@ -29,11 +30,17 @@ class Event extends Component {
         this.setState({ modal: !this.state.modal })
     }
 
+    handleGenderChange(selected) {
+        this.setState({ gender: selected.target.value });
+    }
+
     async saveEvent() {
         var token = await TokenManager.getInstance().getToken();
 
         var body={...this.state};
         fetch('http://localhost:5005/events', {method:'POST', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)})
+        
+        this.toggleModal();
     }
 
     render() {
@@ -57,8 +64,7 @@ class Event extends Component {
                                                 <div className="form-group row">
                                                     <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputEventDate">Data evento</label>
                                                     <div className="col-xl-10 col-md-9 col-8">
-                                                        <Datetime dateFormat={moment().format("DD/MM/YYYY")} timeFormat={false} closeOnSelect={true} value={this.state.eventDate} /*onChange={this.handleDateChange}*/ onChange={(date) => this.setState({eventDate: date.format('DD/MM/YYYY')})} />
-                                                        {/*<input className="form-control" id="inputEventDate" type="date" placeholder="" value={this.state.eventDate} onChange={(event) => this.setState({eventDate: event.target.eventDate})}/>*/}
+                                                        <Datetime dateFormat={moment().format("DD/MM/YYYY")} timeFormat={false} closeOnSelect={true} value={this.state.eventDate} onChange={(date) => this.setState({eventDate: date.format('DD/MM/YYYY')})} />
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
@@ -76,10 +82,11 @@ class Event extends Component {
                                                 <div className="form-group row">
                                                     <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputGender">Sesso</label>
                                                     <div className="col-xl-10 col-md-9 col-8">
-                                                        <select value={this.state.gender} onChange={(event) => this.setState({gender: event.target.gender})} className="custom-select custom-select-sm">
+                                                        <select defaultValue={this.state.gender} onChange={(e) => this.handleGenderChange(e)} className="custom-select custom-select-sm">
                                                             <option>Seleziona</option>
-                                                            <option defaultValue="M">M</option>
-                                                            <option defaultValue="F">F</option>
+                                                            <option value="http://localhost:5005/items/1">M</option>
+                                                            <option value="http://localhost:5005/items/2">F</option>
+                                                            <option value="http://localhost:5005/items/3">X</option>
                                                         </select>
                                                     </div>
                                                 </div>

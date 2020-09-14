@@ -11,12 +11,12 @@ class EventCard extends Component {
         gender: PropTypes.string,
         proposal: PropTypes.string,
         event: PropTypes.string,
-        quote: PropTypes.string,
-        outcome: PropTypes.string,
+        quote: PropTypes.number,
+        outcome: PropTypes.number,
         notes: PropTypes.string,
-        poolId: PropTypes.string,
-        eventCreatedOn: PropTypes.string,
-        eventUpdatedOn: PropTypes.string,
+        pool: PropTypes.string,
+        createdOn: PropTypes.string,
+        updatedOn: PropTypes.string,
     }
 
     render() {
@@ -49,7 +49,7 @@ class EventCard extends Component {
                                 </Col>
                                 <Col md="4">Creato il:</Col>
                                 <Col md="8">
-                                    <strong>{this.props.eventCreatedOn}</strong>
+                                    <strong>{this.props.createdOn}</strong>
                                 </Col>
                             </FormGroup>
                         </Col>
@@ -77,7 +77,7 @@ class EventCard extends Component {
                                 </Col>
                                 <Col md="4">Modificato il:</Col>
                                 <Col md="8">
-                                    <strong>{this.props.eventUpdatedOn}</strong>
+                                    <strong>{this.props.updatedOn}</strong>
                                 </Col>
                             </FormGroup>
                         </Col>

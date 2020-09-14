@@ -11,12 +11,15 @@ class Pool extends Component {
         super(props, context);
      
         this.state = {
+            poolId: null,
             description: 'descr',
             quote: '1.02',
             stake: '10.3',
             profit: '1',
             bookmaker: '1',
+            events: [],
         };
+        this.getMyEvents();
     }
 
     eventModalRef = ({toggleModal}) => {
@@ -32,6 +35,12 @@ class Pool extends Component {
 
         var body={...this.state};
         fetch('http://localhost:5005/pools', {method:'POST', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)})
+    }
+
+    async getMyEvents() {
+        var token =  await TokenManager.getInstance().getToken();
+        fetch('http://localhost:5005/events', {method: 'GET', headers: {'Content-Type': 'application/json', 'X-Auth': token}}).then((response) => response.json()).then((response) => this.setState({events: response._embedded.events}));
+        //fetch('http://localhost:5005/pools/' + this.state.poolId + '/events', {method: 'GET', headers: {'Content-Type': 'application/json', 'X-Auth': token}}).then((response) => response.json()).then((response) => this.setState({events: response._embedded.events}));
     }
 
     render(){
@@ -70,7 +79,7 @@ class Pool extends Component {
                                             <div className="form-group row">
                                                 <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputStake">Stake</label>
                                                 <div className="col-xl-10 col-md-9 col-8">
-                                                    <Input placeholder="Stake" type="number" step="0.1" value={this.state.stake} onChange={(event) => this.setState({stake: event.target.value})}/>
+                                                    <Input id="inputStake" placeholder="Stake" type="number" step="0.1" value={this.state.stake} onChange={(event) => this.setState({stake: event.target.value})}/>
                                                 </div>
                                             </div>
                                             <div className="form-group row">
@@ -84,9 +93,9 @@ class Pool extends Component {
                                                 <div className="col-xl-10 col-md-9 col-8">
                                                     <select value={this.state.bookmaker} onChange={(event) => this.setState({bookmaker: event.target.value})} className="custom-select custom-select-sm">
                                                         <option>Seleziona</option>
-                                                        <option defaultValue="1">William Hill</option>
-                                                        <option defaultValue="2">Bet365</option>
-                                                        <option defaultValue="3">PlanetWin365</option>
+                                                        <option value="1">William Hill</option>
+                                                        <option value="2">Bet365</option>
+                                                        <option value="3">PlanetWin365</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -117,12 +126,7 @@ class Pool extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col lg="6">
-                    <EventCard id="1" eventDate="01/02/2019" sport="Calcio" competition="Serie B" gender="M" proposal="1" event="Vicenza - Lecce" quote="1.10" outcome="6,90" notes="vittoria facile facile..." poolId="3" eventCreatedOn="02/04/2018 19:22" eventUpdatedOn="06/07/2018 12:18"/>
-                    </Col>
-                    <Col lg="6">
-                    <EventCard id="2" eventDate="01/02/2019" sport="Calcio" competition="Serie A" gender="M" proposal="X" event="Roma - Lazio" quote="2.00" outcome="7,50" notes="-" poolId="3" eventCreatedOn="02/04/2018 19:33" eventUpdatedOn="06/07/2018 12:00"/>
-                    </Col>
+                    {this.state.events.map((event) => <Col lg="6"><EventCard id={event.id} eventDate={event.eventDate} sport={event.sport} competition={event.competition} gender={event.gender} proposal={event.proposal} event={event.event} quote={event.quote} outcome={event.outcome} notes={event.notes} pool={event.pool} createdOn={event.CreatedOn} updatedOn={event.updatedOn}/></Col>)}
                 </Row>
             </ContentWrapper>
         )

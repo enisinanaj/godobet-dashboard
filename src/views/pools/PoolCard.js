@@ -7,7 +7,7 @@ class PoolCard extends Component {
     static propTypes = {
         id: PropTypes.string,
         description: PropTypes.string,
-        quote: PropTypes.string,
+        totalQuote: PropTypes.string,
         stake: PropTypes.string,
         profit: PropTypes.string,
         bookmaker: PropTypes.string,
@@ -31,7 +31,7 @@ class PoolCard extends Component {
                                     </Col>
                                     <Col md="4">Quota:</Col>
                                     <Col md="8">
-                                        <strong>{this.props.quote}</strong>
+                                        <strong>{this.props.totalQuote}</strong>
                                     </Col>
                                     <Col md="4">Bookmaker:</Col>
                                     <Col md="8">
