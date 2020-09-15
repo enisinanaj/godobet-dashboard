@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ContentWrapper from '../../components/layout/ContentWrapper';
 import { Card, CardHeader, CardBody, CardFooter, Row, Col, FormGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 class PoolCard extends Component {
     static propTypes = {
@@ -14,6 +15,7 @@ class PoolCard extends Component {
         totalEvents: PropTypes.string,
         poolCreatedOn: PropTypes.string,
         poolUpdatedOn: PropTypes.string,
+        hrefPool: PropTypes.string,
     }
 
     render() {
@@ -67,7 +69,7 @@ class PoolCard extends Component {
                     </CardBody>
                     <CardFooter className="d-flex">
                         <div>
-                            <button type="button" className="btn btn-xs btn-primary">Modifica</button>
+                            <Link to={{pathname: 'pool', data: this.props.hrefPool}} className="btn btn-block btn-secondary">Modifica</Link>
                         </div>
                         <div className="ml-auto">
                             <button type="button" className="btn btn-xs btn-secondary">Elimina</button>

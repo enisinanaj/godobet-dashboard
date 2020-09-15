@@ -19,6 +19,10 @@ class Pool extends Component {
             bookmaker: '1',
             events: [],
         };
+
+        if (props.location.data)
+            this.getPoolData(props.location.data);
+
         this.getMyEvents();
     }
 
@@ -30,17 +34,27 @@ class Pool extends Component {
         this.showModal();
     }
 
+    async getPoolData(data) {
+        var token = await TokenManager.getInstance().getToken();
+        var response = await fetch(data, {method: 'GET', headers: {'Content-Type': 'application/json', 'X-Auth': token}})
+        var pool = await response.json();
+        this.setState({...pool});
+    }
+
     async savePool() {
         var token = await TokenManager.getInstance().getToken();
 
         var body={...this.state};
-        fetch('http://localhost:5005/pools', {method:'POST', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)})
+        if (this.props.location.data)
+            fetch(this.props.location.data, {method:'PUT', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)})
+        else
+            fetch('http://localhost:5005/pools/', {method:'POST', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)})
     }
 
     async getMyEvents() {
         var token =  await TokenManager.getInstance().getToken();
-        fetch('http://localhost:5005/events', {method: 'GET', headers: {'Content-Type': 'application/json', 'X-Auth': token}}).then((response) => response.json()).then((response) => this.setState({events: response._embedded.events}));
-        //fetch('http://localhost:5005/pools/' + this.state.poolId + '/events', {method: 'GET', headers: {'Content-Type': 'application/json', 'X-Auth': token}}).then((response) => response.json()).then((response) => this.setState({events: response._embedded.events}));
+        if (this.props.location.data)
+            fetch(this.props.location.data + '/events', {method: 'GET', headers: {'Content-Type': 'application/json', 'X-Auth': token}}).then((response) => response.json()).then((response) => this.setState({events: response._embedded.events}));
     }
 
     render(){

@@ -26,7 +26,7 @@ class MyPools extends Component {
     render() {
         return (
             <ContentWrapper>
-                {this.state.pools.map((pool) => <PoolCard id={pool.id} description={pool.description} totalQuote={pool.totalQuote} stake={pool.stake} profit={pool.profit} bookmaker={pool.bookmaker} totalEvents={pool.totalEvents} poolCreatedOn={pool.createdOn} poolUpdatedOn={pool.updatedOn}></PoolCard>)}
+                {this.state.pools.map((pool) => <PoolCard key={pool._links.self.href} id={pool.id} description={pool.description} totalQuote={pool.totalQuote} stake={pool.stake} profit={pool.profit} bookmaker={pool.bookmaker} totalEvents={pool.totalEvents} poolCreatedOn={pool.createdOn} poolUpdatedOn={pool.updatedOn} hrefPool={pool._links.self.href}></PoolCard>)}
             </ContentWrapper>
         )
     }
