@@ -18,12 +18,14 @@ class Pool extends Component {
             profit: '1',
             bookmaker: '1',
             events: [],
+            poolURL: props.location.data,
         };
 
         if (props.location.data)
+        {
             this.getPoolData(props.location.data);
-
-        this.getMyEvents();
+            this.getMyEvents(props.location.data);
+        }
     }
 
     eventModalRef = ({toggleModal}) => {
@@ -46,15 +48,15 @@ class Pool extends Component {
 
         var body={...this.state};
         if (this.props.location.data)
-            fetch(this.props.location.data, {method:'PUT', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)})
+            fetch(this.props.location.data, {method:'PUT', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)}).then((response) => response.json()).then((response) => this.getMyEvents(response._links.self.href));
         else
-            fetch('http://localhost:5005/pools/', {method:'POST', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)})
+            fetch('http://localhost:5005/pools/', {method:'POST', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)});
     }
 
-    async getMyEvents() {
+    async getMyEvents(data) {
         var token =  await TokenManager.getInstance().getToken();
-        if (this.props.location.data)
-            fetch(this.props.location.data + '/events', {method: 'GET', headers: {'Content-Type': 'application/json', 'X-Auth': token}}).then((response) => response.json()).then((response) => this.setState({events: response._embedded.events}));
+        if (data)
+            fetch(data + '/events', {method: 'GET', headers: {'Content-Type': 'application/json', 'X-Auth': token}}).then((response) => response.json()).then((response) => this.setState({events: response._embedded.events}));
     }
 
     render(){
@@ -99,7 +101,7 @@ class Pool extends Component {
                                             <div className="form-group row">
                                                 <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputProfit">Profitto</label>
                                                 <div className="col-xl-10 col-md-9 col-8">
-                                                    <input className="form-control" id="inputProfit" type="text" value={this.state.profit} onChange={(event) => this.setState({profit: event.target.value})}/>
+                                                    <input className="form-control" id="inputProfit" type="text" value={this.state.profit ? this.state.profit : '-'} onChange={(event) => this.setState({profit: event.target.value})}/>
                                                 </div>
                                             </div>
                                             <div className="form-group row">
@@ -129,7 +131,7 @@ class Pool extends Component {
                                                 <div className="col-md-12">
                                                     <Button color="success" className="float-right" onClick={() => this.savePool()}>Salva schedina</Button>
                                                     <Button color="primary" onClick={this.openEvent}>Aggiungi evento</Button>
-                                                    <Event ref={this.eventModalRef}></Event>
+                                                    <Event pool={this.state.poolURL} ref={this.eventModalRef}></Event>
                                                 </div>
                                             </div>
                                         </form>

@@ -23,6 +23,7 @@ class Event extends Component {
             quote: '1.40',
             outcome: '2.5',
             notes: 'alto rischio, non giocatela se non vi fidate',
+            pool: props.pool,
         };
     }
 
@@ -70,13 +71,13 @@ class Event extends Component {
                                                 <div className="form-group row">
                                                     <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputSport">Sport</label>
                                                     <div className="col-xl-10 col-md-9 col-8">
-                                                        <input className="form-control" id="inputSport" type="text" value={this.state.sport} onChange={(event) => this.setState({sport: event.target.sport})}/>
+                                                        <input className="form-control" id="inputSport" type="text" value={this.state.sport} onChange={(event) => this.setState({sport: event.target.value})}/>
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
                                                     <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputCompetition">Competizione</label>
                                                     <div className="col-xl-10 col-md-9 col-8">
-                                                        <Input placeholder="inputCompetition" type="text" value={this.state.competition} onChange={(event) => this.setState({competition: event.target.competition})} />
+                                                        <Input placeholder="inputCompetition" type="text" value={this.state.competition} onChange={(event) => this.setState({competition: event.target.value})} />
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
@@ -93,37 +94,37 @@ class Event extends Component {
                                                 <div className="form-group row">
                                                     <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputProposal">Proposta</label>
                                                     <div className="col-xl-10 col-md-9 col-8">
-                                                        <Input placeholder="inputProposal" type="text" value={this.state.proposal} onChange={(event) => this.setState({proposal: event.target.proposal})} />
+                                                        <Input placeholder="inputProposal" type="text" value={this.state.proposal} onChange={(event) => this.setState({proposal: event.target.value})} />
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
                                                     <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputEvent">Evento</label>
                                                     <div className="col-xl-10 col-md-9 col-8">
-                                                        <input className="form-control" id="inputEvent" type="text" value={this.state.event} onChange={(event) => this.setState({event: event.target.event})} />
+                                                        <Input className="form-control" id="inputEvent" type="text" value={this.state.event} onChange={(event) => this.setState({event: event.target.value})} />
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
                                                     <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputQuote">Quota</label>
                                                     <div className="col-xl-10 col-md-9 col-8">
-                                                        <Input id="inputQuote" placeholder="Stake" type="number" step="0.1" value={this.state.quote} onChange={(event) => this.setState({quote: event.target.quote})} />
+                                                        <Input id="inputQuote" placeholder="Stake" type="number" step="0.1" value={this.state.quote} onChange={(event) => this.setState({quote: event.target.value})} />
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
                                                     <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputOutcome">Risultato</label>
                                                     <div className="col-xl-10 col-md-9 col-8">
-                                                        <input className="form-control" id="inputOutcome" type="text" value={this.state.outcome} onChange={(event) => this.setState({outcome: event.target.outcome})} />
+                                                        <input className="form-control" id="inputOutcome" type="text" value={this.state.outcome} onChange={(event) => this.setState({outcome: event.target.value})} />
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
                                                     <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputNotes">Note</label>
                                                     <div className="col-xl-10 col-md-9 col-8">
-                                                        <textarea className="form-control" id="inputNotes" row="4" value={this.state.notes} onChange={(event) => this.setState({notes: event.target.notes})} ></textarea>
+                                                        <textarea className="form-control" id="inputNotes" row="4" value={this.state.notes} onChange={(event) => this.setState({notes: event.target.value})} ></textarea>
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
                                                     <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputPoolID">ID Schedina</label>
                                                     <div className="col-xl-10 col-md-9 col-8">
-                                                        <input className="form-control" id="inputPoolID" type="text" placeholder="" defaultValue="26" readOnly={true}/>
+                                                        <input className="form-control" id="inputPoolID" type="text" placeholder="" value={this.state.pool} readOnly={true}/>
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">

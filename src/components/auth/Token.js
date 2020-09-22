@@ -4,7 +4,7 @@ export default class TokenManager {
     static getInstance()
     {
         if (!TokenManager.instance) {
-            TokenManager.instance = new TokenManager;
+            TokenManager.instance = new TokenManager();
         }
 
         return this.instance;
