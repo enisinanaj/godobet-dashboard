@@ -47,7 +47,18 @@ class Login extends Component {
             }
         });
 
-        console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
+        fetch("http://localhost:5005/token", {
+            body: JSON.stringify({
+                username: this.state.formLogin.email,
+                password: this.state.formLogin.password
+            }),
+            method: 'POST'
+        })
+        .then(e => {
+            //TODO: save token to localstorage
+            localStorage.setItem("token", "token")
+            console.warn(e.headers)
+        })
 
         e.preventDefault()
     }
@@ -73,7 +84,7 @@ class Login extends Component {
                         <form className="mb-3" name="formLogin" onSubmit={this.onSubmit}>
                             <div className="form-group">
                                 <div className="input-group with-focus">
-                                    <Input type="email"
+                                    <Input type="text"
                                         name="email"
                                         className="border-right-0"
                                         placeholder="Email"
