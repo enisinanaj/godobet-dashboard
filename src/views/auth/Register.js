@@ -38,7 +38,6 @@ class Register extends Component {
                 }
             }
         });
-
     }
 
     onSubmit = e => {
@@ -103,7 +102,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPassword1">Password</label>
                                 <div className="input-group with-focus">
-                                    <Input type="text"
+                                    <Input type="password"
                                         id="id-password"
                                         name="password"
                                         className="border-right-0"
@@ -124,7 +123,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputRePassword1">Ripeti password</label>
                                 <div className="input-group with-focus">
-                                    <Input type="text" name="password2"
+                                    <Input type="password" name="password2"
                                         className="border-right-0"
                                         placeholder="Ripeti password"
                                         invalid={this.hasError('formRegister','password2','equalto')}
