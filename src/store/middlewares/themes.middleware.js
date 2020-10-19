@@ -14,7 +14,7 @@ const createLink = () => {
     return link;
 }
 
-const injectStylesheet = stylesheet => {
+export const injectStylesheet = stylesheet => {
     const linkTag = createLink();
     if (stylesheet)
         linkTag.href = stylesheet;

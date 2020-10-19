@@ -71,9 +71,9 @@ class Register extends Component {
             <div className="block-center mt-4 wd-xl">
                 {/* START card */}
                 <div className="card card-flat">
-                    <div className="card-header text-center bg-dark">
+                    <div className="card-header text-center bg-accent" style={{borderRadius: 0, backgroundImage: "linear-gradient(-45deg, rgb(233, 233, 233), rgb(242, 242, 242))"}}>
                         <a href="">
-                            <img className="block-center" src="img/logo.png" alt="Logo"/>
+                            <img className="block-center" src="img/godobet_logo.png" alt="Logo" width={100}/>
                         </a>
                     </div>
                     <div className="card-body">

@@ -9,7 +9,7 @@ export default () => {
             <span className="mx-2">-</span>
             <span>GodoBet</span>
             <br/>
-            <span>Powered by NewLine Code</span>
+            <span>Powered by Newline Code</span>
         </div>
     )
 };
