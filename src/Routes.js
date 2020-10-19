@@ -50,7 +50,7 @@ const Routes = ({ location }) => {
     const animationName = 'rag-fadeIn'
 
     if (!localStorage.getItem('token') && listofPages.indexOf(location.pathname) === -1) {
-        //return <Redirect to="/login"></Redirect>
+        return <Redirect to="/login"></Redirect>
     }
 
     if(listofPages.indexOf(location.pathname) > -1) {
