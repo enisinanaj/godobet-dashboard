@@ -23,20 +23,19 @@ class Recover extends Component {
                 ...this.state[form.name],
                 errors
             }
-        }, _ => {
-            if (!errors) {
-                auth.sendPasswordResetEmail(this.state.formLogin.email)
-                .then(e => {
-                    console.warn(e)
-                })
-                .catch(e => {
-                    console.warn(e)
-                    this.setState({
-                        formError: e + ""
-                    })
-                })
-            }
+        });
+
+        auth.sendPasswordResetEmail(this.state.formLogin.email)
+        .then(e => {
+            this.setState({formError: ""})
         })
+        .catch(e => {
+            this.setState({
+                formError: e.message + ""
+            })
+        })
+
+        e.preventDefault();
     }
 
     hasError = (formName, inputName, method) => {
@@ -77,7 +76,7 @@ class Recover extends Component {
                     </div>
                     <div className="card-body">
                         <p className="text-center py-2">RESET PASSWORD</p>
-                        <form className="mb-3" name="formLogin" onSubmit={this.onSubmit}>
+                        <form className="mb-3" name="formLogin" onSubmit={e => this.onSubmit(e)}>
                             <p className="text-center">Inserisci il tuo indirizzo email per ricevere le istruzioni su come resettare il tuo account.</p>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="resetInputEmail1">Indirizzo email</label>

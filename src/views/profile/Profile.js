@@ -3,7 +3,6 @@ import ContentWrapper from '../../components/layout/ContentWrapper';
 import { Row, Col } from 'reactstrap';
 import { Input } from 'reactstrap';
 import FormValidator from '../../template_components/Forms/FormValidator.js';
-import { auth } from '../../components/auth/firebase';
 import { connect } from 'react-redux';
 
 class Profile extends Component {
