@@ -54,6 +54,7 @@
     "draft-js": "0.10.5",
     "easy-pie-chart": "2.1.7",
     "element-closest": "3.0.1",
+    "firebase": "^7.24.0",
     "flot": "themicon/flot",
     "get-size": "2.0.3",
     "history": "4.7.2",

@@ -20,16 +20,12 @@ import RoutesTemplate from './RoutesTemplate';
 import "./Vendor";
 // Application Styles
 import './styles/bootstrap.scss';
-import './styles/app.scss'
+import './styles/app.scss';
+import './styles/themes/theme-d.scss';
+import { connect } from 'react-redux';
 
 
 class App extends Component {
-
-  constructor(props) {
-    super(props)
-
-  }
-
   render() {
 
     // specify base href from env varible 'PUBLIC_URL'
@@ -49,11 +45,13 @@ class App extends Component {
 
     return (
       <BrowserRouter basename={basename}>
-          <Routes />
+          <Routes app={this.props.app} />
       </BrowserRouter>
     );
 
   }
 }
 
-export default App;
+// export default App;
+const mapStateToProps = state => ({ app: state.app })
+export default connect(mapStateToProps)(App)

@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import {injectStylesheet} from './store/middlewares/themes.middleware'
 
 /* loader component for Suspense*/
 import PageLoader from './template_components/Common/PageLoader';
@@ -27,8 +26,8 @@ const MyPools = lazy(() => import('./views/pools/MyPools'));
 // listed here to Switch between layouts
 // depending on the current pathname
 const listofPages = [
-    '/login',
     '/register',
+    '/login',
     '/recover',
     '/lock',
     '/notfound',
@@ -36,24 +35,22 @@ const listofPages = [
     '/maintenance'
 ];
 
-const Routes = ({ location }) => {
+const Routes = ({location, app}) => {
     const currentKey = location.pathname.split('/')[1] || '/';
     const timeout = { enter: 500, exit: 500 };
-    injectStylesheet("themes/theme-d.css");
 
     // Animations supported
     //      'rag-fadeIn'
     //      'rag-fadeInRight'
     //      'rag-fadeInLeft'
 
-
     const animationName = 'rag-fadeIn'
 
-    if (!localStorage.getItem('token') && listofPages.indexOf(location.pathname) === -1) {
-        return <Redirect to="/login"></Redirect>
+    if (!app.loggedIn && listofPages.indexOf(location.pathname) === -1) {
+        return <Redirect to={"/login"} />
     }
 
-    if(listofPages.indexOf(location.pathname) > -1) {
+    if(!app.loggedIn) {
         return (
             // Page Layout component wrapper
             <BasePage>

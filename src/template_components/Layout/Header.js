@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as actions from '../../store/actions/actions';
 
 import HeaderRun from './Header.run'
+import { auth } from '../../components/auth/firebase';
 
 class Header extends Component {
 
@@ -41,6 +42,13 @@ class Header extends Component {
         window.dispatchEvent(evt);
         // modern dispatchEvent way
         // window.dispatchEvent(new Event('resize'));
+    }
+
+    logout() {
+        auth.signOut()
+        .then(e => {
+            this.props.actions.userLogin(null);
+        })
     }
 
     render() {
@@ -83,6 +91,12 @@ class Header extends Component {
                     { /* START Right Navbar */ }
                     <ul className="navbar-nav flex-row">
                         { /* Eventual top level right menu */}
+                        { /* Logout icon */ }
+                        <li className="nav-item">
+                            <a className="nav-link" style={{color: '#000'}} href="#" onClick={() => this.logout()}>
+                                <em className="icon-logout"></em>
+                            </a>
+                        </li>
                     </ul>
                     { /* END Right Navbar */ }
 
@@ -108,7 +122,7 @@ Header.propTypes = {
     settings: PropTypes.object
 };
 
-const mapStateToProps = state => ({ settings: state.settings })
+const mapStateToProps = state => ({ settings: state.settings, app: state.app })
 const mapDispatchToProps = dispatch => ({ actions: bindActionCreators(actions, dispatch) })
 
 export default connect(
