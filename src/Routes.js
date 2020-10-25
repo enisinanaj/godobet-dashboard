@@ -1,12 +1,13 @@
-import React, { Suspense, lazy } from 'react';
-import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import React, { Suspense, lazy } from "react";
+import { withRouter, Switch, Route, Redirect } from "react-router-dom";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 /* loader component for Suspense*/
-import PageLoader from './template_components/Common/PageLoader';
+import PageLoader from "./template_components/Common/PageLoader";
 
-import Base from './template_components/Layout/Base'; 
-import BasePage from './template_components/Layout/BasePage';
+import Base from "./template_components/Layout/Base";
+import BaseTipster from "./template_components/Layout/BaseTipster";
+import BasePage from "./template_components/Layout/BasePage";
 // import BaseHorizontal from './components/Layout/BaseHorizontal';
 
 /* Used to render a lazy component with react-router */
@@ -39,12 +40,12 @@ const Routes = ({location, app}) => {
     const currentKey = location.pathname.split('/')[1] || '/';
     const timeout = { enter: 500, exit: 500 };
 
-    // Animations supported
-    //      'rag-fadeIn'
-    //      'rag-fadeInRight'
-    //      'rag-fadeInLeft'
+  // Animations supported
+  //      'rag-fadeIn'
+  //      'rag-fadeInRight'
+  //      'rag-fadeInLeft'
 
-    const animationName = 'rag-fadeIn'
+  const animationName = "rag-fadeIn";
 
     if (!app.loggedIn && listofPages.indexOf(location.pathname) === -1) {
         return <Redirect to={"/login"} />
@@ -79,6 +80,7 @@ const Routes = ({location, app}) => {
                                 <Route path="/profile" component={waitFor(Profile)}/>
                                 <Route path="/pool" component={waitFor(Pool)}/>
                                 <Route path="/myPools" component={waitFor(MyPools)}/>
+                                <Route path="/myServices" component={waitFor(MyServices)} />
                             </Switch>
                         </Suspense>
                     </div>
