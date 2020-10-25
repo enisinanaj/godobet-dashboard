@@ -23,7 +23,6 @@ const Profile = lazy(() => import('./views/profile/Profile'));
 const Pool = lazy(() => import('./views/pools/Pool'));
 const MyPools = lazy(() => import('./views/pools/MyPools'));
 
-
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -47,6 +46,10 @@ const Routes = ({ location }) => {
     //      'rag-fadeInLeft'
 
     const animationName = 'rag-fadeIn'
+
+    if (!localStorage.getItem('token') && listofPages.indexOf(location.pathname) == -1) {
+        return <Redirect to="/login"></Redirect>
+    }
 
     if(listofPages.indexOf(location.pathname) > -1) {
         return (
