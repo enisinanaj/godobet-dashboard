@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { withNamespaces } from 'react-i18next';
 import { Input, CustomInput } from 'reactstrap';
+import {auth} from '../../components/auth/firebase'
+
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actions from '../../store/actions/actions';
 
 import FormValidator from '../../template_components/Forms/FormValidator.js';
 import Footer from '../../components/footer';
@@ -8,10 +14,23 @@ import Footer from '../../components/footer';
 class Login extends Component {
 
     state = {
-        formLogin: {
+        formUserLogin: {
             email: '',
             password: ''
-        }
+        },
+        formError: ""
+    }
+
+    constructor(props) {
+        super(props);
+
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                return;
+            }
+            
+            this.props.actions.userLogin(user);
+        });
     }
 
     validateOnChange = event => {
@@ -31,14 +50,12 @@ class Login extends Component {
                 }
             }
         });
-
     }
 
     onSubmit = e => {
         const form = e.target;
         const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
-
-        const { errors, hasError } = FormValidator.bulkValidate(inputs)
+        const { errors } = FormValidator.bulkValidate(inputs)
 
         this.setState({
             [form.name]: {
@@ -47,13 +64,19 @@ class Login extends Component {
             }
         });
 
-        console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
+        auth.signInWithEmailAndPassword(this.state.formUserLogin.email, this.state.formUserLogin.password)
+        .catch(e => {
+            console.warn(e.message)
+            this.setState({
+                formError: e.message
+            });
+        });
 
-        e.preventDefault()
+        e.preventDefault();
     }
 
     hasError = (formName, inputName, method) => {
-        return  this.state[formName] &&
+        return this.state[formName] &&
                 this.state[formName].errors &&
                 this.state[formName].errors[inputName] &&
                 this.state[formName].errors[inputName][method]
@@ -63,31 +86,32 @@ class Login extends Component {
         return (
             <div className="block-center mt-4 wd-xl">
                 <div className="card card-flat">
-                    <div className="card-header text-center bg-dark">
+                    <div className="card-header text-center bg-accent" style={{borderRadius: 0, backgroundImage: "linear-gradient(-45deg, rgb(233, 233, 233), rgb(242, 242, 242))"}}>
                         <a href="">
-                            <img className="block-center rounded" src="img/logo.png" alt="Logo"/>
+                            <img className="block-center rounded" src="img/godobet_logo.png" alt="Logo"
+                                width={100}/>
                         </a>
                     </div>
                     <div className="card-body">
                         <p className="text-center py-2">Accedi</p>
-                        <form className="mb-3" name="formLogin" onSubmit={this.onSubmit}>
+                        <form className="mb-3" name="formUserLogin" onSubmit={this.onSubmit}>
                             <div className="form-group">
                                 <div className="input-group with-focus">
-                                    <Input type="email"
+                                    <Input type="text"
                                         name="email"
                                         className="border-right-0"
                                         placeholder="Email"
-                                        invalid={this.hasError('formLogin','email','required')||this.hasError('formLogin','email','email')}
+                                        invalid={this.hasError('formUserLogin','email','required') || this.hasError('formUserLogin','email','email')}
                                         onChange={this.validateOnChange}
                                         data-validate='["required", "email"]'
-                                        value={this.state.formLogin.email}/>
+                                        value={this.state.formUserLogin.email}/>
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-envelope"></em>
                                         </span>
                                     </div>
-                                    { this.hasError('formLogin','email','required') && <span className="invalid-feedback">Il campo indirizzo email è obbligatorio</span> }
-                                    { this.hasError('formLogin','email','email') && <span className="invalid-feedback">Inserisci un indirizzo email valido</span> }
+                                    { this.hasError('formUserLogin','email','required') && <span className="invalid-feedback">Il campo indirizzo email è obbligatorio</span> }
+                                    { this.hasError('formUserLogin','email','email') && <span className="invalid-feedback">Inserisci un indirizzo email valido</span> }
                                 </div>
                             </div>
                             <div className="form-group">
@@ -97,10 +121,10 @@ class Login extends Component {
                                         name="password"
                                         className="border-right-0"
                                         placeholder="Password"
-                                        invalid={this.hasError('formLogin','password','required')}
+                                        invalid={this.hasError('formUserLogin','password','required')}
                                         onChange={this.validateOnChange}
                                         data-validate='["required"]'
-                                        value={this.state.formLogin.password}
+                                        value={this.state.formUserLogin.password}
                                     />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
@@ -120,6 +144,12 @@ class Login extends Component {
                                     <Link to="recover" className="text-muted">Password dimenticata?</Link>
                                 </div>
                             </div>
+                            <div className="form-group" style={{marginTop: 15}}>
+                                <div className="input-group with-focus">
+                                    <span className="is-invalid"></span>
+                                    <span className="invalid-feedback">{this.state.formError}</span>
+                                </div>
+                            </div>
                             <button className="btn btn-block btn-primary mt-3" type="submit">Login</button>
                         </form>
                         <p className="pt-3 text-center">Non hai ancora un account?</p>
@@ -132,4 +162,10 @@ class Login extends Component {
     }
 }
 
-export default Login;
+const mapStateToProps = state => ({ app: state.app })
+const mapDispatchToProps = dispatch => ({ actions: bindActionCreators(actions, dispatch) })
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withNamespaces('translations')(withRouter(Login)));

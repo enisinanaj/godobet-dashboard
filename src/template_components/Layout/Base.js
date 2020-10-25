@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Header from './Header'
-import Sidebar from './Sidebar'
+import Sidebar from '../../components/layout/Sidebar'
 import Offsidebar from './Offsidebar'
 import Footer from './Footer'
 

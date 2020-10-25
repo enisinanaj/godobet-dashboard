@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Input, CustomInput } from 'reactstrap';
 
 import FormValidator from '../../template_components/Forms/FormValidator.js';
 import Footer from '../../components/footer';
+import { connect } from 'react-redux';
+import { auth } from '../../components/auth/firebase.js';
+import TokenManager from '../../components/auth/Token.js';
 
 class Register extends Component {
 
@@ -53,10 +56,44 @@ class Register extends Component {
             }
         });
 
-        console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
+        console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!');
 
-        e.preventDefault()
-    }
+        var user = {
+            role: "http://localhost:5005/roles/4",
+            email: this.state.formRegister.email,
+            loginProvider: 'http://localhost:5005/items/6'
+        };
+
+        auth
+        .createUserWithEmailAndPassword(this.state.formRegister.email, this.state.formRegister.password)
+        .then(e => {
+            e.user.sendEmailVerification();
+            user.name = e.user.displayName;
+            return e.user.getIdToken();
+        })
+        .then(accessToken => {
+            return TokenManager.getInstance().getToken()
+            .then(jwt => {
+                return fetch("http://localhost:5005/users", {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Auth": jwt
+                    },
+                    body: JSON.stringify({
+                        ...user,
+                        password: "",
+                        accessToken
+                    })
+                })
+            })
+        })
+        .then(e => {
+            alert("check your email")
+        })
+        .catch(_ => {});
+            e.preventDefault()
+        }
 
     /* Simplify error check */
     hasError = (formName, inputName, method) => {
@@ -71,9 +108,9 @@ class Register extends Component {
             <div className="block-center mt-4 wd-xl">
                 {/* START card */}
                 <div className="card card-flat">
-                    <div className="card-header text-center bg-dark">
+                    <div className="card-header text-center bg-accent" style={{borderRadius: 0, backgroundImage: "linear-gradient(-45deg, rgb(233, 233, 233), rgb(242, 242, 242))"}}>
                         <a href="">
-                            <img className="block-center" src="img/logo.png" alt="Logo"/>
+                            <img className="block-center" src="img/godobet_logo.png" alt="Logo" width={100}/>
                         </a>
                     </div>
                     <div className="card-body">
@@ -162,4 +199,8 @@ class Register extends Component {
     }
 }
 
-export default Register;
+const mapStateToProps = state => ({ app: state.app })
+
+export default connect(
+    mapStateToProps
+)(withRouter(Register));

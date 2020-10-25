@@ -3,6 +3,7 @@ import ContentWrapper from '../../components/layout/ContentWrapper';
 import { Row, Col } from 'reactstrap';
 import { Input } from 'reactstrap';
 import FormValidator from '../../template_components/Forms/FormValidator.js';
+import { connect } from 'react-redux';
 
 class Profile extends Component {
     
@@ -12,6 +13,12 @@ class Profile extends Component {
             newPassword: '',
             repeatNewPassword: ''
         }
+    }
+
+    constructor(props) {
+        super(props);
+
+        console.warn(this.props.app.user)
     }
 
     validateOnChange = event => {
@@ -240,4 +247,7 @@ class Profile extends Component {
     }
 }
 
-export default Profile;
+//export default Profile;
+
+const mapStateToProps = state => state
+export default connect(mapStateToProps)(Profile);

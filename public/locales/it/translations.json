@@ -1,0 +1,17 @@
+{
+  "dashboard": {
+    "WELCOME": "Welcome to GODOBET!"
+  },
+  "sidebar": {
+    "WELCOME": "Benvenuto",
+    "heading": {
+      "HEADER": "Navigazione Principale",
+      "COMPONENTS": "Componenti",
+      "MORE": "Altro"
+    },
+    "nav": {
+      "PROFILE": "Profilo",
+      "MY_POOLS": "Le mie schedine"
+    }
+  }
+}

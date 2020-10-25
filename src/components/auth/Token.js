@@ -12,6 +12,16 @@ export default class TokenManager {
 
     getToken() {
         var loginInfo={username: 'admin', password: 'admin'};
-        return fetch('http://localhost:5005/token', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify(loginInfo)}).then((response) => {return response.headers.get('X-Auth')});
+        return fetch('http://localhost:5005/token', 
+            {
+                method: 'POST', 
+                headers: 
+                {
+                    'content-type': 'application/json'
+                }, 
+                body: JSON.stringify(loginInfo)
+            }
+        )
+        .then((response) => response.headers.get('X-Auth'));
     }
 }
