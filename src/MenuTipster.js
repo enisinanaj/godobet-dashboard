@@ -7,7 +7,7 @@ const MenuTipster = [
   {
     name: "I tuoi pacchetti",
     icon: "icon-grid",
-    path: "/",
+    path: "/myServices",
   },
 ];
 
