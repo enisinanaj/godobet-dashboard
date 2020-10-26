@@ -20,7 +20,15 @@ class MyPools extends Component {
 
     async getMyPools() {
         var token =  await TokenManager.getInstance().getToken();
-        fetch('http://localhost:5005/pools', {method: 'GET', headers: {'Content-Type': 'application/json', 'X-Auth': token}}).then((response) => response.json()).then((response) => this.setState({pools: response._embedded.pools}));
+        fetch(process.env.API_URL + '/pools', {
+            method: 'GET', 
+            headers: {
+                'Content-Type': 'application/json', 
+                'X-Auth': token
+            }
+        })
+        .then((response) => response.json())
+        .then((response) => this.setState({pools: response._embedded.pools}));
     }
 
     render() {

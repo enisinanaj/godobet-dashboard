@@ -69,7 +69,8 @@ module.exports = (webpackConfig, env, { paths }) => {
     // Allow cofiguration of router base href
     webpackConfig.plugins = (webpackConfig.plugins || []).concat([
         new webpack.DefinePlugin({
-            PUBLIC_URL: JSON.stringify(process.env.PUBLIC_URL)
+            PUBLIC_URL: JSON.stringify(process.env.PUBLIC_URL),
+            API_URL: JSON.stringify(process.env.API_URL)
         })
     ]);
 

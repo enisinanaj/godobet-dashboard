@@ -17,7 +17,7 @@ class Event extends Component {
             eventDate: moment(),
             sport: 'calcio',
             competition: 'Serie A',
-            gender: 'http://localhost:5005/items/1',
+            gender: process.env.API_URL + '/items/1',
             proposal: 'over 2.5',
             event: 'Roma - Parma',
             quote: '1.40',
@@ -39,7 +39,14 @@ class Event extends Component {
         var token = await TokenManager.getInstance().getToken();
 
         var body={...this.state};
-        fetch('http://localhost:5005/events', {method:'POST', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)})
+        fetch(process.env.API_URL + '/events', {
+            method:'POST', 
+            headers: {
+                'X-Auth': token, 
+                'Content-Type': 'application/json'
+            }, 
+            body:JSON.stringify(body)
+        })
         
         this.toggleModal();
     }
@@ -85,9 +92,9 @@ class Event extends Component {
                                                     <div className="col-xl-10 col-md-9 col-8">
                                                         <select defaultValue={this.state.gender} onChange={(e) => this.handleGenderChange(e)} className="custom-select custom-select-sm">
                                                             <option>Seleziona</option>
-                                                            <option value="http://localhost:5005/items/1">M</option>
-                                                            <option value="http://localhost:5005/items/2">F</option>
-                                                            <option value="http://localhost:5005/items/3">X</option>
+                                                            <option value="{process.env.API_URL}/items/1">M</option>
+                                                            <option value="{process.env.API_URL}/items/2">F</option>
+                                                            <option value="{process.env.API_URL}/items/3">X</option>
                                                         </select>
                                                     </div>
                                                 </div>

@@ -12,7 +12,7 @@ export default class TokenManager {
 
     getToken() {
         var loginInfo={username: 'admin', password: 'admin'};
-        return fetch('http://localhost:5005/token', 
+        return fetch(process.env.API_URL + '/token', 
             {
                 method: 'POST', 
                 headers: 

@@ -5,6 +5,10 @@
   "author": "@themicon_co",
   "license": "https://wrapbootstrap.com/help/licenses",
   "private": true,
+  "engines": {
+    "npm": "6.9.0",
+    "node": "10.16.0"
+  },
   "homepage": ".",
   "scripts": {
     "start": "react-scripts start",
