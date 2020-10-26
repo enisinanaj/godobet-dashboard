@@ -74,7 +74,7 @@ const Routes = ({ location, app }) => {
     return (
       // Layout component wrapper
       // Use <BaseHorizontal> to change layout
-      <Base>
+      <BaseTipster>
         <TransitionGroup>
           <CSSTransition
             key={currentKey}
@@ -94,7 +94,7 @@ const Routes = ({ location, app }) => {
             </div>
           </CSSTransition>
         </TransitionGroup>
-      </Base>
+      </BaseTipster>
     );
   }
 };
