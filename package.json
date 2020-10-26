@@ -114,14 +114,14 @@
     "sweetalert": "2.1.2",
     "validator": "10.9.0",
     "weather-icons": "github:erikflowers/weather-icons",
-    "whirl": "github:themicon/whirl"
+    "whirl": "github:themicon/whirl",
+    "react-scripts-rewired": "3.1.1"
   },
   "devDependencies": {
     "acorn-dynamic-import": "3.0.0",
     "imports-loader": "0.8.0",
     "node-sass": "4.13.1",
     "raw-loader": "0.5.1",
-    "react-scripts-rewired": "3.1.1",
     "sass-loader": "7.1.0",
     "style-loader": "0.23.1",
     "webpack-bundle-analyzer": "3.3.2"
