@@ -1,3 +1,5 @@
+import config from '../../store/config'
+
 export default class TokenManager {
     static instance;
 
@@ -12,7 +14,7 @@ export default class TokenManager {
 
     getToken() {
         var loginInfo={username: 'admin', password: 'admin'};
-        return fetch('http://localhost:5005/token', 
+        return fetch( config.API_URL + '/token', 
             {
                 method: 'POST', 
                 headers: 

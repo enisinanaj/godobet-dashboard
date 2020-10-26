@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ServiceCard from "./ServiceCard";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
+import config from "../../store/config";
 
 class MyServices extends Component {
   constructor(props, context) {
@@ -10,10 +11,10 @@ class MyServices extends Component {
       services: [
         {
           id: 1,
-          author: "http://localhost:5005/users/1",
+          author: config.API_URL + "/users/1",
           taxonomies: [
-            "http://localhost:5005/taxonomies/2",
-            "http://localhost:5005/taxonomies/3",
+            config.API_URL + "/taxonomies/2",
+            config.API_URL + "/taxonomies/3",
           ],
           serviceName: "vinci ora (Pallavolo)!",
           description: "Tutte le scommesse sulla pallavolo",
@@ -25,10 +26,10 @@ class MyServices extends Component {
         },
         {
           id: 2,
-          author: "http://localhost:5005/users/1",
+          author: config.API_URL + "/users/1",
           taxonomies: [
-            "http://localhost:5005/taxonomies/2",
-            "http://localhost:5005/taxonomies/3",
+            config.API_URL + "/taxonomies/2",
+            config.API_URL + "/taxonomies/3",
           ],
           serviceName: "Tutto il calcio",
           description: "Tutte le scommesse sul calcio 222",
@@ -45,7 +46,7 @@ class MyServices extends Component {
 
   async getMyServices() {
     var token = await TokenManager.getInstance().getToken();
-    fetch("http://localhost:5005/services", {
+    fetch(config.API_URL + "/services", {
       method: "GET",
       headers: { "Content-Type": "application/json", "X-Auth": token },
     })
@@ -57,7 +58,7 @@ class MyServices extends Component {
 
   async getTaxonomies() {
     var token = await TokenManager.getInstance().getToken();
-    fetch("http://localhost:5005/taxonomies", {
+    fetch(config.API_URL + "/taxonomies", {
       method: "GET",
       headers: { "Content-Type": "application/json", "X-Auth": token },
     })

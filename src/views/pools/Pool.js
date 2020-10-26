@@ -4,6 +4,7 @@ import { Row, Col, Input, Button } from 'reactstrap';
 import Event from '../events/Event.js'
 import EventCard from '../events/EventCard.js'
 import TokenManager from '../../components/auth/Token';
+import config from '../../store/config';
 
 class Pool extends Component {  
 
@@ -47,10 +48,27 @@ class Pool extends Component {
         var token = await TokenManager.getInstance().getToken();
 
         var body={...this.state};
-        if (this.props.location.data)
-            fetch(this.props.location.data, {method:'PUT', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)}).then((response) => response.json()).then((response) => this.getMyEvents(response._links.self.href));
-        else
-            fetch('http://localhost:5005/pools/', {method:'POST', headers: {'X-Auth': token, 'Content-Type': 'application/json'}, body:JSON.stringify(body)});
+        if (this.props.location.data) {
+            fetch(this.props.location.data, {
+                method:'PUT', 
+                headers: {
+                    'X-Auth': token, 
+                    'Content-Type': 'application/json'
+                }, 
+                body:JSON.stringify(body)
+            })
+            .then((response) => response.json())
+            .then((response) => this.getMyEvents(response._links.self.href));
+        } else {
+            fetch(config.API_URL + '/pools/', {
+                method:'POST', 
+                headers: {
+                    'X-Auth': token, 
+                    'Content-Type': 'application/json'
+                }, 
+                body:JSON.stringify(body)
+            });
+        }
     }
 
     async getMyEvents(data) {
