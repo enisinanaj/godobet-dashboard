@@ -4,6 +4,7 @@ import { Row, Col, Input, Button } from 'reactstrap';
 import Event from '../events/Event.js'
 import EventCard from '../events/EventCard.js'
 import TokenManager from '../../components/auth/Token';
+import config from '../../store/config';
 
 class Pool extends Component {  
 
@@ -59,7 +60,7 @@ class Pool extends Component {
             .then((response) => response.json())
             .then((response) => this.getMyEvents(response._links.self.href));
         } else {
-            fetch(process.env.API_URL + '/pools/', {
+            fetch(config.API_URL + '/pools/', {
                 method:'POST', 
                 headers: {
                     'X-Auth': token, 

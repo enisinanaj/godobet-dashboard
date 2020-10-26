@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PoolCard from './PoolCard';
 import ContentWrapper from '../../components/layout/ContentWrapper';
 import TokenManager from '../../components/auth/Token';
+import config from '../../store/config';
 
 class MyPools extends Component {
 
@@ -20,7 +21,7 @@ class MyPools extends Component {
 
     async getMyPools() {
         var token =  await TokenManager.getInstance().getToken();
-        fetch(process.env.API_URL + '/pools', {
+        fetch(config.API_URL + '/pools', {
             method: 'GET', 
             headers: {
                 'Content-Type': 'application/json', 

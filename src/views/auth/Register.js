@@ -7,6 +7,7 @@ import Footer from '../../components/footer';
 import { connect } from 'react-redux';
 import { auth } from '../../components/auth/firebase.js';
 import TokenManager from '../../components/auth/Token.js';
+import config from '../../store/config.js';
 
 class Register extends Component {
 
@@ -59,9 +60,9 @@ class Register extends Component {
         console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!');
 
         var user = {
-            role: process.env.API_URL + "/roles/4",
+            role: config.API_URL + "/roles/4",
             email: this.state.formRegister.email,
-            loginProvider: process.env.API_URL + '/items/6'
+            loginProvider: config.API_URL + '/items/6'
         };
 
         auth
@@ -74,7 +75,7 @@ class Register extends Component {
         .then(accessToken => {
             return TokenManager.getInstance().getToken()
             .then(jwt => {
-                return fetch(process.env.API_URL + "/users", {
+                return fetch(config.API_URL + "/users", {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json",
