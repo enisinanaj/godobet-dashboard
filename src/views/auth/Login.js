@@ -11,6 +11,7 @@ import * as actions from '../../store/actions/actions';
 import FormValidator from '../../template_components/Forms/FormValidator.js';
 import Footer from '../../components/footer';
 import config from '../../store/config';
+import TokenManager from '../../components/auth/Token';
 
 class Login extends Component {
 
@@ -20,26 +21,6 @@ class Login extends Component {
             password: ''
         },
         formError: ""
-    }
-
-    constructor(props) {
-        super(props);
-
-        auth.onAuthStateChanged(user => {
-            if (!user) {
-                return;
-            }
-
-            fetch(config.API_URL + "/users/search/findByAccessToken/?accessToken=" + user.uid)
-            .then(localUser => {
-                this.props.actions.userLogin({
-                    ...user,
-                    ...localUser
-                })
-            })
-            
-            this.props.actions.userLogin(user);
-        });
     }
 
     validateOnChange = event => {
@@ -80,7 +61,37 @@ class Login extends Component {
             });
         });
 
+        this.addUserStateChangeEvent()
+
         e.preventDefault();
+    }
+
+    addUserStateChangeEvent = () => {
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                return;
+            }
+            
+            TokenManager.getInstance().getToken()
+            .then(jwt => {
+                fetch(config.API_URL + "/users/search/findByAccessToken/?accessToken=" + user.uid, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Auth": jwt
+                    }
+                })
+                .then(e => e.json())
+                .then(localUser => {
+                    console.log("user is: " + JSON.stringify(localUser))
+                    this.props.actions.userLogin({
+                        ...user,
+                        ...localUser
+                    })
+                })
+            });
+            
+            this.props.actions.userLogin(user);
+        });
     }
 
     hasError = (formName, inputName, method) => {
