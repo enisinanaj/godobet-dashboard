@@ -10,46 +10,48 @@ import {
   FormGroup,
 } from "reactstrap";
 import PropTypes from "prop-types";
+import config from "../../store/config";
+import MyEvents from "../events/MyEvents";
 import { Link } from "react-router-dom";
 
-class PoolCard extends Component {
-  static propTypes = {
-    id: PropTypes.string,
-    description: PropTypes.string,
-    totalQuote: PropTypes.string,
-    stake: PropTypes.string,
-    profit: PropTypes.string,
-    bookmaker: PropTypes.string,
-    totalEvents: PropTypes.string,
-    poolCreatedOn: PropTypes.string,
-    poolUpdatedOn: PropTypes.string,
-    hrefPool: PropTypes.string,
-  };
-
+class PoolDetails extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      poolId: null,
+      description: "descr",
+      quote: "1.02",
+      stake: "10.3",
+      profit: "1",
+      bookmaker: "1",
+      events: [],
+      poolURL: props.location.data,
+    };
+  }
   render() {
     return (
       <ContentWrapper>
+        <h2>Dettagli schedina</h2>
         <Card className="card-default">
-          <CardHeader>Riepilogo schedina {this.props.id}</CardHeader>
           <CardBody>
             <Row>
               <Col lg="6">
                 <FormGroup row>
                   <Col md="4">Descrizione:</Col>
                   <Col md="8">
-                    <strong>{this.props.description}</strong>
+                    <strong>{this.state.description}</strong>
                   </Col>
                   <Col md="4">Quota:</Col>
                   <Col md="8">
-                    <strong>{this.props.totalQuote}</strong>
+                    <strong>{this.state.quote}</strong>
                   </Col>
                   <Col md="4">Bookmaker:</Col>
                   <Col md="8">
-                    <strong>{this.props.bookmaker}</strong>
+                    <strong>{this.state.bookmaker}</strong>
                   </Col>
                   <Col md="4">Creato il:</Col>
                   <Col md="8">
-                    <strong>{this.props.poolCreatedOn}</strong>
+                    <strong>{this.state.poolCreatedOn}</strong>
                   </Col>
                 </FormGroup>
               </Col>
@@ -57,38 +59,40 @@ class PoolCard extends Component {
                 <FormGroup row>
                   <Col md="4">Stake:</Col>
                   <Col md="8">
-                    <strong>{this.props.stake}</strong>
+                    <strong>{this.state.stake}</strong>
                   </Col>
                   <Col md="4">Profitto:</Col>
                   <Col md="8">
-                    <strong>{this.props.profit}</strong>
+                    <strong>{this.state.profit}</strong>
                   </Col>
                   <Col md="4">Eventi totali:</Col>
                   <Col md="8">
-                    <strong>{this.props.totalEvents}</strong>
+                    <strong>{this.state.totalEvents}</strong>
                   </Col>
                   <Col md="4">Modificato il:</Col>
                   <Col md="8">
-                    <strong>{this.props.poolUpdatedOn}</strong>
+                    <strong>{this.state.poolUpdatedOn}</strong>
                   </Col>
                 </FormGroup>
               </Col>
             </Row>
+
+            <Row>
+              <Col md="12">
+                <h3>Eventi</h3>
+              </Col>
+            </Row>
+            <Row>
+              <Col md="12">
+                <MyEvents />
+              </Col>
+            </Row>
           </CardBody>
-          <CardFooter className="d-flex">
-            <div>
-              <Link
-                to={{ pathname: "poolDetails" }}
-                className="btn btn-block btn-secondary"
-              >
-                Visualizza
-              </Link>
-            </div>
-          </CardFooter>
+          <CardFooter className="d-flex"></CardFooter>
         </Card>
       </ContentWrapper>
     );
   }
 }
 
-export default PoolCard;
+export default PoolDetails;
