@@ -44,25 +44,21 @@ class MyPools extends Component {
       .then((response) => this.setState({ pools: response._embedded.pools }));
   }
   render() {
-    return (
-      <ContentWrapper>
-        {this.state.pools.map((pool) => (
-          <PoolCard
-            key={1}
-            id={pool.id}
-            description={pool.description}
-            totalQuote={pool.totalQuote}
-            stake={pool.stake}
-            profit={pool.profit}
-            bookmaker={pool.bookmaker}
-            totalEvents={pool.totalEvents}
-            poolCreatedOn={pool.createdOn}
-            poolUpdatedOn={pool.updatedOn}
-            hrefPool={"pool._links.self.href"}
-          ></PoolCard>
-        ))}
-      </ContentWrapper>
-    );
+    return this.state.pools.map((pool) => (
+      <PoolCard
+        key={1}
+        id={pool.id}
+        description={pool.description}
+        totalQuote={pool.totalQuote}
+        stake={pool.stake}
+        profit={pool.profit}
+        bookmaker={pool.bookmaker}
+        totalEvents={pool.totalEvents}
+        poolCreatedOn={pool.createdOn}
+        poolUpdatedOn={pool.updatedOn}
+        hrefPool={"pool._links.self.href"}
+      ></PoolCard>
+    ));
   }
 }
 

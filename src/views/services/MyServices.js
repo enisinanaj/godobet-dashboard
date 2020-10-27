@@ -43,7 +43,6 @@ class MyServices extends Component {
         },
       ],
     };
-    //this.testAPI();
     //this.getMyServices();
   }
 
@@ -54,16 +53,6 @@ class MyServices extends Component {
   openNewService = () => {
     this.showModal();
   };
-
-  async testAPI() {
-    var token = await TokenManager.getInstance().getToken();
-    fetch("https://godobet-api.herokuapp.com/services", {
-      method: "GET",
-      headers: { "Content-Type": "application/json", "X-Auth": token },
-    })
-      .then((response) => response.json())
-      .then((response) => console.log(response));
-  }
 
   async getMyServices() {
     var token = await TokenManager.getInstance().getToken();

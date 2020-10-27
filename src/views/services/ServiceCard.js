@@ -75,7 +75,9 @@ class ServiceCard extends Component {
         <CardFooter className="d-flex">
           <div>
             <Link
-              to={{ pathname: "pool", data: this.props.hrefService }}
+              to={{
+                pathname: "serviceDetails",
+              }}
               className="btn btn-block btn-secondary"
             >
               Visualizza
