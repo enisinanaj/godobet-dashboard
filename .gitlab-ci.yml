@@ -4,12 +4,17 @@ stages:
 
 build:
   stage: build
-  image: node
+  image: node:10.16.0
   script: 
     - echo "Start building App"
     - npm install
     - npm build
     - echo "Build successfully!"
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - build
+      - node_modules/
 
 test:
   stage: test
