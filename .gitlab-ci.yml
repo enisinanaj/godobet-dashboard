@@ -17,6 +17,7 @@ build:
       - node_modules/
 
 production:
+  type: deploy
   stage: production
   image: ruby:latest
   script:
