@@ -69,9 +69,7 @@ class Register extends Component {
         .then(e => {
             e.user.sendEmailVerification();
             user.name = e.user.displayName;
-            return e.user.getIdToken();
-        })
-        .then(accessToken => {
+            
             return TokenManager.getInstance().getToken()
             .then(jwt => {
                 return fetch("http://localhost:5005/users", {
@@ -83,7 +81,7 @@ class Register extends Component {
                     body: JSON.stringify({
                         ...user,
                         password: "",
-                        accessToken
+                        accessToken: e.user.uid
                     })
                 })
             })
