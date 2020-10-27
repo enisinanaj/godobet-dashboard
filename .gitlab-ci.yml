@@ -1,6 +1,6 @@
 stages:
   - build
-  - test
+  - production
 
 build:
   stage: build
@@ -16,11 +16,8 @@ build:
       - build
       - node_modules/
 
-test:
-  stage: test
-  image: node
+production:
+  stage: production
+  image: ruby:latest
   script:
-    - echo "Testing App"
-    - npm install
-    - CI=true npm test
-    - echo "Test successfully!"
+      - dpl --provider=heroku --app=godobet-dashboard --api-key=$HEROKU_API_KEY
