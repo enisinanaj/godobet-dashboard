@@ -28,63 +28,61 @@ class ServiceCard extends Component {
 
   render() {
     return (
-      <ContentWrapper>
-        <Card className="card-default">
-          <CardHeader>
-            <strong>{this.props.serviceName}</strong>
-          </CardHeader>
-          <CardBody>
-            <Row>
-              <Col lg="6">
-                <FormGroup row>
-                  <Col md="4">Descrizione:</Col>
-                  <Col md="8">
-                    <strong>{this.props.description}</strong>
-                  </Col>
-                  <Col md="4">Prezzo:</Col>
-                  <Col md="8">
-                    <strong>{this.props.price} €</strong>
-                  </Col>
-                  <Col md="4">Durata:</Col>
-                  <Col md="8">
-                    <strong>{this.props.duration} giorni</strong>
-                  </Col>
-                </FormGroup>
-              </Col>
-              <Col lg="6">
-                <FormGroup row>
-                  <Col md="4">Numero max iscritti:</Col>
-                  <Col md="8">
-                    <strong>{this.props.maxSubscribers}</strong>
-                  </Col>
-                  <Col md="4">Tag:</Col>
-                  <Col md="8">
-                    <strong>
-                      {this.props.taxonomiesDefinition.map((taxonomy) => {
-                        return taxonomy + " ";
-                      })}
-                    </strong>
-                  </Col>
-                  <Col md="4">Versione:</Col>
-                  <Col md="8">
-                    <strong>{this.props.version}</strong>
-                  </Col>
-                </FormGroup>
-              </Col>
-            </Row>
-          </CardBody>
-          <CardFooter className="d-flex">
-            <div>
-              <Link
-                to={{ pathname: "pool", data: this.props.hrefService }}
-                className="btn btn-block btn-secondary"
-              >
-                Visualizza
-              </Link>
-            </div>
-          </CardFooter>
-        </Card>
-      </ContentWrapper>
+      <Card className="card-default">
+        <CardHeader>
+          <strong>{this.props.serviceName}</strong>
+        </CardHeader>
+        <CardBody>
+          <Row>
+            <Col lg="6">
+              <FormGroup row>
+                <Col md="4">Descrizione:</Col>
+                <Col md="8">
+                  <strong>{this.props.description}</strong>
+                </Col>
+                <Col md="4">Prezzo:</Col>
+                <Col md="8">
+                  <strong>{this.props.price} €</strong>
+                </Col>
+                <Col md="4">Durata:</Col>
+                <Col md="8">
+                  <strong>{this.props.duration} giorni</strong>
+                </Col>
+              </FormGroup>
+            </Col>
+            <Col lg="6">
+              <FormGroup row>
+                <Col md="4">Numero max iscritti:</Col>
+                <Col md="8">
+                  <strong>{this.props.maxSubscribers}</strong>
+                </Col>
+                <Col md="4">Tag:</Col>
+                <Col md="8">
+                  <strong>
+                    {this.props.taxonomiesDefinition.map((taxonomy) => {
+                      return taxonomy + " ";
+                    })}
+                  </strong>
+                </Col>
+                <Col md="4">Versione:</Col>
+                <Col md="8">
+                  <strong>{this.props.version}</strong>
+                </Col>
+              </FormGroup>
+            </Col>
+          </Row>
+        </CardBody>
+        <CardFooter className="d-flex">
+          <div>
+            <Link
+              to={{ pathname: "pool", data: this.props.hrefService }}
+              className="btn btn-block btn-secondary"
+            >
+              Visualizza
+            </Link>
+          </div>
+        </CardFooter>
+      </Card>
     );
   }
 }

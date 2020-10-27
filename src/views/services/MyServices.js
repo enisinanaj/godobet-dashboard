@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import ServiceCard from "./ServiceCard";
+import { Row, Col, Input, Button } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
+import NewService from "./NewService.js";
 
 class MyServices extends Component {
   constructor(props, context) {
@@ -41,7 +43,26 @@ class MyServices extends Component {
         },
       ],
     };
+    //this.testAPI();
     //this.getMyServices();
+  }
+
+  eventModalRef = (props) => {
+    this.showModal = props && props.toggleModal;
+  };
+
+  openNewService = () => {
+    this.showModal();
+  };
+
+  async testAPI() {
+    var token = await TokenManager.getInstance().getToken();
+    fetch("https://godobet-api.herokuapp.com/services", {
+      method: "GET",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+    })
+      .then((response) => response.json())
+      .then((response) => console.log(response));
   }
 
   async getMyServices() {
@@ -68,9 +89,26 @@ class MyServices extends Component {
       );
   }
 
+  addService(service) {
+    var joined = this.state.services.concat(service);
+    this.setState({ services: joined });
+  }
+
   render() {
     return (
       <ContentWrapper>
+        <div className="form-group row">
+          <div className="col-md-12">
+            <Button color="primary" onClick={this.openNewService}>
+              Aggiungi pacchetto
+            </Button>
+            <NewService
+              pool={this.state.poolURL}
+              addService={(newService) => this.addService(newService)}
+              ref={this.eventModalRef}
+            ></NewService>
+          </div>
+        </div>
         {this.state.services.map((service) => (
           <ServiceCard
             key={service.key}
