@@ -21,4 +21,5 @@ production:
   stage: production
   image: ruby:latest
   script:
+      - gem install dpl
       - dpl --provider=heroku --app=godobet-dashboard --api-key=$HEROKU_API_KEY
