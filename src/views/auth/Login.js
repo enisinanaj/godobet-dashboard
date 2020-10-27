@@ -10,6 +10,7 @@ import * as actions from '../../store/actions/actions';
 
 import FormValidator from '../../template_components/Forms/FormValidator.js';
 import Footer from '../../components/footer';
+import config from '../../store/config';
 
 class Login extends Component {
 
@@ -29,7 +30,7 @@ class Login extends Component {
                 return;
             }
 
-            fetch("/users/search/findByAccessToken/?accessToken=" + user.uid)
+            fetch(config.API_URL + "/users/search/findByAccessToken/?accessToken=" + user.uid)
             .then(localUser => {
                 this.props.actions.userLogin({
                     ...user,
