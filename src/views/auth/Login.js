@@ -28,6 +28,14 @@ class Login extends Component {
             if (!user) {
                 return;
             }
+
+            fetch("/users/search/findByAccessToken/?accessToken=" + user.uid)
+            .then(localUser => {
+                this.props.actions.userLogin({
+                    ...user,
+                    ...localUser
+                })
+            })
             
             this.props.actions.userLogin(user);
         });
@@ -66,7 +74,6 @@ class Login extends Component {
 
         auth.signInWithEmailAndPassword(this.state.formUserLogin.email, this.state.formUserLogin.password)
         .catch(e => {
-            console.warn(e.message)
             this.setState({
                 formError: e.message
             });
