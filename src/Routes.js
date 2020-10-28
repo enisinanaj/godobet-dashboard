@@ -22,7 +22,7 @@ const Maintenance = lazy(() =>
   import("./template_components/Pages/Maintenance")
 );
 const Profile = lazy(() => import("./views/profile/Profile"));
-const Pool = lazy(() => import("./views/pools/Pool"));
+const NewPool = lazy(() => import("./views/pools/NewPool"));
 const MyPools = lazy(() => import("./views/pools/MyPools"));
 const MyServices = lazy(() => import("./views/services/MyServices"));
 const ServiceDetails = lazy(() => import("./views/services/ServiceDetails"));
@@ -88,7 +88,7 @@ const Routes = ({ location, app }) => {
               <Suspense fallback={<PageLoader />}>
                 <Switch location={location}>
                   <Route path="/profile" component={waitFor(Profile)} />
-                  <Route path="/pool" component={waitFor(Pool)} />
+                  <Route path="/newPool" component={waitFor(NewPool)} />
                   <Route path="/myPools" component={waitFor(MyPools)} />
                   <Route path="/myServices" component={waitFor(MyServices)} />
                   <Route

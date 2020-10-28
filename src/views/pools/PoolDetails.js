@@ -13,6 +13,7 @@ import PropTypes from "prop-types";
 import config from "../../store/config";
 import MyEvents from "../events/MyEvents";
 import { Link } from "react-router-dom";
+import * as moment from "moment";
 
 class PoolDetails extends Component {
   constructor(props) {
@@ -24,7 +25,34 @@ class PoolDetails extends Component {
       stake: "10.3",
       profit: "1",
       bookmaker: "1",
-      events: [],
+      events: [
+        {
+          id: 2,
+          eventDate: moment().format(),
+          sport: "calcio",
+          competition: "Serie A",
+          gender: config.API_URL + "/items/1",
+          proposal: "over 2.5",
+          event: "Roma - Parma",
+          quote: "1.40",
+          outcome: "2.5",
+          notes: "alto rischio, non giocatela se non vi fidate",
+          pool: "props.pool",
+        },
+        {
+          id: 3,
+          eventDate: moment().format(),
+          sport: "calcio",
+          competition: "Serie A",
+          gender: config.API_URL + "/items/1",
+          proposal: "over 2.5",
+          event: "Juventus - Milan",
+          quote: "3.4",
+          outcome: "2.5",
+          notes: "sicura",
+          pool: "props.pool",
+        },
+      ],
       poolURL: props.location.data,
     };
   }
@@ -84,7 +112,7 @@ class PoolDetails extends Component {
             </Row>
             <Row>
               <Col md="12">
-                <MyEvents />
+                <MyEvents events={this.state.events} />
               </Col>
             </Row>
           </CardBody>

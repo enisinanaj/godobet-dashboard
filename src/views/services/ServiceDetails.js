@@ -8,8 +8,10 @@ import {
   Row,
   Col,
   FormGroup,
+  Button,
 } from "reactstrap";
 import PropTypes from "prop-types";
+import NewPool from "../pools/NewPool";
 import config from "../../store/config";
 import MyPools from "../pools/MyPools";
 import { Link } from "react-router-dom";
@@ -30,8 +32,36 @@ class ServiceDetails extends Component {
       duration: 30,
       price: 4500,
       version: 2,
+      pools: [
+        {
+          id: 1,
+          description: "descrizione",
+          totalQuote: 50,
+          stake: 10,
+          profit: 1000,
+          bookmaker: "William Hill",
+          totalEvents: [],
+          poolCreatedOn: "data",
+          poolUpdatedOn: "2",
+          hrefPool: "link",
+        },
+      ],
     };
   }
+
+  eventModalRef = (props) => {
+    this.showModal = props && props.toggleModal;
+  };
+
+  openNewPool = () => {
+    this.showModal();
+  };
+
+  addService(service) {
+    var joined = this.state.services.concat(service);
+    this.setState({ services: joined });
+  }
+
   render() {
     return (
       <ContentWrapper>
@@ -75,15 +105,28 @@ class ServiceDetails extends Component {
                 </FormGroup>
               </Col>
             </Row>
-
-            <Row>
-              <Col md="12">
+            <Row style={{ marginTop: 20 }}>
+              <Col md="6">
                 <h3>Schedine</h3>
+              </Col>
+              <Col md="6">
+                <div className="form-group row">
+                  <div>
+                    <Link
+                      to={{
+                        pathname: "newPool",
+                      }}
+                      className="btn btn-block btn-secondary"
+                    >
+                      Aggiungi schedina
+                    </Link>
+                  </div>
+                </div>
               </Col>
             </Row>
             <Row>
               <Col md="12">
-                <MyPools />
+                <MyPools pools={this.state.pools} />
               </Col>
             </Row>
           </CardBody>
