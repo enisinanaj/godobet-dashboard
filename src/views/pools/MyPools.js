@@ -13,20 +13,7 @@ class MyPools extends Component {
       stake: "",
       profit: "",
       bookmaker: "",
-      pools: [
-        {
-          id: 1,
-          description: "descrizione",
-          totalQuote: 50,
-          stake: 10,
-          profit: 1000,
-          bookmaker: "William Hill",
-          totalEvents: [],
-          poolCreatedOn: "data",
-          poolUpdatedOn: "2",
-          hrefPool: "link",
-        },
-      ],
+      pools: this.props.pools,
     };
     //this.getMyPools();
   }
