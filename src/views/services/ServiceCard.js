@@ -58,11 +58,7 @@ class ServiceCard extends Component {
                 </Col>
                 <Col md="4">Tag:</Col>
                 <Col md="8">
-                  <strong>
-                    {this.props.taxonomiesDefinition.map((taxonomy) => {
-                      return taxonomy + " ";
-                    })}
-                  </strong>
+                  <strong></strong>
                 </Col>
                 <Col md="4">Versione:</Col>
                 <Col md="8">

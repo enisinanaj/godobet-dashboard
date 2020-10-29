@@ -14,71 +14,81 @@ import TokenManager from "../../components/auth/Token";
 
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
+import { connect } from "react-redux";
+import ReactTagInput from "@pathofdev/react-tag-input";
+import "@pathofdev/react-tag-input/build/index.css";
+import config from "../../store/config";
 
 class NewService extends Component {
   constructor(props, context) {
     super(props, context);
-    this.toggleModal = this.toggleModal.bind(this);
-    this.handleGenderChange = this.handleGenderChange.bind(this);
     this.state = {
-      modal: false,
-      author: "Andrea",
-      taxonomies: "tags",
-      serviceName: "Nome servizio",
-      description: "descrizione",
-      maxSubscribers: "30",
-      duration: "50",
-      price: "100",
-      version: "1",
+      taxonomies: [],
+      serviceName: "",
+      description: "",
+      maxSubscribers: "",
+      duration: "",
+      price: "",
+      version: 1,
     };
   }
 
   toggleModal() {
-    this.setState({ modal: !this.state.modal });
+    this.props.toggleModal();
   }
 
-  handleGenderChange(selected) {
-    this.setState({ gender: selected.target.value });
+  handleTaxonomiesChange(newTaxonomies) {
+    this.setState({ taxonomies: newTaxonomies });
   }
 
-  saveTest() {
+  async saveService() {
     const newService = {
-      author: this.state.author,
-      taxonomies: this.state.taxonomies,
+      author: this.props.app.user._links.user.href,
+      taxonomies: [], //this.state.taxonomies,
       serviceName: this.state.serviceName,
       description: this.state.description,
-      maxSubscribers: this.state.maxSubscribers,
-      duration: this.state.duration,
-      price: this.state.price,
-      version: this.state.version,
-      taxonomiesDefinition: [],
+      maxSubscribers: parseInt(
+        this.state.maxSubscribers == "" ? 0 : this.state.maxSubscribers
+      ),
+      duration: parseInt(this.state.duration == "" ? 0 : this.state.duration),
+      price: parseInt(this.state.price == "" ? 0 : this.state.price),
+      version: parseInt(this.state.version == "" ? 0 : this.state.version),
     };
 
-    this.props.addService(newService);
-    this.toggleModal();
+    var token = await TokenManager.getInstance().getToken();
+    fetch(config.API_URL + "/services", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+      body: JSON.stringify(newService),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        this.toggleModal();
+        this.props.refreshServiceList();
+      });
   }
 
-  async saveEvent() {
+  async test() {
     var token = await TokenManager.getInstance().getToken();
-
-    var body = { ...this.state };
-    fetch("http://localhost:5005/events", {
-      method: "POST",
-      headers: { "X-Auth": token, "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-
-    this.toggleModal();
+    fetch("https://godobet-api.herokuapp.com/taxonomies", {
+      method: "GET",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+    })
+      .then((response) => response.json())
+      .then((response) => console.log(response));
   }
 
   render() {
     return (
       <Modal
-        isOpen={this.state.modal}
-        toggle={this.toggleModal}
+        isOpen={this.props.modalNewServiceVisible}
+        toggle={() => this.toggleModal()}
         style={{ maxWidth: "70%" }}
       >
-        <ModalHeader toggle={this.toggleModal}>Nuovo pacchetto</ModalHeader>
+        <ModalHeader toggle={() => this.toggleModal()}>
+          Nuovo pacchetto
+        </ModalHeader>
         <ModalBody>
           <Row>
             <Col lg="12">
@@ -137,12 +147,15 @@ class NewService extends Component {
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
                             <Input
-                              placeholder="inputPrice"
-                              type="number"
-                              step="1"
+                              type="text"
+                              pattern="[0-9]*"
                               value={this.state.price}
                               onChange={(service) =>
-                                this.setState({ price: service.target.value })
+                                this.setState({
+                                  price: service.target.validity.valid
+                                    ? service.target.value
+                                    : this.state.price,
+                                })
                               }
                             />
                           </div>
@@ -159,10 +172,13 @@ class NewService extends Component {
                               className="form-control"
                               id="inputMaxSubscribers"
                               type="text"
+                              pattern="[0-9]*"
                               value={this.state.maxSubscribers}
                               onChange={(service) =>
                                 this.setState({
-                                  maxSubscribers: service.target.value,
+                                  maxSubscribers: service.target.validity.valid
+                                    ? service.target.value
+                                    : this.state.maxSubscribers,
                                 })
                               }
                             />
@@ -178,12 +194,14 @@ class NewService extends Component {
                           <div className="col-xl-10 col-md-9 col-8">
                             <Input
                               id="inputDuration"
-                              type="number"
-                              step="1"
+                              type="text"
+                              pattern="[0-9]*"
                               value={this.state.duration}
                               onChange={(service) =>
                                 this.setState({
-                                  duration: service.target.value,
+                                  duration: service.target.validity.valid
+                                    ? service.target.value
+                                    : this.state.duration,
                                 })
                               }
                             />
@@ -197,16 +215,13 @@ class NewService extends Component {
                             Tag
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
-                            <input
-                              className="form-control"
-                              id="inputTaxonomies"
-                              type="text"
-                              value={this.state.taxonomies}
-                              onChange={(service) =>
-                                this.setState({
-                                  taxonomies: service.target.value,
-                                })
+                            <ReactTagInput
+                              tags={this.state.taxonomies}
+                              onChange={(newTags) =>
+                                this.handleTaxonomiesChange(newTags)
                               }
+                              removeOnBackspace={true}
+                              placeholder={"Inserisci un tag e premi invio"}
                             />
                           </div>
                         </div>
@@ -221,12 +236,14 @@ class NewService extends Component {
                             <input
                               className="form-control"
                               id="inputVersion"
-                              type="number"
-                              step="0.1"
+                              type="text"
+                              pattern="[0-9]*"
                               value={this.state.version}
                               onChange={(service) =>
                                 this.setState({
-                                  version: service.target.value,
+                                  version: service.target.validity.valid
+                                    ? service.target.value
+                                    : this.state.version,
                                 })
                               }
                             />
@@ -241,10 +258,10 @@ class NewService extends Component {
           </Row>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={() => this.saveTest()}>
+          <Button color="primary" onClick={() => this.saveService()}>
             Salva
           </Button>{" "}
-          <Button color="secondary" onClick={this.toggleModal}>
+          <Button color="secondary" onClick={() => this.toggleModal()}>
             Annulla
           </Button>
         </ModalFooter>
@@ -253,4 +270,5 @@ class NewService extends Component {
   }
 }
 
-export default NewService;
+const mapStateToProps = (state) => state;
+export default connect(mapStateToProps)(NewService);

@@ -5,65 +5,41 @@ import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
 import NewService from "./NewService.js";
+import { connect } from "react-redux";
 
 class MyServices extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      services: [
-        {
-          id: 1,
-          author: config.API_URL + "/users/1",
-          taxonomies: [
-            config.API_URL + "/taxonomies/2",
-            config.API_URL + "/taxonomies/3",
-          ],
-          serviceName: "vinci ora (Pallavolo)!",
-          description: "Tutte le scommesse sulla pallavolo",
-          maxSubscribers: 30,
-          duration: 30,
-          price: 4500,
-          version: 2,
-          taxonomiesDefinition: [],
-        },
-        {
-          id: 2,
-          author: config.API_URL + "/users/1",
-          taxonomies: [
-            config.API_URL + "/taxonomies/2",
-            config.API_URL + "/taxonomies/3",
-          ],
-          serviceName: "Tutto il calcio",
-          description: "Tutte le scommesse sul calcio 222",
-          maxSubscribers: 20,
-          duration: 30,
-          price: 5000,
-          version: 1,
-          taxonomiesDefinition: [],
-        },
-      ],
+      modalNewServiceVisible: false,
+      services: [],
     };
-    //this.getMyServices();
+    this.getMyServices();
   }
 
   eventModalRef = (props) => {
+    console.log(props);
     this.showModal = props && props.toggleModal;
   };
 
-  openNewService = () => {
-    this.showModal();
+  toggleModal = () => {
+    this.setState({
+      modalNewServiceVisible: !this.state.modalNewServiceVisible,
+    });
+    //this.showModal();
   };
 
   async getMyServices() {
     var token = await TokenManager.getInstance().getToken();
-    fetch(config.API_URL + "/services", {
+    fetch(this.props.app.user._links.services.href, {
       method: "GET",
       headers: { "Content-Type": "application/json", "X-Auth": token },
     })
       .then((response) => response.json())
-      .then((response) =>
-        this.setState({ services: response._embedded.services })
-      );
+      .then((response) => {
+        console.log(response);
+        this.setState({ services: response._embedded.services });
+      });
   }
 
   async getTaxonomies() {
@@ -88,13 +64,15 @@ class MyServices extends Component {
       <ContentWrapper>
         <div className="form-group row">
           <div className="col-md-12">
-            <Button color="primary" onClick={this.openNewService}>
+            <Button color="primary" onClick={this.toggleModal}>
               Aggiungi pacchetto
             </Button>
             <NewService
               pool={this.state.poolURL}
               addService={(newService) => this.addService(newService)}
-              ref={this.eventModalRef}
+              modalNewServiceVisible={this.state.modalNewServiceVisible}
+              toggleModal={() => this.toggleModal()}
+              refreshServiceList={() => this.getMyServices()}
             ></NewService>
           </div>
         </div>
@@ -119,4 +97,5 @@ class MyServices extends Component {
   }
 }
 
-export default MyServices;
+const mapStateToProps = (state) => state;
+export default connect(mapStateToProps)(MyServices);
