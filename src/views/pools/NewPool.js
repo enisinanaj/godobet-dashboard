@@ -6,13 +6,15 @@ import MyEvents from "../events/MyEvents";
 import EventCard from "../events/EventCard.js";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as actions from "../../store/actions/actions";
 
 class NewPool extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.state = {
-      poolId: null,
       description: "descr",
       quote: "1.02",
       stake: "10.3",
@@ -32,12 +34,29 @@ class NewPool extends Component {
           pool: props.pool,
         },
       ],
-      poolURL: props.location.data,
     };
+    console.log(this.props);
+    this.checkServiceDetails();
+  }
 
-    if (props.location.data) {
-      this.getPoolData(props.location.data);
-      this.getMyEvents(props.location.data);
+  numberToBookmaker(number) {
+    switch (number) {
+      case "1":
+        return "William Hill";
+        break;
+      case "2":
+        return "Bet365";
+      case "3":
+        return "PlanetWin365";
+      default:
+        return "";
+    }
+  }
+
+  checkServiceDetails() {
+    if (Object.keys(this.props.app.serviceDetails).lenght === 0) {
+      this.props.history.push("/");
+      return;
     }
   }
 
@@ -49,41 +68,28 @@ class NewPool extends Component {
     this.showModal();
   };
 
-  async getPoolData(data) {
-    var token = await TokenManager.getInstance().getToken();
-    var response = await fetch(data, {
-      method: "GET",
-      headers: { "Content-Type": "application/json", "X-Auth": token },
-    });
-    var pool = await response.json();
-    this.setState({ ...pool });
-  }
-
   async savePool() {
-    var token = await TokenManager.getInstance().getToken();
+    const newPool = {
+      createdOn: new Date(),
+      description: this.state.description,
+      stake: this.state.stake,
+      bookmaker: this.numberToBookmaker(this.state.bookmaker),
+      events: [],
+      author: this.props.app.user._links.self.href,
+      service: this.props.app.serviceDetails.links.self.href,
+    };
 
-    var body = { ...this.state };
-    if (this.props.location.data) {
-      fetch(this.props.location.data, {
-        method: "PUT",
-        headers: {
-          "X-Auth": token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      })
-        .then((response) => response.json())
-        .then((response) => this.getMyEvents(response._links.self.href));
-    } else {
-      fetch(config.API_URL + "/pools/", {
-        method: "POST",
-        headers: {
-          "X-Auth": token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+    var token = await TokenManager.getInstance().getToken();
+    fetch(config.API_URL + "/pools", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+      body: JSON.stringify(newPool),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        this.props.history.push("/serviceDetails");
       });
-    }
   }
 
   async getMyEvents(data) {
@@ -112,31 +118,16 @@ class NewPool extends Component {
             <div className="card card-default">
               <div className="card-header d-flex align-items-center">
                 <div className="d-flex justify-content-center col">
-                  <div className="h4 m-0 text-center">Inserimento schedina</div>
+                  <div className="h4 m-0 text-center">
+                    Inserimento schedina per il pacchetto "
+                    {this.props.app.serviceDetails.serviceName}"
+                  </div>
                 </div>
               </div>
               <div className="card-body">
                 <div className="row py-4 justify-content-center">
                   <div className="col-12 col-sm-10">
                     <form className="form-horizontal">
-                      <div className="form-group row">
-                        <label
-                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                          htmlFor="inputID"
-                        >
-                          ID
-                        </label>
-                        <div className="col-xl-10 col-md-9 col-8">
-                          <input
-                            className="form-control"
-                            id="inputID"
-                            type="text"
-                            placeholder=""
-                            defaultValue="15"
-                            readOnly={true}
-                          />
-                        </div>
-                      </div>
                       <div className="form-group row">
                         <label
                           className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
@@ -153,25 +144,6 @@ class NewPool extends Component {
                             value={this.state.description}
                             onChange={(event) =>
                               this.setState({ description: event.target.value })
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <label
-                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                          htmlFor="inputTotalQuote"
-                        >
-                          Quota
-                        </label>
-                        <div className="col-xl-10 col-md-9 col-8">
-                          <input
-                            className="form-control"
-                            id="inputTotalQuote"
-                            type="number"
-                            value={this.state.quote}
-                            onChange={(event) =>
-                              this.setState({ quote: event.target.value })
                             }
                           />
                         </div>
@@ -199,25 +171,6 @@ class NewPool extends Component {
                       <div className="form-group row">
                         <label
                           className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                          htmlFor="inputProfit"
-                        >
-                          Profitto
-                        </label>
-                        <div className="col-xl-10 col-md-9 col-8">
-                          <input
-                            className="form-control"
-                            id="inputProfit"
-                            type="text"
-                            value={this.state.profit ? this.state.profit : "-"}
-                            onChange={(event) =>
-                              this.setState({ profit: event.target.value })
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <label
-                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
                           htmlFor="inputBookmaker"
                         >
                           Bookmaker
@@ -238,45 +191,11 @@ class NewPool extends Component {
                         </div>
                       </div>
                       <div className="form-group row">
-                        <label
-                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                          htmlFor="inputCreatedOn"
-                        >
-                          Data creazione
-                        </label>
-                        <div className="col-xl-10 col-md-9 col-8">
-                          <input
-                            className="form-control"
-                            id="inputCreatedOn"
-                            type="text"
-                            defaultValue="26/08/2020 21:19"
-                            readOnly={true}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <label
-                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                          htmlFor="inputUpdatedOn"
-                        >
-                          Data ultima modifica
-                        </label>
-                        <div className="col-xl-10 col-md-9 col-8">
-                          <input
-                            className="form-control"
-                            id="inputUpdatedOn"
-                            type="text"
-                            defaultValue="27/08/2020 07:41"
-                            readOnly={true}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
                         <div className="col-md-12">
                           <Button
                             color="success"
                             className="float-right"
-                            onClick={() => null}
+                            onClick={() => this.savePool()}
                           >
                             Salva schedina
                           </Button>
@@ -308,4 +227,8 @@ class NewPool extends Component {
   }
 }
 
-export default NewPool;
+const mapStateToProps = (state) => state;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(NewPool);

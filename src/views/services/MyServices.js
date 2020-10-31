@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ServiceCard from "./ServiceCard";
-import { Row, Col, Input, Button } from "reactstrap";
+import { Row, Col, Input, Button, Spinner } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
@@ -11,6 +11,8 @@ class MyServices extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      loading: true,
+      noErrors: true,
       modalNewServiceVisible: false,
       services: [],
     };
@@ -37,8 +39,12 @@ class MyServices extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
-        this.setState({ services: response._embedded.services });
+        if (response._embedded !== undefined)
+          this.setState({
+            services: response._embedded.services,
+            loading: false,
+          });
+        else this.setState({ noErrors: false });
       });
   }
 
@@ -60,40 +66,65 @@ class MyServices extends Component {
   }
 
   render() {
-    return (
-      <ContentWrapper>
-        <div className="form-group row">
-          <div className="col-md-12">
-            <Button color="primary" onClick={this.toggleModal}>
-              Aggiungi pacchetto
-            </Button>
-            <NewService
-              pool={this.state.poolURL}
-              addService={(newService) => this.addService(newService)}
-              modalNewServiceVisible={this.state.modalNewServiceVisible}
-              toggleModal={() => this.toggleModal()}
-              refreshServiceList={() => this.getMyServices()}
-            ></NewService>
+    if (!this.state.loading)
+      return (
+        <ContentWrapper>
+          <div className="form-group row">
+            <div className="col-md-12">
+              <Button color="primary" onClick={this.toggleModal}>
+                Aggiungi pacchetto
+              </Button>
+              <NewService
+                pool={this.state.poolURL}
+                addService={(newService) => this.addService(newService)}
+                modalNewServiceVisible={this.state.modalNewServiceVisible}
+                toggleModal={() => this.toggleModal()}
+                refreshServiceList={() => this.getMyServices()}
+              ></NewService>
+            </div>
           </div>
-        </div>
-        {this.state.services.map((service) => (
-          <ServiceCard
-            key={service.key}
-            id={service.id}
-            author={service.author}
-            taxonomies={service.taxonomies}
-            taxonomiesDefinition={service.taxonomiesDefinition}
-            serviceName={service.serviceName}
-            description={service.description}
-            maxSubscribers={service.maxSubscribers}
-            duration={service.duration}
-            price={service.price}
-            version={service.version}
-            hrefService={""}
-          ></ServiceCard>
-        ))}
-      </ContentWrapper>
-    );
+          {this.state.services.map((service) => (
+            <ServiceCard
+              history={this.props.history}
+              key={service._links.self.href}
+              taxonomies={service.taxonomies}
+              serviceName={service.serviceName}
+              description={service.description}
+              maxSubscribers={service.maxSubscribers}
+              duration={service.duration}
+              price={service.price}
+              version={service.version}
+              links={service._links}
+            ></ServiceCard>
+          ))}
+        </ContentWrapper>
+      );
+    else if (this.state.noErrors)
+      return (
+        <ContentWrapper>
+          <Spinner />
+        </ContentWrapper>
+      );
+    else
+      return (
+        <ContentWrapper>
+          <div>
+            <h4>Errore nel caricamento dei tuoi pacchetti</h4>
+          </div>
+          <div>
+            <Button
+              className="btn"
+              onClick={() => {
+                this.setState({ noErrors: true, loading: true }, () => {
+                  this.getMyServices();
+                });
+              }}
+            >
+              Riprova
+            </Button>
+          </div>
+        </ContentWrapper>
+      );
   }
 }
 

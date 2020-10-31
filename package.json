@@ -115,7 +115,7 @@
     "react-select": "2.1.1",
     "react-toastify": "4.4.3",
     "react-transition-group": "2.5.0",
-    "reactstrap": "6.5.0",
+    "reactstrap": "^8.6.0",
     "recompose": "0.30.0",
     "rtlcss": "2.4.0",
     "sass-loader": "7.1.0",

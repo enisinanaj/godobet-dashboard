@@ -15,23 +15,13 @@ import NewPool from "../pools/NewPool";
 import config from "../../store/config";
 import MyPools from "../pools/MyPools";
 import { Link } from "react-router-dom";
+import TokenManager from "../../components/auth/Token";
+import { connect } from "react-redux";
 
 class ServiceDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: 1,
-      author: config.API_URL + "/users/1",
-      taxonomies: [
-        config.API_URL + "/taxonomies/2",
-        config.API_URL + "/taxonomies/3",
-      ],
-      serviceName: "vinci ora (Pallavolo)!",
-      description: "Tutte le scommesse sulla pallavolo",
-      maxSubscribers: 30,
-      duration: 30,
-      price: 4500,
-      version: 2,
       pools: [
         {
           id: 1,
@@ -47,6 +37,16 @@ class ServiceDetails extends Component {
         },
       ],
     };
+    this.checkServiceDetails();
+  }
+
+  checkServiceDetails() {
+    if (Object.keys(this.props.app.serviceDetails).lenght === 0) {
+      this.props.history.push("/");
+      return;
+    } else {
+      this.getMyPools();
+    }
   }
 
   eventModalRef = (props) => {
@@ -62,13 +62,32 @@ class ServiceDetails extends Component {
     this.setState({ services: joined });
   }
 
+  async getMyPools() {
+    var token = await TokenManager.getInstance().getToken();
+    fetch(
+      this.props.app.serviceDetails.links.pools.href.replace(
+        "{?projection}",
+        ""
+      ),
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json", "X-Auth": token },
+      }
+    )
+      .then((response) => response.json())
+      .then((response) => {
+        //this.setState({ pools: response._embedded.pools });
+        console.log(response);
+      });
+  }
+
   render() {
     return (
       <ContentWrapper>
         <h2>Dettagli pacchetto</h2>
         <Card className="card-default">
           <CardHeader>
-            <strong>{this.state.serviceName}</strong>
+            <strong>{this.props.app.serviceDetails.serviceName}</strong>
           </CardHeader>
           <CardBody>
             <Row>
@@ -76,15 +95,17 @@ class ServiceDetails extends Component {
                 <FormGroup row>
                   <Col md="4">Descrizione:</Col>
                   <Col md="8">
-                    <strong>{this.state.description}</strong>
+                    <strong>{this.props.app.serviceDetails.description}</strong>
                   </Col>
                   <Col md="4">Prezzo:</Col>
                   <Col md="8">
-                    <strong>{this.state.price} €</strong>
+                    <strong>{this.props.app.serviceDetails.price} €</strong>
                   </Col>
                   <Col md="4">Durata:</Col>
                   <Col md="8">
-                    <strong>{this.state.duration} giorni</strong>
+                    <strong>
+                      {this.props.app.serviceDetails.duration} giorni
+                    </strong>
                   </Col>
                 </FormGroup>
               </Col>
@@ -92,7 +113,9 @@ class ServiceDetails extends Component {
                 <FormGroup row>
                   <Col md="4">Numero max iscritti:</Col>
                   <Col md="8">
-                    <strong>{this.state.maxSubscribers}</strong>
+                    <strong>
+                      {this.props.app.serviceDetails.maxSubscribers}
+                    </strong>
                   </Col>
                   <Col md="4">Tag:</Col>
                   <Col md="8">
@@ -100,7 +123,7 @@ class ServiceDetails extends Component {
                   </Col>
                   <Col md="4">Versione:</Col>
                   <Col md="8">
-                    <strong>{this.state.version}</strong>
+                    <strong>{this.props.app.serviceDetails.version}</strong>
                   </Col>
                 </FormGroup>
               </Col>
@@ -137,4 +160,5 @@ class ServiceDetails extends Component {
   }
 }
 
-export default ServiceDetails;
+const mapStateToProps = (state) => state;
+export default connect(mapStateToProps)(ServiceDetails);
