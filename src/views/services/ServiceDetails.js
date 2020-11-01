@@ -9,6 +9,7 @@ import {
   Col,
   FormGroup,
   Button,
+  Spinner,
 } from "reactstrap";
 import PropTypes from "prop-types";
 import NewPool from "../pools/NewPool";
@@ -22,6 +23,8 @@ class ServiceDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
+      noErrors: true,
       pools: [
         {
           id: 1,
@@ -76,8 +79,12 @@ class ServiceDetails extends Component {
     )
       .then((response) => response.json())
       .then((response) => {
-        //this.setState({ pools: response._embedded.pools });
-        console.log(response);
+        if (response._embedded !== undefined) {
+          console.log(response);
+          this.setState({ loading: false, noErrors: true });
+        } else {
+          this.setState({ noErrors: false });
+        }
       });
   }
 
@@ -128,35 +135,101 @@ class ServiceDetails extends Component {
                 </FormGroup>
               </Col>
             </Row>
-            <Row style={{ marginTop: 20 }}>
-              <Col md="6">
-                <h3>Schedine</h3>
-              </Col>
-              <Col md="6">
-                <div className="form-group row">
-                  <div>
-                    <Link
-                      to={{
-                        pathname: "newPool",
-                      }}
-                      className="btn btn-block btn-secondary"
-                    >
-                      Aggiungi schedina
-                    </Link>
-                  </div>
+            {!this.state.loading ? (
+              <div>
+                <Row style={{ marginTop: 20 }}>
+                  <Col md="6">
+                    <h3>Schedine</h3>
+                  </Col>
+                  <Col md="6">
+                    <div className="form-group row">
+                      {this.state.noErrors && !this.state.loading ? (
+                        <div>
+                          <Link
+                            to={{
+                              pathname: "newPool",
+                            }}
+                            className="btn btn-block btn-secondary"
+                          >
+                            Aggiungi schedina
+                          </Link>
+                        </div>
+                      ) : null}
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md="12">
+                    <MyPools pools={this.state.pools} />
+                  </Col>
+                </Row>
+              </div>
+            ) : this.state.noErrors ? (
+              <div>
+                <h4> Carico le tue schedine...</h4>
+                <div>
+                  <Spinner />
                 </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col md="12">
-                <MyPools pools={this.state.pools} />
-              </Col>
-            </Row>
+              </div>
+            ) : (
+              <div>
+                <div>
+                  <h4>Errore nel caricamento delle tue schedine</h4>
+                </div>
+                <div>
+                  <Button
+                    className="btn"
+                    onClick={() => {
+                      this.setState({ noErrors: true, loading: true }, () => {
+                        this.getMyPools();
+                      });
+                    }}
+                  >
+                    Riprova
+                  </Button>
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    className="btn"
+                    onClick={() => {
+                      this.props.history.push("/myServices");
+                    }}
+                  >
+                    Torna indietro
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardBody>
           <CardFooter className="d-flex"></CardFooter>
         </Card>
       </ContentWrapper>
     );
+    /*else if (this.state.noErrors)
+      return (
+        <ContentWrapper>
+          
+        </ContentWrapper>
+      );
+    else
+      return (
+        <ContentWrapper>
+          <div>
+            <h4>Errore nel caricamento dei tuoi pacchetti</h4>
+          </div>
+          <div>
+            <Button
+              className="btn"
+              onClick={() => {
+                this.setState({ noErrors: true, loading: true }, () => {
+                  this.getMyServices();
+                });
+              }}
+            >
+              Riprova
+            </Button>
+          </div>
+        </ContentWrapper>
+      );*/
   }
 }
 

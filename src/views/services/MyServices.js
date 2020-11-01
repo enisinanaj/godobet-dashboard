@@ -11,12 +11,12 @@ class MyServices extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      loading: true,
+      loading: false,
       noErrors: true,
       modalNewServiceVisible: false,
       services: [],
     };
-    this.getMyServices();
+    //this.getMyServices();
   }
 
   eventModalRef = (props) => {
@@ -44,7 +44,7 @@ class MyServices extends Component {
             services: response._embedded.services,
             loading: false,
           });
-        else this.setState({ noErrors: false });
+        else this.setState({ noErrors: true, loading: false });
       });
   }
 
@@ -102,7 +102,10 @@ class MyServices extends Component {
     else if (this.state.noErrors)
       return (
         <ContentWrapper>
-          <Spinner />
+          <h4> Carico i tuoi pacchetti...</h4>
+          <div>
+            <Spinner />
+          </div>
         </ContentWrapper>
       );
     else
