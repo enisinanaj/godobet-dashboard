@@ -8,6 +8,7 @@ import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import FormValidator from "../../template_components/Forms/FormValidator.js";
 import * as actions from "../../store/actions/actions";
 
 class NewPool extends Component {
@@ -15,11 +16,12 @@ class NewPool extends Component {
     super(props, context);
 
     this.state = {
-      description: "descr",
-      quote: "1.02",
-      stake: "10.3",
-      profit: "1",
-      bookmaker: "1",
+      NewPoolForm: {
+        description: "",
+        stake: "",
+        bookmaker: "0",
+      },
+
       events: [
         {
           eventDate: "oggi",
@@ -35,7 +37,6 @@ class NewPool extends Component {
         },
       ],
     };
-    console.log(this.props);
     this.checkServiceDetails();
   }
 
@@ -68,28 +69,51 @@ class NewPool extends Component {
     this.showModal();
   };
 
-  async savePool() {
-    const newPool = {
-      createdOn: new Date(),
-      description: this.state.description,
-      stake: this.state.stake,
-      bookmaker: this.numberToBookmaker(this.state.bookmaker),
-      events: [],
-      author: this.props.app.user._links.self.href,
-      service: this.props.app.serviceDetails.links.self.href,
-    };
+  async savePool(e) {
+    e.preventDefault();
+    const form = e.target;
+    const inputs = [...form.elements].filter((i) =>
+      ["INPUT", "SELECT"].includes(i.nodeName)
+    );
 
-    var token = await TokenManager.getInstance().getToken();
-    fetch(config.API_URL + "/pools", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Auth": token },
-      body: JSON.stringify(newPool),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        this.props.history.push("/serviceDetails");
-      });
+    const { errors, hasError } = FormValidator.bulkValidate(inputs);
+
+    let bookmakerValidate = [];
+    bookmakerValidate["required"] = this.state.NewPoolForm.bookmaker == "0";
+    errors["bookmaker"] = bookmakerValidate;
+
+    this.setState({
+      [form.name]: {
+        ...this.state[form.name],
+        errors,
+      },
+    });
+
+    if (!(hasError || this.state.NewPoolForm.bookmaker == "0")) {
+      console.log("carico");
+      /*
+      const newPool = {
+        createdOn: new Date(),
+        description: this.state.description,
+        stake: this.state.stake,
+        bookmaker: this.numberToBookmaker(this.state.bookmaker),
+        events: [],
+        author: this.props.app.user._links.self.href,
+        service: this.props.app.serviceDetails.links.self.href,
+      };
+
+      var token = await TokenManager.getInstance().getToken();
+      fetch(config.API_URL + "/pools", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Auth": token },
+        body: JSON.stringify(newPool),
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response);
+          this.props.history.push("/serviceDetails");
+        });*/
+    }
   }
 
   async getMyEvents(data) {
@@ -110,6 +134,49 @@ class NewPool extends Component {
     this.setState({ events: joined }, () => console.log(this.state.events));
   }
 
+  handleBookmakerChange(bookmaker) {
+    let validate = [];
+    validate["required"] = bookmaker.target.value == "0";
+    this.setState({
+      ["NewPoolForm"]: {
+        ...this.state["NewPoolForm"],
+        bookmaker: bookmaker.target.value,
+        errors: {
+          ...this.state["NewPoolForm"].errors,
+          ["bookmaker"]: validate,
+        },
+      },
+    });
+  }
+
+  hasError = (formName, inputName, method) => {
+    return (
+      this.state[formName] &&
+      this.state[formName].errors &&
+      this.state[formName].errors[inputName] &&
+      this.state[formName].errors[inputName][method]
+    );
+  };
+
+  validateOnChange = (event) => {
+    const input = event.target;
+    const form = input.form;
+    const value = input.type === "checkbox" ? input.checked : input.value;
+
+    const result = FormValidator.validate(input);
+
+    this.setState({
+      [form.name]: {
+        ...this.state[form.name],
+        [input.name]: value,
+        errors: {
+          ...this.state[form.name].errors,
+          [input.name]: result,
+        },
+      },
+    });
+  };
+
   render() {
     return (
       <ContentWrapper>
@@ -127,7 +194,12 @@ class NewPool extends Component {
               <div className="card-body">
                 <div className="row py-4 justify-content-center">
                   <div className="col-12 col-sm-10">
-                    <form className="form-horizontal">
+                    <form
+                      className="form-horizontal"
+                      name="NewPoolForm"
+                      id="NewPoolForm"
+                      onSubmit={(e) => this.savePool(e)}
+                    >
                       <div className="form-group row">
                         <label
                           className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
@@ -136,16 +208,30 @@ class NewPool extends Component {
                           Descrizione
                         </label>
                         <div className="col-xl-10 col-md-9 col-8">
-                          <input
+                          <Input
                             className="form-control"
+                            name="description"
                             id="inputDescription"
                             type="text"
-                            placeholder=""
-                            value={this.state.description}
-                            onChange={(event) =>
-                              this.setState({ description: event.target.value })
-                            }
+                            invalid={this.hasError(
+                              "NewPoolForm",
+                              "description",
+                              "required"
+                            )}
+                            data-validate='["required"]'
+                            value={this.state.NewPoolForm.description}
+                            onChange={(event) => this.validateOnChange(event)}
                           />
+
+                          {this.hasError(
+                            "NewPoolForm",
+                            "description",
+                            "required"
+                          ) && (
+                            <span className="invalid-feedback">
+                              Il campo Descrizione è obbligatorio
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div className="form-group row">
@@ -157,15 +243,37 @@ class NewPool extends Component {
                         </label>
                         <div className="col-xl-10 col-md-9 col-8">
                           <Input
+                            className="form-control"
+                            name="stake"
                             id="inputStake"
-                            placeholder="Stake"
                             type="number"
-                            step="0.1"
-                            value={this.state.stake}
-                            onChange={(event) =>
-                              this.setState({ stake: event.target.value })
+                            invalid={
+                              this.hasError(
+                                "NewPoolForm",
+                                "stake",
+                                "required"
+                              ) ||
+                              this.hasError("NewPoolForm", "stake", "integer")
                             }
+                            data-validate='["required", "integer"]'
+                            value={this.state.NewPoolForm.stake}
+                            onChange={(event) => this.validateOnChange(event)}
                           />
+
+                          {this.hasError(
+                            "NewPoolForm",
+                            "stake",
+                            "required"
+                          ) && (
+                            <span className="invalid-feedback">
+                              Il campo Stake è obbligatorio
+                            </span>
+                          )}
+                          {this.hasError("NewPoolForm", "stake", "integer") && (
+                            <span className="invalid-feedback">
+                              Il campo Stake deve essere un intero
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div className="form-group row">
@@ -177,17 +285,27 @@ class NewPool extends Component {
                         </label>
                         <div className="col-xl-10 col-md-9 col-8">
                           <select
+                            name="bookmaker"
                             value={this.state.bookmaker}
                             onChange={(event) =>
-                              this.setState({ bookmaker: event.target.value })
+                              this.handleBookmakerChange(event)
                             }
                             className="custom-select custom-select-sm"
                           >
-                            <option>Seleziona</option>
+                            <option value="0">Seleziona</option>
                             <option value="1">William Hill</option>
                             <option value="2">Bet365</option>
                             <option value="3">PlanetWin365</option>
                           </select>
+                          {this.hasError(
+                            "NewPoolForm",
+                            "bookmaker",
+                            "required"
+                          ) && (
+                            <small className="text-danger">
+                              Il campo Bookmaker è obbligatorio
+                            </small>
+                          )}
                         </div>
                       </div>
                       <div className="form-group row">
@@ -195,7 +313,7 @@ class NewPool extends Component {
                           <Button
                             color="success"
                             className="float-right"
-                            onClick={() => this.savePool()}
+                            form="NewPoolForm"
                           >
                             Salva schedina
                           </Button>

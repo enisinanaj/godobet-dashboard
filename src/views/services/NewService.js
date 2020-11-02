@@ -39,9 +39,7 @@ class NewService extends Component {
 
   handleTaxonomiesChange(newTaxonomies) {
     let validate = [];
-    console.log(this.state);
     validate["required"] = newTaxonomies.length <= 0;
-    console.log(validate);
     this.setState({
       ["NewServiceForm"]: {
         ...this.state["NewServiceForm"],
@@ -64,6 +62,11 @@ class NewService extends Component {
 
     const { errors, hasError } = FormValidator.bulkValidate(inputs);
 
+    let taxonomiesValidate = [];
+    taxonomiesValidate["required"] =
+      this.state.NewServiceForm.taxonomies.length <= 0;
+    errors["taxonomies"] = taxonomiesValidate;
+
     this.setState({
       [form.name]: {
         ...this.state[form.name],
@@ -71,7 +74,7 @@ class NewService extends Component {
       },
     });
 
-    if (!hasError) {
+    if (!(hasError || this.state.NewServiceForm.taxonomies.length <= 0)) {
       const newService = {
         //author: this.props.app.user._links.user.href,
         taxonomies: [], //this.state.taxonomies,
@@ -377,7 +380,6 @@ class NewService extends Component {
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
                             <ReactTagInput
-                              style={{ borderColor: "red" }}
                               id="inputTaxonomies"
                               tags={this.state.NewServiceForm.taxonomies}
                               onChange={(newTags) =>
@@ -386,10 +388,14 @@ class NewService extends Component {
                               removeOnBackspace={true}
                               placeholder={"Inserisci un tag e premi invio"}
                             />
-                            {true && (
-                              <span className="invalid-feedback">
-                                Almeno un tag è obbligatorio
-                              </span>
+                            {this.hasError(
+                              "NewServiceForm",
+                              "taxonomies",
+                              "required"
+                            ) && (
+                              <small className="text-danger">
+                                Il campo Tag è obbligatorio
+                              </small>
                             )}
                           </div>
                         </div>
