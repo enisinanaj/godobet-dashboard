@@ -65,10 +65,43 @@ class ServiceDetails extends Component {
   render() {
     return (
       <ContentWrapper>
-        <h2>Dettagli pacchetto</h2>
+        <Row>
+          <Col lg="6">
+            <h2>Dettagli pacchetto "{this.state.serviceName}"</h2>
+          </Col>
+          <Col lg="2">
+            <Link
+              to={{
+                pathname: "newPool",
+              }}
+              className="btn btn-block btn-primary"
+            >
+              Modifica Pacchetto
+            </Link>
+          </Col>
+          <Col lg="2">
+            <Link
+              to={{
+                pathname: "newPool",
+              }}
+              className="btn btn-block btn-secondary"
+            >
+              Aggiungi schedina
+            </Link>
+          </Col>
+          <Col lg="2">
+            <Link
+              to={{
+                pathname: "newPool",
+              }}
+              className="btn btn-block btn-danger"
+            >
+              Elimina Pacchetto
+            </Link>
+          </Col>
+        </Row>
         <Card className="card-default">
           <CardHeader>
-            <strong>{this.state.serviceName}</strong>
           </CardHeader>
           <CardBody>
             <Row>
@@ -105,25 +138,18 @@ class ServiceDetails extends Component {
                 </FormGroup>
               </Col>
             </Row>
-            <Row style={{ marginTop: 20 }}>
-              <Col md="6">
-                <h3>Schedine</h3>
-              </Col>
-              <Col md="6">
-                <div className="form-group row">
-                  <div>
-                    <Link
-                      to={{
-                        pathname: "newPool",
-                      }}
-                      className="btn btn-block btn-secondary"
-                    >
-                      Aggiungi schedina
-                    </Link>
-                  </div>
-                </div>
-              </Col>
-            </Row>
+          </CardBody>
+          <CardFooter className="d-flex"></CardFooter>
+        </Card>
+        <Row>
+          <Col lg="6">
+            <h3>Schedine</h3>
+          </Col>
+        </Row>
+        <Card className="card-default">
+          <CardHeader>
+          </CardHeader>
+          <CardBody>
             <Row>
               <Col md="12">
                 <MyPools pools={this.state.pools} />
