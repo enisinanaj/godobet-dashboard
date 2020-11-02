@@ -277,32 +277,6 @@ class ServiceDetails extends Component {
         </Card>
       </ContentWrapper>
     );
-    /*else if (this.state.noErrors)
-      return (
-        <ContentWrapper>
-          
-        </ContentWrapper>
-      );
-    else
-      return (
-        <ContentWrapper>
-          <div>
-            <h4>Errore nel caricamento dei tuoi pacchetti</h4>
-          </div>
-          <div>
-            <Button
-              className="btn"
-              onClick={() => {
-                this.setState({ noErrors: true, loading: true }, () => {
-                  this.getMyServices();
-                });
-              }}
-            >
-              Riprova
-            </Button>
-          </div>
-        </ContentWrapper>
-      );*/
   }
 }
 
