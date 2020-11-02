@@ -1,69 +1,51 @@
 import React, { Component } from "react";
 import ServiceCard from "./ServiceCard";
-import { Row, Col, Input, Button } from "reactstrap";
+import { Row, Col, Input, Button, Spinner } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
 import NewService from "./NewService.js";
+import { connect } from "react-redux";
 
 class MyServices extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      services: [
-        {
-          id: 1,
-          author: config.API_URL + "/users/1",
-          taxonomies: [
-            config.API_URL + "/taxonomies/2",
-            config.API_URL + "/taxonomies/3",
-          ],
-          serviceName: "vinci ora (Pallavolo)!",
-          description: "Tutte le scommesse sulla pallavolo",
-          maxSubscribers: 30,
-          duration: 30,
-          price: 4500,
-          version: 2,
-          taxonomiesDefinition: [],
-        },
-        {
-          id: 2,
-          author: config.API_URL + "/users/1",
-          taxonomies: [
-            config.API_URL + "/taxonomies/2",
-            config.API_URL + "/taxonomies/3",
-          ],
-          serviceName: "Tutto il calcio",
-          description: "Tutte le scommesse sul calcio 222",
-          maxSubscribers: 20,
-          duration: 30,
-          price: 5000,
-          version: 1,
-          taxonomiesDefinition: [],
-        },
-      ],
+      loading: false,
+      noErrors: true,
+      modalNewServiceVisible: false,
+      services: [],
     };
     //this.getMyServices();
   }
 
   eventModalRef = (props) => {
+    console.log(props);
     this.showModal = props && props.toggleModal;
   };
 
-  openNewService = () => {
-    this.showModal();
+  toggleModal = () => {
+    this.setState({
+      modalNewServiceVisible: !this.state.modalNewServiceVisible,
+    });
+    //this.showModal();
   };
 
   async getMyServices() {
     var token = await TokenManager.getInstance().getToken();
-    fetch(config.API_URL + "/services", {
+    fetch(this.props.app.user._links.services.href, {
       method: "GET",
       headers: { "Content-Type": "application/json", "X-Auth": token },
     })
       .then((response) => response.json())
-      .then((response) =>
-        this.setState({ services: response._embedded.services })
-      );
+      .then((response) => {
+        if (response._embedded !== undefined)
+          this.setState({
+            services: response._embedded.services,
+            loading: false,
+          });
+        else this.setState({ noErrors: true, loading: false });
+      });
   }
 
   async getTaxonomies() {
@@ -84,39 +66,70 @@ class MyServices extends Component {
   }
 
   render() {
-    return (
-      <ContentWrapper>
-        <div className="form-group row">
-          <div className="col-md-12">
-            <Button color="primary" onClick={this.openNewService}>
-              Aggiungi pacchetto
-            </Button>
-            <NewService
-              pool={this.state.poolURL}
-              addService={(newService) => this.addService(newService)}
-              ref={this.eventModalRef}
-            ></NewService>
+    if (!this.state.loading)
+      return (
+        <ContentWrapper>
+          <div className="form-group row">
+            <div className="col-md-12">
+              <Button color="primary" onClick={this.toggleModal}>
+                Aggiungi pacchetto
+              </Button>
+              <NewService
+                pool={this.state.poolURL}
+                addService={(newService) => this.addService(newService)}
+                modalNewServiceVisible={this.state.modalNewServiceVisible}
+                toggleModal={() => this.toggleModal()}
+                refreshServiceList={() => this.getMyServices()}
+              ></NewService>
+            </div>
           </div>
-        </div>
-        {this.state.services.map((service) => (
-          <ServiceCard
-            key={service.key}
-            id={service.id}
-            author={service.author}
-            taxonomies={service.taxonomies}
-            taxonomiesDefinition={service.taxonomiesDefinition}
-            serviceName={service.serviceName}
-            description={service.description}
-            maxSubscribers={service.maxSubscribers}
-            duration={service.duration}
-            price={service.price}
-            version={service.version}
-            hrefService={""}
-          ></ServiceCard>
-        ))}
-      </ContentWrapper>
-    );
+          {this.state.services.map((service) => (
+            <ServiceCard
+              history={this.props.history}
+              key={service._links.self.href}
+              taxonomies={service.taxonomies}
+              serviceName={service.serviceName}
+              description={service.description}
+              maxSubscribers={service.maxSubscribers}
+              duration={service.duration}
+              price={service.price}
+              version={service.version}
+              links={service._links}
+            ></ServiceCard>
+          ))}
+        </ContentWrapper>
+      );
+    else if (this.state.noErrors)
+      return (
+        <ContentWrapper>
+          <h4> Carico i tuoi pacchetti...</h4>
+          <div>
+            <Spinner />
+          </div>
+        </ContentWrapper>
+      );
+    else
+      return (
+        <ContentWrapper>
+          <div>
+            <h4>Errore nel caricamento dei tuoi pacchetti</h4>
+          </div>
+          <div>
+            <Button
+              className="btn"
+              onClick={() => {
+                this.setState({ noErrors: true, loading: true }, () => {
+                  this.getMyServices();
+                });
+              }}
+            >
+              Riprova
+            </Button>
+          </div>
+        </ContentWrapper>
+      );
   }
 }
 
-export default MyServices;
+const mapStateToProps = (state) => state;
+export default connect(mapStateToProps)(MyServices);

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import {
   Card,
+  Button,
   CardHeader,
   CardBody,
   CardFooter,
@@ -11,19 +12,20 @@ import {
 } from "reactstrap";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as actions from "../../store/actions/actions";
 
 class ServiceCard extends Component {
   static propTypes = {
     id: PropTypes.string,
-    author: PropTypes.string,
-    taxonomiesDefinition: PropTypes.string,
     serviceName: PropTypes.string,
     description: PropTypes.string,
-    maxSubscribers: PropTypes.string,
-    duration: PropTypes.string,
-    price: PropTypes.string,
-    version: PropTypes.string,
-    hrefService: PropTypes.string,
+    maxSubscribers: PropTypes.number,
+    duration: PropTypes.number,
+    price: PropTypes.number,
+    version: PropTypes.number,
+    links: PropTypes.object,
   };
 
   render() {
@@ -58,11 +60,7 @@ class ServiceCard extends Component {
                 </Col>
                 <Col md="4">Tag:</Col>
                 <Col md="8">
-                  <strong>
-                    {this.props.taxonomiesDefinition.map((taxonomy) => {
-                      return taxonomy + " ";
-                    })}
-                  </strong>
+                  <strong></strong>
                 </Col>
                 <Col md="4">Versione:</Col>
                 <Col md="8">
@@ -74,19 +72,31 @@ class ServiceCard extends Component {
         </CardBody>
         <CardFooter className="d-flex">
           <div>
-            <Link
-              to={{
-                pathname: "serviceDetails",
-              }}
+            <Button
               className="btn btn-block btn-secondary"
+              onClick={() => {
+                this.props.actions.serviceDetails({
+                  serviceName: this.props.serviceName,
+                  description: this.props.description,
+                  maxSubscribers: this.props.maxSubscribers,
+                  duration: this.props.duration,
+                  price: this.props.price,
+                  version: this.props.version,
+                  links: this.props.links,
+                });
+                this.props.history.push("/serviceDetails");
+              }}
             >
               Visualizza
-            </Link>
+            </Button>
           </div>
         </CardFooter>
       </Card>
     );
   }
 }
-
-export default ServiceCard;
+const mapStateToProps = (state) => state;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceCard);

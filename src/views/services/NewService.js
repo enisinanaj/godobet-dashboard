@@ -14,71 +14,136 @@ import TokenManager from "../../components/auth/Token";
 
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
+import { connect } from "react-redux";
+import ReactTagInput from "@pathofdev/react-tag-input";
+import FormValidator from "../../template_components/Forms/FormValidator.js";
+import "@pathofdev/react-tag-input/build/index.css";
+import config from "../../store/config";
 
 class NewService extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.toggleModal = this.toggleModal.bind(this);
-    this.handleGenderChange = this.handleGenderChange.bind(this);
-    this.state = {
-      modal: false,
-      author: "Andrea",
-      taxonomies: "tags",
-      serviceName: "Nome servizio",
-      description: "descrizione",
-      maxSubscribers: "30",
-      duration: "50",
-      price: "100",
-      version: "1",
-    };
-  }
+  state = {
+    NewServiceForm: {
+      taxonomies: [],
+      serviceName: "",
+      description: "",
+      maxSubscribers: "",
+      duration: "",
+      price: "",
+      version: 1,
+    },
+  };
 
   toggleModal() {
-    this.setState({ modal: !this.state.modal });
+    this.props.toggleModal();
   }
 
-  handleGenderChange(selected) {
-    this.setState({ gender: selected.target.value });
+  handleTaxonomiesChange(newTaxonomies) {
+    let validate = [];
+    validate["required"] = newTaxonomies.length <= 0;
+    this.setState({
+      ["NewServiceForm"]: {
+        ...this.state["NewServiceForm"],
+        taxonomies: newTaxonomies,
+        errors: {
+          ...this.state["NewServiceForm"].errors,
+          ["taxonomies"]: validate,
+        },
+      },
+    });
   }
 
-  saveTest() {
-    const newService = {
-      author: this.state.author,
-      taxonomies: this.state.taxonomies,
-      serviceName: this.state.serviceName,
-      description: this.state.description,
-      maxSubscribers: this.state.maxSubscribers,
-      duration: this.state.duration,
-      price: this.state.price,
-      version: this.state.version,
-      taxonomiesDefinition: [],
-    };
+  async saveService(e) {
+    e.preventDefault();
+    const form = e.target;
+    const inputs = [...form.elements].filter((i) =>
+      ["INPUT", "SELECT"].includes(i.nodeName)
+    );
+    inputs.splice(5, 1);
 
-    this.props.addService(newService);
-    this.toggleModal();
-  }
+    const { errors, hasError } = FormValidator.bulkValidate(inputs);
 
-  async saveEvent() {
-    var token = await TokenManager.getInstance().getToken();
+    let taxonomiesValidate = [];
+    taxonomiesValidate["required"] =
+      this.state.NewServiceForm.taxonomies.length <= 0;
+    errors["taxonomies"] = taxonomiesValidate;
 
-    var body = { ...this.state };
-    fetch("http://localhost:5005/events", {
-      method: "POST",
-      headers: { "X-Auth": token, "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+    this.setState({
+      [form.name]: {
+        ...this.state[form.name],
+        errors,
+      },
     });
 
-    this.toggleModal();
+    if (!(hasError || this.state.NewServiceForm.taxonomies.length <= 0)) {
+      const newService = {
+        //author: this.props.app.user._links.user.href,
+        taxonomies: [], //this.state.taxonomies,
+        serviceName: this.state.serviceName,
+        description: this.state.description,
+        maxSubscribers: parseInt(
+          this.state.maxSubscribers == "" ? 0 : this.state.maxSubscribers
+        ),
+        duration: parseInt(this.state.duration == "" ? 0 : this.state.duration),
+        price: parseInt(this.state.price == "" ? 0 : this.state.price),
+        version: parseInt(this.state.version == "" ? 0 : this.state.version),
+      };
+
+      //carico il nuovo pacchetto online
+      /*var token = await TokenManager.getInstance().getToken();
+      fetch(config.API_URL + "/services", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Auth": token },
+        body: JSON.stringify(newService),
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response);
+          this.toggleModal();
+          this.props.refreshServiceList();
+        });
+  
+        */
+    }
   }
+
+  hasError = (formName, inputName, method) => {
+    return (
+      this.state[formName] &&
+      this.state[formName].errors &&
+      this.state[formName].errors[inputName] &&
+      this.state[formName].errors[inputName][method]
+    );
+  };
+
+  validateOnChange = (event) => {
+    const input = event.target;
+    const form = input.form;
+    const value = input.type === "checkbox" ? input.checked : input.value;
+
+    const result = FormValidator.validate(input);
+
+    this.setState({
+      [form.name]: {
+        ...this.state[form.name],
+        [input.name]: value,
+        errors: {
+          ...this.state[form.name].errors,
+          [input.name]: result,
+        },
+      },
+    });
+  };
 
   render() {
     return (
       <Modal
-        isOpen={this.state.modal}
-        toggle={this.toggleModal}
+        isOpen={this.props.modalNewServiceVisible}
+        toggle={() => this.toggleModal()}
         style={{ maxWidth: "70%" }}
       >
-        <ModalHeader toggle={this.toggleModal}>Nuovo pacchetto</ModalHeader>
+        <ModalHeader toggle={() => this.toggleModal()}>
+          Nuovo pacchetto
+        </ModalHeader>
         <ModalBody>
           <Row>
             <Col lg="12">
@@ -86,7 +151,12 @@ class NewService extends Component {
                 <div className="card-body">
                   <div className="row py-8 justify-content-center">
                     <div className="col-12 col-sm-10">
-                      <form className="form-horizontal">
+                      <form
+                        name="NewServiceForm"
+                        className="form-horizontal"
+                        id="NewServiceForm"
+                        onSubmit={(e) => this.saveService(e)}
+                      >
                         <div className="form-group row">
                           <label
                             className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
@@ -94,18 +164,31 @@ class NewService extends Component {
                           >
                             Nome
                           </label>
-                          <div className="col-xl-10 col-md-9 col-8">
-                            <input
+                          <div className="col-xl-10 col-md-9 col-8 input-group with-focus">
+                            <Input
                               className="form-control"
+                              name="serviceName"
                               id="inputServiceName"
                               type="text"
-                              value={this.state.serviceName}
-                              onChange={(service) =>
-                                this.setState({
-                                  serviceName: service.target.value,
-                                })
-                              }
+                              invalid={this.hasError(
+                                "NewServiceForm",
+                                "serviceName",
+                                "required"
+                              )}
+                              data-validate='["required"]'
+                              value={this.state.NewServiceForm.serviceName}
+                              onChange={(event) => this.validateOnChange(event)}
                             />
+
+                            {this.hasError(
+                              "NewServiceForm",
+                              "serviceName",
+                              "required"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il campo Nome è obbligatorio
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="form-group row">
@@ -117,15 +200,28 @@ class NewService extends Component {
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
                             <Input
+                              className="form-control"
                               id="inputDescription"
+                              name="description"
                               type="text"
-                              value={this.state.description}
-                              onChange={(service) =>
-                                this.setState({
-                                  description: service.target.value,
-                                })
-                              }
+                              invalid={this.hasError(
+                                "NewServiceForm",
+                                "description",
+                                "required"
+                              )}
+                              data-validate='["required"]'
+                              value={this.state.NewServiceForm.description}
+                              onChange={(event) => this.validateOnChange(event)}
                             />
+                            {this.hasError(
+                              "NewServiceForm",
+                              "description",
+                              "required"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il campo Descrizione è obbligatorio
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="form-group row">
@@ -137,14 +233,44 @@ class NewService extends Component {
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
                             <Input
-                              placeholder="inputPrice"
+                              className="form-control"
                               type="number"
-                              step="1"
-                              value={this.state.price}
-                              onChange={(service) =>
-                                this.setState({ price: service.target.value })
+                              name="price"
+                              id="inputPrice"
+                              invalid={
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "price",
+                                  "required"
+                                ) ||
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "price",
+                                  "integer"
+                                )
                               }
+                              data-validate='["required", "integer"]'
+                              value={this.state.NewServiceForm.price}
+                              onChange={(event) => this.validateOnChange(event)}
                             />
+                            {this.hasError(
+                              "NewServiceForm",
+                              "price",
+                              "required"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il campo Prezzo è obbligatorio
+                              </span>
+                            )}
+                            {this.hasError(
+                              "NewServiceForm",
+                              "price",
+                              "integer"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il prezzo deve essere un numero intero
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="form-group row">
@@ -157,15 +283,43 @@ class NewService extends Component {
                           <div className="col-xl-10 col-md-9 col-8">
                             <Input
                               className="form-control"
+                              name="maxSubscribers"
                               id="inputMaxSubscribers"
-                              type="text"
-                              value={this.state.maxSubscribers}
-                              onChange={(service) =>
-                                this.setState({
-                                  maxSubscribers: service.target.value,
-                                })
+                              type="number"
+                              invalid={
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "maxSubscribers",
+                                  "required"
+                                ) ||
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "maxSubscribers",
+                                  "integer"
+                                )
                               }
+                              data-validate='["required", "integer"]'
+                              value={this.state.NewServiceForm.maxSubscribers}
+                              onChange={(event) => this.validateOnChange(event)}
                             />
+                            {this.hasError(
+                              "NewServiceForm",
+                              "maxSubscribers",
+                              "required"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il campo N° max iscritti è obbligatorio
+                              </span>
+                            )}
+                            {this.hasError(
+                              "NewServiceForm",
+                              "price",
+                              "integer"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il N° max iscritti deve essere un numero intero
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="form-group row">
@@ -177,16 +331,44 @@ class NewService extends Component {
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
                             <Input
+                              className="form-control"
                               id="inputDuration"
+                              name="duration"
                               type="number"
-                              step="1"
-                              value={this.state.duration}
-                              onChange={(service) =>
-                                this.setState({
-                                  duration: service.target.value,
-                                })
+                              invalid={
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "duration",
+                                  "required"
+                                ) ||
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "duration",
+                                  "integer"
+                                )
                               }
+                              data-validate='["required", "integer"]'
+                              value={this.state.NewServiceForm.duration}
+                              onChange={(event) => this.validateOnChange(event)}
                             />
+                            {this.hasError(
+                              "NewServiceForm",
+                              "duration",
+                              "required"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il campo Durata è obbligatorio
+                              </span>
+                            )}
+                            {this.hasError(
+                              "NewServiceForm",
+                              "duration",
+                              "integer"
+                            ) && (
+                              <span className="invalid-feedback">
+                                La durata deve essere un numero intero
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="form-group row">
@@ -197,19 +379,27 @@ class NewService extends Component {
                             Tag
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
-                            <input
-                              className="form-control"
+                            <ReactTagInput
                               id="inputTaxonomies"
-                              type="text"
-                              value={this.state.taxonomies}
-                              onChange={(service) =>
-                                this.setState({
-                                  taxonomies: service.target.value,
-                                })
+                              tags={this.state.NewServiceForm.taxonomies}
+                              onChange={(newTags) =>
+                                this.handleTaxonomiesChange(newTags)
                               }
+                              removeOnBackspace={true}
+                              placeholder={"Inserisci un tag e premi invio"}
                             />
+                            {this.hasError(
+                              "NewServiceForm",
+                              "taxonomies",
+                              "required"
+                            ) && (
+                              <small className="text-danger">
+                                Il campo Tag è obbligatorio
+                              </small>
+                            )}
                           </div>
                         </div>
+
                         <div className="form-group row">
                           <label
                             className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
@@ -218,18 +408,46 @@ class NewService extends Component {
                             Versione
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
-                            <input
+                            <Input
                               className="form-control"
+                              name="version"
                               id="inputVersion"
                               type="number"
-                              step="0.1"
-                              value={this.state.version}
-                              onChange={(service) =>
-                                this.setState({
-                                  version: service.target.value,
-                                })
+                              invalid={
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "version",
+                                  "required"
+                                ) ||
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "version",
+                                  "integer"
+                                )
                               }
+                              data-validate='["required", "integer"]'
+                              value={this.state.NewServiceForm.version}
+                              onChange={(event) => this.validateOnChange(event)}
                             />
+
+                            {this.hasError(
+                              "NewServiceForm",
+                              "version",
+                              "required"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il campo Versione è obbligatorio
+                              </span>
+                            )}
+                            {this.hasError(
+                              "NewServiceForm",
+                              "version",
+                              "integer"
+                            ) && (
+                              <span className="invalid-feedback">
+                                La Versione deve essere un numero intero
+                              </span>
+                            )}
                           </div>
                         </div>
                       </form>
@@ -241,10 +459,10 @@ class NewService extends Component {
           </Row>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={() => this.saveTest()}>
+          <Button form="NewServiceForm" color="primary">
             Salva
           </Button>{" "}
-          <Button color="secondary" onClick={this.toggleModal}>
+          <Button color="secondary" onClick={() => this.toggleModal()}>
             Annulla
           </Button>
         </ModalFooter>
@@ -253,4 +471,5 @@ class NewService extends Component {
   }
 }
 
-export default NewService;
+const mapStateToProps = (state) => state;
+export default connect(mapStateToProps)(NewService);
