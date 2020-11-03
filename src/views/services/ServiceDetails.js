@@ -47,30 +47,18 @@ class ServiceDetails extends Component {
       },
       loading: true,
       noErrors: true,
-      pools: [
-        {
-          id: 1,
-          description: "descrizione",
-          totalQuote: 50,
-          stake: 10,
-          profit: 1000,
-          bookmaker: "William Hill",
-          totalEvents: [],
-          poolCreatedOn: "data",
-          poolUpdatedOn: "2",
-          hrefPool: "link",
-        },
-      ],
+      pools: [],
     };
     this.checkServiceDetails();
   }
 
   checkServiceDetails() {
-    if (Object.keys(this.props.app.serviceDetails).lenght === 0) {
+    try {
+      if (Object.keys(this.props.app.serviceDetails).lenght !== 0) {
+        this.getMyPools();
+      } else this.props.history.push("/");
+    } catch {
       this.props.history.push("/");
-      return;
-    } else {
-      this.getMyPools();
     }
   }
 
@@ -126,7 +114,11 @@ class ServiceDetails extends Component {
       .then((response) => {
         if (response._embedded !== undefined) {
           console.log(response);
-          this.setState({ loading: false, noErrors: true });
+          this.setState({
+            loading: false,
+            noErrors: true,
+            pools: response._embedded.pools,
+          });
         } else {
           this.setState({ noErrors: false });
         }
@@ -234,7 +226,10 @@ class ServiceDetails extends Component {
                 </Row>
                 <Row>
                   <Col md="12">
-                    <MyPools pools={this.state.pools} />
+                    <MyPools
+                      pools={this.state.pools}
+                      history={this.props.history}
+                    />
                   </Col>
                 </Row>
               </div>

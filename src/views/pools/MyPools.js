@@ -7,12 +7,14 @@ import config from "../../store/config";
 class MyPools extends Component {
   constructor(props, context) {
     super(props, context);
+    console.log(props);
   }
 
   render() {
     return this.props.pools.map((pool) => (
       <PoolCard
-        key={1}
+        history={this.props.history}
+        key={pool.id}
         id={pool.id}
         description={pool.description}
         totalQuote={pool.totalQuote}
@@ -22,7 +24,7 @@ class MyPools extends Component {
         totalEvents={pool.totalEvents}
         poolCreatedOn={pool.createdOn}
         poolUpdatedOn={pool.updatedOn}
-        hrefPool={"pool._links.self.href"}
+        links={pool._links}
       ></PoolCard>
     ));
   }
