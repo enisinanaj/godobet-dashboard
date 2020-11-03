@@ -11,12 +11,12 @@ class MyServices extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      loading: false,
+      loading: true,
       noErrors: true,
       modalNewServiceVisible: false,
       services: [],
     };
-    //this.getMyServices();
+    this.getMyServices();
   }
 
   eventModalRef = (props) => {
@@ -32,6 +32,7 @@ class MyServices extends Component {
   };
 
   async getMyServices() {
+    console.log(this.props.app.user._links.services.href);
     var token = await TokenManager.getInstance().getToken();
     fetch(this.props.app.user._links.services.href, {
       method: "GET",
@@ -44,7 +45,20 @@ class MyServices extends Component {
             services: response._embedded.services,
             loading: false,
           });
-        else this.setState({ noErrors: true, loading: false });
+        else this.setState({ noErrors: false, loading: true });
+      });
+  }
+
+  async test() {
+    console.log(this.props.app.user._links.services.href);
+    var token = await TokenManager.getInstance().getToken();
+    fetch("https://godobet-api.herokuapp.com/services/8/pools", {
+      method: "GET",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
       });
   }
 

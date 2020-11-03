@@ -8,19 +8,22 @@ import {
   Row,
   Col,
   FormGroup,
+  Button,
 } from "reactstrap";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as actions from "../../store/actions/actions";
 
 class PoolCard extends Component {
   static propTypes = {
-    id: PropTypes.string,
     description: PropTypes.string,
-    totalQuote: PropTypes.string,
+    totalQuote: PropTypes.number,
     stake: PropTypes.string,
-    profit: PropTypes.string,
+    profit: PropTypes.number,
     bookmaker: PropTypes.string,
-    totalEvents: PropTypes.string,
+    totalEvents: PropTypes.array,
     poolCreatedOn: PropTypes.string,
     poolUpdatedOn: PropTypes.string,
     hrefPool: PropTypes.string,
@@ -77,12 +80,27 @@ class PoolCard extends Component {
           </CardBody>
           <CardFooter className="d-flex">
             <div>
-              <Link
-                to={{ pathname: "poolDetails" }}
+              <Button
                 className="btn btn-block btn-secondary"
+                onClick={() => {
+                  console.log(this.props);
+                  this.props.actions.poolDetails({
+                    bookmaker: this.props.bookmaker,
+                    description: this.props.description,
+                    id: this.props.id,
+                    poolCreatedOn: this.props.poolCreatedOn,
+                    poolUpdatedOn: this.props.poolUpdatedOn,
+                    profit: this.props.profit,
+                    stake: this.props.stake,
+                    totalEvents: this.props.totalEvents,
+                    totalQuote: this.props.totalQuote,
+                    links: this.props.links,
+                  });
+                  this.props.history.push("/poolDetails");
+                }}
               >
                 Visualizza
-              </Link>
+              </Button>
             </div>
           </CardFooter>
         </Card>
@@ -91,4 +109,8 @@ class PoolCard extends Component {
   }
 }
 
-export default PoolCard;
+const mapStateToProps = (state) => state;
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(PoolCard);

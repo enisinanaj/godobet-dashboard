@@ -1,5 +1,6 @@
 import { USER_LOGIN } from "../actions/actions";
 import { SERVICE_DETAILS } from "../actions/actions";
+import { POOL_DETAILS } from "../actions/actions";
 
 const initialState = {
   user: undefined,
@@ -19,6 +20,11 @@ const appReduces = (state = initialState, action) => {
       return {
         ...state,
         serviceDetails: action.service,
+      };
+    case POOL_DETAILS:
+      return {
+        ...state,
+        poolDetails: action.pool,
       };
     default:
       return state;
