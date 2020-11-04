@@ -4,7 +4,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 /* loader component for Suspense*/
 import PageLoader from "./template_components/Common/PageLoader";
-
+import BaseAdmin from "./template_components/Layout/BaseAdmin";
 import BaseTipster from "./template_components/Layout/BaseTipster";
 import BasePage from "./template_components/Layout/BasePage";
 // import BaseHorizontal from './components/Layout/BaseHorizontal';
@@ -24,6 +24,7 @@ const Profile = lazy(() => import("./views/profile/Profile"));
 const MyServices = lazy(() => import("./views/services/MyServices"));
 const ServiceDetails = lazy(() => import("./views/services/ServiceDetails"));
 const PoolDetails = lazy(() => import("./views/pools/PoolDetails"));
+const TipsterList = lazy(() => import("./views/admin/TipsterList"));
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -70,34 +71,72 @@ const Routes = ({ location, app }) => {
       </BasePage>
     );
   } else {
-    return (
-      // Layout component wrapper
-      // Use <BaseHorizontal> to change layout
-      <BaseTipster>
-        <TransitionGroup>
-          <CSSTransition
-            key={currentKey}
-            timeout={timeout}
-            classNames={animationName}
-            exit={false}
-          >
-            <div>
-              <Suspense fallback={<PageLoader />}>
-                <Switch location={location}>
-                  <Route path="/profile" component={waitFor(Profile)} />
-                  <Route path="/myServices" component={waitFor(MyServices)} />
-                  <Route
-                    path="/serviceDetails"
-                    component={waitFor(ServiceDetails)}
-                  />
-                  <Route path="/poolDetails" component={waitFor(PoolDetails)} />
-                </Switch>
-              </Suspense>
-            </div>
-          </CSSTransition>
-        </TransitionGroup>
-      </BaseTipster>
-    );
+    if (app.user._links.role.href.split("/")[4] >= 6) {
+      //ADMIN
+      return (
+        <BaseAdmin>
+          <TransitionGroup>
+            <CSSTransition
+              key={currentKey}
+              timeout={timeout}
+              classNames={animationName}
+              exit={false}
+            >
+              <div>
+                <Suspense fallback={<PageLoader />}>
+                  <Switch location={location}>
+                    <Route path="/profile" component={waitFor(Profile)} />
+                    <Route path="/myServices" component={waitFor(MyServices)} />
+                    <Route
+                      path="/serviceDetails"
+                      component={waitFor(ServiceDetails)}
+                    />
+                    <Route
+                      path="/poolDetails"
+                      component={waitFor(PoolDetails)}
+                    />
+                    <Route
+                      path="/tipsterList"
+                      component={waitFor(TipsterList)}
+                    />
+                  </Switch>
+                </Suspense>
+              </div>
+            </CSSTransition>
+          </TransitionGroup>
+        </BaseAdmin>
+      );
+    } else
+      return (
+        //TIPSTER
+        <BaseTipster>
+          <TransitionGroup>
+            <CSSTransition
+              key={currentKey}
+              timeout={timeout}
+              classNames={animationName}
+              exit={false}
+            >
+              <div>
+                <Suspense fallback={<PageLoader />}>
+                  <Switch location={location}>
+                    <Route path="/profile" component={waitFor(Profile)} />
+                    <Route path="/myServices" component={waitFor(MyServices)} />
+                    <Route
+                      path="/serviceDetails"
+                      component={waitFor(ServiceDetails)}
+                    />
+                    <Route
+                      path="/poolDetails"
+                      component={waitFor(PoolDetails)}
+                    />
+                  </Switch>
+                </Suspense>
+              </div>
+            </CSSTransition>
+          </TransitionGroup>
+        </BaseTipster>
+      );
   }
 };
 
