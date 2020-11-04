@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-computed-key */
 import React, { Component } from "react";
 import {
   Row,
@@ -10,43 +11,34 @@ import {
   ModalFooter,
 } from "reactstrap";
 import * as moment from "moment";
+import "moment/locale/it";
 import TokenManager from "../../components/auth/Token";
-
+import { connect } from "react-redux";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import FormValidator from "../../template_components/Forms/FormValidator.js";
 import config from "../../store/config";
 
-class Event extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.toggleModal = this.toggleModal.bind(this);
-    this.handleGenderChange = this.handleGenderChange.bind(this);
-    this.state = {
-      modal: false,
-      NewEventForm: {
-        eventDate: "",
-        sport: "",
-        competition: "",
-        gender: "0",
-        proposal: "",
-        event: "",
-        quote: "",
-        outcome: "",
-        notes: "",
-        pool: props.pool,
-      },
-    };
-  }
+moment.locale("it");
 
-  toggleModal() {
-    this.setState({ modal: !this.state.modal });
-  }
+class NewEvent extends Component {
+  state = {
+    NewEventForm: {
+      eventDate: "",
+      sport: "",
+      competition: "",
+      gender: "0",
+      proposal: "",
+      event: "",
+      quote: "",
+      outcome: "",
+      notes: "",
+    },
+  };
 
   handleGenderChange(selected) {
-    console.log(selected.target.value);
     let validate = [];
-    validate["required"] = selected.target.value == "0";
+    validate["required"] = selected.target.value === "0";
     this.setState({
       ["NewEventForm"]: {
         ...this.state["NewEventForm"],
@@ -61,24 +53,6 @@ class Event extends Component {
     this.setState({ gender: selected.target.value });
   }
 
-  saveEventTest() {
-    const newEvent = {
-      eventDate: this.state.eventDate,
-      sport: this.state.sport,
-      competition: this.state.competition,
-      gender: this.state.gender,
-      proposal: this.state.proposal,
-      event: this.state.event,
-      quote: this.state.quote,
-      outcome: this.state.outcome,
-      notes: this.state.notes,
-      pool: this.state.pool,
-    };
-
-    this.props.addEvent(newEvent);
-    this.toggleModal();
-  }
-
   async saveEvent(e) {
     e.preventDefault();
     const form = e.target;
@@ -90,11 +64,11 @@ class Event extends Component {
     const { errors, hasError } = FormValidator.bulkValidate(inputs);
 
     let eventDateValidate = [];
-    eventDateValidate["required"] = this.state.NewEventForm.eventDate == "";
+    eventDateValidate["required"] = this.state.NewEventForm.eventDate === "";
     errors["eventDate"] = eventDateValidate;
 
     let genderValidate = [];
-    genderValidate["required"] = this.state.NewEventForm.gender == "0";
+    genderValidate["required"] = this.state.NewEventForm.gender === "0";
     errors["gender"] = genderValidate;
 
     this.setState({
@@ -107,12 +81,12 @@ class Event extends Component {
     if (
       !(
         hasError ||
-        this.state.NewEventForm.gender == "0" ||
-        this.state.NewEventForm.eventDate == ""
+        this.state.NewEventForm.gender === "0" ||
+        this.state.NewEventForm.eventDate === ""
       )
     ) {
       const newEvent = {
-        eventDate: this.state.NewEventForm.eventDate,
+        eventDate: moment(this.state.eventDate).toISOString(),
         sport: this.state.NewEventForm.sport,
         competition: this.state.NewEventForm.competition,
         gender: this.state.NewEventForm.gender,
@@ -121,34 +95,31 @@ class Event extends Component {
         quote: this.state.NewEventForm.quote,
         outcome: this.state.NewEventForm.outcome,
         notes: this.state.NewEventForm.notes,
-        pool: "LINKPOOL",
-        createdOn: "DATA",
+        pool: this.props.app.poolDetails.links.self.href,
+        createdOn: new Date().toISOString(),
       };
-      /*
+
       var token = await TokenManager.getInstance().getToken();
-      fetch(config.API_URL + "/pools", {
+      fetch(config.API_URL + "/events", {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Auth": token },
-        body: JSON.stringify(newPool),
+        body: JSON.stringify(newEvent),
       })
         .then((response) => response.json())
         .then((response) => {
-          console.log(response);
-          this.props.history.push("/serviceDetails");
+          this.props.toggleModal();
+          this.props.refreshPool();
         });
-    */
-      this.toggleModal();
     }
   }
 
   handleEventDateChange(eventDate) {
-    console.log(eventDate);
     let validate = [];
     validate["required"] = !(eventDate && eventDate._isValid);
     this.setState({
       ["NewEventForm"]: {
         ...this.state["NewEventForm"],
-        eventDate: validate["required"] ? eventDate : eventDate.format(),
+        eventDate: eventDate,
         errors: {
           ...this.state["NewEventForm"].errors,
           ["eventDate"]: validate,
@@ -156,6 +127,7 @@ class Event extends Component {
       },
     });
   }
+
   hasError = (formName, inputName, method) => {
     return (
       this.state[formName] &&
@@ -187,11 +159,13 @@ class Event extends Component {
   render() {
     return (
       <Modal
-        isOpen={this.state.modal}
-        toggle={this.toggleModal}
+        isOpen={this.props.modalNewEventVisible}
+        toggle={() => this.props.toggleModal()}
         style={{ maxWidth: "70%" }}
       >
-        <ModalHeader toggle={this.toggleModal}>Dettaglio evento</ModalHeader>
+        <ModalHeader toggle={() => this.props.toggleModal()}>
+          Nuovo evento per {this.props.app.poolDetails.description}
+        </ModalHeader>
         <ModalBody>
           <Row>
             <Col lg="12">
@@ -215,9 +189,7 @@ class Event extends Component {
                           <div className="col-xl-10 col-md-9 col-8">
                             <Datetime
                               name="eventDate"
-                              dateFormat={moment().format("DD/MM/YYYY")}
-                              timeFormat={false}
-                              closeOnSelect={true}
+                              closeOnSelect={false}
                               value={this.state.NewEventForm.eventDate}
                               onChange={(date) =>
                                 this.handleEventDateChange(date)
@@ -341,40 +313,6 @@ class Event extends Component {
                         <div className="form-group row">
                           <label
                             className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                            htmlFor="inputProposal"
-                          >
-                            Proposta
-                          </label>
-                          <div className="col-xl-10 col-md-9 col-8">
-                            <Input
-                              className="form-control"
-                              name="proposal"
-                              id="inputProposal"
-                              type="text"
-                              invalid={this.hasError(
-                                "NewEventForm",
-                                "proposal",
-                                "required"
-                              )}
-                              data-validate='["required"]'
-                              value={this.state.NewEventForm.proposal}
-                              onChange={(event) => this.validateOnChange(event)}
-                            />
-
-                            {this.hasError(
-                              "NewEventForm",
-                              "proposal",
-                              "required"
-                            ) && (
-                              <span className="invalid-feedback">
-                                Il campo Proposta è obbligatorio
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="form-group row">
-                          <label
-                            className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
                             htmlFor="inputEvent"
                           >
                             Evento
@@ -402,6 +340,40 @@ class Event extends Component {
                             ) && (
                               <span className="invalid-feedback">
                                 Il campo Evento è obbligatorio
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="form-group row">
+                          <label
+                            className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                            htmlFor="inputProposal"
+                          >
+                            Proposta
+                          </label>
+                          <div className="col-xl-10 col-md-9 col-8">
+                            <Input
+                              className="form-control"
+                              name="proposal"
+                              id="inputProposal"
+                              type="text"
+                              invalid={this.hasError(
+                                "NewEventForm",
+                                "proposal",
+                                "required"
+                              )}
+                              data-validate='["required"]'
+                              value={this.state.NewEventForm.proposal}
+                              onChange={(event) => this.validateOnChange(event)}
+                            />
+
+                            {this.hasError(
+                              "NewEventForm",
+                              "proposal",
+                              "required"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il campo Proposta è obbligatorio
                               </span>
                             )}
                           </div>
@@ -504,7 +476,7 @@ class Event extends Component {
           <Button color="primary" form="NewEventForm">
             Salva
           </Button>{" "}
-          <Button color="secondary" onClick={this.toggleModal}>
+          <Button color="secondary" onClick={() => this.props.toggleModal()}>
             Annulla
           </Button>
         </ModalFooter>
@@ -513,4 +485,5 @@ class Event extends Component {
   }
 }
 
-export default Event;
+const mapStateToProps = (state) => state;
+export default connect(mapStateToProps)(NewEvent);

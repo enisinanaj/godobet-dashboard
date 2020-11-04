@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ServiceCard from "./ServiceCard";
-import { Row, Col, Input, Button, Spinner } from "reactstrap";
+import { Button, Spinner } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
@@ -19,47 +19,29 @@ class MyServices extends Component {
     this.getMyServices();
   }
 
-  eventModalRef = (props) => {
-    console.log(props);
-    this.showModal = props && props.toggleModal;
-  };
-
   toggleModal = () => {
     this.setState({
       modalNewServiceVisible: !this.state.modalNewServiceVisible,
     });
-    //this.showModal();
   };
 
   async getMyServices() {
-    console.log(this.props.app.user._links.services.href);
     var token = await TokenManager.getInstance().getToken();
-    fetch(this.props.app.user._links.services.href, {
-      method: "GET",
-      headers: { "Content-Type": "application/json", "X-Auth": token },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response._embedded !== undefined)
-          this.setState({
-            services: response._embedded.services,
-            loading: false,
-          });
-        else this.setState({ noErrors: false, loading: true });
-      });
-  }
-
-  async test() {
-    console.log(this.props.app.user._links.services.href);
-    var token = await TokenManager.getInstance().getToken();
-    fetch("https://godobet-api.herokuapp.com/services/8/pools", {
-      method: "GET",
-      headers: { "Content-Type": "application/json", "X-Auth": token },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-      });
+    this.setState({ loading: true, noErrors: true }, () => {
+      fetch(this.props.app.user._links.services.href, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", "X-Auth": token },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response._embedded !== undefined)
+            this.setState({
+              services: response._embedded.services,
+              loading: false,
+            });
+          else this.setState({ noErrors: false, loading: true });
+        });
+    });
   }
 
   async getTaxonomies() {
@@ -89,7 +71,6 @@ class MyServices extends Component {
                 Aggiungi pacchetto
               </Button>
               <NewService
-                pool={this.state.poolURL}
                 addService={(newService) => this.addService(newService)}
                 modalNewServiceVisible={this.state.modalNewServiceVisible}
                 toggleModal={() => this.toggleModal()}

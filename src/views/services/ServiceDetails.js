@@ -11,13 +11,12 @@ import {
   Button,
   Spinner,
 } from "reactstrap";
-import PropTypes from "prop-types";
-import NewPool from "../pools/NewPool";
 import config from "../../store/config";
 import MyPools from "../pools/MyPools";
 import { Link } from "react-router-dom";
 import TokenManager from "../../components/auth/Token";
 import Swal from "../../components/elements/Swal";
+import NewPool from "../pools/NewPool";
 import { connect } from "react-redux";
 
 class ServiceDetails extends Component {
@@ -45,8 +44,12 @@ class ServiceDetails extends Component {
           },
         },
       },
-      loading: true,
-      noErrors: true,
+      serviceLoading: true,
+      serviceNoErrors: true,
+      poolLoading: true,
+      poolNoErrors: true,
+      modalNewPoolVisible: false,
+      service: {},
       pools: [],
     };
     this.checkServiceDetails();
@@ -55,11 +58,82 @@ class ServiceDetails extends Component {
   checkServiceDetails() {
     try {
       if (Object.keys(this.props.app.serviceDetails).lenght !== 0) {
-        this.getMyPools();
+        this.getServiceDetails();
       } else this.props.history.push("/");
     } catch {
       this.props.history.push("/");
     }
+  }
+
+  toggleModal = () => {
+    this.setState({
+      modalNewPoolVisible: !this.state.modalNewPoolVisible,
+    });
+  };
+
+  async getServiceDetails() {
+    var token = await TokenManager.getInstance().getToken();
+    this.setState(
+      {
+        serviceLoading: true,
+        serviceNoErrors: true,
+        poolLoading: true,
+        poolNoErrors: true,
+      },
+      () => {
+        fetch(this.props.app.serviceDetails.links.self.href, {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.serviceName !== undefined) {
+              this.setState({
+                service: response,
+                serviceLoading: false,
+                serviceNoErrors: true,
+              });
+              this.getMyPools();
+            } else {
+              this.setState({ serviceNoErrors: false });
+            }
+          });
+      }
+    );
+  }
+
+  async getMyPools() {
+    var token = await TokenManager.getInstance().getToken();
+    this.setState(
+      {
+        poolLoading: true,
+        poolNoErrors: true,
+      },
+      () => {
+        fetch(
+          this.props.app.serviceDetails.links.pools.href.replace(
+            "{?projection}",
+            ""
+          ),
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "X-Auth": token },
+          }
+        )
+          .then((response) => response.json())
+          .then((response) => {
+            if (response._embedded !== undefined) {
+              this.setState({
+                poolLoading: false,
+                poolNoErrors: true,
+                pools: response._embedded.pools,
+              });
+            } else {
+              this.setState({ poolNoErrors: false });
+            }
+          });
+      }
+    );
   }
 
   eventModalRef = (props) => {
@@ -98,178 +172,183 @@ class ServiceDetails extends Component {
       swal("Annullato", "Il pacchetto non è stato eliminato :)", "error");
     }
   }
-  async getMyPools() {
-    var token = await TokenManager.getInstance().getToken();
-    fetch(
-      this.props.app.serviceDetails.links.pools.href.replace(
-        "{?projection}",
-        ""
-      ),
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json", "X-Auth": token },
-      }
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        if (response._embedded !== undefined) {
-          console.log(response);
-          this.setState({
-            loading: false,
-            noErrors: true,
-            pools: response._embedded.pools,
-          });
-        } else {
-          this.setState({ noErrors: false });
-        }
-      });
-  }
 
   render() {
     return (
       <ContentWrapper>
-        <Row>
-          <Col lg="6">
-            <h2>
-              Dettagli pacchetto "{this.props.app.serviceDetails.serviceName}"
-            </h2>
-          </Col>
-          <Col lg="2">
-            <Link
-              to={{
-                pathname: "newPool",
-              }}
-              className="btn btn-block btn-primary"
-            >
-              Modifica Pacchetto
-            </Link>
-          </Col>
-          <Col lg="2">
-            <Link
-              to={{
-                pathname: "newPool",
-              }}
-              className="btn btn-block btn-secondary"
-            >
-              Aggiungi schedina
-            </Link>
-          </Col>
-          <Col lg="2">
-            <Swal
-              options={this.state.swalDeleteService}
-              callback={this.deleteService}
-              className="btn btn-danger"
-            >
-              Elimina pacchetto
-            </Swal>
-          </Col>
-        </Row>
-        <Card className="card-default">
-          <CardHeader>
-            <strong>{this.props.app.serviceDetails.serviceName}</strong>
-          </CardHeader>
-          <CardBody>
+        {!this.state.serviceLoading ? (
+          <div>
+            <NewPool
+              modalNewPoolVisible={this.state.modalNewPoolVisible}
+              toggleModal={() => this.toggleModal()}
+              refreshService={() => this.getServiceDetails()}
+            />
             <Row>
               <Col lg="6">
-                <FormGroup row>
-                  <Col md="4">Descrizione:</Col>
-                  <Col md="8">
-                    <strong>{this.props.app.serviceDetails.description}</strong>
-                  </Col>
-                  <Col md="4">Prezzo:</Col>
-                  <Col md="8">
-                    <strong>{this.props.app.serviceDetails.price} €</strong>
-                  </Col>
-                  <Col md="4">Durata:</Col>
-                  <Col md="8">
-                    <strong>
-                      {this.props.app.serviceDetails.duration} giorni
-                    </strong>
-                  </Col>
-                </FormGroup>
+                <h2>Dettagli pacchetto "{this.state.service.serviceName}"</h2>
               </Col>
-              <Col lg="6">
-                <FormGroup row>
-                  <Col md="4">Numero max iscritti:</Col>
-                  <Col md="8">
-                    <strong>
-                      {this.props.app.serviceDetails.maxSubscribers}
-                    </strong>
-                  </Col>
-                  <Col md="4">Tag:</Col>
-                  <Col md="8">
-                    <strong>tmp</strong>
-                  </Col>
-                  <Col md="4">Versione:</Col>
-                  <Col md="8">
-                    <strong>{this.props.app.serviceDetails.version}</strong>
-                  </Col>
-                </FormGroup>
+              {false && (
+                <Col lg="2">
+                  <Link
+                    to={{
+                      pathname: "newPool",
+                    }}
+                    className="btn btn-block btn-primary"
+                  >
+                    Modifica Pacchetto
+                  </Link>
+                </Col>
+              )}
+              <Col lg="2">
+                <Button
+                  className="btn btn-block btn-secondary"
+                  onClick={() => this.toggleModal()}
+                >
+                  Aggiungi schedina
+                </Button>
               </Col>
+              {false && (
+                <Col lg="2">
+                  <Swal
+                    options={this.state.swalDeleteService}
+                    callback={this.deleteService}
+                    className="btn btn-danger"
+                  >
+                    Elimina pacchetto
+                  </Swal>
+                </Col>
+              )}
             </Row>
-          </CardBody>
-          <CardFooter className="d-flex"></CardFooter>
-        </Card>
-        <Row>
-          <Col lg="6">
-            <h3>Schedine</h3>
-          </Col>
-        </Row>
-        <Card className="card-default">
-          <CardBody>
-            {!this.state.loading ? (
-              <div>
-                <Row style={{ marginTop: 20 }}>
-                  <Col md="6">
-                    <h3>Schedine</h3>
+            <Card className="card-default">
+              <CardHeader>
+                <strong>{this.state.service.serviceName}</strong>
+              </CardHeader>
+              <CardBody>
+                <Row>
+                  <Col lg="6">
+                    <FormGroup row>
+                      <Col md="4">Descrizione:</Col>
+                      <Col md="8">
+                        <strong>{this.state.service.description}</strong>
+                      </Col>
+                      <Col md="4">Prezzo:</Col>
+                      <Col md="8">
+                        <strong>{this.state.service.price} €</strong>
+                      </Col>
+                      <Col md="4">Durata:</Col>
+                      <Col md="8">
+                        <strong>{this.state.service.duration} giorni</strong>
+                      </Col>
+                    </FormGroup>
+                  </Col>
+                  <Col lg="6">
+                    <FormGroup row>
+                      <Col md="4">Numero max iscritti:</Col>
+                      <Col md="8">
+                        <strong>{this.state.service.maxSubscribers}</strong>
+                      </Col>
+                      <Col md="4">Tag:</Col>
+                      <Col md="8">
+                        <strong>tmp</strong>
+                      </Col>
+                      <Col md="4">Versione:</Col>
+                      <Col md="8">
+                        <strong>{this.state.service.version}</strong>
+                      </Col>
+                    </FormGroup>
                   </Col>
                 </Row>
-                <Row>
-                  <Col md="12">
+              </CardBody>
+              <CardFooter className="d-flex"></CardFooter>
+            </Card>
+            <Row>
+              <Col lg="6">
+                <h3>Schedine</h3>
+              </Col>
+            </Row>
+            <Card className="card-default">
+              <CardBody>
+                {!this.state.poolLoading ? (
+                  <div>
                     <MyPools
                       pools={this.state.pools}
                       history={this.props.history}
                     />
-                  </Col>
-                </Row>
-              </div>
-            ) : this.state.noErrors ? (
-              <div>
-                <h4> Carico le tue schedine...</h4>
-                <div>
-                  <Spinner />
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div>
-                  <h4>Errore nel caricamento delle tue schedine</h4>
-                </div>
-                <div>
-                  <Button
-                    className="btn"
-                    onClick={() => {
-                      this.setState({ noErrors: true, loading: true }, () => {
-                        this.getMyPools();
-                      });
-                    }}
-                  >
-                    Riprova
-                  </Button>
-                  <Button
-                    style={{ marginLeft: 10 }}
-                    className="btn"
-                    onClick={() => {
-                      this.props.history.push("/myServices");
-                    }}
-                  >
-                    Torna indietro
-                  </Button>
-                </div>
-              </div>
-            )}
-          </CardBody>
-        </Card>
+                  </div>
+                ) : this.state.poolNoErrors ? (
+                  <div>
+                    <h4> Carico le tue schedine...</h4>
+                    <div>
+                      <Spinner />
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div>
+                      <h4>Errore nel caricamento delle tue schedine</h4>
+                    </div>
+                    <div>
+                      <Button
+                        className="btn"
+                        onClick={() => {
+                          this.setState(
+                            { noErrors: true, loading: true },
+                            () => {
+                              this.getMyPools();
+                            }
+                          );
+                        }}
+                      >
+                        Riprova
+                      </Button>
+                      <Button
+                        style={{ marginLeft: 10 }}
+                        className="btn"
+                        onClick={() => {
+                          this.props.history.push("/myServices");
+                        }}
+                      >
+                        Torna indietro
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </CardBody>
+            </Card>
+          </div>
+        ) : this.state.serviceNoErrors ? (
+          <div>
+            <h4>Carico il pacchetto...</h4>
+            <div>
+              <Spinner />
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div>
+              <h4>Errore nel caricamento del pacchetto</h4>
+            </div>
+            <div>
+              <Button
+                className="btn"
+                onClick={() => {
+                  this.getServiceDetails();
+                }}
+              >
+                Riprova
+              </Button>
+              <Button
+                style={{ marginLeft: 10 }}
+                className="btn"
+                onClick={() => {
+                  this.props.history.push("/myServices");
+                }}
+              >
+                Torna indietro
+              </Button>
+            </div>
+          </div>
+        )}
       </ContentWrapper>
     );
   }

@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-computed-key */
 import React, { Component } from "react";
 import {
   Row,
@@ -9,10 +10,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "reactstrap";
-import * as moment from "moment";
 import TokenManager from "../../components/auth/Token";
-
-import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import { connect } from "react-redux";
 import ReactTagInput from "@pathofdev/react-tag-input";
@@ -76,20 +74,33 @@ class NewService extends Component {
 
     if (!(hasError || this.state.NewServiceForm.taxonomies.length <= 0)) {
       const newService = {
-        //author: this.props.app.user._links.user.href,
+        author: this.props.app.user._links.user.href,
         taxonomies: [], //this.state.taxonomies,
-        serviceName: this.state.serviceName,
-        description: this.state.description,
+        serviceName: this.state.NewServiceForm.serviceName,
+        description: this.state.NewServiceForm.description,
         maxSubscribers: parseInt(
-          this.state.maxSubscribers == "" ? 0 : this.state.maxSubscribers
+          this.state.NewServiceForm.maxSubscribers === ""
+            ? 0
+            : this.state.NewServiceForm.maxSubscribers
         ),
-        duration: parseInt(this.state.duration == "" ? 0 : this.state.duration),
-        price: parseInt(this.state.price == "" ? 0 : this.state.price),
-        version: parseInt(this.state.version == "" ? 0 : this.state.version),
+        duration: parseInt(
+          this.state.NewServiceForm.duration === ""
+            ? 0
+            : this.state.NewServiceForm.duration
+        ),
+        price: parseInt(
+          this.state.NewServiceForm.price === ""
+            ? 0
+            : this.state.NewServiceForm.price
+        ),
+        version: parseInt(
+          this.state.NewServiceForm.version === ""
+            ? 0
+            : this.state.NewServiceForm.version
+        ),
       };
-
       //carico il nuovo pacchetto online
-      /*var token = await TokenManager.getInstance().getToken();
+      var token = await TokenManager.getInstance().getToken();
       fetch(config.API_URL + "/services", {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Auth": token },
@@ -101,8 +112,6 @@ class NewService extends Component {
           this.toggleModal();
           this.props.refreshServiceList();
         });
-  
-        */
     }
   }
 

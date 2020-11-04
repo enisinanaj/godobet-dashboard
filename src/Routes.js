@@ -5,7 +5,6 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 /* loader component for Suspense*/
 import PageLoader from "./template_components/Common/PageLoader";
 
-import Base from "./template_components/Layout/Base";
 import BaseTipster from "./template_components/Layout/BaseTipster";
 import BasePage from "./template_components/Layout/BasePage";
 // import BaseHorizontal from './components/Layout/BaseHorizontal';
@@ -22,8 +21,6 @@ const Maintenance = lazy(() =>
   import("./template_components/Pages/Maintenance")
 );
 const Profile = lazy(() => import("./views/profile/Profile"));
-const NewPool = lazy(() => import("./views/pools/NewPool"));
-const MyPools = lazy(() => import("./views/pools/MyPools"));
 const MyServices = lazy(() => import("./views/services/MyServices"));
 const ServiceDetails = lazy(() => import("./views/services/ServiceDetails"));
 const PoolDetails = lazy(() => import("./views/pools/PoolDetails"));
@@ -88,8 +85,6 @@ const Routes = ({ location, app }) => {
               <Suspense fallback={<PageLoader />}>
                 <Switch location={location}>
                   <Route path="/profile" component={waitFor(Profile)} />
-                  <Route path="/newPool" component={waitFor(NewPool)} />
-                  <Route path="/myPools" component={waitFor(MyPools)} />
                   <Route path="/myServices" component={waitFor(MyServices)} />
                   <Route
                     path="/serviceDetails"

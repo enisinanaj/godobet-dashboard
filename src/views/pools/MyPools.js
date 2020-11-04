@@ -1,15 +1,7 @@
 import React, { Component } from "react";
 import PoolCard from "./PoolCard";
-import ContentWrapper from "../../components/layout/ContentWrapper";
-import TokenManager from "../../components/auth/Token";
-import config from "../../store/config";
 
 class MyPools extends Component {
-  constructor(props, context) {
-    super(props, context);
-    console.log(props);
-  }
-
   render() {
     return this.props.pools.map((pool) => (
       <PoolCard

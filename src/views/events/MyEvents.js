@@ -1,15 +1,7 @@
 import React, { Component } from "react";
 import EventCard from "./EventCard";
-import ContentWrapper from "../../components/layout/ContentWrapper";
-import TokenManager from "../../components/auth/Token";
-import config from "../../store/config";
 
 class MyEvents extends Component {
-  constructor(props, context) {
-    super(props, context);
-    //this.getMyPools();
-  }
-
   render() {
     return this.props.events.map((event) => (
       <EventCard

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   Row,
@@ -11,155 +10,260 @@ import {
   Spinner,
   Button,
 } from "reactstrap";
-import PropTypes from "prop-types";
-import config from "../../store/config";
 import MyEvents from "../events/MyEvents";
-import { Link } from "react-router-dom";
-import * as moment from "moment";
 import { connect } from "react-redux";
+import NewEvent from "../events/NewEvent";
+
 import TokenManager from "../../components/auth/Token";
 
 class PoolDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
-      noErrors: true,
+      poolLoading: true,
+      poolNoErrors: true,
+      eventLoading: true,
+      eventNoErrors: true,
+      modalNewEventVisible: false,
       events: [],
+      pool: {},
     };
     this.checkPoolDetails();
+    //this.test();
   }
+
+  toggleModal = () => {
+    this.setState({
+      modalNewEventVisible: !this.state.modalNewEventVisible,
+    });
+  };
 
   checkPoolDetails() {
     try {
       if (Object.keys(this.props.app.poolDetails).lenght !== 0) {
-        this.getMyEvents();
+        this.getPoolDetails();
       } else this.props.history.push("/serviceDetails");
     } catch {
       this.props.history.push("/serviceDetails");
     }
   }
 
+  async getPoolDetails() {
+    var token = await TokenManager.getInstance().getToken();
+    this.setState(
+      {
+        poolLoading: true,
+        poolNoErrors: true,
+        eventLoading: true,
+        eventNoErrors: true,
+      },
+      () => {
+        fetch(this.props.app.poolDetails.links.self.href, {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.description !== undefined) {
+              this.setState({
+                pool: response,
+                poolLoading: false,
+                poolNoErrors: true,
+              });
+              this.getMyEvents();
+            } else {
+              this.setState({ poolNoErrors: false });
+            }
+          });
+      }
+    );
+  }
+
   async getMyEvents() {
     var token = await TokenManager.getInstance().getToken();
-    fetch(this.props.app.poolDetails.links.events.href, {
-      method: "GET",
-      headers: { "Content-Type": "application/json", "X-Auth": token },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response._embedded !== undefined) {
-          console.log(response);
-          this.setState({
-            loading: false,
-            noErrors: true,
-            events: response._embedded.events,
+    this.setState(
+      {
+        eventLoading: true,
+        eventNoErrors: true,
+      },
+      () => {
+        fetch(this.props.app.poolDetails.links.events.href, {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            if (response._embedded !== undefined) {
+              this.setState({
+                eventLoading: false,
+                eventNoErrors: true,
+                events: response._embedded.events,
+              });
+            } else {
+              this.setState({ eventNoErrors: false });
+            }
           });
-        } else {
-          this.setState({ noErrors: false });
-        }
-      });
+      }
+    );
   }
 
   render() {
     return (
       <ContentWrapper>
-        <h2>Dettagli schedina</h2>
-        <Card className="card-default">
-          <CardBody>
+        {!this.state.poolLoading ? (
+          <div>
+            <NewEvent
+              //addService={(newService) => this.addService(newService)}
+              modalNewEventVisible={this.state.modalNewEventVisible}
+              toggleModal={() => this.toggleModal()}
+              refreshPool={() => this.getPoolDetails()}
+            />
             <Row>
               <Col lg="6">
-                <FormGroup row>
-                  <Col md="4">Descrizione:</Col>
-                  <Col md="8">
-                    <strong>{this.props.app.poolDetails.description}</strong>
-                  </Col>
-                  <Col md="4">Quota:</Col>
-                  <Col md="8">
-                    <strong>{this.props.app.poolDetails.totalQuote}</strong>
-                  </Col>
-                  <Col md="4">Bookmaker:</Col>
-                  <Col md="8">
-                    <strong>{this.props.app.poolDetails.bookmaker}</strong>
-                  </Col>
-                  <Col md="4">Creato il:</Col>
-                  <Col md="8">
-                    <strong>{this.props.app.poolDetails.poolCreatedOn}</strong>
-                  </Col>
-                </FormGroup>
+                <h2>Dettagli schedina "{this.state.pool.description}"</h2>
               </Col>
-              <Col lg="6">
-                <FormGroup row>
-                  <Col md="4">Stake:</Col>
-                  <Col md="8">
-                    <strong>{this.props.app.poolDetails.stake}</strong>
-                  </Col>
-                  <Col md="4">Profitto:</Col>
-                  <Col md="8">
-                    <strong>{this.state.profit}</strong>
-                  </Col>
-                  <Col md="4">Eventi totali:</Col>
-                  <Col md="8">
-                    <strong>{this.props.app.poolDetails.totalEvents}</strong>
-                  </Col>
-                  <Col md="4">Modificato il:</Col>
-                  <Col md="8">
-                    <strong>{this.props.app.poolDetails.poolUpdatedOn}</strong>
-                  </Col>
-                </FormGroup>
+              <Col lg="2">
+                <Button
+                  className="btn btn-block btn-secondary"
+                  onClick={() => this.toggleModal()}
+                >
+                  Aggiungi evento
+                </Button>
               </Col>
             </Row>
-            {!this.state.loading ? (
-              <div>
+            <Card className="card-default">
+              <CardBody>
                 <Row>
-                  <Col md="12">
-                    <h3>Eventi</h3>
+                  <Col lg="6">
+                    <FormGroup row>
+                      <Col md="4">Descrizione:</Col>
+                      <Col md="8">
+                        <strong>{this.state.pool.description}</strong>
+                      </Col>
+                      <Col md="4">Quota:</Col>
+                      <Col md="8">
+                        <strong>{this.state.pool.totalQuote}</strong>
+                      </Col>
+                      <Col md="4">Bookmaker:</Col>
+                      <Col md="8">
+                        <strong>{this.state.pool.bookmaker}</strong>
+                      </Col>
+                      <Col md="4">Creato il:</Col>
+                      <Col md="8">
+                        <strong>{this.state.pool.createdOn}</strong>
+                      </Col>
+                    </FormGroup>
+                  </Col>
+                  <Col lg="6">
+                    <FormGroup row>
+                      <Col md="4">Stake:</Col>
+                      <Col md="8">
+                        <strong>{this.state.pool.stake}</strong>
+                      </Col>
+                      <Col md="4">Profitto:</Col>
+                      <Col md="8">
+                        <strong>{this.state.pool.profit}</strong>
+                      </Col>
+                      <Col md="4">Modificato il:</Col>
+                      <Col md="8">
+                        <strong>{this.state.pool.updatedOn}</strong>
+                      </Col>
+                    </FormGroup>
                   </Col>
                 </Row>
-                <Row>
-                  <Col md="12">
-                    <MyEvents events={this.state.events} />
-                  </Col>
-                </Row>
-              </div>
-            ) : this.state.noErrors ? (
-              <div>
-                <h4> Carico gli eventi...</h4>
-                <div>
-                  <Spinner />
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div>
-                  <h4>Errore nel caricamento degli eventi</h4>
-                </div>
-                <div>
-                  <Button
-                    className="btn"
-                    onClick={() => {
-                      this.setState({ noErrors: true, loading: true }, () => {
-                        this.getMyEvents();
-                      });
-                    }}
-                  >
-                    Riprova
-                  </Button>
-                  <Button
-                    style={{ marginLeft: 10 }}
-                    className="btn"
-                    onClick={() => {
-                      this.props.history.push("/serviceDetails");
-                    }}
-                  >
-                    Torna indietro
-                  </Button>
-                </div>
-              </div>
-            )}
-          </CardBody>
-          <CardFooter className="d-flex"></CardFooter>
-        </Card>
+                {!this.state.eventLoading ? (
+                  <div>
+                    <Row>
+                      <Col md="12">
+                        <h3>Eventi</h3>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md="12">
+                        <MyEvents events={this.state.events} />
+                      </Col>
+                    </Row>
+                  </div>
+                ) : this.state.eventNoErrors ? (
+                  <div>
+                    <h4> Carico gli eventi...</h4>
+                    <div>
+                      <Spinner />
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div>
+                      <h4>Errore nel caricamento degli eventi</h4>
+                    </div>
+                    <div>
+                      <Button
+                        className="btn"
+                        onClick={() => {
+                          this.setState(
+                            { eventNoErrors: true, eventLoading: true },
+                            () => {
+                              this.getMyEvents();
+                            }
+                          );
+                        }}
+                      >
+                        Riprova
+                      </Button>
+                      <Button
+                        style={{ marginLeft: 10 }}
+                        className="btn"
+                        onClick={() => {
+                          this.props.history.push("/serviceDetails");
+                        }}
+                      >
+                        Torna indietro
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </CardBody>
+              <CardFooter className="d-flex"></CardFooter>
+            </Card>
+          </div>
+        ) : this.state.poolNoErrors ? (
+          <div>
+            <h4>Carico la schedina...</h4>
+            <div>
+              <Spinner />
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div>
+              <h4>Errore nel caricamento della schedina</h4>
+            </div>
+            <div>
+              <Button
+                className="btn"
+                onClick={() => {
+                  this.setState(
+                    { poolNoErrors: true, poolLoading: true },
+                    () => {
+                      this.getPoolDetails();
+                    }
+                  );
+                }}
+              >
+                Riprova
+              </Button>
+              <Button
+                style={{ marginLeft: 10 }}
+                className="btn"
+                onClick={() => {
+                  this.props.history.push("/serviceDetails");
+                }}
+              >
+                Torna indietro
+              </Button>
+            </div>
+          </div>
+        )}
       </ContentWrapper>
     );
   }
