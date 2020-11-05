@@ -87,8 +87,7 @@ class NewPool extends Component {
         author: this.props.app.user._links.self.href,
         service: this.props.app.serviceDetails.links.self.href,
       };
-      console.log(newPool);
-      /*
+
       var token = await TokenManager.getInstance().getToken();
       fetch(config.API_URL + "/pools", {
         method: "POST",
@@ -100,7 +99,7 @@ class NewPool extends Component {
           console.log(response);
           this.toggleModal();
           this.props.refreshService();
-        });*/
+        });
     }
   }
 
