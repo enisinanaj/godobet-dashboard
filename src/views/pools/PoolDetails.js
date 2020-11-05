@@ -10,6 +10,7 @@ import {
   Spinner,
   Button,
 } from "reactstrap";
+import * as moment from "moment";
 import MyEvents from "../events/MyEvents";
 import { connect } from "react-redux";
 import NewEvent from "../events/NewEvent";
@@ -150,7 +151,11 @@ class PoolDetails extends Component {
                       </Col>
                       <Col md="4">Creato il:</Col>
                       <Col md="8">
-                        <strong>{this.state.pool.createdOn}</strong>
+                        <strong>
+                          {moment(this.state.pool.createdOn).format(
+                            "DD/MM/YYYY HH:mm"
+                          )}
+                        </strong>
                       </Col>
                     </FormGroup>
                   </Col>
@@ -166,18 +171,26 @@ class PoolDetails extends Component {
                       </Col>
                       <Col md="4">Modificato il:</Col>
                       <Col md="8">
-                        <strong>{this.state.pool.updatedOn}</strong>
+                        <strong>
+                          {moment(this.state.pool.updatedOn).format(
+                            "DD/MM/YYYY HH:mm"
+                          )}
+                        </strong>
                       </Col>
                     </FormGroup>
                   </Col>
                 </Row>
+              </CardBody>
+            </Card>
+            <Row>
+              <Col lg="6">
+                <h3>Eventi</h3>
+              </Col>
+            </Row>
+            <Card className="card-default">
+              <CardBody>
                 {!this.state.eventLoading ? (
                   <div>
-                    <Row>
-                      <Col md="12">
-                        <h3>Eventi</h3>
-                      </Col>
-                    </Row>
                     <Row>
                       <Col md="12">
                         <MyEvents events={this.state.events} />
@@ -223,7 +236,6 @@ class PoolDetails extends Component {
                   </div>
                 )}
               </CardBody>
-              <CardFooter className="d-flex"></CardFooter>
             </Card>
           </div>
         ) : this.state.poolNoErrors ? (

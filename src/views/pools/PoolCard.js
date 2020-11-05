@@ -9,6 +9,7 @@ import {
   FormGroup,
   Button,
 } from "reactstrap";
+import * as moment from "moment";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -49,7 +50,11 @@ class PoolCard extends Component {
                 </Col>
                 <Col md="4">Creato il:</Col>
                 <Col md="8">
-                  <strong>{this.props.poolCreatedOn}</strong>
+                  <strong>
+                    {moment(this.props.poolCreatedOn).format(
+                      "DD/MM/YYYY HH:mm"
+                    )}
+                  </strong>
                 </Col>
               </FormGroup>
             </Col>
@@ -69,7 +74,11 @@ class PoolCard extends Component {
                 </Col>
                 <Col md="4">Modificato il:</Col>
                 <Col md="8">
-                  <strong>{this.props.poolUpdatedOn}</strong>
+                  <strong>
+                    {moment(this.props.poolUpdatedOn).format(
+                      "DD/MM/YYYY HH:mm"
+                    )}
+                  </strong>
                 </Col>
               </FormGroup>
             </Col>

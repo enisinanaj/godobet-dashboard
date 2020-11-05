@@ -259,7 +259,6 @@ class ServiceDetails extends Component {
                   </Col>
                 </Row>
               </CardBody>
-              <CardFooter className="d-flex"></CardFooter>
             </Card>
             <Row>
               <Col lg="6">
