@@ -25,23 +25,10 @@ class NewPool extends Component {
       NewPoolForm: {
         description: "",
         stake: "",
-        bookmaker: "0",
+        bookmaker: "",
       },
     };
     this.checkServiceDetails();
-  }
-
-  numberToBookmaker(number) {
-    switch (number) {
-      case "1":
-        return "William Hill";
-      case "2":
-        return "Bet365";
-      case "3":
-        return "PlanetWin365";
-      default:
-        return "";
-    }
   }
 
   checkServiceDetails() {
@@ -65,7 +52,7 @@ class NewPool extends Component {
         NewPoolForm: {
           description: "",
           stake: "",
-          bookmaker: "0",
+          bookmaker: "",
         },
       },
       () => {
@@ -83,10 +70,6 @@ class NewPool extends Component {
 
     const { errors, hasError } = FormValidator.bulkValidate(inputs);
 
-    let bookmakerValidate = [];
-    bookmakerValidate["required"] = this.state.NewPoolForm.bookmaker === "0";
-    errors["bookmaker"] = bookmakerValidate;
-
     this.setState({
       [form.name]: {
         ...this.state[form.name],
@@ -99,12 +82,13 @@ class NewPool extends Component {
         createdOn: new Date(),
         description: this.state.NewPoolForm.description,
         stake: this.state.NewPoolForm.stake,
-        bookmaker: this.numberToBookmaker(this.state.NewPoolForm.bookmaker),
+        bookmaker: this.state.NewPoolForm.bookmaker,
         events: [],
         author: this.props.app.user._links.self.href,
         service: this.props.app.serviceDetails.links.self.href,
       };
-
+      console.log(newPool);
+      /*
       var token = await TokenManager.getInstance().getToken();
       fetch(config.API_URL + "/pools", {
         method: "POST",
@@ -116,23 +100,8 @@ class NewPool extends Component {
           console.log(response);
           this.toggleModal();
           this.props.refreshService();
-        });
+        });*/
     }
-  }
-
-  handleBookmakerChange(bookmaker) {
-    let validate = [];
-    validate["required"] = bookmaker.target.value === "0";
-    this.setState({
-      ["NewPoolForm"]: {
-        ...this.state["NewPoolForm"],
-        bookmaker: bookmaker.target.value,
-        errors: {
-          ...this.state["NewPoolForm"].errors,
-          ["bookmaker"]: validate,
-        },
-      },
-    });
   }
 
   hasError = (formName, inputName, method) => {
@@ -275,27 +244,29 @@ class NewPool extends Component {
                             Bookmaker
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
-                            <select
+                            <Input
+                              className="form-control"
                               name="bookmaker"
-                              value={this.state.bookmaker}
-                              onChange={(event) =>
-                                this.handleBookmakerChange(event)
-                              }
-                              className="custom-select custom-select-sm"
-                            >
-                              <option value="0">Seleziona</option>
-                              <option value="1">William Hill</option>
-                              <option value="2">Bet365</option>
-                              <option value="3">PlanetWin365</option>
-                            </select>
+                              id="inputBookmaker"
+                              type="text"
+                              invalid={this.hasError(
+                                "NewPoolForm",
+                                "bookmaker",
+                                "required"
+                              )}
+                              data-validate='["required"]'
+                              value={this.state.NewPoolForm.bookmaker}
+                              onChange={(event) => this.validateOnChange(event)}
+                            />
+
                             {this.hasError(
                               "NewPoolForm",
                               "bookmaker",
                               "required"
                             ) && (
-                              <small className="text-danger">
+                              <span className="invalid-feedback">
                                 Il campo Bookmaker è obbligatorio
-                              </small>
+                              </span>
                             )}
                           </div>
                         </div>
