@@ -28,19 +28,24 @@ class MyServices extends Component {
   async getMyServices() {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
-      fetch(this.props.app.user._links.services.href, {
-        method: "GET",
-        headers: { "Content-Type": "application/json", "X-Auth": token },
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response._embedded !== undefined)
-            this.setState({
-              services: response._embedded.services,
-              loading: false,
-            });
-          else this.setState({ noErrors: false, loading: true });
-        });
+      try {
+        fetch(this.props.app.user._links.services.href, {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            if (response._embedded !== undefined)
+              this.setState({
+                services: response._embedded.services,
+                loading: false,
+              });
+            else this.setState({ noErrors: false, loading: true });
+          });
+      } catch {
+        console.log(this.props.app);
+        // this.props.history.push("/login");
+      }
     });
   }
 

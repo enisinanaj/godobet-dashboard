@@ -36,6 +36,27 @@ class NewEvent extends Component {
     },
   };
 
+  toggleModal() {
+    this.setState(
+      {
+        NewEventForm: {
+          eventDate: "",
+          sport: "",
+          competition: "",
+          gender: "0",
+          proposal: "",
+          event: "",
+          quote: "",
+          outcome: "",
+          notes: "",
+        },
+      },
+      () => {
+        this.props.toggleModal();
+      }
+    );
+  }
+
   handleGenderChange(selected) {
     let validate = [];
     validate["required"] = selected.target.value === "0";
@@ -107,7 +128,7 @@ class NewEvent extends Component {
       })
         .then((response) => response.json())
         .then((response) => {
-          this.props.toggleModal();
+          this.toggleModal();
           this.props.refreshPool();
         });
     }
@@ -160,10 +181,10 @@ class NewEvent extends Component {
     return (
       <Modal
         isOpen={this.props.modalNewEventVisible}
-        toggle={() => this.props.toggleModal()}
+        toggle={() => this.toggleModal()}
         style={{ maxWidth: "70%" }}
       >
-        <ModalHeader toggle={() => this.props.toggleModal()}>
+        <ModalHeader toggle={() => this.toggleModal()}>
           Nuovo evento per {this.props.app.poolDetails.description}
         </ModalHeader>
         <ModalBody>
@@ -476,7 +497,7 @@ class NewEvent extends Component {
           <Button color="primary" form="NewEventForm">
             Salva
           </Button>{" "}
-          <Button color="secondary" onClick={() => this.props.toggleModal()}>
+          <Button color="secondary" onClick={() => this.toggleModal()}>
             Annulla
           </Button>
         </ModalFooter>

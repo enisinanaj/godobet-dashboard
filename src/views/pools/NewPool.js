@@ -59,6 +59,21 @@ class NewPool extends Component {
     this.showModal();
   };
 
+  toggleModal() {
+    this.setState(
+      {
+        NewPoolForm: {
+          description: "",
+          stake: "",
+          bookmaker: "0",
+        },
+      },
+      () => {
+        this.props.toggleModal();
+      }
+    );
+  }
+
   async savePool(e) {
     e.preventDefault();
     const form = e.target;
@@ -99,7 +114,7 @@ class NewPool extends Component {
         .then((response) => response.json())
         .then((response) => {
           console.log(response);
-          this.props.toggleModal();
+          this.toggleModal();
           this.props.refreshService();
         });
     }
@@ -152,10 +167,10 @@ class NewPool extends Component {
     return (
       <Modal
         isOpen={this.props.modalNewPoolVisible}
-        toggle={() => this.props.toggleModal()}
+        toggle={() => this.toggleModal()}
         style={{ maxWidth: "70%" }}
       >
-        <ModalHeader toggle={() => this.props.toggleModal()}>
+        <ModalHeader toggle={() => this.toggleModal()}>
           Inserimento schedina per il pacchetto "
           {this.props.app.serviceDetails.serviceName}"
         </ModalHeader>
@@ -296,7 +311,7 @@ class NewPool extends Component {
           <Button color="primary" form="NewPoolForm">
             Salva
           </Button>{" "}
-          <Button color="secondary" onClick={() => this.props.toggleModal()}>
+          <Button color="secondary" onClick={() => this.toggleModal()}>
             Annulla
           </Button>
         </ModalFooter>

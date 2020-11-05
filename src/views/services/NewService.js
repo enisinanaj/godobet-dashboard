@@ -32,7 +32,20 @@ class NewService extends Component {
   };
 
   toggleModal() {
-    this.props.toggleModal();
+    this.setState(
+      {
+        NewServiceForm: {
+          taxonomies: [],
+          serviceName: "",
+          description: "",
+          maxSubscribers: "",
+          duration: "",
+          price: "",
+          version: 1,
+        },
+      },
+      () => this.props.toggleModal()
+    );
   }
 
   handleTaxonomiesChange(newTaxonomies) {
