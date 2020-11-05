@@ -84,7 +84,7 @@ class NewPool extends Component {
         stake: this.state.NewPoolForm.stake,
         bookmaker: this.state.NewPoolForm.bookmaker,
         events: [],
-        author: this.props.app.user._links.self.href,
+        author: this.props.app.serviceDetails.links.author.href,
         service: this.props.app.serviceDetails.links.self.href,
       };
 

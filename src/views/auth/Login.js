@@ -93,18 +93,35 @@ class Login extends Component {
           )
             .then((e) => e.json())
             .then((localUser) => {
-              console.log("user is: " + JSON.stringify(localUser));
-              this.props.actions.userLogin({
-                ...user,
-                ...localUser,
-              });
-              this.props.history.push("/profile");
+              this.getUserRole(localUser._links.role.href, user, localUser);
             });
         });
 
-      this.props.actions.userLogin(user);
+      //this.props.actions.userLogin(user);
     });
   };
+
+  async getUserRole(url, user, localUser) {
+    TokenManager.getInstance()
+      .getToken()
+      .then((jwt) => {
+        fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+        })
+          .then((e) => e.json())
+          .then((role) => {
+            const roleData = { role };
+            this.props.actions.userLogin({
+              ...user,
+              ...localUser,
+              ...roleData,
+            });
+          });
+      });
+  }
 
   hasError = (formName, inputName, method) => {
     return (

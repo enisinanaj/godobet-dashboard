@@ -1,6 +1,7 @@
 import { USER_LOGIN } from "../actions/actions";
 import { SERVICE_DETAILS } from "../actions/actions";
 import { POOL_DETAILS } from "../actions/actions";
+import { TIPSTER_DETAILS } from "../actions/actions";
 
 const initialState = {
   user: undefined,
@@ -25,6 +26,11 @@ const appReduces = (state = initialState, action) => {
       return {
         ...state,
         poolDetails: action.pool,
+      };
+    case TIPSTER_DETAILS:
+      return {
+        ...state,
+        tipsterDetails: action.tipster,
       };
     default:
       return state;

@@ -4,7 +4,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 /* loader component for Suspense*/
 import PageLoader from "./template_components/Common/PageLoader";
-
+import BaseAdmin from "./template_components/Layout/BaseAdmin";
 import BaseTipster from "./template_components/Layout/BaseTipster";
 import BasePage from "./template_components/Layout/BasePage";
 // import BaseHorizontal from './components/Layout/BaseHorizontal';
@@ -24,6 +24,9 @@ const Profile = lazy(() => import("./views/profile/Profile"));
 const MyServices = lazy(() => import("./views/services/MyServices"));
 const ServiceDetails = lazy(() => import("./views/services/ServiceDetails"));
 const PoolDetails = lazy(() => import("./views/pools/PoolDetails"));
+const TipsterList = lazy(() => import("./views/admin/TipsterList"));
+const TipsterDetails = lazy(() => import("./views/admin/TipsterDetails"));
+const AllServices = lazy(() => import("./views/admin/AllServices"));
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -49,11 +52,18 @@ const Routes = ({ location, app }) => {
 
   const animationName = "rag-fadeIn";
 
-  if (!app.loggedIn && listofPages.indexOf(location.pathname) === -1) {
+  if (
+    (!app.loggedIn ||
+      (app && app.user && (!app.user._links || !app.user.role))) &&
+    listofPages.indexOf(location.pathname) === -1
+  ) {
     return <Redirect to={"/login"} />;
   }
 
-  if (!app.loggedIn) {
+  if (
+    !app.loggedIn ||
+    (app && app.user && (!app.user._links || !app.user.role))
+  ) {
     return (
       // Page Layout component wrapper
       <BasePage>
@@ -70,34 +80,80 @@ const Routes = ({ location, app }) => {
       </BasePage>
     );
   } else {
-    return (
-      // Layout component wrapper
-      // Use <BaseHorizontal> to change layout
-      <BaseTipster>
-        <TransitionGroup>
-          <CSSTransition
-            key={currentKey}
-            timeout={timeout}
-            classNames={animationName}
-            exit={false}
-          >
-            <div>
-              <Suspense fallback={<PageLoader />}>
-                <Switch location={location}>
-                  <Route path="/profile" component={waitFor(Profile)} />
-                  <Route path="/myServices" component={waitFor(MyServices)} />
-                  <Route
-                    path="/serviceDetails"
-                    component={waitFor(ServiceDetails)}
-                  />
-                  <Route path="/poolDetails" component={waitFor(PoolDetails)} />
-                </Switch>
-              </Suspense>
-            </div>
-          </CSSTransition>
-        </TransitionGroup>
-      </BaseTipster>
-    );
+    if (app && app.user && app.user.role._links.self.href.split("/")[4] >= 4) {
+      //ADMIN
+      return (
+        <BaseAdmin>
+          <TransitionGroup>
+            <CSSTransition
+              key={currentKey}
+              timeout={timeout}
+              classNames={animationName}
+              exit={false}
+            >
+              <div>
+                <Suspense fallback={<PageLoader />}>
+                  <Switch location={location}>
+                    <Route path="/profile" component={waitFor(Profile)} />
+                    <Route path="/myServices" component={waitFor(MyServices)} />
+                    <Route
+                      path="/serviceDetails"
+                      component={waitFor(ServiceDetails)}
+                    />
+                    <Route
+                      path="/poolDetails"
+                      component={waitFor(PoolDetails)}
+                    />
+                    <Route
+                      path="/tipstersList"
+                      component={waitFor(TipsterList)}
+                    />
+                    <Route
+                      path="/tipsterDetails"
+                      component={waitFor(TipsterDetails)}
+                    />
+                    <Route
+                      path="/allServices"
+                      component={waitFor(AllServices)}
+                    />
+                  </Switch>
+                </Suspense>
+              </div>
+            </CSSTransition>
+          </TransitionGroup>
+        </BaseAdmin>
+      );
+    } else
+      return (
+        //TIPSTER
+        <BaseTipster>
+          <TransitionGroup>
+            <CSSTransition
+              key={currentKey}
+              timeout={timeout}
+              classNames={animationName}
+              exit={false}
+            >
+              <div>
+                <Suspense fallback={<PageLoader />}>
+                  <Switch location={location}>
+                    <Route path="/profile" component={waitFor(Profile)} />
+                    <Route path="/myServices" component={waitFor(MyServices)} />
+                    <Route
+                      path="/serviceDetails"
+                      component={waitFor(ServiceDetails)}
+                    />
+                    <Route
+                      path="/poolDetails"
+                      component={waitFor(PoolDetails)}
+                    />
+                  </Switch>
+                </Suspense>
+              </div>
+            </CSSTransition>
+          </TransitionGroup>
+        </BaseTipster>
+      );
   }
 };
 
