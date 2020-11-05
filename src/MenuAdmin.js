@@ -15,7 +15,12 @@ const MenuAdmin = [
   {
     name: "Gestione Tipster",
     icon: "icon-people",
-    path: "/tipsterList",
+    path: "/tipstersList",
+  },
+  {
+    name: "Tutti i pacchetti",
+    icon: "icon-organization",
+    path: "/allServices",
   },
 ];
 

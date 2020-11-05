@@ -26,6 +26,7 @@ const ServiceDetails = lazy(() => import("./views/services/ServiceDetails"));
 const PoolDetails = lazy(() => import("./views/pools/PoolDetails"));
 const TipsterList = lazy(() => import("./views/admin/TipsterList"));
 const TipsterDetails = lazy(() => import("./views/admin/TipsterDetails"));
+const AllServices = lazy(() => import("./views/admin/AllServices"));
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -104,12 +105,16 @@ const Routes = ({ location, app }) => {
                       component={waitFor(PoolDetails)}
                     />
                     <Route
-                      path="/tipsterList"
+                      path="/tipstersList"
                       component={waitFor(TipsterList)}
                     />
                     <Route
                       path="/tipsterDetails"
                       component={waitFor(TipsterDetails)}
+                    />
+                    <Route
+                      path="/allServices"
+                      component={waitFor(AllServices)}
                     />
                   </Switch>
                 </Suspense>
