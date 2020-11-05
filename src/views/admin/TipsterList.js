@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 
-import { Button, Spinner } from "reactstrap";
+import { Button, Spinner, Row, Col } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
+import TipsterCard from "./TipsterCard";
 import config from "../../store/config";
 import { connect } from "react-redux";
 
@@ -15,37 +16,41 @@ class TipsterList extends Component {
       modalNewServiceVisible: false,
       tipsters: [],
     };
-    this.test();
+    this.getTipsters();
   }
 
   async getTipsters() {
-    /*
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
-      fetch(this.props.app.user._links.services.href, {
-        method: "GET",
-        headers: { "Content-Type": "application/json", "X-Auth": token },
-      })
+      fetch(
+        "https://godobet-api.herokuapp.com/users/search/findByRole/?role=https://godobet-api.herokuapp.com/roles/4",
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+        }
+      )
         .then((response) => response.json())
         .then((response) => {
-          if (response._embedded !== undefined)
+          if (response._embedded !== undefined) {
             this.setState({
-              services: response._embedded.services,
+              tipsters: response._embedded.users,
               loading: false,
             });
-          else this.setState({ noErrors: false, loading: true });
+          } else this.setState({ noErrors: false, loading: true });
         });
     });
-    */
   }
 
   async test() {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
-      fetch("https://godobet-api.herokuapp.com/users", {
-        method: "GET",
-        headers: { "Content-Type": "application/json", "X-Auth": token },
-      })
+      fetch(
+        "https://godobet-api.herokuapp.com/users/search/findByRole/?role=https://godobet-api.herokuapp.com/roles/4",
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+        }
+      )
         .then((response) => response.json())
         .then((response) => {
           console.log(response);
@@ -57,8 +62,24 @@ class TipsterList extends Component {
     if (!this.state.loading)
       return (
         <ContentWrapper>
-          <div className="form-group row"></div>
-          {this.state.tipsters.map((tipster) => null)}
+          <Row>
+            <Col lg="6">
+              <h2>Gestione Tipster</h2>
+            </Col>
+            <Col lg="2">
+              <Button className="btn btn-block btn-secondary">
+                Aggiungi Tipster
+              </Button>
+            </Col>
+          </Row>
+
+          {this.state.tipsters.map((tipster) => (
+            <TipsterCard
+              key={tipster._links.self.href}
+              data={tipster}
+              history={this.props.history}
+            />
+          ))}
         </ContentWrapper>
       );
     else if (this.state.noErrors)

@@ -25,6 +25,7 @@ const MyServices = lazy(() => import("./views/services/MyServices"));
 const ServiceDetails = lazy(() => import("./views/services/ServiceDetails"));
 const PoolDetails = lazy(() => import("./views/pools/PoolDetails"));
 const TipsterList = lazy(() => import("./views/admin/TipsterList"));
+const TipsterDetails = lazy(() => import("./views/admin/TipsterDetails"));
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -50,11 +51,18 @@ const Routes = ({ location, app }) => {
 
   const animationName = "rag-fadeIn";
 
-  if (!app.loggedIn && listofPages.indexOf(location.pathname) === -1) {
+  if (
+    (!app.loggedIn ||
+      (app && app.user && (!app.user._links || !app.user.role))) &&
+    listofPages.indexOf(location.pathname) === -1
+  ) {
     return <Redirect to={"/login"} />;
   }
 
-  if (!app.loggedIn) {
+  if (
+    !app.loggedIn ||
+    (app && app.user && (!app.user._links || !app.user.role))
+  ) {
     return (
       // Page Layout component wrapper
       <BasePage>
@@ -71,7 +79,7 @@ const Routes = ({ location, app }) => {
       </BasePage>
     );
   } else {
-    if (app.user._links.role.href.split("/")[4] >= 6) {
+    if (app && app.user && app.user.role._links.self.href.split("/")[4] >= 4) {
       //ADMIN
       return (
         <BaseAdmin>
@@ -98,6 +106,10 @@ const Routes = ({ location, app }) => {
                     <Route
                       path="/tipsterList"
                       component={waitFor(TipsterList)}
+                    />
+                    <Route
+                      path="/tipsterDetails"
+                      component={waitFor(TipsterDetails)}
                     />
                   </Switch>
                 </Suspense>
