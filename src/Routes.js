@@ -80,7 +80,12 @@ const Routes = ({ location, app }) => {
       </BasePage>
     );
   } else {
-    if (app && app.user && app.user.role._links.self.href.split("/")[4] >= 4) {
+    if (
+      app &&
+      app.user &&
+      app.user.role &&
+      app.user.role._links.self.href.split("/")[4] >= 4
+    ) {
       //ADMIN
       return (
         <BaseAdmin>
