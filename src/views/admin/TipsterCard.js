@@ -19,8 +19,20 @@ class TipsterCard extends Component {
     return (
       <Card className="card-default">
         <CardHeader>
-          <strong>{this.props.data.email}</strong>
+          <strong>{this.props.data.name}</strong>
         </CardHeader>
+        <CardBody>
+          <Row>
+            <Col lg="6">
+              <FormGroup row>
+                <Col md="2">email:</Col>
+                <Col md="8">
+                  <strong>{this.props.data.email}</strong>
+                </Col>
+              </FormGroup>
+            </Col>
+          </Row>
+        </CardBody>
         <CardFooter className="d-flex">
           <div>
             <Button
