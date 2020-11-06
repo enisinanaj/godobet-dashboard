@@ -6,6 +6,7 @@ import TokenManager from "../../components/auth/Token";
 import TipsterCard from "./TipsterCard";
 import config from "../../store/config";
 import { connect } from "react-redux";
+import Register from "../auth/Register";
 
 class TipsterList extends Component {
   constructor(props, context) {
@@ -13,11 +14,17 @@ class TipsterList extends Component {
     this.state = {
       loading: true,
       noErrors: true,
-      modalNewServiceVisible: false,
+      modalNewTipsterVisible: false,
       tipsters: [],
     };
     this.getTipsters();
   }
+
+  toggleModal = () => {
+    this.setState({
+      modalNewTipsterVisible: !this.state.modalNewTipsterVisible,
+    });
+  };
 
   async getTipsters() {
     var token = await TokenManager.getInstance().getToken();
@@ -67,9 +74,18 @@ class TipsterList extends Component {
               <h2>Gestione Tipster</h2>
             </Col>
             <Col lg="2">
-              <Button className="btn btn-block btn-secondary">
+              <Button
+                className="btn btn-block btn-secondary"
+                onClick={() => this.toggleModal()}
+              >
                 Aggiungi Tipster
               </Button>
+              <Register
+                //addService={(newService) => this.addService(newService)}
+                modalNewTipsterVisible={this.state.modalNewTipsterVisible}
+                toggleModal={() => this.toggleModal()}
+                refreshTipsterList={() => this.getTipsters()}
+              />
             </Col>
           </Row>
 
