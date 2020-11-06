@@ -91,28 +91,13 @@ class NewService extends Component {
         taxonomies: [], //this.state.taxonomies,
         serviceName: this.state.NewServiceForm.serviceName,
         description: this.state.NewServiceForm.description,
-        maxSubscribers: parseInt(
-          this.state.NewServiceForm.maxSubscribers === ""
-            ? 0
-            : this.state.NewServiceForm.maxSubscribers
-        ),
-        duration: parseInt(
-          this.state.NewServiceForm.duration === ""
-            ? 0
-            : this.state.NewServiceForm.duration
-        ),
-        price: parseInt(
-          this.state.NewServiceForm.price === ""
-            ? 0
-            : this.state.NewServiceForm.price
-        ),
-        version: parseInt(
-          this.state.NewServiceForm.version === ""
-            ? 0
-            : this.state.NewServiceForm.version
-        ),
+        maxSubscribers: parseInt(this.state.NewServiceForm.maxSubscribers),
+        duration: parseInt(this.state.NewServiceForm.duration),
+        price: parseInt(this.state.NewServiceForm.price),
+        version: parseInt(this.state.NewServiceForm.version),
       };
       //carico il nuovo pacchetto online
+
       var token = await TokenManager.getInstance().getToken();
       fetch(config.API_URL + "/services", {
         method: "POST",
@@ -269,9 +254,11 @@ class NewService extends Component {
                                   "NewServiceForm",
                                   "price",
                                   "integer"
-                                )
+                                ) ||
+                                this.hasError("NewServiceForm", "price", "min")
                               }
-                              data-validate='["required", "integer"]'
+                              data-validate='["required", "integer", "min"]'
+                              data-param={1}
                               value={this.state.NewServiceForm.price}
                               onChange={(event) => this.validateOnChange(event)}
                             />
@@ -291,6 +278,15 @@ class NewService extends Component {
                             ) && (
                               <span className="invalid-feedback">
                                 Il prezzo deve essere un numero intero
+                              </span>
+                            )}
+                            {this.hasError(
+                              "NewServiceForm",
+                              "price",
+                              "min"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il prezzo deve essere maggiore di zero
                               </span>
                             )}
                           </div>
@@ -318,9 +314,15 @@ class NewService extends Component {
                                   "NewServiceForm",
                                   "maxSubscribers",
                                   "integer"
+                                ) ||
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "maxSubscribers",
+                                  "min"
                                 )
                               }
-                              data-validate='["required", "integer"]'
+                              data-validate='["required", "integer", "min"]'
+                              data-param={1}
                               value={this.state.NewServiceForm.maxSubscribers}
                               onChange={(event) => this.validateOnChange(event)}
                             />
@@ -340,6 +342,16 @@ class NewService extends Component {
                             ) && (
                               <span className="invalid-feedback">
                                 Il N° max iscritti deve essere un numero intero
+                              </span>
+                            )}
+                            {this.hasError(
+                              "NewServiceForm",
+                              "price",
+                              "integer"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il N° max iscritti deve essere un maggiore di
+                                zero
                               </span>
                             )}
                           </div>
@@ -367,9 +379,15 @@ class NewService extends Component {
                                   "NewServiceForm",
                                   "duration",
                                   "integer"
+                                ) ||
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "duration",
+                                  "min"
                                 )
                               }
-                              data-validate='["required", "integer"]'
+                              data-validate='["required", "integer", "min"]'
+                              data-param={1}
                               value={this.state.NewServiceForm.duration}
                               onChange={(event) => this.validateOnChange(event)}
                             />
@@ -389,6 +407,15 @@ class NewService extends Component {
                             ) && (
                               <span className="invalid-feedback">
                                 La durata deve essere un numero intero
+                              </span>
+                            )}
+                            {this.hasError(
+                              "NewServiceForm",
+                              "duration",
+                              "min"
+                            ) && (
+                              <span className="invalid-feedback">
+                                La durata deve essere maggiore di zero
                               </span>
                             )}
                           </div>
@@ -445,9 +472,15 @@ class NewService extends Component {
                                   "NewServiceForm",
                                   "version",
                                   "integer"
+                                ) ||
+                                this.hasError(
+                                  "NewServiceForm",
+                                  "version",
+                                  "min"
                                 )
                               }
-                              data-validate='["required", "integer"]'
+                              data-validate='["required", "integer", "min"]'
+                              data-param={1}
                               value={this.state.NewServiceForm.version}
                               onChange={(event) => this.validateOnChange(event)}
                             />
@@ -468,6 +501,15 @@ class NewService extends Component {
                             ) && (
                               <span className="invalid-feedback">
                                 La Versione deve essere un numero intero
+                              </span>
+                            )}
+                            {this.hasError(
+                              "NewServiceForm",
+                              "version",
+                              "min"
+                            ) && (
+                              <span className="invalid-feedback">
+                                La Versione deve essere maggiore di zero
                               </span>
                             )}
                           </div>

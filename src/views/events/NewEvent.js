@@ -85,13 +85,17 @@ class NewEvent extends Component {
     const { errors, hasError } = FormValidator.bulkValidate(inputs);
 
     let eventDateValidate = [];
-    eventDateValidate["required"] = this.state.NewEventForm.eventDate === "";
+    eventDateValidate["required"] = !this.state.NewEventForm.eventDate._isValid;
     errors["eventDate"] = eventDateValidate;
 
     let genderValidate = [];
     genderValidate["required"] = this.state.NewEventForm.gender === "0";
     errors["gender"] = genderValidate;
 
+    errors["quote"]["gtOne"] = this.state.NewEventForm.quote <= 1;
+    errors["outcome"]["gtOne"] = this.state.NewEventForm.outcome <= 1;
+
+    console.log(errors);
     this.setState({
       [form.name]: {
         ...this.state[form.name],
@@ -164,6 +168,26 @@ class NewEvent extends Component {
     const value = input.type === "checkbox" ? input.checked : input.value;
 
     const result = FormValidator.validate(input);
+
+    this.setState({
+      [form.name]: {
+        ...this.state[form.name],
+        [input.name]: value,
+        errors: {
+          ...this.state[form.name].errors,
+          [input.name]: result,
+        },
+      },
+    });
+  };
+
+  validatePositiveNumbers = (event) => {
+    const input = event.target;
+    const form = input.form;
+    const value = input.type === "checkbox" ? input.checked : input.value;
+
+    const result = FormValidator.validate(input);
+    result["gtOne"] = value <= 1;
 
     this.setState({
       [form.name]: {
@@ -412,14 +436,19 @@ class NewEvent extends Component {
                               name="quote"
                               id="inputQuote"
                               type="number"
-                              invalid={this.hasError(
-                                "NewEventForm",
-                                "quote",
-                                "required"
-                              )}
+                              invalid={
+                                this.hasError(
+                                  "NewEventForm",
+                                  "quote",
+                                  "required"
+                                ) ||
+                                this.hasError("NewEventForm", "quote", "gtOne")
+                              }
                               data-validate='["required"]'
                               value={this.state.NewEventForm.quote}
-                              onChange={(event) => this.validateOnChange(event)}
+                              onChange={(event) =>
+                                this.validatePositiveNumbers(event)
+                              }
                             />
 
                             {this.hasError(
@@ -429,6 +458,15 @@ class NewEvent extends Component {
                             ) && (
                               <span className="invalid-feedback">
                                 Il campo Quota è obbligatorio
+                              </span>
+                            )}
+                            {this.hasError(
+                              "NewEventForm",
+                              "quote",
+                              "gtOne"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il campo Quota deve essere maggiore di uno
                               </span>
                             )}
                           </div>
@@ -446,14 +484,23 @@ class NewEvent extends Component {
                               name="outcome"
                               id="inputOutcome"
                               type="text"
-                              invalid={this.hasError(
-                                "NewEventForm",
-                                "outcome",
-                                "required"
-                              )}
+                              invalid={
+                                this.hasError(
+                                  "NewEventForm",
+                                  "outcome",
+                                  "required"
+                                ) ||
+                                this.hasError(
+                                  "NewEventForm",
+                                  "outcome",
+                                  "gtOne"
+                                )
+                              }
                               data-validate='["required"]'
                               value={this.state.NewEventForm.outcome}
-                              onChange={(event) => this.validateOnChange(event)}
+                              onChange={(event) =>
+                                this.validatePositiveNumbers(event)
+                              }
                             />
 
                             {this.hasError(
@@ -463,6 +510,15 @@ class NewEvent extends Component {
                             ) && (
                               <span className="invalid-feedback">
                                 Il campo Risultato è obbligatorio
+                              </span>
+                            )}
+                            {this.hasError(
+                              "NewEventForm",
+                              "outcome",
+                              "gtOne"
+                            ) && (
+                              <span className="invalid-feedback">
+                                Il campo Risultato deve essere maggiore di uno
                               </span>
                             )}
                           </div>

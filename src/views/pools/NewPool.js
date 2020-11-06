@@ -208,9 +208,15 @@ class NewPool extends Component {
                                   "stake",
                                   "required"
                                 ) ||
-                                this.hasError("NewPoolForm", "stake", "integer")
+                                this.hasError(
+                                  "NewPoolForm",
+                                  "stake",
+                                  "integer"
+                                ) ||
+                                this.hasError("NewPoolForm", "stake", "min")
                               }
-                              data-validate='["required", "integer"]'
+                              data-validate='["required", "integer", "min"]'
+                              data-param={1}
                               value={this.state.NewPoolForm.stake}
                               onChange={(event) => this.validateOnChange(event)}
                             />
@@ -231,6 +237,11 @@ class NewPool extends Component {
                             ) && (
                               <span className="invalid-feedback">
                                 Il campo Stake deve essere un intero
+                              </span>
+                            )}
+                            {this.hasError("NewPoolForm", "stake", "min") && (
+                              <span className="invalid-feedback">
+                                Il campo Stake deve essere maggiore di zero
                               </span>
                             )}
                           </div>
