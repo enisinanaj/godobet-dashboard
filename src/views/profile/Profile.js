@@ -45,17 +45,15 @@ class Profile extends Component {
     if (!hasError) {
       var updatedUser = {
         name: this.state.formUserInfo.userName,
-        role: this.props.app.user.role,
-        email: this.state.formUserInfo.email,
-        accessToken: this.props.app.user.accessToken,
       };
 
       const serverUserInfo = {
         loginProvider: config.API_URL + "/items/6",
         password: "",
+        role: this.props.app.user.role._links.self.href,
+        email: this.state.formUserInfo.email,
+        accessToken: this.props.app.user.accessToken,
       };
-
-      console.log({ ...updatedUser, ...serverUserInfo });
 
       var token = await TokenManager.getInstance().getToken();
       fetch(this.props.app.user._links.self.href, {
@@ -70,7 +68,7 @@ class Profile extends Component {
             ...this.props.app.user,
             ...updatedUser,
           });
-          //window.location.reload(false);
+          window.location.reload(false);
         });
     }
   }
