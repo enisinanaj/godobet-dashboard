@@ -42,35 +42,37 @@ class Profile extends Component {
       },
     });
 
-    var updatedUser = {
-      name: this.state.formUserInfo.userName,
-      role: this.props.app.user.role,
-      email: this.state.formUserInfo.email,
-      accessToken: this.props.app.user.accessToken,
-    };
+    if (!hasError) {
+      var updatedUser = {
+        name: this.state.formUserInfo.userName,
+        role: this.props.app.user.role,
+        email: this.state.formUserInfo.email,
+        accessToken: this.props.app.user.accessToken,
+      };
 
-    const serverUserInfo = {
-      loginProvider: config.API_URL + "/items/6",
-      password: "",
-    };
+      const serverUserInfo = {
+        loginProvider: config.API_URL + "/items/6",
+        password: "",
+      };
 
-    console.log({ ...updatedUser, ...serverUserInfo });
+      console.log({ ...updatedUser, ...serverUserInfo });
 
-    var token = await TokenManager.getInstance().getToken();
-    fetch(this.props.app.user._links.self.href, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", "X-Auth": token },
-      body: JSON.stringify({ ...updatedUser, ...serverUserInfo }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        this.props.actions.userLogin({
-          ...this.props.app.user,
-          ...updatedUser,
+      var token = await TokenManager.getInstance().getToken();
+      fetch(this.props.app.user._links.self.href, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "X-Auth": token },
+        body: JSON.stringify({ ...updatedUser, ...serverUserInfo }),
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response);
+          this.props.actions.userLogin({
+            ...this.props.app.user,
+            ...updatedUser,
+          });
+          //window.location.reload(false);
         });
-        window.location.reload(false);
-      });
+    }
   }
 
   hasError = (formName, inputName, method) => {
@@ -145,6 +147,9 @@ class Profile extends Component {
                             value={this.state.formUserInfo.userName}
                             onChange={(event) => this.validateOnChange(event)}
                           />
+                          <span className="invalid-feedback">
+                            Il campo Nome è obbligatorio
+                          </span>
                         </div>
                       </div>
                       <div className="form-group row">
