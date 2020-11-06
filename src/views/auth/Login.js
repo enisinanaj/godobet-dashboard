@@ -245,10 +245,6 @@ class Login extends Component {
                 Login
               </button>
             </form>
-            <p className="pt-3 text-center">Non hai ancora un account?</p>
-            <Link to="register" className="btn btn-block btn-secondary">
-              Registrati ora
-            </Link>
           </div>
         </div>
         <Footer />

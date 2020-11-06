@@ -13,7 +13,6 @@ import BasePage from "./template_components/Layout/BasePage";
 const waitFor = (Tag) => (props) => <Tag {...props} />;
 
 const Login = lazy(() => import("./views/auth/Login"));
-const Register = lazy(() => import("./views/auth/Register"));
 const Recover = lazy(() => import("./views/auth/Recover"));
 const NotFound = lazy(() => import("./template_components/Pages/NotFound"));
 const Error500 = lazy(() => import("./template_components/Pages/Error500"));
@@ -70,7 +69,6 @@ const Routes = ({ location, app }) => {
         <Suspense fallback={<PageLoader />}>
           <Switch location={location}>
             <Route path="/login" component={waitFor(Login)} />
-            <Route path="/register" component={waitFor(Register)} />
             <Route path="/recover" component={waitFor(Recover)} />
             <Route path="/notfound" component={waitFor(NotFound)} />
             <Route path="/error500" component={waitFor(Error500)} />
