@@ -111,7 +111,7 @@ class NewEvent extends Component {
       )
     ) {
       const newEvent = {
-        eventDate: moment(this.state.eventDate).toISOString(),
+        eventDate: moment(this.state.NewEventForm.eventDate).toISOString(),
         sport: this.state.NewEventForm.sport,
         competition: this.state.NewEventForm.competition,
         gender: this.state.NewEventForm.gender,
