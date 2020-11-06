@@ -5,9 +5,19 @@ const MenuTipster = [
     path: "/profile",
   },
   {
-    name: "I tuoi pacchetti",
-    icon: "icon-grid",
+    name: "I miei pacchetti",
+    icon: "icon-layers",
     path: "/myServices",
+  },
+  {
+    name: "Abbonati",
+    icon: "icon-people",
+    path: "/mySubscribers",
+  },
+  {
+    name: "Le mie schedine",
+    icon: "icon-grid",
+    path: "/allPools",
   },
 ];
 

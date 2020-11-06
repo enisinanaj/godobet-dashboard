@@ -1,0 +1,85 @@
+import React, { Component } from "react";
+import MyPools from "./MyPools";
+import { Button, Spinner } from "reactstrap";
+import ContentWrapper from "../../components/layout/ContentWrapper";
+import TokenManager from "../../components/auth/Token";
+import config from "../../store/config";
+import { connect } from "react-redux";
+
+class AllPools extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      loading: true,
+      noErrors: true,
+      pools: [],
+    };
+    this.getAllPools();
+  }
+
+  async getAllPools() {
+    console.log(this.props.app.user);
+    var token = await TokenManager.getInstance().getToken();
+    this.setState({ loading: true, noErrors: true }, () => {
+      fetch(
+        this.props.app.user._links.pools.href.replace("{?projection}", ""),
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+        }
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          //console.log(response);
+          if (response._embedded !== undefined)
+            this.setState({
+              pools: response._embedded.pools,
+              loading: false,
+            });
+          else this.setState({ noErrors: false, loading: true });
+        });
+    });
+  }
+
+  render() {
+    if (!this.state.loading)
+      return (
+        <ContentWrapper>
+          <h3>Le mie schedine</h3>
+          <MyPools pools={this.state.pools} history={this.props.history} />
+        </ContentWrapper>
+      );
+    else if (this.state.noErrors)
+      return (
+        <ContentWrapper>
+          <h4> Carico tutte le schedine...</h4>
+          <div>
+            <Spinner />
+          </div>
+        </ContentWrapper>
+      );
+    else
+      return (
+        <ContentWrapper>
+          <div>
+            <h4>Errore nel caricamento delle schedine</h4>
+          </div>
+          <div>
+            <Button
+              className="btn"
+              onClick={() => {
+                this.setState({ noErrors: true, loading: true }, () => {
+                  this.getAllPools();
+                });
+              }}
+            >
+              Riprova
+            </Button>
+          </div>
+        </ContentWrapper>
+      );
+  }
+}
+
+const mapStateToProps = (state) => state;
+export default connect(mapStateToProps)(AllPools);
