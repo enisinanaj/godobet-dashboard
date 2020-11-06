@@ -23,6 +23,8 @@ const Profile = lazy(() => import("./views/profile/Profile"));
 const MyServices = lazy(() => import("./views/services/MyServices"));
 const ServiceDetails = lazy(() => import("./views/services/ServiceDetails"));
 const PoolDetails = lazy(() => import("./views/pools/PoolDetails"));
+const MySubscribers = lazy(() => import("./views/services/MySubscribers"));
+const AllPools = lazy(() => import("./views/pools/AllPools"));
 const TipsterList = lazy(() => import("./views/admin/TipsterList"));
 const TipsterDetails = lazy(() => import("./views/admin/TipsterDetails"));
 const AllServices = lazy(() => import("./views/admin/AllServices"));
@@ -103,6 +105,11 @@ const Routes = ({ location, app }) => {
                       component={waitFor(PoolDetails)}
                     />
                     <Route
+                      path="/mySubscribers"
+                      component={waitFor(MySubscribers)}
+                    />
+                    <Route path="/allPools" component={waitFor(AllPools)} />
+                    <Route
                       path="/tipstersList"
                       component={waitFor(TipsterList)}
                     />
@@ -145,6 +152,11 @@ const Routes = ({ location, app }) => {
                       path="/poolDetails"
                       component={waitFor(PoolDetails)}
                     />
+                    <Route
+                      path="/mySubscribers"
+                      component={waitFor(MySubscribers)}
+                    />
+                    <Route path="/allPools" component={waitFor(AllPools)} />
                   </Switch>
                 </Suspense>
               </div>
