@@ -140,7 +140,6 @@ class NewService extends Component {
         let arrayUrlTaxonomies = [];
         await Promise.all(arrayFetch).then((results) => {
           for (let result of results) {
-            console.log(result);
             arrayUrlTaxonomies.push(result._links.self.href);
           }
         });
@@ -165,7 +164,6 @@ class NewService extends Component {
         })
           .then((response) => response.json())
           .then((response) => {
-            console.log(response);
             this.toggleModal();
             this.props.refreshServiceList();
           });
@@ -174,9 +172,35 @@ class NewService extends Component {
   }
 
   async editService() {
+    var token = await TokenManager.getInstance().getToken();
+    var userUrl = await fetch(this.props.serviceToEdit._links.author.href, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        return response._links.self.href;
+      });
+
+    var taxonomiesUrl = await fetch(
+      this.props.serviceToEdit._links.taxonomies.href,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json", "X-Auth": token },
+      }
+    )
+      .then((response) => response.json())
+      .then((response) => {
+        let arrayOfLinks = [];
+        for (let taxonomy of response._embedded.taxonomy) {
+          arrayOfLinks.push(taxonomy._links.self.href);
+        }
+        return arrayOfLinks;
+      });
+
     const editService = {
-      author: this.props.serviceToEdit._links.author.href,
-      taxonomies: this.props.serviceToEdit._links.taxonomies.href,
+      author: userUrl,
+      taxonomies: taxonomiesUrl,
       serviceName: this.state.NewServiceForm.serviceName,
       description: this.state.NewServiceForm.description,
       maxSubscribers: parseInt(this.state.NewServiceForm.maxSubscribers),
@@ -184,8 +208,6 @@ class NewService extends Component {
       price: parseInt(this.state.NewServiceForm.price),
       version: parseInt(this.state.NewServiceForm.version),
     };
-
-    console.log(editService);
 
     var token = await TokenManager.getInstance().getToken();
     fetch(this.props.serviceToEdit._links.self.href, {
@@ -240,9 +262,7 @@ class NewService extends Component {
         style={{ maxWidth: "70%" }}
       >
         <ModalHeader toggle={() => this.toggleModal()}>
-          <h4>
-            {this.props.serviceToEdit !== null ? "Modifica" : "Nuovo"} pacchetto
-          </h4>
+          <h4>{this.state.mode === "new" ? "Nuovo" : "Modifica"} pacchetto</h4>
         </ModalHeader>
         <ModalBody>
           <Row>
