@@ -39,6 +39,24 @@ class PoolDetails extends Component {
     });
   };
 
+  newEvent() {
+    this.setState(
+      {
+        eventToEdit: null,
+      },
+      () => this.toggleModal()
+    );
+  }
+
+  editEvent(event) {
+    this.setState(
+      {
+        eventToEdit: event,
+      },
+      () => this.toggleModal()
+    );
+  }
+
   checkPoolDetails() {
     try {
       if (Object.keys(this.props.app.poolDetails).lenght !== 0) {
@@ -116,6 +134,7 @@ class PoolDetails extends Component {
             <NewEvent
               //addService={(newService) => this.addService(newService)}
               modalNewEventVisible={this.state.modalNewEventVisible}
+              eventToEdit={this.state.eventToEdit}
               toggleModal={() => this.toggleModal()}
               refreshPool={() => this.getPoolDetails()}
             />
@@ -126,7 +145,7 @@ class PoolDetails extends Component {
               <Col lg="2">
                 <Button
                   className="btn btn-block btn-secondary"
-                  onClick={() => this.toggleModal()}
+                  onClick={() => this.newEvent()}
                 >
                   Aggiungi evento
                 </Button>
@@ -193,7 +212,10 @@ class PoolDetails extends Component {
                   <div>
                     <Row>
                       <Col md="12">
-                        <MyEvents events={this.state.events} />
+                        <MyEvents
+                          events={this.state.events}
+                          editEvent={(event) => this.editEvent(event)}
+                        />
                       </Col>
                     </Row>
                   </div>

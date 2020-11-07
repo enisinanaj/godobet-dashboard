@@ -23,6 +23,7 @@ moment.locale("it");
 
 class NewEvent extends Component {
   state = {
+    mode: "new",
     NewEventForm: {
       eventDate: "",
       sport: "",
@@ -39,6 +40,7 @@ class NewEvent extends Component {
   toggleModal() {
     this.setState(
       {
+        mode: "new",
         NewEventForm: {
           eventDate: "",
           sport: "",
@@ -57,6 +59,33 @@ class NewEvent extends Component {
     );
   }
 
+  async prepareToEdit() {
+    var token = await TokenManager.getInstance().getToken();
+    var gender = await fetch(this.props.eventToEdit._links.gender.href, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        return response._links.self.href;
+      });
+
+    this.setState({
+      mode: "edit",
+      NewEventForm: {
+        eventDate: moment(this.props.eventToEdit.eventDate),
+        sport: this.props.eventToEdit.sport,
+        competition: this.props.eventToEdit.competition,
+        gender: gender,
+        proposal: this.props.eventToEdit.proposal,
+        event: this.props.eventToEdit.event,
+        quote: this.props.eventToEdit.quote,
+        outcome: this.props.eventToEdit.outcome,
+        notes: this.props.eventToEdit.notes,
+      },
+    });
+  }
+
   handleGenderChange(selected) {
     let validate = [];
     validate["required"] = selected.target.value === "0";
@@ -70,8 +99,6 @@ class NewEvent extends Component {
         },
       },
     });
-
-    this.setState({ gender: selected.target.value });
   }
 
   async saveEvent(e) {
@@ -95,7 +122,6 @@ class NewEvent extends Component {
     errors["quote"]["gtOne"] = this.state.NewEventForm.quote <= 1;
     errors["outcome"]["gtOne"] = this.state.NewEventForm.outcome <= 1;
 
-    console.log(errors);
     this.setState({
       [form.name]: {
         ...this.state[form.name],
@@ -107,35 +133,68 @@ class NewEvent extends Component {
       !(
         hasError ||
         this.state.NewEventForm.gender === "0" ||
-        this.state.NewEventForm.eventDate === ""
+        !this.state.NewEventForm.eventDate._isValid ||
+        this.state.NewEventForm.gender === "0" ||
+        this.state.NewEventForm.quote <= 1 ||
+        this.state.NewEventForm.outcome <= 1
       )
     ) {
-      const newEvent = {
-        eventDate: moment(this.state.NewEventForm.eventDate).toISOString(),
-        sport: this.state.NewEventForm.sport,
-        competition: this.state.NewEventForm.competition,
-        gender: this.state.NewEventForm.gender,
-        proposal: this.state.NewEventForm.proposal,
-        event: this.state.NewEventForm.event,
-        quote: this.state.NewEventForm.quote,
-        outcome: this.state.NewEventForm.outcome,
-        notes: this.state.NewEventForm.notes,
-        pool: this.props.app.poolDetails.links.self.href,
-        createdOn: new Date().toISOString(),
-      };
+      if (this.state.mode === "new") {
+        const newEvent = {
+          eventDate: moment(this.state.NewEventForm.eventDate).toISOString(),
+          sport: this.state.NewEventForm.sport,
+          competition: this.state.NewEventForm.competition,
+          gender: this.state.NewEventForm.gender,
+          proposal: this.state.NewEventForm.proposal,
+          event: this.state.NewEventForm.event,
+          quote: this.state.NewEventForm.quote,
+          outcome: this.state.NewEventForm.outcome,
+          notes: this.state.NewEventForm.notes,
+          pool: this.props.app.poolDetails.links.self.href,
+          createdOn: new Date().toISOString(),
+        };
 
-      var token = await TokenManager.getInstance().getToken();
-      fetch(config.API_URL + "/events", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Auth": token },
-        body: JSON.stringify(newEvent),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          this.toggleModal();
-          this.props.refreshPool();
-        });
+        var token = await TokenManager.getInstance().getToken();
+        fetch(config.API_URL + "/events", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+          body: JSON.stringify(newEvent),
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            this.toggleModal();
+            this.props.refreshPool();
+          });
+      } else {
+        this.editEvent();
+      }
     }
+  }
+
+  async editEvent() {
+    const editEvent = {
+      eventDate: moment(this.state.NewEventForm.eventDate).toISOString(),
+      sport: this.state.NewEventForm.sport,
+      competition: this.state.NewEventForm.competition,
+      gender: this.state.NewEventForm.gender,
+      proposal: this.state.NewEventForm.proposal,
+      event: this.state.NewEventForm.event,
+      quote: this.state.NewEventForm.quote,
+      outcome: this.state.NewEventForm.outcome,
+      notes: this.state.NewEventForm.notes,
+    };
+
+    var token = await TokenManager.getInstance().getToken();
+    fetch(this.props.eventToEdit._links.self.href, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+      body: JSON.stringify(editEvent),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        this.toggleModal();
+        this.props.refreshPool();
+      });
   }
 
   handleEventDateChange(eventDate) {
@@ -205,11 +264,15 @@ class NewEvent extends Component {
     return (
       <Modal
         isOpen={this.props.modalNewEventVisible}
+        onOpened={() => {
+          if (this.props.eventToEdit !== null) this.prepareToEdit();
+        }}
         toggle={() => this.toggleModal()}
         style={{ maxWidth: "70%" }}
       >
         <ModalHeader toggle={() => this.toggleModal()}>
-          Nuovo evento per {this.props.app.poolDetails.description}
+          {this.state.mode === "new" ? "Nuovo" : "Modifica"} evento per{" "}
+          {this.props.app.poolDetails.description}
         </ModalHeader>
         <ModalBody>
           <Row>
@@ -270,7 +333,7 @@ class NewEvent extends Component {
                                 "required"
                               )}
                               data-validate='["required"]'
-                              value={this.state.NewEventForm.description}
+                              value={this.state.NewEventForm.sport}
                               onChange={(event) => this.validateOnChange(event)}
                             />
 
@@ -329,7 +392,7 @@ class NewEvent extends Component {
                           <div className="col-xl-10 col-md-9 col-8">
                             <select
                               name="gender"
-                              defaultValue={this.state.gender}
+                              value={this.state.NewEventForm.gender}
                               onChange={(e) => this.handleGenderChange(e)}
                               className="custom-select custom-select-sm"
                             >

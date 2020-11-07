@@ -110,20 +110,18 @@ class EventCard extends Component {
             </Col>
           </Row>
         </CardBody>
-        {false && (
-          <CardFooter className="d-flex">
-            <div>
-              <button type="button" className="btn btn-xs btn-primary">
-                Modifica
-              </button>
-            </div>
-            <div className="ml-auto">
-              <button type="button" className="btn btn-xs btn-secondary">
-                Elimina
-              </button>
-            </div>
-          </CardFooter>
-        )}
+
+        <CardFooter className="d-flex">
+          <div>
+            <button
+              type="button"
+              className="btn btn-block btn-secondary"
+              onClick={() => this.props.editEvent(this.props.data)}
+            >
+              Modifica
+            </button>
+          </div>
+        </CardFooter>
       </Card>
     );
   }
