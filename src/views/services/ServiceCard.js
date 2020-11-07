@@ -9,8 +9,11 @@ import {
   Col,
   FormGroup,
 } from "reactstrap";
+import TokenManager from "../../components/auth/Token";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import ReactTagInput from "@pathofdev/react-tag-input";
+import "@pathofdev/react-tag-input/build/index.css";
 import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";
 
@@ -25,6 +28,39 @@ class ServiceCard extends Component {
     version: PropTypes.number,
     links: PropTypes.object,
   };
+
+  state = {
+    taxonomies: [],
+  };
+
+  componentDidMount() {
+    this.getTaxonomies();
+  }
+
+  async getTaxonomies() {
+    var token = await TokenManager.getInstance().getToken();
+    this.setState({ loading: true, noErrors: true }, () => {
+      try {
+        fetch(this.props.links.taxonomies.href, {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            if (response._embedded) {
+              let arrayTaxonomies = [];
+              for (let taxonomy of response._embedded.taxonomy) {
+                arrayTaxonomies.push(taxonomy.definition);
+              }
+              this.setState({ taxonomies: arrayTaxonomies });
+            }
+          });
+      } catch {
+        console.log(this.props.app);
+        // this.props.history.push("/login");
+      }
+    });
+  }
 
   render() {
     return (
@@ -58,7 +94,11 @@ class ServiceCard extends Component {
                 </Col>
                 <Col md="4">Tag:</Col>
                 <Col md="8">
-                  <strong></strong>
+                  <ReactTagInput
+                    className="culo"
+                    tags={this.state.taxonomies}
+                    readOnly={true}
+                  />
                 </Col>
                 <Col md="4">Versione:</Col>
                 <Col md="8">
