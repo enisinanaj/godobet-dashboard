@@ -182,6 +182,7 @@ class NewEvent extends Component {
       quote: this.state.NewEventForm.quote,
       outcome: this.state.NewEventForm.outcome,
       notes: this.state.NewEventForm.notes,
+      createdOn: this.props.eventToEdit.createdOn,
     };
 
     var token = await TokenManager.getInstance().getToken();
