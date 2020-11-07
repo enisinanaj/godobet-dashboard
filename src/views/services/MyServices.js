@@ -35,12 +35,13 @@ class MyServices extends Component {
         })
           .then((response) => response.json())
           .then((response) => {
-            if (response._embedded !== undefined)
+            if (response._embedded !== undefined) {
+              console.log(response);
               this.setState({
                 services: response._embedded.services,
                 loading: false,
               });
-            else this.setState({ noErrors: false, loading: true });
+            } else this.setState({ noErrors: false, loading: true });
           });
       } catch {
         console.log(this.props.app);
@@ -87,7 +88,6 @@ class MyServices extends Component {
             <ServiceCard
               history={this.props.history}
               key={service._links.self.href}
-              taxonomies={service.taxonomies}
               serviceName={service.serviceName}
               description={service.description}
               maxSubscribers={service.maxSubscribers}

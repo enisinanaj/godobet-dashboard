@@ -31,6 +31,27 @@ class NewService extends Component {
     },
   };
 
+  componentDidMount() {
+    //this.uploadTaxonomy("Test");
+    //this.test();
+  }
+
+  async uploadTaxonomy(taxonomy) {
+    var token = await TokenManager.getInstance().getToken();
+
+    try {
+      return fetch(config.API_URL + "/taxonomies/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Auth": token },
+        body: JSON.stringify({ definition: taxonomy }),
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          return response;
+        });
+    } catch {}
+  }
+
   toggleModal() {
     this.setState(
       {
@@ -86,9 +107,25 @@ class NewService extends Component {
     });
 
     if (!(hasError || this.state.NewServiceForm.taxonomies.length <= 0)) {
+      //carico le taxonomies
+      const arrayDefinitions = this.state.NewServiceForm.taxonomies;
+      let arrayFetch = [];
+
+      for (let definition of arrayDefinitions) {
+        arrayFetch.push(this.uploadTaxonomy(definition));
+      }
+
+      let arrayUrlTaxonomies = [];
+      await Promise.all(arrayFetch).then((results) => {
+        for (let result of results) {
+          console.log(result);
+          arrayUrlTaxonomies.push(result._links.self.href);
+        }
+      });
+
       const newService = {
         author: this.props.app.user._links.user.href,
-        taxonomies: [], //this.state.taxonomies,
+        taxonomies: arrayUrlTaxonomies,
         serviceName: this.state.NewServiceForm.serviceName,
         description: this.state.NewServiceForm.description,
         maxSubscribers: parseInt(this.state.NewServiceForm.maxSubscribers),
