@@ -14,6 +14,7 @@ class MyServices extends Component {
       loading: true,
       noErrors: true,
       modalNewServiceVisible: false,
+      serviceToEdit: null,
       services: [],
     };
     this.getMyServices();
@@ -24,6 +25,24 @@ class MyServices extends Component {
       modalNewServiceVisible: !this.state.modalNewServiceVisible,
     });
   };
+
+  newService() {
+    this.setState(
+      {
+        serviceToEdit: null,
+      },
+      () => this.toggleModal()
+    );
+  }
+
+  editService(service) {
+    this.setState(
+      {
+        serviceToEdit: service,
+      },
+      () => this.toggleModal()
+    );
+  }
 
   async getMyServices() {
     var token = await TokenManager.getInstance().getToken();
@@ -36,7 +55,6 @@ class MyServices extends Component {
           .then((response) => response.json())
           .then((response) => {
             if (response._embedded !== undefined) {
-              console.log(response);
               this.setState({
                 services: response._embedded.services,
                 loading: false,
@@ -73,12 +91,12 @@ class MyServices extends Component {
         <ContentWrapper>
           <div className="form-group row">
             <div className="col-md-12">
-              <Button color="primary" onClick={this.toggleModal}>
+              <Button color="primary" onClick={() => this.newService()}>
                 Aggiungi pacchetto
               </Button>
               <NewService
-                addService={(newService) => this.addService(newService)}
                 modalNewServiceVisible={this.state.modalNewServiceVisible}
+                serviceToEdit={this.state.serviceToEdit}
                 toggleModal={() => this.toggleModal()}
                 refreshServiceList={() => this.getMyServices()}
               ></NewService>
@@ -87,14 +105,9 @@ class MyServices extends Component {
           {this.state.services.map((service) => (
             <ServiceCard
               history={this.props.history}
+              serviceData={service}
               key={service._links.self.href}
-              serviceName={service.serviceName}
-              description={service.description}
-              maxSubscribers={service.maxSubscribers}
-              duration={service.duration}
-              price={service.price}
-              version={service.version}
-              links={service._links}
+              editService={(service) => this.editService(service)}
             ></ServiceCard>
           ))}
         </ContentWrapper>
