@@ -10,48 +10,38 @@ import {
   Button,
 } from "reactstrap";
 import * as moment from "moment";
+import "moment/locale/it";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";
+moment.locale("it");
 
 class PoolCard extends Component {
-  static propTypes = {
-    description: PropTypes.string,
-    totalQuote: PropTypes.number,
-    stake: PropTypes.string,
-    profit: PropTypes.number,
-    bookmaker: PropTypes.string,
-    totalEvents: PropTypes.array,
-    poolCreatedOn: PropTypes.string,
-    poolUpdatedOn: PropTypes.string,
-    hrefPool: PropTypes.string,
-  };
-
   render() {
     return (
       <Card className="card-default">
-        <CardHeader>Riepilogo schedina {this.props.id}</CardHeader>
+        <CardHeader>Riepilogo schedina {this.props.poolData.id}</CardHeader>
         <CardBody>
           <Row>
             <Col lg="6">
               <FormGroup row>
                 <Col md="4">Descrizione:</Col>
                 <Col md="8">
-                  <strong>{this.props.description}</strong>
+                  <strong>{this.props.poolData.description}</strong>
                 </Col>
                 <Col md="4">Quota:</Col>
                 <Col md="8">
-                  <strong>{this.props.totalQuote}</strong>
+                  <strong>{this.props.poolData.totalQuote}</strong>
                 </Col>
                 <Col md="4">Bookmaker:</Col>
                 <Col md="8">
-                  <strong>{this.props.bookmaker}</strong>
+                  <strong>{this.props.poolData.bookmaker}</strong>
                 </Col>
                 <Col md="4">Creato il:</Col>
                 <Col md="8">
                   <strong>
-                    {moment(this.props.poolCreatedOn).format(
+                    {moment(this.props.poolData.createdOn).format(
                       "DD/MM/YYYY HH:mm"
                     )}
                   </strong>
@@ -62,20 +52,20 @@ class PoolCard extends Component {
               <FormGroup row>
                 <Col md="4">Stake:</Col>
                 <Col md="8">
-                  <strong>{this.props.stake}</strong>
+                  <strong>{this.props.poolData.stake}</strong>
                 </Col>
                 <Col md="4">Profitto:</Col>
                 <Col md="8">
-                  <strong>{this.props.profit}</strong>
+                  <strong>{this.props.poolData.profit}</strong>
                 </Col>
                 <Col md="4">Eventi totali:</Col>
                 <Col md="8">
-                  <strong>{this.props.totalEvents}</strong>
+                  <strong>{this.props.poolData.totalEvents}</strong>
                 </Col>
                 <Col md="4">Modificato il:</Col>
                 <Col md="8">
                   <strong>
-                    {moment(this.props.poolUpdatedOn).format(
+                    {moment(this.props.poolData.updatedOn).format(
                       "DD/MM/YYYY HH:mm"
                     )}
                   </strong>
@@ -90,21 +80,32 @@ class PoolCard extends Component {
               className="btn btn-block btn-secondary"
               onClick={() => {
                 this.props.actions.poolDetails({
-                  bookmaker: this.props.bookmaker,
-                  description: this.props.description,
+                  bookmaker: this.props.poolData.bookmaker,
+                  description: this.props.poolData.description,
                   id: this.props.id,
-                  poolCreatedOn: this.props.poolCreatedOn,
-                  poolUpdatedOn: this.props.poolUpdatedOn,
-                  profit: this.props.profit,
-                  stake: this.props.stake,
-                  totalEvents: this.props.totalEvents,
-                  totalQuote: this.props.totalQuote,
-                  links: this.props.links,
+                  poolCreatedOn: this.props.poolData.poolCreatedOn,
+                  poolUpdatedOn: this.props.poolData.poolUpdatedOn,
+                  profit: this.props.poolData.profit,
+                  stake: this.props.poolData.stake,
+                  totalEvents: this.props.poolData.totalEvents,
+                  totalQuote: this.props.poolData.totalQuote,
+                  links: this.props.poolData._links,
                 });
                 this.props.history.push("/poolDetails");
               }}
             >
               Visualizza
+            </Button>
+          </div>
+          <div className="ml-auto">
+            <Button
+              type="button"
+              className="btn btn-block btn-primary"
+              onClick={() => {
+                this.props.editPool(this.props.poolData);
+              }}
+            >
+              Modifica
             </Button>
           </div>
         </CardFooter>

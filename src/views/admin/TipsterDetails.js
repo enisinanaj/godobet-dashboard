@@ -132,14 +132,7 @@ class TipsterDetails extends Component {
                       <ServiceCard
                         history={this.props.history}
                         key={service._links.self.href}
-                        taxonomies={service.taxonomies}
-                        serviceName={service.serviceName}
-                        description={service.description}
-                        maxSubscribers={service.maxSubscribers}
-                        duration={service.duration}
-                        price={service.price}
-                        version={service.version}
-                        links={service._links}
+                        serviceData={service}
                       ></ServiceCard>
                     ))}
                   </div>

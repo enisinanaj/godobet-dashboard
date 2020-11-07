@@ -72,7 +72,6 @@ class NewService extends Component {
   }
 
   prepareToEdit() {
-    console.log(this.props.serviceToEdit);
     this.setState({
       mode: "edit",
       NewServiceForm: {

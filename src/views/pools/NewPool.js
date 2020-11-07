@@ -22,6 +22,7 @@ class NewPool extends Component {
     super(props, context);
 
     this.state = {
+      mode: "new",
       NewPoolForm: {
         description: "",
         stake: "",
@@ -49,6 +50,7 @@ class NewPool extends Component {
   toggleModal() {
     this.setState(
       {
+        mode: "new",
         NewPoolForm: {
           description: "",
           stake: "",
@@ -59,6 +61,17 @@ class NewPool extends Component {
         this.props.toggleModal();
       }
     );
+  }
+
+  prepareToEdit() {
+    this.setState({
+      mode: "edit",
+      NewPoolForm: {
+        description: this.props.poolToEdit.description,
+        stake: this.props.poolToEdit.stake,
+        bookmaker: this.props.poolToEdit.bookmaker,
+      },
+    });
   }
 
   async savePool(e) {
@@ -78,29 +91,55 @@ class NewPool extends Component {
     });
 
     if (!(hasError || this.state.NewPoolForm.bookmaker === "0")) {
-      const newPool = {
-        createdOn: new Date(),
-        description: this.state.NewPoolForm.description,
-        stake: this.state.NewPoolForm.stake,
-        bookmaker: this.state.NewPoolForm.bookmaker,
-        events: [],
-        author: this.props.app.serviceDetails.links.author.href,
-        service: this.props.app.serviceDetails.links.self.href,
-      };
+      if (this.state.mode == "new") {
+        const newPool = {
+          createdOn: new Date(),
+          description: this.state.NewPoolForm.description,
+          stake: this.state.NewPoolForm.stake,
+          bookmaker: this.state.NewPoolForm.bookmaker,
+          events: [],
+          author: this.props.app.serviceDetails.links.author.href,
+          service: this.props.app.serviceDetails.links.self.href,
+        };
 
-      var token = await TokenManager.getInstance().getToken();
-      fetch(config.API_URL + "/pools", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Auth": token },
-        body: JSON.stringify(newPool),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          console.log(response);
-          this.toggleModal();
-          this.props.refreshService();
-        });
+        var token = await TokenManager.getInstance().getToken();
+        fetch(config.API_URL + "/pools", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+          body: JSON.stringify(newPool),
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            console.log(response);
+            this.toggleModal();
+            this.props.refreshService();
+          });
+      } else {
+        this.editPool();
+      }
     }
+  }
+
+  async editPool() {
+    const editedPool = {
+      createdOn: this.props.poolToEdit.createdOn,
+      description: this.state.NewPoolForm.description,
+      stake: this.state.NewPoolForm.stake,
+      bookmaker: this.state.NewPoolForm.bookmaker,
+    };
+
+    var token = await TokenManager.getInstance().getToken();
+    fetch(this.props.poolToEdit._links.self.href, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+      body: JSON.stringify(editedPool),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        //console.log(response);
+        this.toggleModal();
+        this.props.refreshService();
+      });
   }
 
   hasError = (formName, inputName, method) => {
@@ -135,12 +174,17 @@ class NewPool extends Component {
     return (
       <Modal
         isOpen={this.props.modalNewPoolVisible}
+        onOpened={() => {
+          if (this.props.poolToEdit !== null) this.prepareToEdit();
+        }}
         toggle={() => this.toggleModal()}
         style={{ maxWidth: "70%" }}
       >
         <ModalHeader toggle={() => this.toggleModal()}>
-          Inserimento schedina per il pacchetto "
-          {this.props.app.serviceDetails.serviceName}"
+          <h4>
+            {this.state.mode == "new" ? "Inserimento" : "Modifica"} schedina per
+            il pacchetto "{this.props.app.serviceDetails.serviceName}"
+          </h4>
         </ModalHeader>
         <ModalBody>
           <Row>

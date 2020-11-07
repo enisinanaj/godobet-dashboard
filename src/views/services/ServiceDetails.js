@@ -49,6 +49,7 @@ class ServiceDetails extends Component {
       poolLoading: true,
       poolNoErrors: true,
       modalNewPoolVisible: false,
+      poolToEdit: null,
       service: {},
       pools: [],
     };
@@ -70,6 +71,24 @@ class ServiceDetails extends Component {
       modalNewPoolVisible: !this.state.modalNewPoolVisible,
     });
   };
+
+  newPool() {
+    this.setState(
+      {
+        poolToEdit: null,
+      },
+      () => this.toggleModal()
+    );
+  }
+
+  editPool(pool) {
+    this.setState(
+      {
+        poolToEdit: pool,
+      },
+      () => this.toggleModal()
+    );
+  }
 
   async getServiceDetails() {
     var token = await TokenManager.getInstance().getToken();
@@ -180,6 +199,7 @@ class ServiceDetails extends Component {
           <div>
             <NewPool
               modalNewPoolVisible={this.state.modalNewPoolVisible}
+              poolToEdit={this.state.poolToEdit}
               toggleModal={() => this.toggleModal()}
               refreshService={() => this.getServiceDetails()}
             />
@@ -187,37 +207,14 @@ class ServiceDetails extends Component {
               <Col lg="6">
                 <h2>Dettagli pacchetto "{this.state.service.serviceName}"</h2>
               </Col>
-              {false && (
-                <Col lg="2">
-                  <Link
-                    to={{
-                      pathname: "newPool",
-                    }}
-                    className="btn btn-block btn-primary"
-                  >
-                    Modifica Pacchetto
-                  </Link>
-                </Col>
-              )}
               <Col lg="2">
                 <Button
                   className="btn btn-block btn-secondary"
-                  onClick={() => this.toggleModal()}
+                  onClick={() => this.newPool()}
                 >
                   Aggiungi schedina
                 </Button>
               </Col>
-              {false && (
-                <Col lg="2">
-                  <Swal
-                    options={this.state.swalDeleteService}
-                    callback={this.deleteService}
-                    className="btn btn-danger"
-                  >
-                    Elimina pacchetto
-                  </Swal>
-                </Col>
-              )}
             </Row>
             <Card className="card-default">
               <CardHeader>
@@ -272,6 +269,7 @@ class ServiceDetails extends Component {
                     <MyPools
                       pools={this.state.pools}
                       history={this.props.history}
+                      editPool={(pool) => this.editPool(pool)}
                     />
                   </div>
                 ) : this.state.poolNoErrors ? (
