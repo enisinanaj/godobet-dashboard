@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import TokenManager from "../../components/auth/Token";
 import Swal from "../../components/elements/Swal";
 import NewPool from "../pools/NewPool";
+import NewService from "../services/NewService.js";
 import { connect } from "react-redux";
 
 class TipsterDetails extends Component {
@@ -27,10 +28,26 @@ class TipsterDetails extends Component {
       tipsterNoErrors: true,
       serviceLoading: true,
       serviceNoErrors: true,
+      modalEditServiceVisible: false,
       tipster: {},
       services: [],
     };
     this.checkTipsterDetails();
+  }
+
+  toggleModalEditService = () => {
+    this.setState({
+      modalEditServiceVisible: !this.state.modalEditServiceVisible,
+    });
+  };
+
+  editService(service) {
+    this.setState(
+      {
+        serviceToEdit: service,
+      },
+      () => this.toggleModalEditService()
+    );
   }
 
   checkTipsterDetails() {
@@ -109,6 +126,12 @@ class TipsterDetails extends Component {
       <ContentWrapper>
         {!this.state.tipsterLoading ? (
           <div>
+            <NewService
+              modalNewServiceVisible={this.state.modalEditServiceVisible}
+              serviceToEdit={this.state.serviceToEdit}
+              toggleModal={() => this.toggleModalEditService()}
+              refreshServiceList={() => this.getTipsterDetails()}
+            />
             <Row>
               <Col lg="6">
                 <h2>Dettagli tipster</h2>
@@ -133,6 +156,7 @@ class TipsterDetails extends Component {
                         history={this.props.history}
                         key={service._links.self.href}
                         serviceData={service}
+                        editService={(service) => this.editService(service)}
                       ></ServiceCard>
                     ))}
                   </div>
