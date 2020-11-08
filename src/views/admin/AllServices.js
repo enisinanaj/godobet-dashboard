@@ -5,6 +5,7 @@ import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
 import { connect } from "react-redux";
+import NewService from "../services/NewService.js";
 
 class AllServices extends Component {
   constructor(props, context) {
@@ -12,16 +13,26 @@ class AllServices extends Component {
     this.state = {
       loading: true,
       noErrors: true,
+      modalEditServiceVisible: false,
       services: [],
     };
     this.getAllServices();
   }
 
-  toggleModal = () => {
+  toggleModalEditService = () => {
     this.setState({
-      modalNewServiceVisible: !this.state.modalNewServiceVisible,
+      modalEditServiceVisible: !this.state.modalEditServiceVisible,
     });
   };
+
+  editService(service) {
+    this.setState(
+      {
+        serviceToEdit: service,
+      },
+      () => this.toggleModalEditService()
+    );
+  }
 
   async getAllServices() {
     var token = await TokenManager.getInstance().getToken();
@@ -47,18 +58,18 @@ class AllServices extends Component {
     if (!this.state.loading)
       return (
         <ContentWrapper>
+          <NewService
+            modalNewServiceVisible={this.state.modalEditServiceVisible}
+            serviceToEdit={this.state.serviceToEdit}
+            toggleModal={() => this.toggleModalEditService()}
+            refreshServiceList={() => this.getAllServices()}
+          />
           {this.state.services.map((service) => (
             <ServiceCard
               history={this.props.history}
               key={service._links.self.href}
-              taxonomies={service.taxonomies}
-              serviceName={service.serviceName}
-              description={service.description}
-              maxSubscribers={service.maxSubscribers}
-              duration={service.duration}
-              price={service.price}
-              version={service.version}
-              links={service._links}
+              serviceData={service}
+              editService={(service) => this.editService(service)}
             ></ServiceCard>
           ))}
         </ContentWrapper>

@@ -7,16 +7,8 @@ class MyPools extends Component {
       <PoolCard
         history={this.props.history}
         key={pool.id}
-        id={pool.id}
-        description={pool.description}
-        totalQuote={pool.totalQuote}
-        stake={pool.stake}
-        profit={pool.profit}
-        bookmaker={pool.bookmaker}
-        totalEvents={pool.totalEvents}
-        poolCreatedOn={pool.createdOn}
-        poolUpdatedOn={pool.updatedOn}
-        links={pool._links}
+        poolData={pool}
+        editPool={(poolEdit) => this.props.editPool(poolEdit)}
       ></PoolCard>
     ));
   }

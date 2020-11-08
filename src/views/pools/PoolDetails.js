@@ -14,6 +14,7 @@ import * as moment from "moment";
 import MyEvents from "../events/MyEvents";
 import { connect } from "react-redux";
 import NewEvent from "../events/NewEvent";
+import NewPool from "./NewPool";
 
 import TokenManager from "../../components/auth/Token";
 
@@ -26,6 +27,7 @@ class PoolDetails extends Component {
       eventLoading: true,
       eventNoErrors: true,
       modalNewEventVisible: false,
+      modalEditPoolVisible: false,
       events: [],
       pool: {},
     };
@@ -38,6 +40,39 @@ class PoolDetails extends Component {
       modalNewEventVisible: !this.state.modalNewEventVisible,
     });
   };
+
+  toggleModalEditPool = () => {
+    this.setState({
+      modalEditPoolVisible: !this.state.modalEditPoolVisible,
+    });
+  };
+
+  newEvent() {
+    this.setState(
+      {
+        eventToEdit: null,
+      },
+      () => this.toggleModal()
+    );
+  }
+
+  editEvent(event) {
+    this.setState(
+      {
+        eventToEdit: event,
+      },
+      () => this.toggleModal()
+    );
+  }
+
+  editPool(pool) {
+    this.setState(
+      {
+        poolToEdit: pool,
+      },
+      () => this.toggleModalEditPool()
+    );
+  }
 
   checkPoolDetails() {
     try {
@@ -116,17 +151,36 @@ class PoolDetails extends Component {
             <NewEvent
               //addService={(newService) => this.addService(newService)}
               modalNewEventVisible={this.state.modalNewEventVisible}
+              eventToEdit={this.state.eventToEdit}
               toggleModal={() => this.toggleModal()}
               refreshPool={() => this.getPoolDetails()}
+            />
+
+            <NewPool
+              modalNewPoolVisible={this.state.modalEditPoolVisible}
+              poolToEdit={this.state.poolToEdit}
+              toggleModal={() => this.toggleModalEditPool()}
+              refreshService={() => this.getPoolDetails()}
             />
             <Row>
               <Col lg="6">
                 <h2>Dettagli schedina "{this.state.pool.description}"</h2>
               </Col>
+
               <Col lg="2">
                 <Button
                   className="btn btn-block btn-secondary"
-                  onClick={() => this.toggleModal()}
+                  onClick={() => {
+                    this.editPool(this.state.pool);
+                  }}
+                >
+                  Modifica schedina
+                </Button>
+              </Col>
+              <Col lg="2">
+                <Button
+                  className="btn btn-block btn-secondary"
+                  onClick={() => this.newEvent()}
                 >
                   Aggiungi evento
                 </Button>
@@ -193,7 +247,10 @@ class PoolDetails extends Component {
                   <div>
                     <Row>
                       <Col md="12">
-                        <MyEvents events={this.state.events} />
+                        <MyEvents
+                          events={this.state.events}
+                          editEvent={(event) => this.editEvent(event)}
+                        />
                       </Col>
                     </Row>
                   </div>

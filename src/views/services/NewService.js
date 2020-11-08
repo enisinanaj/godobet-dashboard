@@ -20,6 +20,7 @@ import config from "../../store/config";
 
 class NewService extends Component {
   state = {
+    mode: "new",
     NewServiceForm: {
       taxonomies: [],
       serviceName: "",
@@ -55,6 +56,7 @@ class NewService extends Component {
   toggleModal() {
     this.setState(
       {
+        mode: "new",
         NewServiceForm: {
           taxonomies: [],
           serviceName: "",
@@ -67,6 +69,21 @@ class NewService extends Component {
       },
       () => this.props.toggleModal()
     );
+  }
+
+  prepareToEdit() {
+    this.setState({
+      mode: "edit",
+      NewServiceForm: {
+        taxonomies: this.props.serviceToEdit.taxonomies,
+        serviceName: this.props.serviceToEdit.serviceName,
+        description: this.props.serviceToEdit.description,
+        maxSubscribers: this.props.serviceToEdit.maxSubscribers,
+        duration: this.props.serviceToEdit.duration,
+        price: this.props.serviceToEdit.price,
+        version: "1",
+      },
+    });
   }
 
   handleTaxonomiesChange(newTaxonomies) {
@@ -107,47 +124,114 @@ class NewService extends Component {
     });
 
     if (!(hasError || this.state.NewServiceForm.taxonomies.length <= 0)) {
-      //carico le taxonomies
-      const arrayDefinitions = this.state.NewServiceForm.taxonomies;
-      let arrayFetch = [];
+      if (this.props.serviceToEdit !== null) {
+        //devo modificare
+        this.editService();
+      } else {
+        //carico le taxonomies
+        const arrayDefinitions = this.state.NewServiceForm.taxonomies;
+        let arrayFetch = [];
 
-      for (let definition of arrayDefinitions) {
-        arrayFetch.push(this.uploadTaxonomy(definition));
-      }
-
-      let arrayUrlTaxonomies = [];
-      await Promise.all(arrayFetch).then((results) => {
-        for (let result of results) {
-          console.log(result);
-          arrayUrlTaxonomies.push(result._links.self.href);
+        for (let definition of arrayDefinitions) {
+          arrayFetch.push(this.uploadTaxonomy(definition));
         }
+
+        let arrayUrlTaxonomies = [];
+        await Promise.all(arrayFetch).then((results) => {
+          for (let result of results) {
+            arrayUrlTaxonomies.push(result._links.self.href);
+          }
+        });
+
+        const newService = {
+          author: this.props.app.user._links.user.href,
+          taxonomies: arrayUrlTaxonomies,
+          serviceName: this.state.NewServiceForm.serviceName,
+          description: this.state.NewServiceForm.description,
+          maxSubscribers: parseInt(this.state.NewServiceForm.maxSubscribers),
+          duration: parseInt(this.state.NewServiceForm.duration),
+          price: parseInt(this.state.NewServiceForm.price),
+          version: parseInt(this.state.NewServiceForm.version),
+        };
+        //carico il nuovo pacchetto online
+
+        var token = await TokenManager.getInstance().getToken();
+        fetch(config.API_URL + "/services", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Auth": token },
+          body: JSON.stringify(newService),
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            this.toggleModal();
+            this.props.refreshServiceList();
+          });
+      }
+    }
+  }
+
+  async editService() {
+    //associo le taxonomies a link gia esistenti
+    let arrayUrlExistingTaxonomies = [];
+    let arrayTaxonomiesWithNoUrl = [];
+    for (let taxonomy of this.state.NewServiceForm.taxonomies) {
+      const existingUrl = this.props.serviceToEdit.taxonomiesObjects.filter(
+        (obj) => {
+          return obj.definition === taxonomy;
+        }
+      );
+      if (existingUrl.length === 0) arrayTaxonomiesWithNoUrl.push(taxonomy);
+      else arrayUrlExistingTaxonomies.push(existingUrl[0]._links.self.href);
+    }
+
+    //carico le taxonomies rimanenti
+
+    let arrayFetch = [];
+
+    for (let definition of arrayTaxonomiesWithNoUrl) {
+      arrayFetch.push(this.uploadTaxonomy(definition));
+    }
+
+    await Promise.all(arrayFetch).then((results) => {
+      for (let result of results) {
+        arrayUrlExistingTaxonomies.push(result._links.self.href);
+      }
+    });
+
+    var token = await TokenManager.getInstance().getToken();
+    var userUrl = await fetch(this.props.serviceToEdit._links.author.href, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        return response._links.self.href;
       });
 
-      const newService = {
-        author: this.props.app.user._links.user.href,
-        taxonomies: arrayUrlTaxonomies,
-        serviceName: this.state.NewServiceForm.serviceName,
-        description: this.state.NewServiceForm.description,
-        maxSubscribers: parseInt(this.state.NewServiceForm.maxSubscribers),
-        duration: parseInt(this.state.NewServiceForm.duration),
-        price: parseInt(this.state.NewServiceForm.price),
-        version: parseInt(this.state.NewServiceForm.version),
-      };
-      //carico il nuovo pacchetto online
+    const editService = {
+      author: userUrl,
+      taxonomies: arrayUrlExistingTaxonomies,
+      serviceName: this.state.NewServiceForm.serviceName,
+      description: this.state.NewServiceForm.description,
+      maxSubscribers: parseInt(this.state.NewServiceForm.maxSubscribers),
+      duration: parseInt(this.state.NewServiceForm.duration),
+      price: parseInt(this.state.NewServiceForm.price),
+      version: parseInt(this.state.NewServiceForm.version),
+    };
+    console.log(editService);
 
-      var token = await TokenManager.getInstance().getToken();
-      fetch(config.API_URL + "/services", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Auth": token },
-        body: JSON.stringify(newService),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          console.log(response);
-          this.toggleModal();
-          this.props.refreshServiceList();
-        });
-    }
+    var token = await TokenManager.getInstance().getToken();
+    fetch(this.props.serviceToEdit._links.self.href, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+      body: JSON.stringify(editService),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        this.toggleModal();
+        this.props.refreshServiceList();
+      });
   }
 
   hasError = (formName, inputName, method) => {
@@ -182,11 +266,14 @@ class NewService extends Component {
     return (
       <Modal
         isOpen={this.props.modalNewServiceVisible}
+        onOpened={() => {
+          if (this.props.serviceToEdit !== null) this.prepareToEdit();
+        }}
         toggle={() => this.toggleModal()}
         style={{ maxWidth: "70%" }}
       >
         <ModalHeader toggle={() => this.toggleModal()}>
-          Nuovo pacchetto
+          <h4>{this.state.mode === "new" ? "Nuovo" : "Modifica"} pacchetto</h4>
         </ModalHeader>
         <ModalBody>
           <Row>
@@ -281,6 +368,7 @@ class NewService extends Component {
                               type="number"
                               name="price"
                               id="inputPrice"
+                              disabled={this.props.serviceToEdit !== null}
                               invalid={
                                 this.hasError(
                                   "NewServiceForm",
@@ -341,6 +429,7 @@ class NewService extends Component {
                               name="maxSubscribers"
                               id="inputMaxSubscribers"
                               type="number"
+                              disabled={this.props.serviceToEdit !== null}
                               invalid={
                                 this.hasError(
                                   "NewServiceForm",
@@ -406,6 +495,7 @@ class NewService extends Component {
                               id="inputDuration"
                               name="duration"
                               type="number"
+                              disabled={this.props.serviceToEdit !== null}
                               invalid={
                                 this.hasError(
                                   "NewServiceForm",
@@ -499,6 +589,7 @@ class NewService extends Component {
                               name="version"
                               id="inputVersion"
                               type="number"
+                              disabled={this.props.serviceToEdit !== null}
                               invalid={
                                 this.hasError(
                                   "NewServiceForm",
