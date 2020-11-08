@@ -5,6 +5,9 @@ stages:
 build:
   stage: build
   image: node:10.16.0
+  only:
+    refs:
+      - master
   script: 
     - echo "Start building App"
     - npm install
@@ -20,6 +23,9 @@ production:
   type: deploy
   stage: production
   image: ruby:latest
+  only:
+    refs:
+      - master
   script:
       - gem install dpl
       - dpl --provider=heroku --app=godobet-dashboard --api-key=$HEROKU_API_KEY
