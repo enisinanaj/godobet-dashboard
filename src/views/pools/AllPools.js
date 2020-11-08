@@ -5,6 +5,7 @@ import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
 import { connect } from "react-redux";
+import NewPool from "./NewPool";
 
 class AllPools extends Component {
   constructor(props, context) {
@@ -12,10 +13,26 @@ class AllPools extends Component {
     this.state = {
       loading: true,
       noErrors: true,
+      modalEditPoolVisible: false,
       pools: [],
     };
     this.getAllPools();
   }
+
+  editPool(pool) {
+    this.setState(
+      {
+        poolToEdit: pool,
+      },
+      () => this.toggleModalEditPool()
+    );
+  }
+
+  toggleModalEditPool = () => {
+    this.setState({
+      modalEditPoolVisible: !this.state.modalEditPoolVisible,
+    });
+  };
 
   async getAllPools() {
     console.log(this.props.app.user);
@@ -46,7 +63,17 @@ class AllPools extends Component {
       return (
         <ContentWrapper>
           <h3>Le mie schedine</h3>
-          <MyPools pools={this.state.pools} history={this.props.history} />
+          <NewPool
+            modalNewPoolVisible={this.state.modalEditPoolVisible}
+            poolToEdit={this.state.poolToEdit}
+            toggleModal={() => this.toggleModalEditPool()}
+            refreshService={() => this.getAllPools()}
+          />
+          <MyPools
+            pools={this.state.pools}
+            history={this.props.history}
+            editPool={(pool) => this.editPool(pool)}
+          />
         </ContentWrapper>
       );
     else if (this.state.noErrors)
