@@ -14,9 +14,11 @@ import {
 import config from "../../store/config";
 import MyPools from "../pools/MyPools";
 import { Link } from "react-router-dom";
+import ReactTagInput from "@pathofdev/react-tag-input";
 import TokenManager from "../../components/auth/Token";
 import Swal from "../../components/elements/Swal";
 import NewPool from "../pools/NewPool";
+import NewService from "./NewService";
 import { connect } from "react-redux";
 
 class ServiceDetails extends Component {
@@ -49,7 +51,10 @@ class ServiceDetails extends Component {
       poolLoading: true,
       poolNoErrors: true,
       modalNewPoolVisible: false,
+      modalEditServiceVisible: false,
+      serviceToEdit: null,
       poolToEdit: null,
+      taxonomies: [],
       service: {},
       pools: [],
     };
@@ -72,6 +77,12 @@ class ServiceDetails extends Component {
     });
   };
 
+  toggleModalEditService = () => {
+    this.setState({
+      modalEditServiceVisible: !this.state.modalEditServiceVisible,
+    });
+  };
+
   newPool() {
     this.setState(
       {
@@ -87,6 +98,15 @@ class ServiceDetails extends Component {
         poolToEdit: pool,
       },
       () => this.toggleModal()
+    );
+  }
+
+  editService(service) {
+    this.setState(
+      {
+        serviceToEdit: service,
+      },
+      () => this.toggleModalEditService()
     );
   }
 
@@ -112,6 +132,7 @@ class ServiceDetails extends Component {
                 serviceLoading: false,
                 serviceNoErrors: true,
               });
+              this.getTaxonomies();
               this.getMyPools();
             } else {
               this.setState({ serviceNoErrors: false });
@@ -153,6 +174,31 @@ class ServiceDetails extends Component {
           });
       }
     );
+  }
+
+  async getTaxonomies() {
+    var token = await TokenManager.getInstance().getToken();
+    try {
+      fetch(this.props.app.serviceDetails.links.taxonomies.href, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", "X-Auth": token },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response._embedded) {
+            let arrayTaxonomies = [];
+            for (let taxonomy of response._embedded.taxonomy) {
+              arrayTaxonomies.push(taxonomy.definition);
+            }
+            this.setState({
+              taxonomies: arrayTaxonomies,
+              taxonomiesObjects: response._embedded.taxonomy,
+            });
+          }
+        });
+    } catch {
+      // this.props.history.push("/login");
+    }
   }
 
   eventModalRef = (props) => {
@@ -203,9 +249,31 @@ class ServiceDetails extends Component {
               toggleModal={() => this.toggleModal()}
               refreshService={() => this.getServiceDetails()}
             />
+
+            <NewService
+              modalNewServiceVisible={this.state.modalEditServiceVisible}
+              serviceToEdit={this.state.serviceToEdit}
+              toggleModal={() => this.toggleModalEditService()}
+              refreshServiceList={() => this.getServiceDetails()}
+            />
             <Row>
               <Col lg="6">
                 <h2>Dettagli pacchetto "{this.state.service.serviceName}"</h2>
+              </Col>
+              <Col lg="2">
+                <Button
+                  className="btn btn-block btn-secondary"
+                  onClick={() => {
+                    this.editService({
+                      ...this.props.app.serviceDetails,
+                      taxonomies: this.state.taxonomies,
+                      _links: this.props.app.serviceDetails.links,
+                    });
+                    console.log();
+                  }}
+                >
+                  Modifica pacchetto
+                </Button>
               </Col>
               <Col lg="2">
                 <Button
@@ -246,7 +314,10 @@ class ServiceDetails extends Component {
                       </Col>
                       <Col md="4">Tag:</Col>
                       <Col md="8">
-                        <strong>tmp</strong>
+                        <ReactTagInput
+                          tags={this.state.taxonomies}
+                          readOnly={true}
+                        />
                       </Col>
                       <Col md="4">Versione:</Col>
                       <Col md="8">
