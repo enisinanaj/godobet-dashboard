@@ -171,6 +171,33 @@ class NewService extends Component {
   }
 
   async editService() {
+    //associo le taxonomies a link gia esistenti
+    let arrayUrlExistingTaxonomies = [];
+    let arrayTaxonomiesWithNoUrl = [];
+    for (let taxonomy of this.state.NewServiceForm.taxonomies) {
+      const existingUrl = this.props.serviceToEdit.taxonomiesObjects.filter(
+        (obj) => {
+          return obj.definition === taxonomy;
+        }
+      );
+      if (existingUrl.length === 0) arrayTaxonomiesWithNoUrl.push(taxonomy);
+      else arrayUrlExistingTaxonomies.push(existingUrl[0]._links.self.href);
+    }
+
+    //carico le taxonomies rimanenti
+
+    let arrayFetch = [];
+
+    for (let definition of arrayTaxonomiesWithNoUrl) {
+      arrayFetch.push(this.uploadTaxonomy(definition));
+    }
+
+    await Promise.all(arrayFetch).then((results) => {
+      for (let result of results) {
+        arrayUrlExistingTaxonomies.push(result._links.self.href);
+      }
+    });
+
     var token = await TokenManager.getInstance().getToken();
     var userUrl = await fetch(this.props.serviceToEdit._links.author.href, {
       method: "GET",
@@ -181,25 +208,9 @@ class NewService extends Component {
         return response._links.self.href;
       });
 
-    var taxonomiesUrl = await fetch(
-      this.props.serviceToEdit._links.taxonomies.href,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json", "X-Auth": token },
-      }
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        let arrayOfLinks = [];
-        for (let taxonomy of response._embedded.taxonomy) {
-          arrayOfLinks.push(taxonomy._links.self.href);
-        }
-        return arrayOfLinks;
-      });
-
     const editService = {
       author: userUrl,
-      taxonomies: taxonomiesUrl,
+      taxonomies: arrayUrlExistingTaxonomies,
       serviceName: this.state.NewServiceForm.serviceName,
       description: this.state.NewServiceForm.description,
       maxSubscribers: parseInt(this.state.NewServiceForm.maxSubscribers),
@@ -207,6 +218,7 @@ class NewService extends Component {
       price: parseInt(this.state.NewServiceForm.price),
       version: parseInt(this.state.NewServiceForm.version),
     };
+    console.log(editService);
 
     var token = await TokenManager.getInstance().getToken();
     fetch(this.props.serviceToEdit._links.self.href, {
@@ -550,7 +562,6 @@ class NewService extends Component {
                                 this.handleTaxonomiesChange(newTags)
                               }
                               removeOnBackspace={true}
-                              readOnly={this.props.serviceToEdit !== null}
                               placeholder={"Inserisci un tag e premi invio"}
                             />
                             {this.hasError(

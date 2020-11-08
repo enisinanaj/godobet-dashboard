@@ -35,7 +35,7 @@ class AllPools extends Component {
   };
 
   async getAllPools() {
-    console.log(this.props.app.user);
+    //console.log(this.props.app.user);
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
       fetch(

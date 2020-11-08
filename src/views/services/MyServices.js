@@ -18,6 +18,7 @@ class MyServices extends Component {
       services: [],
     };
     this.getMyServices();
+    this.getTaxonomies();
   }
 
   toggleModal = () => {
@@ -75,9 +76,7 @@ class MyServices extends Component {
       headers: { "Content-Type": "application/json", "X-Auth": token },
     })
       .then((response) => response.json())
-      .then((response) =>
-        this.setState({ taxonomiesDefinition: response._embedded.taxonomies })
-      );
+      .then((response) => console.log(response));
   }
 
   addService(service) {

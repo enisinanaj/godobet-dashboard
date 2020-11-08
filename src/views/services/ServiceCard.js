@@ -121,8 +121,10 @@ class ServiceCard extends Component {
               type="button"
               className="btn btn-block btn-primary"
               onClick={() => {
+                console.log(this);
                 this.props.editService({
                   ...this.props.serviceData,
+                  taxonomiesObjects: this.state.taxonomiesObjects,
                   taxonomies: this.state.taxonomies,
                 });
               }}

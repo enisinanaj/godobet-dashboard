@@ -267,6 +267,7 @@ class ServiceDetails extends Component {
                     this.editService({
                       ...this.props.app.serviceDetails,
                       taxonomies: this.state.taxonomies,
+                      taxonomiesObjects: this.state.taxonomiesObjects,
                       _links: this.props.app.serviceDetails.links,
                     });
                     console.log();
