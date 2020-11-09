@@ -7,6 +7,7 @@ import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";
 import config from "../../store/config";
 import TokenManager from "../../components/auth/Token";
+import { auth } from "../../components/auth/firebase.js";
 
 class Profile extends Component {
   constructor(props, context) {
@@ -101,6 +102,57 @@ class Profile extends Component {
     });
   };
 
+  async changeUserPassword(e) {
+    e.preventDefault();
+    const form = e.target;
+    const inputs = [...form.elements].filter((i) =>
+      ["INPUT", "SELECT"].includes(i.nodeName)
+    );
+
+    const { errors, hasError } = FormValidator.bulkValidate(inputs);
+
+    this.setState({
+      [form.name]: {
+        ...this.state[form.name],
+        errors,
+      },
+    });
+
+    if (!hasError) {
+      //controllo se la password è giusta
+
+      var user = auth.currentUser;
+      auth
+        .signInWithEmailAndPassword(
+          user.email,
+          this.state.formChangePwd.oldPassword
+        )
+        .then((response) => {
+          //password vecchia giusta
+          user
+            .updatePassword(this.state.formChangePwd.newPassword)
+            .then(() => {
+              // Update successful.
+              alert("Cambio password riuscito! Esegui di nuovo il login");
+              auth.signOut().then((e) => {
+                this.props.actions.userLogin(null);
+                this.props.actions.serviceDetails(null);
+                this.props.actions.poolDetails(null);
+              });
+            })
+            .catch(function (error) {
+              alert(
+                "Cambio password non riuscito, assicurati di usare una password di almeno 6 lettere"
+              );
+            });
+        })
+        .catch((error) => {
+          alert("Password errata!");
+        });
+      // Prompt the user to re-provide their sign-in credentials
+    }
+  }
+
   render() {
     return (
       <ContentWrapper>
@@ -110,14 +162,19 @@ class Profile extends Component {
               <div className="card-header d-flex align-items-center">
                 <div className="d-flex col">
                   <div class="col-md-2">
-                    <img className="img-thumbnail rounded-circle thumb128" src="img/user/09.jpg" alt="Avatar"/>
+                    <img
+                      className="img-thumbnail rounded-circle thumb128"
+                      src="img/user/09.jpg"
+                      alt="Avatar"
+                    />
                   </div>
                   <div class="col-md-10 pl-0">
                     <div className="h1 mt-4 mb-4 ml-0 mr-0 text-left">
                       Informazioni del contatto
                     </div>
                     <div className="h5 mt-4 mb-4 ml-0 mr-0 text-left">
-                      Inserisci qui le informazioni base riguardanti il tuo profilo.
+                      Inserisci qui le informazioni base riguardanti il tuo
+                      profilo.
                     </div>
                   </div>
                 </div>
@@ -177,8 +234,7 @@ class Profile extends Component {
                         </div>
                       </div>
                       <div className="form-group row">
-                        <div className="col-md-2">
-                        </div>
+                        <div className="col-md-2"></div>
                         <div className="col-md-10">
                           <button className="btn btn-info" type="submit">
                             Aggiorna contatto
@@ -192,145 +248,156 @@ class Profile extends Component {
             </div>
           </Col>
           <Col lg="4">&nbsp;</Col>
-          {false && (
-            <Col lg="8">
-              <div className="card card-default">
-                <div className="card-header d-flex align-items-center">
-                  <div className="d-flex justify-content-center col">
-                    <div className="h4 m-0 text-center">Cambio password</div>
-                  </div>
+
+          <Col lg="12">
+            <div className="card card-default">
+              <div className="card-header d-flex align-items-center">
+                <div className="d-flex col">
+                  <div className="h4 m-0 text-center">Cambio password</div>
                 </div>
-                <div className="card-body">
-                  <div className="row py-4 justify-content-center">
-                    <div className="col-12 col-sm-10">
-                      <form className="form-horizontal" name="formChangePwd">
-                        <div className="form-group row">
-                          <label
-                            className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                            htmlFor="input-old-password"
-                          >
-                            Vecchia password
-                          </label>
-                          <div className="col-xl-10 col-md-9 col-8">
-                            <div className="form-group">
-                              <div className="input-group with-focus">
-                                <Input
-                                  type="password"
-                                  id="id-password"
-                                  name="oldPassword"
-                                  className="border-right-0"
-                                  placeholder="Password"
-                                  invalid={this.hasError(
-                                    "formChangePwd",
-                                    "oldPassword",
-                                    "required"
-                                  )}
-                                  onChange={this.validateOnChange}
-                                  data-validate='["required"]'
-                                  value={this.state.formChangePwd.oldPassword}
-                                />
-                                <div className="input-group-append">
-                                  <span className="input-group-text text-muted bg-transparent border-left-0">
-                                    <em className="fa fa-lock"></em>
-                                  </span>
-                                </div>
-                                <span className="invalid-feedback">
-                                  Il campo password è obbligatorio
+              </div>
+              <div className="card-body">
+                <div className="row py-4 justify-content-center">
+                  <div className="col-12 col-sm-10">
+                    <form
+                      className="form-horizontal"
+                      name="formChangePwd"
+                      onSubmit={(e) => this.changeUserPassword(e)}
+                    >
+                      <div className="form-group row">
+                        <label
+                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                          htmlFor="input-old-password"
+                        >
+                          Vecchia password
+                        </label>
+                        <div className="col-xl-10 col-md-9 col-8">
+                          <div className="form-group">
+                            <div className="input-group with-focus">
+                              <Input
+                                type="password"
+                                id="id-password"
+                                name="oldPassword"
+                                className="border-right-0"
+                                placeholder="Password"
+                                invalid={this.hasError(
+                                  "formChangePwd",
+                                  "oldPassword",
+                                  "required"
+                                )}
+                                onChange={this.validateOnChange}
+                                data-validate='["required"]'
+                                value={this.state.formChangePwd.oldPassword}
+                              />
+                              <div className="input-group-append">
+                                <span className="input-group-text text-muted bg-transparent border-left-0">
+                                  <em className="fa fa-lock"></em>
                                 </span>
                               </div>
+                              <span className="invalid-feedback">
+                                Il campo password è obbligatorio
+                              </span>
                             </div>
                           </div>
                         </div>
-                        <div className="form-group row">
-                          <label
-                            className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                            htmlFor="input-new-password"
-                          >
-                            Nuova password
-                          </label>
-                          <div className="col-xl-10 col-md-9 col-8">
-                            <div className="form-group">
-                              <div className="input-group with-focus">
-                                <Input
-                                  type="password"
-                                  id="id-new-password"
-                                  name="newPassword"
-                                  className="border-right-0"
-                                  placeholder="Password"
-                                  invalid={this.hasError(
-                                    "formChangePwd",
-                                    "newPassword",
-                                    "required"
-                                  )}
-                                  onChange={this.validateOnChange}
-                                  data-validate='["required"]'
-                                  value={this.state.formChangePwd.newPassword}
-                                />
-                                <div className="input-group-append">
-                                  <span className="input-group-text text-muted bg-transparent border-left-0">
-                                    <em className="fa fa-lock"></em>
-                                  </span>
-                                </div>
-                                <span className="invalid-feedback">
-                                  Il campo password è obbligatorio
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                          htmlFor="input-new-password"
+                        >
+                          Nuova password
+                        </label>
+                        <div className="col-xl-10 col-md-9 col-8">
+                          <div className="form-group">
+                            <div className="input-group with-focus">
+                              <Input
+                                type="password"
+                                id="id-new-password"
+                                name="newPassword"
+                                className="border-right-0"
+                                placeholder="Password"
+                                invalid={this.hasError(
+                                  "formChangePwd",
+                                  "newPassword",
+                                  "required"
+                                )}
+                                onChange={this.validateOnChange}
+                                data-validate='["required"]'
+                                value={this.state.formChangePwd.newPassword}
+                              />
+                              <div className="input-group-append">
+                                <span className="input-group-text text-muted bg-transparent border-left-0">
+                                  <em className="fa fa-lock"></em>
                                 </span>
                               </div>
+                              <span className="invalid-feedback">
+                                Il campo password è obbligatorio
+                              </span>
                             </div>
                           </div>
                         </div>
-                        <div className="form-group row">
-                          <label
-                            className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                            htmlFor="input-repeat-new-password"
-                          >
-                            Ripeti nuova password
-                          </label>
-                          <div className="col-xl-10 col-md-9 col-8">
-                            <div className="form-group">
-                              <div className="input-group with-focus">
-                                <Input
-                                  type="password"
-                                  id="id-repeat-new-password"
-                                  name="repeatNewPassword"
-                                  className="border-right-0"
-                                  placeholder="Password"
-                                  invalid={this.hasError(
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                          htmlFor="input-repeat-new-password"
+                        >
+                          Ripeti nuova password
+                        </label>
+                        <div className="col-xl-10 col-md-9 col-8">
+                          <div className="form-group">
+                            <div className="input-group with-focus">
+                              <Input
+                                type="password"
+                                id="id-repeat-new-password"
+                                name="repeatNewPassword"
+                                className="border-right-0"
+                                placeholder="Password"
+                                invalid={
+                                  this.hasError(
                                     "formChangePwd",
                                     "repeatNewPassword",
                                     "required"
-                                  )}
-                                  onChange={this.validateOnChange}
-                                  data-validate='["required"]'
-                                  value={
-                                    this.state.formChangePwd.repeatNewPassword
-                                  }
-                                />
-                                <div className="input-group-append">
-                                  <span className="input-group-text text-muted bg-transparent border-left-0">
-                                    <em className="fa fa-lock"></em>
-                                  </span>
-                                </div>
-                                <span className="invalid-feedback">
-                                  Il campo password è obbligatorio
+                                  ) ||
+                                  this.hasError(
+                                    "formChangePwd",
+                                    "repeatNewPassword",
+                                    "equalto"
+                                  )
+                                }
+                                onChange={this.validateOnChange}
+                                data-validate='["required", "equalto"]'
+                                data-param="id-new-password"
+                                value={
+                                  this.state.formChangePwd.repeatNewPassword
+                                }
+                              />
+                              <div className="input-group-append">
+                                <span className="input-group-text text-muted bg-transparent border-left-0">
+                                  <em className="fa fa-lock"></em>
                                 </span>
                               </div>
+                              <span className="invalid-feedback">
+                                Le due password devono coincidere
+                              </span>
                             </div>
                           </div>
                         </div>
-                        <div className="form-group row">
-                          <div className="col-md-10">
-                            <button className="btn btn-info" type="submit">
-                              Conferma
-                            </button>
-                          </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-md-10">
+                          <button className="btn btn-info" type="submit">
+                            Conferma
+                          </button>
                         </div>
-                      </form>
-                    </div>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
-            </Col>
-          )}
+            </div>
+          </Col>
         </Row>
       </ContentWrapper>
     );
