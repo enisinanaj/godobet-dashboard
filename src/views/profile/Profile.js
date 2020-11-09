@@ -105,18 +105,26 @@ class Profile extends Component {
     return (
       <ContentWrapper>
         <Row>
-          <Col lg="8">
+          <Col lg="12">
             <div className="card card-default">
               <div className="card-header d-flex align-items-center">
-                <div className="d-flex justify-content-center col">
-                  <div className="h4 m-0 text-center">
-                    Informazioni del contatto
+                <div className="d-flex col">
+                  <div class="col-md-2">
+                    <img className="img-thumbnail rounded-circle thumb128" src="img/user/09.jpg" alt="Avatar"/>
+                  </div>
+                  <div class="col-md-10 pl-0">
+                    <div className="h1 mt-4 mb-4 ml-0 mr-0 text-left">
+                      Informazioni del contatto
+                    </div>
+                    <div className="h5 mt-4 mb-4 ml-0 mr-0 text-left">
+                      Inserisci qui le informazioni base riguardanti il tuo profilo.
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="card-body">
+              <div className="card-body mt-0">
                 <div className="row py-4 justify-content-center">
-                  <div className="col-12 col-sm-10">
+                  <div className="col-12 col-sm-12">
                     <form
                       className="form-horizontal"
                       name="formUserInfo"
@@ -169,6 +177,8 @@ class Profile extends Component {
                         </div>
                       </div>
                       <div className="form-group row">
+                        <div className="col-md-2">
+                        </div>
                         <div className="col-md-10">
                           <button className="btn btn-info" type="submit">
                             Aggiorna contatto
