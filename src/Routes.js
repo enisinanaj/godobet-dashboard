@@ -126,6 +126,8 @@ const Routes = ({ location, app }) => {
                       path="/allServices"
                       component={waitFor(AllServices)}
                     />
+
+                    <Redirect to="/profile" />
                   </Switch>
                 </Suspense>
               </div>
@@ -162,6 +164,8 @@ const Routes = ({ location, app }) => {
                       component={waitFor(MySubscribers)}
                     />
                     <Route path="/allPools" component={waitFor(AllPools)} />
+
+                    <Redirect to="/profile" />
                   </Switch>
                 </Suspense>
               </div>
