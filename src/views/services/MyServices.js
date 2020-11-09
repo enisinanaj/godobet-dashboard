@@ -86,31 +86,75 @@ class MyServices extends Component {
 
   render() {
     if (!this.state.loading)
-      return (
-        <ContentWrapper>
-          <div className="form-group row">
-            <div className="col-md-12">
-              <Button color="primary" onClick={() => this.newService()}>
-                Aggiungi pacchetto
-              </Button>
-              <NewService
-                modalNewServiceVisible={this.state.modalNewServiceVisible}
-                serviceToEdit={this.state.serviceToEdit}
-                toggleModal={() => this.toggleModal()}
-                refreshServiceList={() => this.getMyServices()}
-              ></NewService>
+        if (this.state.services != null)
+        return (
+          <ContentWrapper>
+            {this.state.services.map((service) => (
+              <ServiceCard
+                history={this.props.history}
+                serviceData={service}
+                key={service._links.self.href}
+                editService={(service) => this.editService(service)}
+              ></ServiceCard>
+            ))}
+            <div className="form-group row text-center">
+              <div className="col-md-12">
+                <em className="fa-4x icon-layers mr-2"></em>
+              </div>
             </div>
-          </div>
-          {this.state.services.map((service) => (
-            <ServiceCard
-              history={this.props.history}
-              serviceData={service}
-              key={service._links.self.href}
-              editService={(service) => this.editService(service)}
-            ></ServiceCard>
-          ))}
-        </ContentWrapper>
-      );
+            <div className="form-group row text-center">
+              <div className="col-md-12">
+                <div className="h2 mb-4 text-center">
+                  Crea un pacchetto
+                </div>
+                <div className="h5 mb-4 text-center">
+                  I pacchetti aiutano gli utenti a capire meglio il servizio che offri. <br/>
+                  Compilalo nei minimi dettagli per aiutare le persone a fare la giusta scelta!
+                </div>
+                <Button color="primary" onClick={() => this.newService()}>
+                  <em className="fas fa-plus mr-2"></em>Aggiungi pacchetto
+                </Button>
+                <NewService
+                  modalNewServiceVisible={this.state.modalNewServiceVisible}
+                  serviceToEdit={this.state.serviceToEdit}
+                  toggleModal={() => this.toggleModal()}
+                  refreshServiceList={() => this.getMyServices()}
+                ></NewService>
+              </div>
+            </div>
+          </ContentWrapper>
+        );
+      else
+        return (
+          <ContentWrapper>
+            <div className="h1 mb-5 text-center">Ancora nessun pacchetto presente ma non temere!</div>
+            <div className="form-group row text-center mt-5">
+              <div className="col-md-12">
+                <em className="fa-4x icon-layers mr-2"></em>
+              </div>
+            </div>
+            <div className="form-group row text-center">
+              <div className="col-md-12">
+                <div className="h2 mb-4 text-center">
+                  Crea un pacchetto
+                </div>
+                <div className="h5 mb-4 text-center">
+                  I pacchetti aiutano gli utenti a capire meglio il servizio che offri. <br/>
+                  Compilalo nei minimi dettagli per aiutare le persone a fare la giusta scelta!
+                </div>
+                <Button color="primary" onClick={() => this.newService()}>
+                  <em className="fas fa-plus mr-2"></em>Aggiungi pacchetto
+                </Button>
+                <NewService
+                  modalNewServiceVisible={this.state.modalNewServiceVisible}
+                  serviceToEdit={this.state.serviceToEdit}
+                  toggleModal={() => this.toggleModal()}
+                  refreshServiceList={() => this.getMyServices()}
+                ></NewService>
+              </div>
+            </div>
+          </ContentWrapper>
+        )
     else if (this.state.noErrors)
       return (
         <ContentWrapper>
