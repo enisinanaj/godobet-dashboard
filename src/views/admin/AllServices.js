@@ -58,12 +58,6 @@ class AllServices extends Component {
     if (!this.state.loading)
       return (
         <ContentWrapper>
-          <NewService
-            modalNewServiceVisible={this.state.modalEditServiceVisible}
-            serviceToEdit={this.state.serviceToEdit}
-            toggleModal={() => this.toggleModalEditService()}
-            refreshServiceList={() => this.getAllServices()}
-          />
           {this.state.services.map((service) => (
             <ServiceCard
               history={this.props.history}
@@ -72,6 +66,31 @@ class AllServices extends Component {
               editService={(service) => this.editService(service)}
             ></ServiceCard>
           ))}
+          <div className="form-group row text-center">
+            <div className="col-md-12">
+              <em className="fa-4x icon-organization mr-2"></em>
+            </div>
+          </div>
+          <div className="form-group row text-center">
+            <div className="col-md-12">
+              <div className="h2 mb-4 text-center">
+                Crea un pacchetto
+              </div>
+              <div className="h5 mb-4 text-center">
+                I pacchetti aiutano gli utenti a capire meglio il servizio che offri. <br/>
+                Compilalo nei minimi dettagli per aiutare le persone a fare la giusta scelta!
+              </div>
+              <Button color="primary" onClick={() => this.newService()}>
+                <em className="fas fa-plus mr-2"></em>Aggiungi pacchetto
+              </Button>
+              <NewService
+                modalNewServiceVisible={this.state.modalNewServiceVisible}
+                serviceToEdit={this.state.serviceToEdit}
+                toggleModal={() => this.toggleModal()}
+                refreshServiceList={() => this.getMyServices()}
+              ></NewService>
+            </div>
+          </div>
         </ContentWrapper>
       );
     else if (this.state.noErrors)

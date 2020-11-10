@@ -260,30 +260,6 @@ class ServiceDetails extends Component {
               <Col lg="6">
                 <h2>Dettagli pacchetto "{this.state.service.serviceName}"</h2>
               </Col>
-              <Col lg="2">
-                <Button
-                  className="btn btn-block btn-secondary"
-                  onClick={() => {
-                    this.editService({
-                      ...this.props.app.serviceDetails,
-                      taxonomies: this.state.taxonomies,
-                      taxonomiesObjects: this.state.taxonomiesObjects,
-                      _links: this.props.app.serviceDetails.links,
-                    });
-                    console.log();
-                  }}
-                >
-                  Modifica pacchetto
-                </Button>
-              </Col>
-              <Col lg="2">
-                <Button
-                  className="btn btn-block btn-secondary"
-                  onClick={() => this.newPool()}
-                >
-                  Aggiungi schedina
-                </Button>
-              </Col>
             </Row>
             <Card className="card-default">
               <CardHeader>
@@ -384,6 +360,50 @@ class ServiceDetails extends Component {
                 )}
               </CardBody>
             </Card>
+            <div className="form-group row text-center">
+              <div className="col-md-12">
+                <em className="fa-4x mr-2 fas fa-box-open"></em>
+              </div>
+            </div>
+            <div className="form-group row text-center">
+              <div className="col-md-12">
+                <div className="h2 mb-4 text-center">
+                  Dettaglio pacchetto
+                </div>
+                <div className="h5 mb-4 text-center">
+                  Modifica il pacchetto per aiutare gli utenti a capire meglio il servizio che offri. <br/>
+                  Aggiungi una nuova schedina e i relativi eventi, fai vincere i tuoi subscribers!
+                </div>
+                <div className="form-group row text-center">
+                  <div className="col-md-4"></div>
+                  <div className="col-md-2">
+                    <Button
+                      color="primary"
+                      onClick={() => {
+                        this.editService({
+                          ...this.props.app.serviceDetails,
+                          taxonomies: this.state.taxonomies,
+                          taxonomiesObjects: this.state.taxonomiesObjects,
+                          _links: this.props.app.serviceDetails.links,
+                        });
+                        console.log();
+                      }}
+                    >
+                      <em className="fas fa-edit mr-2"></em>Modifica pacchetto
+                    </Button>
+                  </div>
+                  <div className="col-md-2">
+                    <Button
+                      color="primary"
+                      onClick={() => this.newPool()}
+                    >
+                      <em className="fas fa-plus mr-2"></em>Aggiungi schedina
+                    </Button>
+                  </div>
+                  <div className="col-md-4"></div>
+                </div>
+              </div>
+            </div>
           </div>
         ) : this.state.serviceNoErrors ? (
           <div>
