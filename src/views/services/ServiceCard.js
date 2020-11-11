@@ -8,6 +8,7 @@ import {
   Row,
   Col,
   FormGroup,
+  Label,
 } from "reactstrap";
 import TokenManager from "../../components/auth/Token";
 import PropTypes from "prop-types";
@@ -16,6 +17,7 @@ import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";
+import Sparkline from "../../template_components/Common/Sparklines";
 
 class ServiceCard extends Component {
   state = {
@@ -56,51 +58,11 @@ class ServiceCard extends Component {
 
   render() {
     return (
-      <Card className="card-default">
-        <CardHeader>
-          <strong>{this.props.serviceData.serviceName}</strong>
-        </CardHeader>
-        <CardBody>
-          <Row>
-            <Col lg="6">
-              <FormGroup row>
-                <Col md="4">Descrizione:</Col>
-                <Col md="8">
-                  <strong>{this.props.serviceData.description}</strong>
-                </Col>
-                <Col md="4">Prezzo:</Col>
-                <Col md="8">
-                  <strong>{this.props.serviceData.price} €</strong>
-                </Col>
-                <Col md="4">Durata:</Col>
-                <Col md="8">
-                  <strong>{this.props.serviceData.duration} giorni</strong>
-                </Col>
-              </FormGroup>
-            </Col>
-            <Col lg="6">
-              <FormGroup row>
-                <Col md="4">Numero max iscritti:</Col>
-                <Col md="8">
-                  <strong>{this.props.serviceData.maxSubscribers}</strong>
-                </Col>
-                <Col md="4">Tag:</Col>
-                <Col md="8">
-                  <ReactTagInput tags={this.state.taxonomies} readOnly={true} />
-                </Col>
-                <Col md="4">Versione:</Col>
-                <Col md="8">
-                  <strong>{this.props.serviceData.version}</strong>
-                </Col>
-              </FormGroup>
-            </Col>
-          </Row>
-        </CardBody>
-        <CardFooter className="d-flex">
-          <div>
-            <Button
-              className="btn btn-block btn-secondary"
-              onClick={() => {
+      <Col lg="4" md="6" sm="12" className={"mb-5"}>
+        <Card className="card-default mb-3" style={{height: "100%"}}>
+          <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
+            <strong style={{fontSize: "1.7em"}}>{this.props.serviceData.serviceName}</strong>
+            <a className="text-muted float-right" style={{lineHeight: "35px"}} onClick={() => {
                 this.props.actions.serviceDetails({
                   serviceName: this.props.serviceData.serviceName,
                   description: this.props.serviceData.description,
@@ -111,29 +73,46 @@ class ServiceCard extends Component {
                   links: this.props.serviceData._links,
                 });
                 this.props.history.push("/serviceDetails");
-              }}
-            >
-              Visualizza
-            </Button>
-          </div>
-          <div className="ml-auto">
-            <Button
-              type="button"
-              className="btn btn-block btn-primary"
-              onClick={() => {
-                console.log(this);
-                this.props.editService({
-                  ...this.props.serviceData,
-                  taxonomiesObjects: this.state.taxonomiesObjects,
-                  taxonomies: this.state.taxonomies,
-                });
-              }}
-            >
-              Modifica
-            </Button>
-          </div>
-        </CardFooter>
-      </Card>
+              }}>
+              <em className="fa fa-arrow-right"></em>
+            </a>
+          </CardHeader>
+          <CardBody>
+            <Row className={"bb"} style={{padding: 10}}>
+              <Col lg="12" className={"mb-3"}>
+                <Row><strong>Descrizione</strong></Row>
+                <Row>
+                  <span style={{fontSize: "1.2em", minHeight: "50px"}} className={"text-truncate"}>
+                    {this.props.serviceData.description}
+                  </span>
+                </Row>
+              </Col>
+              <Col lg="6">
+                <Row><strong>Numero max iscritti</strong></Row>
+                <Row><span style={{fontSize: "1.2em"}}>{this.props.serviceData.maxSubscribers}</span></Row>
+              </Col>
+            </Row>
+
+            <Row classNamew="mb-3" style={{padding: 10}}>
+              <ul class="list-inline m-0">
+                {this.state.taxonomies.map(tax => {
+                  return (<li class="list-inline-item" style={{marginTop: "0.5rem"}} key={tax}>
+                    <span class="badge bg-gray" style={{fontSize: "1.1em", padding: 7}}>{tax}</span>
+                  </li>);
+                })}
+              </ul>
+            </Row>
+          </CardBody>
+          <CardFooter className="d-flex" style={{flexDirection: "row", justifyContent: "space-between"}}>
+              <Col lg="2">
+                <div style={{fontSize: "1.2em", display: "inline-block", marginTop: "3px"}} className={"badge bg-green"}>v0.1{this.props.serviceData.version}</div>
+              </Col>
+              <Col lg="10" style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", textAlign: "right"}}>
+                <div style={{fontSize: "1.4em", display: "inline-block"}}>{this.props.serviceData.price} € ogni {this.props.serviceData.duration} giorni</div>
+              </Col>
+          </CardFooter>
+        </Card>
+      </Col>
     );
   }
 }

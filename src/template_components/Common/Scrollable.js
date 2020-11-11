@@ -11,10 +11,10 @@ import 'jquery-slimscroll';
  */
 const Scrollable = props => {
 
-    const init = node =>
-        $(node).slimScroll({
-            height: props.height
-        });
+    const init = node => {};
+        // $(node).slimScroll({
+        //     height: props.height
+        // });
 
     return (
         <div ref={init} {...props}>

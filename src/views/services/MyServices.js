@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ServiceCard from "./ServiceCard";
-import { Button, Spinner } from "reactstrap";
+import { Button, Row, Spinner } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
@@ -89,17 +89,31 @@ class MyServices extends Component {
         if (this.state.services != null)
         return (
           <ContentWrapper>
-            {this.state.services.map((service) => (
-              <ServiceCard
-                history={this.props.history}
-                serviceData={service}
-                key={service._links.self.href}
-                editService={(service) => this.editService(service)}
-              ></ServiceCard>
-            ))}
-            <div className="form-group row text-center">
+            <div className="content-heading" style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
+              <div>
+                <div>I miei pacchetti</div>
+                <small>Qua si trovano tutti i pacchetti che hai creato</small>
+              </div>
+              <div>
+                <Button color="success" onClick={() => this.newService()}>
+                  <em className="fas fa-plus mr-2"></em>Aggiungi pacchetto
+                </Button>
+              </div>
+            </div>
+
+            <Row lg="12" sm="12" md="12">
+              {this.state.services.map((service) => (
+                <ServiceCard
+                  history={this.props.history}
+                  serviceData={service}
+                  key={service._links.self.href}
+                  editService={(service) => this.editService(service)}
+                ></ServiceCard>
+              ))}
+            </Row>
+            <div className="form-group row text-center mt-5">
               <div className="col-md-12">
-                <em className="fa-4x icon-layers mr-2"></em>
+                <em className="fa-3x icon-layers mr-2"></em>
               </div>
             </div>
             <div className="form-group row text-center">
@@ -111,7 +125,7 @@ class MyServices extends Component {
                   I pacchetti aiutano gli utenti a capire meglio il servizio che offri. <br/>
                   Compilalo nei minimi dettagli per aiutare le persone a fare la giusta scelta!
                 </div>
-                <Button color="primary" onClick={() => this.newService()}>
+                <Button color="success" onClick={() => this.newService()}>
                   <em className="fas fa-plus mr-2"></em>Aggiungi pacchetto
                 </Button>
                 <NewService
@@ -130,7 +144,7 @@ class MyServices extends Component {
             <div className="h1 mb-5 text-center">Ancora nessun pacchetto presente ma non temere!</div>
             <div className="form-group row text-center mt-5">
               <div className="col-md-12">
-                <em className="fa-4x icon-layers mr-2"></em>
+                <em className="fa-3x icon-layers mr-2"></em>
               </div>
             </div>
             <div className="form-group row text-center">
@@ -142,7 +156,7 @@ class MyServices extends Component {
                   I pacchetti aiutano gli utenti a capire meglio il servizio che offri. <br/>
                   Compilalo nei minimi dettagli per aiutare le persone a fare la giusta scelta!
                 </div>
-                <Button color="primary" onClick={() => this.newService()}>
+                <Button color="success" onClick={() => this.newService()}>
                   <em className="fas fa-plus mr-2"></em>Aggiungi pacchetto
                 </Button>
                 <NewService
