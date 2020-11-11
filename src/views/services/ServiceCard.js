@@ -59,22 +59,24 @@ class ServiceCard extends Component {
   render() {
     return (
       <Col lg="4" md="6" sm="12" className={"mb-5"}>
-        <Card className="card-default mb-3" style={{height: "100%"}}>
+        <Card className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
-            <strong style={{fontSize: "1.7em"}}>{this.props.serviceData.serviceName}</strong>
-            <a className="text-muted float-right" style={{lineHeight: "35px"}} onClick={() => {
-                this.props.actions.serviceDetails({
-                  serviceName: this.props.serviceData.serviceName,
-                  description: this.props.serviceData.description,
-                  maxSubscribers: this.props.serviceData.maxSubscribers,
-                  duration: this.props.serviceData.duration,
-                  price: this.props.serviceData.price,
-                  version: this.props.serviceData.version,
-                  links: this.props.serviceData._links,
-                });
-                this.props.history.push("/serviceDetails");
-              }}>
-              <em className="fa fa-arrow-right"></em>
+            <a className="text-muted" 
+              style={{lineHeight: "35px", cursor: "pointer", flex: 1, flexDirection: "row", justifyContent: "space-between"}} href="#" 
+              onClick={() => {
+              this.props.actions.serviceDetails({
+                serviceName: this.props.serviceData.serviceName,
+                description: this.props.serviceData.description,
+                maxSubscribers: this.props.serviceData.maxSubscribers,
+                duration: this.props.serviceData.duration,
+                price: this.props.serviceData.price,
+                version: this.props.serviceData.version,
+                links: this.props.serviceData._links,
+              });
+              this.props.history.push("/serviceDetails");
+            }}>
+              <strong style={{fontSize: "1.7em"}}>{this.props.serviceData.serviceName}</strong>
+              <em className="fa fa-arrow-right" style={{float: "right", lineHeight: "38px"}}></em>
             </a>
           </CardHeader>
           <CardBody>
@@ -97,18 +99,18 @@ class ServiceCard extends Component {
               <ul class="list-inline m-0">
                 {this.state.taxonomies.map(tax => {
                   return (<li class="list-inline-item" style={{marginTop: "0.5rem"}} key={tax}>
-                    <span class="badge bg-gray" style={{fontSize: "1.1em", padding: 7}}>{tax}</span>
+                    <span class="badge bg-gray" style={{fontSize: "1.1em", padding: 7, opacity: 0.8}}>#{tax}</span>
                   </li>);
                 })}
               </ul>
             </Row>
           </CardBody>
-          <CardFooter className="d-flex" style={{flexDirection: "row", justifyContent: "space-between"}}>
+          <CardFooter className="d-flex bg-light" style={{flexDirection: "row", justifyContent: "space-between"}}>
               <Col lg="2">
                 <div style={{fontSize: "1.2em", display: "inline-block", marginTop: "3px"}} className={"badge bg-green"}>v0.1{this.props.serviceData.version}</div>
               </Col>
               <Col lg="10" style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", textAlign: "right"}}>
-                <div style={{fontSize: "1.4em", display: "inline-block"}}>{this.props.serviceData.price} € ogni {this.props.serviceData.duration} giorni</div>
+                <div style={{fontSize: "1.4em", display: "inline-block"}}>{this.props.serviceData.price}€ ogni {this.props.serviceData.duration} giorni</div>
               </Col>
           </CardFooter>
         </Card>
