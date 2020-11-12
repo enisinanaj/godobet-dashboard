@@ -29,14 +29,6 @@ class NewPool extends Component {
         bookmaker: "",
       },
     };
-    this.checkServiceDetails();
-  }
-
-  checkServiceDetails() {
-    if (Object.keys(this.props.app.serviceDetails).lenght === 0) {
-      this.props.history.push("/");
-      return;
-    }
   }
 
   eventModalRef = (props) => {
@@ -182,8 +174,9 @@ class NewPool extends Component {
       >
         <ModalHeader toggle={() => this.toggleModal()}>
           <h4>
-            {this.state.mode == "new" ? "Inserimento" : "Modifica"} schedina per
-            il pacchetto "{this.props.app.serviceDetails.serviceName}"
+            {this.state.mode == "new"
+              ? "Inserimento schedina"
+              : 'Modifica schedina "' + this.props.poolToEdit.description + '"'}
           </h4>
         </ModalHeader>
         <ModalBody>
