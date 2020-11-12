@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { withNamespaces } from "react-i18next";
-import { Input, CustomInput } from "reactstrap";
+import { Input, CustomInput, Spinner } from "reactstrap";
 import { auth } from "../../components/auth/firebase";
 
 import { connect } from "react-redux";
@@ -20,6 +20,7 @@ class Login extends Component {
       password: "",
     },
     formError: "",
+    loginLoading: false,
   };
 
   validateOnChange = (event) => {
@@ -49,6 +50,7 @@ class Login extends Component {
     const { errors } = FormValidator.bulkValidate(inputs);
 
     this.setState({
+      loginLoading: true,
       [form.name]: {
         ...this.state[form.name],
         errors,
@@ -62,6 +64,7 @@ class Login extends Component {
       )
       .catch((e) => {
         this.setState({
+          loginLoading: false,
           formError: e.message,
         });
       });
@@ -241,8 +244,12 @@ class Login extends Component {
                   </span>
                 </div>
               </div>
-              <button className="btn btn-block btn-primary mt-3" type="submit">
-                Login
+              <button
+                className="btn btn-block btn-primary mt-3"
+                type="submit"
+                disabled={this.state.loginLoading}
+              >
+                {this.state.loginLoading ? <Spinner size="sm" /> : "Login"}
               </button>
             </form>
           </div>
