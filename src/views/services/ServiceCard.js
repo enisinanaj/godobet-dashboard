@@ -94,7 +94,6 @@ class ServiceCard extends Component {
                 <Row><span style={{fontSize: "1.2em"}}>{this.props.serviceData.maxSubscribers}</span></Row>
               </Col>
             </Row>
-
             <Row classNamew="mb-3" style={{padding: 10}}>
               <ul class="list-inline m-0">
                 {this.state.taxonomies.map(tax => {

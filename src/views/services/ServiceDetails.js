@@ -310,56 +310,53 @@ class ServiceDetails extends Component {
                 <h3>Schedine</h3>
               </Col>
             </Row>
-            <Card className="card-default">
-              <CardBody>
-                {!this.state.poolLoading ? (
-                  <div>
-                    <MyPools
-                      pools={this.state.pools}
-                      history={this.props.history}
-                      editPool={(pool) => this.editPool(pool)}
-                    />
-                  </div>
-                ) : this.state.poolNoErrors ? (
-                  <div>
-                    <h4> Carico le tue schedine...</h4>
-                    <div>
-                      <Spinner />
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <div>
-                      <h4>Errore nel caricamento delle tue schedine</h4>
-                    </div>
-                    <div>
-                      <Button
-                        className="btn"
-                        onClick={() => {
-                          this.setState(
-                            { noErrors: true, loading: true },
-                            () => {
-                              this.getMyPools();
-                            }
-                          );
-                        }}
-                      >
-                        Riprova
-                      </Button>
-                      <Button
-                        style={{ marginLeft: 10 }}
-                        className="btn"
-                        onClick={() => {
-                          this.props.history.push("/myServices");
-                        }}
-                      >
-                        Torna indietro
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </CardBody>
-            </Card>
+            
+            {!this.state.poolLoading ? (
+              <div>
+                <MyPools
+                  pools={this.state.pools}
+                  history={this.props.history}
+                  editPool={(pool) => this.editPool(pool)}
+                />
+              </div>
+            ) : this.state.poolNoErrors ? (
+              <div>
+                <h4> Carico le tue schedine...</h4>
+                <div>
+                  <Spinner />
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div>
+                  <h4>Errore nel caricamento delle tue schedine</h4>
+                </div>
+                <div>
+                  <Button
+                    className="btn"
+                    onClick={() => {
+                      this.setState(
+                        { noErrors: true, loading: true },
+                        () => {
+                          this.getMyPools();
+                        }
+                      );
+                    }}
+                  >
+                    Riprova
+                  </Button>
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    className="btn"
+                    onClick={() => {
+                      this.props.history.push("/myServices");
+                    }}
+                  >
+                    Torna indietro
+                  </Button>
+                </div>
+              </div>
+            )}
             <div className="form-group row text-center">
               <div className="col-md-12">
                 <em className="fa-4x mr-2 fas fa-box-open"></em>

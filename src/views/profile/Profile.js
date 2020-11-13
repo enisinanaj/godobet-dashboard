@@ -161,14 +161,14 @@ class Profile extends Component {
             <div className="card card-default">
               <div className="card-header d-flex align-items-center">
                 <div className="d-flex col">
-                  <div class="col-md-2">
+                  <div className="col-md-2">
                     <img
                       className="img-thumbnail rounded-circle thumb128"
                       src="img/user/09.jpg"
                       alt="Avatar"
                     />
                   </div>
-                  <div class="col-md-10 pl-0">
+                  <div className="col-md-10 pl-0">
                     <div className="h1 mt-4 mb-4 ml-0 mr-0 text-left">
                       Informazioni del contatto
                     </div>

@@ -62,7 +62,13 @@ class AllPools extends Component {
     if (!this.state.loading)
       return (
         <ContentWrapper>
-          <h3>Le mie schedine</h3>
+          <div className="content-heading" style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
+            <div>
+              <div>Le mie schedine</div>
+              <small>Qua si trovano tutte le schedine in ordine di inserimento</small>
+            </div>
+          </div>
+          
           <NewPool
             modalNewPoolVisible={this.state.modalEditPoolVisible}
             poolToEdit={this.state.poolToEdit}
