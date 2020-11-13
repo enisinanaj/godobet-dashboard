@@ -24,7 +24,7 @@ class PoolCard extends Component {
         <Card className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 
-              style={{lineHeight: "35px", cursor: "pointer", flex: 1, flexDirection: "row", justifyContent: "space-between"}} href="#" 
+              style={{lineHeight: "35px", cursor: "pointer", flex: 1, flexDirection: "row", justifyContent: "space-between"}}
               onClick={() => {
                 this.props.actions.poolDetails({
                   bookmaker: this.props.poolData.bookmaker,
