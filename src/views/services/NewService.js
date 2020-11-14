@@ -208,9 +208,22 @@ class NewService extends Component {
         return response._links.self.href;
       });
 
+    const editTaxonomies = {
+      taxonomies: arrayUrlExistingTaxonomies,
+    };
+    //carico i nuovi tag
+    await fetch(this.props.serviceToEdit._links.self.href, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+      body: JSON.stringify(editTaxonomies),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+      });
+
     const editService = {
       author: userUrl,
-      taxonomies: arrayUrlExistingTaxonomies,
       serviceName: this.state.NewServiceForm.serviceName,
       description: this.state.NewServiceForm.description,
       maxSubscribers: parseInt(this.state.NewServiceForm.maxSubscribers),
@@ -218,9 +231,7 @@ class NewService extends Component {
       price: parseInt(this.state.NewServiceForm.price),
       version: parseInt(this.state.NewServiceForm.version),
     };
-    console.log(editService);
 
-    var token = await TokenManager.getInstance().getToken();
     fetch(this.props.serviceToEdit._links.self.href, {
       method: "PUT",
       headers: { "Content-Type": "application/json", "X-Auth": token },
