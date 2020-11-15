@@ -18,6 +18,7 @@ import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import FormValidator from "../../template_components/Forms/FormValidator.js";
 import config from "../../store/config";
+import CurrencyInput from "../../components/inputs/CurrencyInput";
 
 moment.locale("it");
 
@@ -161,7 +162,7 @@ class NewEvent extends Component {
           body: JSON.stringify(newEvent),
         })
           .then((response) => response.json())
-          .then((response) => {
+          .then(() => {
             this.toggleModal();
             this.props.refreshPool();
           });
@@ -495,11 +496,15 @@ class NewEvent extends Component {
                             Quota
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
-                            <Input
-                              className="form-control"
-                              name="quote"
-                              id="inputQuote"
-                              type="number"
+                          <CurrencyInput 
+                              name={"quote"}
+                              max={1000}
+                              onValueChange={(val) => this.setState({
+                                NewEventForm: {
+                                  ...this.state["NewEventForm"],
+                                  quote: val,
+                                },
+                              })}
                               invalid={
                                 this.hasError(
                                   "NewEventForm",
@@ -508,12 +513,10 @@ class NewEvent extends Component {
                                 ) ||
                                 this.hasError("NewEventForm", "quote", "gtOne")
                               }
-                              data-validate='["required"]'
-                              value={this.state.NewEventForm.quote}
-                              onChange={(event) =>
-                                this.validatePositiveNumbers(event)
-                              }
-                            />
+                              dataValidate='["required"]'
+                              className={"form-control form-control"}
+                              style={{ textAlign: 'right' }}
+                              value={this.state.NewEventForm.quote} />
 
                             {this.hasError(
                               "NewEventForm",

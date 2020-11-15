@@ -6,12 +6,9 @@ import {
   CardFooter,
   Row,
   Col,
-  FormGroup,
-  Button,
 } from "reactstrap";
 import * as moment from "moment";
 import "moment/locale/it";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";
@@ -60,7 +57,7 @@ class PoolCard extends Component {
               </Col>
               <Col lg="6" className={"mb-3"}>
                 <Row><strong>Quota</strong></Row>
-                <Row><span style={{fontSize: "1.2em"}}>{this.props.poolData.totalQuote}</span></Row>
+                <Row><span style={{fontSize: "1.2em"}}>{this.props.poolData.quote}</span></Row>
               </Col>
               <Col lg="6">
                 <Row><strong>Stake</strong></Row>

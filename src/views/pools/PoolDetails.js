@@ -3,7 +3,6 @@ import ContentWrapper from "../../components/layout/ContentWrapper";
 import {
   Card,
   CardBody,
-  CardFooter,
   Row,
   Col,
   FormGroup,
@@ -197,7 +196,7 @@ class PoolDetails extends Component {
                       </Col>
                       <Col md="4">Quota:</Col>
                       <Col md="8">
-                        <strong>{this.state.pool.totalQuote}</strong>
+                        <strong>{(this.state.pool.quote / 100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
                       </Col>
                       <Col md="4">Bookmaker:</Col>
                       <Col md="8">
@@ -217,11 +216,11 @@ class PoolDetails extends Component {
                     <FormGroup row>
                       <Col md="4">Stake:</Col>
                       <Col md="8">
-                        <strong>{this.state.pool.stake}</strong>
+                        <strong>{(this.state.pool.stake / 100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</strong>
                       </Col>
                       <Col md="4">Profitto:</Col>
                       <Col md="8">
-                        <strong>{this.state.pool.profit}</strong>
+                        <strong>{(this.state.pool.profit / 10000).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</strong>
                       </Col>
                       <Col md="4">Modificato il:</Col>
                       <Col md="8">

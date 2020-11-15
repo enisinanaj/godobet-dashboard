@@ -4,7 +4,6 @@ import { Button, Spinner, Row, Col } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import TipsterCard from "./TipsterCard";
-import config from "../../store/config";
 import { connect } from "react-redux";
 import Register from "../auth/Register";
 

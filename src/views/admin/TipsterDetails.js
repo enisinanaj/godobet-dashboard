@@ -4,19 +4,13 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   Row,
   Col,
-  FormGroup,
   Button,
   Spinner,
 } from "reactstrap";
-import config from "../../store/config";
 import ServiceCard from "../services/ServiceCard";
-import { Link } from "react-router-dom";
 import TokenManager from "../../components/auth/Token";
-import Swal from "../../components/elements/Swal";
-import NewPool from "../pools/NewPool";
 import NewService from "../services/NewService.js";
 import { connect } from "react-redux";
 

@@ -16,6 +16,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import FormValidator from "../../template_components/Forms/FormValidator.js";
 import * as actions from "../../store/actions/actions";
+import CurrencyInput from "../../components/inputs/CurrencyInput";
 
 class NewPool extends Component {
   constructor(props, context) {
@@ -83,7 +84,7 @@ class NewPool extends Component {
     });
 
     if (!(hasError || this.state.NewPoolForm.bookmaker === "0")) {
-      if (this.state.mode == "new") {
+      if (this.state.mode === "new") {
         const newPool = {
           createdOn: new Date(),
           description: this.state.NewPoolForm.description,
@@ -127,8 +128,7 @@ class NewPool extends Component {
       body: JSON.stringify(editedPool),
     })
       .then((response) => response.json())
-      .then((response) => {
-        //console.log(response);
+      .then(() => {
         this.toggleModal();
         this.props.refreshService();
       });
@@ -174,7 +174,7 @@ class NewPool extends Component {
       >
         <ModalHeader toggle={() => this.toggleModal()}>
           <h4>
-            {this.state.mode == "new"
+            {this.state.mode === "new"
               ? "Inserimento schedina"
               : 'Modifica schedina "' + this.props.poolToEdit.description + '"'}
           </h4>
@@ -234,29 +234,27 @@ class NewPool extends Component {
                             Stake
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
-                            <Input
-                              className="form-control"
+                            <CurrencyInput 
                               name="stake"
-                              id="inputStake"
-                              type="number"
+                              max={1000}
+                              onValueChange={(val) => this.setState({
+                                NewPoolForm: {
+                                  ...this.state["NewPoolForm"],
+                                  stake: val,
+                                },
+                              })}
                               invalid={
                                 this.hasError(
                                   "NewPoolForm",
                                   "stake",
                                   "required"
                                 ) ||
-                                this.hasError(
-                                  "NewPoolForm",
-                                  "stake",
-                                  "integer"
-                                ) ||
                                 this.hasError("NewPoolForm", "stake", "min")
                               }
-                              data-validate='["required", "integer", "min"]'
-                              data-param={1}
-                              value={this.state.NewPoolForm.stake}
-                              onChange={(event) => this.validateOnChange(event)}
-                            />
+                              data-validate='["required", "min"]'
+                              className={"form-control form-control"}
+                              style={{ textAlign: 'right' }}
+                              value={this.state.NewPoolForm.stake} />
 
                             {this.hasError(
                               "NewPoolForm",
@@ -265,15 +263,6 @@ class NewPool extends Component {
                             ) && (
                               <span className="invalid-feedback">
                                 Il campo Stake è obbligatorio
-                              </span>
-                            )}
-                            {this.hasError(
-                              "NewPoolForm",
-                              "stake",
-                              "integer"
-                            ) && (
-                              <span className="invalid-feedback">
-                                Il campo Stake deve essere un intero
                               </span>
                             )}
                             {this.hasError("NewPoolForm", "stake", "min") && (

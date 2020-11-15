@@ -1,17 +1,15 @@
 import React, { Component } from "react";
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   Row,
   Col,
   FormGroup,
 } from "reactstrap";
-import PropTypes from "prop-types";
 import * as moment from "moment";
 import TokenManager from "../../components/auth/Token";
-import config from "../../store/config";
+import Outcome from "../../components/elements/Outcome";
 
 class EventCard extends Component {
   state = {
@@ -60,7 +58,7 @@ class EventCard extends Component {
                 </Col>
                 <Col md="4">Risultato:</Col>
                 <Col md="8">
-                  <strong>{this.props.data.outcome}</strong>
+                  <Outcome outcome={this.props.data.outcome} />
                 </Col>
                 <Col md="4">Creato il:</Col>
                 <Col md="8">
@@ -92,7 +90,7 @@ class EventCard extends Component {
                 </Col>
                 <Col md="4">Quota:</Col>
                 <Col md="8">
-                  <strong>{this.props.data.quote}</strong>
+                  <strong>{(this.props.data.quote / 100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
                 </Col>
                 <Col md="4">Note:</Col>
                 <Col md="8">

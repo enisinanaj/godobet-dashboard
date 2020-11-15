@@ -3,7 +3,6 @@ import MyPools from "./MyPools";
 import { Button, Spinner } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
-import config from "../../store/config";
 import { connect } from "react-redux";
 import NewPool from "./NewPool";
 

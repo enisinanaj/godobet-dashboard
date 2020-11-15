@@ -4,7 +4,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   Row,
   Col,
   FormGroup,
@@ -13,10 +12,8 @@ import {
 } from "reactstrap";
 import config from "../../store/config";
 import MyPools from "../pools/MyPools";
-import { Link } from "react-router-dom";
 import ReactTagInput from "@pathofdev/react-tag-input";
 import TokenManager from "../../components/auth/Token";
-import Swal from "../../components/elements/Swal";
 import NewPool from "../pools/NewPool";
 import NewService from "./NewService";
 import { connect } from "react-redux";
