@@ -1,5 +1,10 @@
 const MenuTipster = [
   {
+    name: "Dashboard",
+    icon: "icon-graph",
+    path: "/dashboard",
+  },
+  {
     name: "Profilo",
     icon: "icon-user",
     path: "/profile",

@@ -1,16 +1,13 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {
   Input,
-  CustomInput,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
 } from "reactstrap";
 
 import FormValidator from "../../template_components/Forms/FormValidator.js";
-import Footer from "../../components/footer";
 import { connect } from "react-redux";
 import { auth } from "../../components/auth/firebase.js";
 import TokenManager from "../../components/auth/Token.js";

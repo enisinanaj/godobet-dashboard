@@ -12,12 +12,13 @@ import BasePage from "./template_components/Layout/BasePage";
 /* Used to render a lazy component with react-router */
 const waitFor = (Tag) => (props) => <Tag {...props} />;
 
+const Dashboard = lazy(() => import("./views/dashboard/Dashboard"));
 const Login = lazy(() => import("./views/auth/Login"));
 const Recover = lazy(() => import("./views/auth/Recover"));
 const NotFound = lazy(() => import("./template_components/Pages/NotFound"));
 const Error500 = lazy(() => import("./template_components/Pages/Error500"));
 const Maintenance = lazy(() =>
-  import("./template_components/Pages/Maintenance")
+import("./template_components/Pages/Maintenance")
 );
 const Profile = lazy(() => import("./views/profile/Profile"));
 const MyServices = lazy(() => import("./views/services/MyServices"));
@@ -99,7 +100,7 @@ const Routes = ({ location, app }) => {
               <div>
                 <Suspense fallback={<PageLoader />}>
                   <Switch location={location}>
-                    <Route path="/profile" component={waitFor(Profile)} />
+                    <Route path="/dashboard" component={waitFor(Dashboard)} />
                     <Route path="/myServices" component={waitFor(MyServices)} />
                     <Route
                       path="/serviceDetails"
@@ -126,8 +127,11 @@ const Routes = ({ location, app }) => {
                       path="/allServices"
                       component={waitFor(AllServices)}
                     />
-
-                    <Redirect to="/profile" />
+                    <Route
+                      path="/profile"
+                      component={waitFor(Profile)}
+                    />
+                    <Redirect to="/dashboard" />
                   </Switch>
                 </Suspense>
               </div>

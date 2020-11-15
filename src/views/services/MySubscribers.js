@@ -2,11 +2,8 @@ import React, { Component } from "react";
 
 import { Button, Spinner, Row, Col } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
-import TokenManager from "../../components/auth/Token";
 import SubscriberCard from "./SubscriberCard";
-import config from "../../store/config";
 import { connect } from "react-redux";
-import Register from "../auth/Register";
 
 class MySubscribers extends Component {
   constructor(props, context) {

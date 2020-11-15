@@ -9,7 +9,6 @@ import {
   Col,
   FormGroup,
 } from "reactstrap";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";

@@ -1,23 +1,17 @@
 import React, { Component } from "react";
 import {
   Card,
-  Button,
   CardHeader,
   CardBody,
   CardFooter,
   Row,
-  Col,
-  FormGroup,
-  Label,
+  Col
 } from "reactstrap";
 import TokenManager from "../../components/auth/Token";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";
-import Sparkline from "../../template_components/Common/Sparklines";
 
 class ServiceCard extends Component {
   state = {
