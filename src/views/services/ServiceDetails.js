@@ -253,60 +253,68 @@ class ServiceDetails extends Component {
               toggleModal={() => this.toggleModalEditService()}
               refreshServiceList={() => this.getServiceDetails()}
             />
-            <Row>
-              <Col lg="6">
-                <h2>Dettagli pacchetto "{this.state.service.serviceName}"</h2>
-              </Col>
-            </Row>
-            <Card className="card-default">
-              <CardHeader>
-                <strong>{this.state.service.serviceName}</strong>
-              </CardHeader>
-              <CardBody>
-                <Row>
-                  <Col lg="6">
+            <div className="content-heading" style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
+              <div>
+                <div>I miei pacchetti</div>
+                <small>Qua si trovano tutti i pacchetti che hai creato</small>
+              </div>
+              <div>
+                <Button color="success" onClick={() => this.newService()}>
+                  <em className="fas fa-plus mr-2"></em>Modifica pacchetto
+                </Button>
+              </div>
+            </div>
+            <Col className={"mb-5"}>
+              <Row>
+                <Col md="12">
+                  <h3>{this.state.service.serviceName}</h3>
+                </Col>
+                <Col md="4">
+                  <h5>{this.state.service.description}</h5>
+                </Col>
+                <Col md="4">
+                  <form className="form-horizontal">
                     <FormGroup row>
-                      <Col md="4">Descrizione:</Col>
-                      <Col md="8">
-                        <strong>{this.state.service.description}</strong>
+                      <Col md="4"><strong>Prezzo:</strong></Col>
+                      <Col md="8" className="text-right"><span style={{fontSize: "1.2em"}}>{this.state.service.price} €</span>
                       </Col>
-                      <Col md="4">Prezzo:</Col>
-                      <Col md="8">
-                        <strong>{this.state.service.price} €</strong>
+                      <Col md="4"><strong>Durata:</strong></Col>
+                      <Col md="8" className="text-right"><span style={{fontSize: "1.2em"}}>{this.state.service.duration} giorni</span>
                       </Col>
-                      <Col md="4">Durata:</Col>
-                      <Col md="8">
-                        <strong>{this.state.service.duration} giorni</strong>
+                      <Col md="4"><strong>Numero max iscritti:</strong></Col>
+                      <Col md="8" className="text-right"><span style={{fontSize: "1.2em"}}>{this.state.service.maxSubscribers}</span>
+                      </Col>
+                      <Col md="4"><strong>Tag:</strong></Col>
+                      <Col md="8" className="text-right">
+                        <ul class="list-inline m-0">
+                          {this.state.taxonomies.map(tax => {
+                            return (<li class="list-inline-item" style={{marginTop: "0.5rem"}} key={tax}>
+                              <span class="badge bg-gray" style={{fontSize: "1.1em", padding: 7, opacity: 0.8}}>#{tax}</span>
+                            </li>);
+                          })}
+                        </ul>
+                      </Col>
+                      <Col md="4"><strong>Versione:</strong></Col>
+                      <Col md="8" className="text-right"><span style={{fontSize: "1.2em"}}>0.1{this.state.service.version}</span>
                       </Col>
                     </FormGroup>
-                  </Col>
-                  <Col lg="6">
-                    <FormGroup row>
-                      <Col md="4">Numero max iscritti:</Col>
-                      <Col md="8">
-                        <strong>{this.state.service.maxSubscribers}</strong>
-                      </Col>
-                      <Col md="4">Tag:</Col>
-                      <Col md="8">
-                        <ReactTagInput
-                          tags={this.state.taxonomies}
-                          readOnly={true}
-                        />
-                      </Col>
-                      <Col md="4">Versione:</Col>
-                      <Col md="8">
-                        <strong>{this.state.service.version}</strong>
-                      </Col>
-                    </FormGroup>
-                  </Col>
-                </Row>
-              </CardBody>
-            </Card>
-            <Row>
-              <Col lg="6">
-                <h3>Schedine</h3>
-              </Col>
-            </Row>
+                  </form>
+                </Col>
+                <Col lg="6">
+                </Col>
+              </Row>
+            </Col>
+            <div className="mb-5" style={{display: "flex", flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
+              <div>
+                <h3>Le tue schedine</h3>
+                <h5>Qui si trovano le schedine del pacchetto selezionato</h5>
+              </div>
+              <div style={{float: "right"}}>
+                <Button color="warning" onClick={() => this.newService()}>
+                  <em className="fas fa-plus mr-2"></em>Aggiungi schedina
+                </Button>
+              </div>
+            </div>
             
             {!this.state.poolLoading ? (
               <div>
@@ -372,7 +380,7 @@ class ServiceDetails extends Component {
                   <div className="col-md-4"></div>
                   <div className="col-md-2">
                     <Button
-                      color="primary"
+                      color="success"
                       onClick={() => {
                         this.editService({
                           ...this.props.app.serviceDetails,
@@ -388,7 +396,7 @@ class ServiceDetails extends Component {
                   </div>
                   <div className="col-md-2">
                     <Button
-                      color="primary"
+                      color="warning"
                       onClick={() => this.newPool()}
                     >
                       <em className="fas fa-plus mr-2"></em>Aggiungi schedina
