@@ -33,6 +33,14 @@
   top: -1px;
 }
 
+.badge-classic {
+  font-size: 1.1em !important;
+  border-radius: 4px !important;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #c0c0c0;
+}
+
 // Pill badges
 //
 // Make them extra rounded with a modifier to replace v3's badges.

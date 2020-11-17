@@ -1,22 +1,21 @@
 import React, { Component } from "react";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import {
-  Card,
-  CardHeader,
-  CardBody,
   Row,
   Col,
-  FormGroup,
   Button,
   Spinner,
+  Alert,
 } from "reactstrap";
 import config from "../../store/config";
 import MyPools from "../pools/MyPools";
-import ReactTagInput from "@pathofdev/react-tag-input";
 import TokenManager from "../../components/auth/Token";
 import NewPool from "../pools/NewPool";
 import NewService from "./NewService";
 import { connect } from "react-redux";
+import DetailGrid from "../../components/layout/DetailGrid";
+import Label from "../../components/layout/Label";
+import moment from 'moment';
 
 class ServiceDetails extends Component {
   constructor(props) {
@@ -253,118 +252,132 @@ class ServiceDetails extends Component {
               toggleModal={() => this.toggleModalEditService()}
               refreshServiceList={() => this.getServiceDetails()}
             />
-            <div className="content-heading" style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
-              <div>
-                <div>I miei pacchetti</div>
-                <small>Qua si trovano tutti i pacchetti che hai creato</small>
-              </div>
-              <div>
-                <Button color="success" onClick={() => this.newService()}>
-                  <em className="fas fa-plus mr-2"></em>Modifica pacchetto
-                </Button>
-              </div>
-            </div>
             <Col className={"mb-5"}>
               <Row>
                 <Col md="12">
-                  <h3>{this.state.service.serviceName}</h3>
+                  <h3 style={{marginBottom: 0}}>
+                    {this.state.service.serviceName}
+                  </h3>
+                  <p style={{fontSize: "1rem", fontWeight: "200"}}>{this.state.service.description}</p>
+                  <DetailGrid className={"mt-4"}>
+                    <Col style={{borderRightColor: '#e0e0e0', borderRightWidth: "1px", borderRightStyle: "solid", padding: 5}} md={2} sm={6} >
+                      <div style={{fontWeight: "300"}}>Versione</div>
+                      <div>v0.1{this.state.service.version}</div>
+                    </Col>
+                    <Col style={{borderRightColor: '#e0e0e0', borderRightWidth: "1px", borderRightStyle: "solid", padding: 5, paddingLeft: 10}} md={2} sm={6} >
+                      <div style={{fontWeight: "300"}}><i class="icon-wallet mr-2"></i> Prezzo</div>
+                      <div>{this.state.service.price} €</div>
+                    </Col>
+                    <Col style={{borderRightColor: '#e0e0e0', borderRightWidth: "1px", borderRightStyle: "solid", padding: 5, paddingLeft: 10}} md={2} sm={6} >
+                      <div style={{fontWeight: "300"}}><i class="icon-clock mr-2"></i> Durata abbonamento</div>
+                      <div>{this.state.service.duration} giorni</div>
+                    </Col>
+                    <Col style={{borderRightColor: '#e0e0e0', borderRightWidth: "1px", borderRightStyle: "solid", padding: 5, paddingLeft: 10}} md={2} sm={6} >
+                      <div style={{fontWeight: "300"}}><i class="mr-2 icon-people"></i> Massimo abbonati</div>
+                      <div>{this.state.service.maxSubscribers}</div>
+                    </Col>
+                    <Col style={{borderRightColor: '#e0e0e0', borderRightWidth: "1px", borderRightStyle: "solid", padding: 5, paddingLeft: 10}} md={2} sm={6} >
+                      <Label style={{fontWeight: "300"}}><i class="mr-2 icon-clock"></i> Creato il</Label>
+                      <div>{moment(this.state.service.createdOn).format( "DD/MM/YYYY HH:mm" )}</div>
+                    </Col>
+                    <Col style={{padding: 5, paddingLeft: 10}} md={2} sm={6} >
+                      <Label style={{fontSize: "1em", display: "inline-block"}}><i class="mr-2 icon-clock"></i> Modificato il</Label>
+                      <div>{moment(this.state.service.createdOn).format( "DD/MM/YYYY HH:mm" )}</div>
+                    </Col>
+                  </DetailGrid>
                 </Col>
-                <Col md="4">
-                  <h5>{this.state.service.description}</h5>
-                </Col>
-                <Col md="4">
-                  <form className="form-horizontal">
-                    <FormGroup row>
-                      <Col md="4"><strong>Prezzo:</strong></Col>
-                      <Col md="8" className="text-right"><span style={{fontSize: "1.2em"}}>{this.state.service.price} €</span>
-                      </Col>
-                      <Col md="4"><strong>Durata:</strong></Col>
-                      <Col md="8" className="text-right"><span style={{fontSize: "1.2em"}}>{this.state.service.duration} giorni</span>
-                      </Col>
-                      <Col md="4"><strong>Numero max iscritti:</strong></Col>
-                      <Col md="8" className="text-right"><span style={{fontSize: "1.2em"}}>{this.state.service.maxSubscribers}</span>
-                      </Col>
-                      <Col md="4"><strong>Tag:</strong></Col>
-                      <Col md="8" className="text-right">
-                        <ul class="list-inline m-0">
-                          {this.state.taxonomies.map(tax => {
-                            return (<li class="list-inline-item" style={{marginTop: "0.5rem"}} key={tax}>
-                              <span class="badge bg-gray" style={{fontSize: "1.1em", padding: 7, opacity: 0.8}}>#{tax}</span>
-                            </li>);
-                          })}
-                        </ul>
-                      </Col>
-                      <Col md="4"><strong>Versione:</strong></Col>
-                      <Col md="8" className="text-right"><span style={{fontSize: "1.2em"}}>0.1{this.state.service.version}</span>
-                      </Col>
-                    </FormGroup>
-                  </form>
-                </Col>
-                <Col lg="6">
+                <Col md="12">
+                  <DetailGrid borderTop={0} className={"mb-4"}>
+                    <Col style={{padding: 5, }} md={12} sm={12} >
+                      <div style={{fontWeight: "300"}}><i class="mr-2 icon-tag"></i> Tags</div>
+                      <div>
+                        {this.state.taxonomies.map(tax => <span class="mr-2" key={tax}>#{tax}</span>)}
+                        {this.state.taxonomies.length === 0 && (<Alert color="info" style={{
+                          color: "#125f77", 
+                          backgroundColor: "#d3f1fa",
+                          width: "100%",
+                          paddingTop: "5px",
+                          paddingBottom: "5px",
+                          marginTop: "5px",
+                          opacity: 0.8
+                        }}>
+                        Non ci sono hashtag per questo pacchetto.
+                        </Alert>)}
+                      </div>
+                    </Col>
+                  </DetailGrid>
                 </Col>
               </Row>
+              <div className="mb-5 mt-5" style={{display: "flex", flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
+                <div style={{flex:1, flexDirection: 'column', justifyContent: 'flex-start'}}>
+                  <div style={{flex:1, flexDirection: 'row', justifyContent: 'flex-start'}}>
+                    <h3 style={{marginBottom: 0, display: 'inline-block'}}>
+                      Le tue schedine
+                    </h3>
+                    <Button style={{position: "absolute",
+                        marginTop: "-2px",
+                        height: "30px",
+                        width: "30px",
+                        lineHeight: "31px"
+                      }}
+                      className={"btn bg-primary btn-circle btn-outline ml-2"} onClick={() => this.newService()}>
+                      <em className="fas fa-plus"></em>
+                    </Button>
+                    <p style={{fontSize: "1rem", fontWeight: "200"}}>Qui si trovano le schedine del pacchetto selezionato</p>
+                  </div>
+                </div>
+              </div>
+
+              {!this.state.poolLoading ? (
+                <div>
+                  <MyPools
+                    pools={this.state.pools}
+                    history={this.props.history}
+                    editPool={(pool) => this.editPool(pool)}
+                  />
+                </div>
+              ) : this.state.poolNoErrors ? (
+                <div>
+                  <h4> Carico le tue schedine...</h4>
+                  <div>
+                    <Spinner />
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div>
+                    <h4>Errore nel caricamento delle tue schedine</h4>
+                  </div>
+                  <div>
+                    <Button
+                      className="btn"
+                      onClick={() => {
+                        this.setState(
+                          { noErrors: true, loading: true },
+                          () => {
+                            this.getMyPools();
+                          }
+                        );
+                      }}
+                    >
+                      Riprova
+                    </Button>
+                    <Button
+                      style={{ marginLeft: 10 }}
+                      className="btn"
+                      onClick={() => {
+                        this.props.history.push("/myServices");
+                      }}
+                    >
+                      Torna indietro
+                    </Button>
+                  </div>
+                </div>
+              )}
             </Col>
-            <div className="mb-5" style={{display: "flex", flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
-              <div>
-                <h3>Le tue schedine</h3>
-                <h5>Qui si trovano le schedine del pacchetto selezionato</h5>
-              </div>
-              <div style={{float: "right"}}>
-                <Button color="warning" onClick={() => this.newService()}>
-                  <em className="fas fa-plus mr-2"></em>Aggiungi schedina
-                </Button>
-              </div>
-            </div>
-            
-            {!this.state.poolLoading ? (
-              <div>
-                <MyPools
-                  pools={this.state.pools}
-                  history={this.props.history}
-                  editPool={(pool) => this.editPool(pool)}
-                />
-              </div>
-            ) : this.state.poolNoErrors ? (
-              <div>
-                <h4> Carico le tue schedine...</h4>
-                <div>
-                  <Spinner />
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div>
-                  <h4>Errore nel caricamento delle tue schedine</h4>
-                </div>
-                <div>
-                  <Button
-                    className="btn"
-                    onClick={() => {
-                      this.setState(
-                        { noErrors: true, loading: true },
-                        () => {
-                          this.getMyPools();
-                        }
-                      );
-                    }}
-                  >
-                    Riprova
-                  </Button>
-                  <Button
-                    style={{ marginLeft: 10 }}
-                    className="btn"
-                    onClick={() => {
-                      this.props.history.push("/myServices");
-                    }}
-                  >
-                    Torna indietro
-                  </Button>
-                </div>
-              </div>
-            )}
             <div className="form-group row text-center">
               <div className="col-md-12">
-                <em className="fa-4x mr-2 fas fa-box-open"></em>
+                <em className="fa-3x mr-2 fas fa-box-open"></em>
               </div>
             </div>
             <div className="form-group row text-center">
@@ -372,7 +385,7 @@ class ServiceDetails extends Component {
                 <div className="h2 mb-4 text-center">
                   Dettaglio pacchetto
                 </div>
-                <div className="h5 mb-4 text-center">
+                <div className="h5 mb-4 text-center" style={{fontWeight: "300", fontSize: '1rem'}}>
                   Modifica il pacchetto per aiutare gli utenti a capire meglio il servizio che offri. <br/>
                   Aggiungi una nuova schedina e i relativi eventi, fai vincere i tuoi subscribers!
                 </div>

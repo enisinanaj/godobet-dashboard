@@ -16,6 +16,7 @@ export default class Outcome extends Component {
             case '1/2 lose':
                 className = "badge bg-orange";
                 break;
+            default:
             case 'void':
                 className = "badge bg-gray";
                 break;

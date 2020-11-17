@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {
-  Card,
   CardHeader,
   CardBody,
   CardFooter,
@@ -12,13 +11,16 @@ import "moment/locale/it";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";
+import ShadowCard from "../../components/layout/ShadowCard";
+import Label from "../../components/layout/Label";
 moment.locale("it");
 
 class PoolCard extends Component {
   render() {
+
     return (
       <Col lg="4" md="6" sm="12" className={"mb-5"}>
-        <Card className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
+        <ShadowCard className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 
               style={{lineHeight: "35px", cursor: "pointer", flex: 1, flexDirection: "row", justifyContent: "space-between"}}
@@ -42,45 +44,45 @@ class PoolCard extends Component {
             </a>
           </CardHeader>
           <CardBody className={"pb-0"}>
-            <Row className={"bb"} style={{padding: 10}}>
+            <div style={{paddingLeft: 10, paddingRight: 10, display: "flex", flexWrap: "wrap"}}>
               <Col lg="12" className={"mb-3"}>
-                <Row><strong>Descrizione</strong></Row>
-                <Row>
+                <div><Label>Description</Label></div>
+                <div>
                   <span style={{fontSize: "1.2em", minHeight: "50px"}} className={"text-truncate"}>
                     {this.props.poolData.description}
                   </span>
-                </Row>
+                </div>
               </Col>
               <Col lg="6" className={"mb-3"}>
-                <Row><strong>Bookmaker</strong></Row>
-                <Row><span style={{fontSize: "1.2em"}}>{this.props.poolData.bookmaker}</span></Row>
+                <div><Label><i class="icon-book-open mr-2"></i> Bookmaker</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{this.props.poolData.bookmaker}</span></div>
               </Col>
               <Col lg="6" className={"mb-3"}>
-                <Row><strong>Quota</strong></Row>
-                <Row><span style={{fontSize: "1.2em"}}>{this.props.poolData.quote}</span></Row>
+                <div><Label><i class="icon-graph mr-2"></i> Quota</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.quote / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
               </Col>
-              <Col lg="6">
-                <Row><strong>Stake</strong></Row>
-                <Row><span style={{fontSize: "1.2em"}}>{this.props.poolData.stake}</span></Row>
+              <Col lg="6" className={"mb-3"}>
+                <div><Label><i class="icon-pie-chart mr-2"></i>Stake</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.stake / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
               </Col>
-              <Col lg="6">
-                <Row><strong>Profitto</strong></Row>
-                <Row><span style={{fontSize: "1.2em"}}>{this.props.poolData.profit}</span></Row>
+              <Col lg="6" className={"mb-3"}>
+                <div><Label><i class="icon-trophy mr-2"></i>Profitto</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.profit / 10000).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
               </Col>
-            </Row>
-            <Row classNamew="mb-3" style={{padding: 10}}>
-              <span style={{fontSize: "1.2em"}}>{this.props.poolData.totalEvents}0 Eventi presenti</span>
+            </div>
+            <Row classNamew="mb-3 mt-2" style={{padding: "10px", paddingLeft: "15px", borderTopWidth: "1px", borderTopColor: "rgba(0, 0, 0, 0.125)", borderTopStyle: "solid"}}>
+              <Label style={{fontSize: "1.2em"}}>{this.props.poolData.events.length} Eventi presenti</Label>
             </Row>
           </CardBody>
           <CardFooter className="d-flex bg-light" style={{flexDirection: "row", justifyContent: "flex-start"}}>
               <Col lg="6" className="p-0">
-                <div style={{fontSize: "0.9em", display: "inline-block"}}>creato il {moment(this.props.poolData.createdOn).format( "DD/MM/YYYY HH:mm" )}</div>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>creato il {moment(this.props.poolData.createdOn).format( "DD/MM/YYYY HH:mm" )}</Label>
               </Col>
               <Col lg="6" className="p-0" style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", textAlign: "right"}}>
-                <div style={{fontSize: "0.9em", display: "inline-block"}}>modificato il {moment(this.props.poolData.updatedOn).format( "DD/MM/YYYY HH:mm" )}</div>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>modificato il {moment(this.props.poolData.updatedOn).format( "DD/MM/YYYY HH:mm" )}</Label>
               </Col>
           </CardFooter>
-        </Card>
+        </ShadowCard>
       </Col>
     );
   }

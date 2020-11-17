@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 import {
-  Card,
   CardHeader,
   CardBody,
   CardFooter,
   Row,
-  Col
+  Col,
+  Alert
 } from "reactstrap";
 import TokenManager from "../../components/auth/Token";
 import { connect } from "react-redux";
 import "@pathofdev/react-tag-input/build/index.css";
 import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";
+import ShadowCard from "../../components/layout/ShadowCard";
+import Label from "../../components/layout/Label";
+import moment from 'moment'
 
 class ServiceCard extends Component {
   state = {
@@ -53,7 +56,7 @@ class ServiceCard extends Component {
   render() {
     return (
       <Col lg="4" md="6" sm="12" className={"mb-5"}>
-        <Card className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
+        <ShadowCard className="card bg-light mb-3">
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 
               style={{lineHeight: "35px", cursor: "pointer", flex: 1, flexDirection: "row", justifyContent: "space-between"}} 
@@ -74,9 +77,9 @@ class ServiceCard extends Component {
             </a>
           </CardHeader>
           <CardBody>
-            <Row className={"bb"} style={{padding: 10}}>
+            <div style={{padding: 10}}>
               <Col lg="12" className={"mb-3"}>
-                <Row><strong>Descrizione</strong></Row>
+                <Row><Label>Descrizione</Label></Row>
                 <Row>
                   <span style={{fontSize: "1.2em", minHeight: "50px"}} className={"text-truncate"}>
                     {this.props.serviceData.description}
@@ -84,29 +87,53 @@ class ServiceCard extends Component {
                 </Row>
               </Col>
               <Col lg="6">
-                <Row><strong>Numero max iscritti</strong></Row>
+                <Row><Label><i class="icon-people mr-2"></i>  Numero max iscritti</Label></Row>
                 <Row><span style={{fontSize: "1.2em"}}>{this.props.serviceData.maxSubscribers}</span></Row>
               </Col>
-            </Row>
-            <Row classNamew="mb-3" style={{padding: 10}}>
-              <ul class="list-inline m-0">
-                {this.state.taxonomies.map(tax => {
-                  return (<li class="list-inline-item" style={{marginTop: "0.5rem"}} key={tax}>
-                    <span class="badge bg-gray" style={{fontSize: "1.1em", padding: 7, opacity: 0.8}}>#{tax}</span>
-                  </li>);
-                })}
-              </ul>
-            </Row>
+            </div>
+            <div classNamew="mb-1" style={{padding: 10}}>
+              <Col lg="12">
+                <Row><Label><i class="icon-tag mr-2"></i> Hashtag</Label></Row>
+                <Row>
+                  {this.state.taxonomies.map(tax => <span style={{fontSize: "1.1em", 
+                    padding: 3,
+                    display: 'inline-block', 
+                  }}>#{tax}</span>)}
+                  {this.state.taxonomies.length === 0 && (<Alert color="info" style={{
+                      color: "#125f77", 
+                      backgroundColor: "#d3f1fa",
+                      width: "100%",
+                      paddingTop: "5px",
+                      paddingBottom: "5px",
+                      marginTop: "5px",
+                      opacity: 0.8
+                    }}>
+                     Non ci sono hashtag per questo pacchetto.
+                    </Alert>)}
+                </Row>
+              </Col>
+            </div>
           </CardBody>
-          <CardFooter className="d-flex bg-light" style={{flexDirection: "row", justifyContent: "space-between"}}>
+          <CardFooter className="bg-light">
+            <Row style={{paddingBottom: "10px", paddingLeft: "15px", borderBottomWidth: "1px", borderBottomColor: "rgba(0, 0, 0, 0.125)", borderBottomStyle: "solid"}}
+              className={"mb-2"}>
               <Col lg="2">
-                <div style={{fontSize: "1.2em", display: "inline-block", marginTop: "3px"}} className={"badge bg-green"}>v0.1{this.props.serviceData.version}</div>
+                <Label style={{fontSize: "1.2em", display: "inline-block", marginTop: "3px"}}>v0.1{this.props.serviceData.version}</Label>
               </Col>
               <Col lg="10" style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", textAlign: "right"}}>
-                <div style={{fontSize: "1.4em", display: "inline-block"}}>{this.props.serviceData.price}€ ogni {this.props.serviceData.duration} giorni</div>
+                <Label display={"inline"}>{this.props.serviceData.price}€ ogni {this.props.serviceData.duration} giorni</Label>
               </Col>
+            </Row>
+            <div className={"d-flex"} style={{flex :1, flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Col lg="6" className="p-0">
+                <Label style={{fontSize: "1em", display: "inline-block"}}>creato il {moment(this.props.serviceData.createdOn).format( "DD/MM/YYYY HH:mm" )}</Label>
+              </Col>
+              <Col lg="6" className="p-0" style={{textAlign: "right"}}>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>modificato il {moment(this.props.serviceData.updatedOn).format( "DD/MM/YYYY HH:mm" )}</Label>
+              </Col>
+            </div>
           </CardFooter>
-        </Card>
+        </ShadowCard>
       </Col>
     );
   }

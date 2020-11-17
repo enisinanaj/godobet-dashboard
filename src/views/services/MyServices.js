@@ -6,6 +6,7 @@ import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
 import NewService from "./NewService.js";
 import { connect } from "react-redux";
+import Label from "../../components/layout/Label";
 
 class MyServices extends Component {
   constructor(props, context) {
@@ -92,7 +93,7 @@ class MyServices extends Component {
             <div className="content-heading" style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
               <div>
                 <div>I miei pacchetti</div>
-                <small>Qua si trovano tutti i pacchetti che hai creato</small>
+                <Label>Qua si trovano tutti i pacchetti che hai creato</Label>
               </div>
               <div>
                 <Button color="success" onClick={() => this.newService()}>
@@ -121,9 +122,9 @@ class MyServices extends Component {
                 <div className="h2 mb-4 text-center">
                   Crea un pacchetto
                 </div>
-                <div className="h5 mb-4 text-center">
-                  I pacchetti aiutano gli utenti a capire meglio il servizio che offri. <br/>
-                  Compilalo nei minimi dettagli per aiutare le persone a fare la giusta scelta!
+                <div className="mb-4 text-center">
+                  <Label>I pacchetti aiutano gli utenti a capire meglio il servizio che offri.</Label>
+                  <Label>Compilalo nei minimi dettagli per aiutare le persone a fare la giusta scelta!</Label>
                 </div>
                 <Button color="success" onClick={() => this.newService()}>
                   <em className="fas fa-plus mr-2"></em>Aggiungi pacchetto
@@ -152,9 +153,9 @@ class MyServices extends Component {
                 <div className="h2 mb-4 text-center">
                   Crea un pacchetto
                 </div>
-                <div className="h5 mb-4 text-center">
-                  I pacchetti aiutano gli utenti a capire meglio il servizio che offri. <br/>
-                  Compilalo nei minimi dettagli per aiutare le persone a fare la giusta scelta!
+                <div className="mb-4 text-center">
+                  <Label>I pacchetti aiutano gli utenti a capire meglio il servizio che offri.</Label>
+                  <Label>Compilalo nei minimi dettagli per aiutare le persone a fare la giusta scelta!</Label>
                 </div>
                 <Button color="success" onClick={() => this.newService()}>
                   <em className="fas fa-plus mr-2"></em>Aggiungi pacchetto
