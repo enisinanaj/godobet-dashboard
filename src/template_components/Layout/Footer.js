@@ -6,8 +6,10 @@ class Footer extends Component {
         const year = new Date().getFullYear()
         return (
             <footer className="footer-container">
-                <span>&copy; {year} - Angle</span>
-            </footer>
+                <div className="text-center">
+                    <span className="ml-2">&copy; 2020 Godobet - Powered by NewLine Code</span>
+                </div>
+            </footer> 
         );
     }
 

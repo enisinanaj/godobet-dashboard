@@ -51,6 +51,10 @@ class Header extends Component {
     });
   }
 
+  addCredits() {
+    //ToDo
+  }
+
   render() {
     return (
       <header className="topnavbar-wrapper">
@@ -109,6 +113,16 @@ class Header extends Component {
           <ul className="navbar-nav flex-row">
             {/* Eventual top level right menu */}
             {/* Logout icon */}
+            <li className="nav-item">
+              <a
+                className="nav-link"
+                style={{ color: "#000" }}
+                href="#"
+                onClick={() => this.addCredits()}
+              >
+                <em className="mr-1 far fa-gem"></em> 75 GEMS
+              </a>
+            </li>
             <li className="nav-item">
               <a
                 className="nav-link"

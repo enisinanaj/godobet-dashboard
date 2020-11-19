@@ -23,6 +23,14 @@ class Profile extends Component {
         userName: this.props.app.user.name,
         email: this.props.app.user.email,
       },
+      formBankInfo: {
+        IBAN: "",
+        bankName: "",
+        bankAddress: "",
+        swiftCode: "",
+        ABICode: "",
+        CABCode: "",
+      }
     };
     console.warn(this.props.app.user);
   }
@@ -153,6 +161,10 @@ class Profile extends Component {
     }
   }
 
+  async changePaymentInfo(e) {
+    //ToDo
+  }
+
   render() {
     return (
       <ContentWrapper>
@@ -181,7 +193,7 @@ class Profile extends Component {
               </div>
               <div className="card-body mt-0">
                 <div className="row py-4 justify-content-center">
-                  <div className="col-12 col-sm-12">
+                  <div className="col-12 col-sm-10">
                     <form
                       className="form-horizontal"
                       name="formUserInfo"
@@ -380,6 +392,221 @@ class Profile extends Component {
                               </div>
                               <span className="invalid-feedback">
                                 Le due password devono coincidere
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-md-10">
+                          <button className="btn btn-info" type="submit">
+                            Conferma
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Col>
+
+          <Col lg="12">
+            <div className="card card-default">
+              <div className="card-header d-flex align-items-center">
+                <div className="d-flex col">
+                  <div className="h4 m-0 text-center">Informazioni di pagamento</div>
+                </div>
+              </div>
+              <div className="card-body">
+                <div className="row py-4 justify-content-center">
+                  <div className="col-12 col-sm-10">
+                    <form
+                      className="form-horizontal"
+                      name="formChangePaymentInfo"
+                      onSubmit={(e) => this.changePaymentInfo(e)}
+                    >
+                      <div className="form-group row">
+                        <label
+                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                          htmlFor="input-iban"
+                        >
+                          IBAN
+                        </label>
+                        <div className="col-xl-10 col-md-9 col-8">
+                          <div className="form-group">
+                            <div className="input-group with-focus">
+                              <Input
+                                className="form-control"
+                                name="IBAN"
+                                id="inputIBAN"
+                                type="text"
+                                invalid={this.hasError(
+                                  "formBankInfo",
+                                  "IBAN",
+                                  "required"
+                                )}
+                                data-validate='["required"]'
+                                value={this.state.formBankInfo.IBAN}
+                                onChange={(event) => this.validateOnChange(event)}
+                              />
+                              <span className="invalid-feedback">
+                                Il campo IBAN è obbligatorio
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                          htmlFor="input-bank-name"
+                        >
+                          Nome banca
+                        </label>
+                        <div className="col-xl-10 col-md-9 col-8">
+                          <div className="form-group">
+                            <div className="input-group with-focus">
+                              <Input
+                                className="form-control"
+                                name="bankName"
+                                id="inputBankName"
+                                type="text"
+                                invalid={this.hasError(
+                                  "formBankInfo",
+                                  "bankName",
+                                  "required"
+                                )}
+                                data-validate='["required"]'
+                                value={this.state.formBankInfo.bankName}
+                                onChange={(event) => this.validateOnChange(event)}
+                              />
+                              <span className="invalid-feedback">
+                                Il nome della banca è obbligatorio
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                          htmlFor="input-bank-address"
+                        >
+                          Indirizzo banca
+                        </label>
+                        <div className="col-xl-10 col-md-9 col-8">
+                          <div className="form-group">
+                            <div className="input-group with-focus">
+                              <Input
+                                className="form-control"
+                                name="bankAddress"
+                                id="inputBankAddress"
+                                type="text"
+                                invalid={this.hasError(
+                                  "formBankInfo",
+                                  "bankAddress",
+                                  "required"
+                                )}
+                                data-validate='["required"]'
+                                value={this.state.formBankInfo.bankAddress}
+                                onChange={(event) => this.validateOnChange(event)}
+                              />
+                              <span className="invalid-feedback">
+                                L'indirizzo della banca è obbligatorio
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                          htmlFor="input-swift-code"
+                        >
+                          BIC / SWIFT
+                        </label>
+                        <div className="col-xl-10 col-md-9 col-8">
+                          <div className="form-group">
+                            <div className="input-group with-focus">
+                              <Input
+                                className="form-control"
+                                name="swiftCode"
+                                id="inputSwiftCode"
+                                type="text"
+                                invalid={this.hasError(
+                                  "formBankInfo",
+                                  "swiftCode",
+                                  "required"
+                                )}
+                                data-validate='["required"]'
+                                value={this.state.formBankInfo.swiftCode}
+                                onChange={(event) => this.validateOnChange(event)}
+                              />
+                              <span className="invalid-feedback">
+                                Il codice SWIFT / BIC è obbligatorio
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                          htmlFor="input-ABI-code"
+                        >
+                          ABI
+                        </label>
+                        <div className="col-xl-10 col-md-9 col-8">
+                          <div className="form-group">
+                            <div className="input-group with-focus">
+                              <Input
+                                className="form-control"
+                                name="ABICode"
+                                id="inputABICode"
+                                type="text"
+                                invalid={this.hasError(
+                                  "formBankInfo",
+                                  "ABICode",
+                                  "required"
+                                )}
+                                data-validate='["required"]'
+                                value={this.state.formBankInfo.ABICode}
+                                onChange={(event) => this.validateOnChange(event)}
+                              />
+                              <span className="invalid-feedback">
+                                Il codice ABI è obbligatorio
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                          htmlFor="input-CAB-code"
+                        >
+                          CAB
+                        </label>
+                        <div className="col-xl-10 col-md-9 col-8">
+                          <div className="form-group">
+                            <div className="input-group with-focus">
+                              <Input
+                                className="form-control"
+                                name="CABCode"
+                                id="inputCABCode"
+                                type="text"
+                                invalid={this.hasError(
+                                  "formBankInfo",
+                                  "CABCode",
+                                  "required"
+                                )}
+                                data-validate='["required"]'
+                                value={this.state.formBankInfo.CABCode}
+                                onChange={(event) => this.validateOnChange(event)}
+                              />
+                              <span className="invalid-feedback">
+                                Il codice CAB è obbligatorio
                               </span>
                             </div>
                           </div>
