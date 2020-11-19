@@ -70,7 +70,7 @@ class PoolCard extends Component {
                 <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.profit / 10000).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
               </Col>
             </div>
-            <Row classNamew="mb-3 mt-2" style={{padding: "10px", paddingLeft: "15px", borderTopWidth: "1px", borderTopColor: "rgba(0, 0, 0, 0.125)", borderTopStyle: "solid"}}>
+            <Row className="mb-3 mt-2" style={{padding: "10px", paddingLeft: "15px", borderTopWidth: "1px", borderTopColor: "rgba(0, 0, 0, 0.125)", borderTopStyle: "solid"}}>
               <Label style={{fontSize: "1.2em"}}>{this.props.poolData.events.length} Eventi presenti</Label>
             </Row>
           </CardBody>
