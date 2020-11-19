@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import ServiceCard from "../services/ServiceCard";
-import { Button, Spinner } from "reactstrap";
+import { Button, Row, Spinner } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
 import { connect } from "react-redux";
 import NewService from "../services/NewService.js";
+import Label from "../../components/layout/Label";
 
 class AllServices extends Component {
   constructor(props, context) {
@@ -58,14 +59,22 @@ class AllServices extends Component {
     if (!this.state.loading)
       return (
         <ContentWrapper>
-          {this.state.services.map((service) => (
-            <ServiceCard
-              history={this.props.history}
-              key={service._links.self.href}
-              serviceData={service}
-              editService={(service) => this.editService(service)}
-            ></ServiceCard>
-          ))}
+          <div className="content-heading" style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
+            <div>
+              <div>Tutti i pacchetti</div>
+              <Label>Qua si trovano tutti i pacchetti disponibili nella piattaforma</Label>
+            </div>
+          </div>
+          <Row>
+            {this.state.services.map((service) => (
+              <ServiceCard
+                history={this.props.history}
+                key={service._links.self.href}
+                serviceData={service}
+                editService={(service) => this.editService(service)}
+              ></ServiceCard>
+            ))}
+          </Row>
           <div className="form-group row text-center">
             <div className="col-md-12">
               <em className="fa-4x icon-organization mr-2"></em>

@@ -5,6 +5,7 @@ import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import { connect } from "react-redux";
 import NewPool from "./NewPool";
+import Label from "../../components/layout/Label";
 
 class AllPools extends Component {
   constructor(props, context) {
@@ -64,7 +65,7 @@ class AllPools extends Component {
           <div className="content-heading" style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
             <div>
               <div>Le mie schedine</div>
-              <small>Qua si trovano tutte le schedine in ordine di inserimento</small>
+              <Label>Qua si trovano tutte le schedine in ordine di inserimento</Label>
             </div>
           </div>
           
