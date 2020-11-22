@@ -1,12 +1,6 @@
 import React, { Component } from "react";
 import ContentWrapper from "../../components/layout/ContentWrapper";
-import {
-  Row,
-  Col,
-  Button,
-  Spinner,
-  Alert,
-} from "reactstrap";
+import { Row, Col, Button, Spinner, Alert } from "reactstrap";
 import config from "../../store/config";
 import MyPools from "../pools/MyPools";
 import TokenManager from "../../components/auth/Token";
@@ -15,7 +9,7 @@ import NewService from "./NewService";
 import { connect } from "react-redux";
 import DetailGrid from "../../components/layout/DetailGrid";
 import Label from "../../components/layout/Label";
-import moment from 'moment';
+import moment from "moment";
 
 class ServiceDetails extends Component {
   constructor(props) {
@@ -255,75 +249,183 @@ class ServiceDetails extends Component {
             <Col className={"mb-5"}>
               <Row>
                 <Col md="12">
-                  <h3 style={{marginBottom: 0}}>
+                  <h3 style={{ marginBottom: 0 }}>
                     {this.state.service.serviceName}
                   </h3>
-                  <p style={{fontSize: "1rem", fontWeight: "200"}}>{this.state.service.description}</p>
+                  <p style={{ fontSize: "1rem", fontWeight: "200" }}>
+                    {this.state.service.description}
+                  </p>
                   <DetailGrid className={"mt-4"}>
-                    <Col style={{borderRightColor: '#e0e0e0', borderRightWidth: "1px", borderRightStyle: "solid", padding: 5}} md={2} sm={6} >
-                      <div style={{fontWeight: "300"}}>Versione</div>
+                    <Col
+                      style={{
+                        borderRightColor: "#e0e0e0",
+                        borderRightWidth: "1px",
+                        borderRightStyle: "solid",
+                        padding: 5,
+                      }}
+                      md={2}
+                      sm={6}
+                    >
+                      <div style={{ fontWeight: "300" }}>Versione</div>
                       <div>v0.1{this.state.service.version}</div>
                     </Col>
-                    <Col style={{borderRightColor: '#e0e0e0', borderRightWidth: "1px", borderRightStyle: "solid", padding: 5, paddingLeft: 10}} md={2} sm={6} >
-                      <div style={{fontWeight: "300"}}><i class="icon-wallet mr-2"></i> Prezzo</div>
+                    <Col
+                      style={{
+                        borderRightColor: "#e0e0e0",
+                        borderRightWidth: "1px",
+                        borderRightStyle: "solid",
+                        padding: 5,
+                        paddingLeft: 10,
+                      }}
+                      md={2}
+                      sm={6}
+                    >
+                      <div style={{ fontWeight: "300" }}>
+                        <i class="icon-wallet mr-2"></i> Prezzo
+                      </div>
                       <div>{this.state.service.price} €</div>
                     </Col>
-                    <Col style={{borderRightColor: '#e0e0e0', borderRightWidth: "1px", borderRightStyle: "solid", padding: 5, paddingLeft: 10}} md={2} sm={6} >
-                      <div style={{fontWeight: "300"}}><i class="icon-clock mr-2"></i> Durata abbonamento</div>
+                    <Col
+                      style={{
+                        borderRightColor: "#e0e0e0",
+                        borderRightWidth: "1px",
+                        borderRightStyle: "solid",
+                        padding: 5,
+                        paddingLeft: 10,
+                      }}
+                      md={2}
+                      sm={6}
+                    >
+                      <div style={{ fontWeight: "300" }}>
+                        <i class="icon-clock mr-2"></i> Durata abbonamento
+                      </div>
                       <div>{this.state.service.duration} giorni</div>
                     </Col>
-                    <Col style={{borderRightColor: '#e0e0e0', borderRightWidth: "1px", borderRightStyle: "solid", padding: 5, paddingLeft: 10}} md={2} sm={6} >
-                      <div style={{fontWeight: "300"}}><i class="mr-2 icon-people"></i> Massimo abbonati</div>
+                    <Col
+                      style={{
+                        borderRightColor: "#e0e0e0",
+                        borderRightWidth: "1px",
+                        borderRightStyle: "solid",
+                        padding: 5,
+                        paddingLeft: 10,
+                      }}
+                      md={2}
+                      sm={6}
+                    >
+                      <div style={{ fontWeight: "300" }}>
+                        <i class="mr-2 icon-people"></i> Massimo abbonati
+                      </div>
                       <div>{this.state.service.maxSubscribers}</div>
                     </Col>
-                    <Col style={{borderRightColor: '#e0e0e0', borderRightWidth: "1px", borderRightStyle: "solid", padding: 5, paddingLeft: 10}} md={2} sm={6} >
-                      <Label style={{fontWeight: "300"}}><i class="mr-2 icon-clock"></i> Creato il</Label>
-                      <div>{moment(this.state.service.createdOn).format( "DD/MM/YYYY HH:mm" )}</div>
+                    <Col
+                      style={{
+                        borderRightColor: "#e0e0e0",
+                        borderRightWidth: "1px",
+                        borderRightStyle: "solid",
+                        padding: 5,
+                        paddingLeft: 10,
+                      }}
+                      md={2}
+                      sm={6}
+                    >
+                      <Label style={{ fontWeight: "300" }}>
+                        <i class="mr-2 icon-clock"></i> Creato il
+                      </Label>
+                      <div>
+                        {moment(this.state.service.createdOn).format(
+                          "DD/MM/YYYY HH:mm"
+                        )}
+                      </div>
                     </Col>
-                    <Col style={{padding: 5, paddingLeft: 10}} md={2} sm={6} >
-                      <Label style={{fontSize: "1em", display: "inline-block"}}><i class="mr-2 icon-clock"></i> Modificato il</Label>
-                      <div>{moment(this.state.service.createdOn).format( "DD/MM/YYYY HH:mm" )}</div>
+                    <Col style={{ padding: 5, paddingLeft: 10 }} md={2} sm={6}>
+                      <Label
+                        style={{ fontSize: "1em", display: "inline-block" }}
+                      >
+                        <i class="mr-2 icon-clock"></i> Modificato il
+                      </Label>
+                      <div>
+                        {moment(this.state.service.createdOn).format(
+                          "DD/MM/YYYY HH:mm"
+                        )}
+                      </div>
                     </Col>
                   </DetailGrid>
                 </Col>
                 <Col md="12">
                   <DetailGrid borderTop={0} className={"mb-4"}>
-                    <Col style={{padding: 5, }} md={12} sm={12} >
-                      <div style={{fontWeight: "300"}}><i class="mr-2 icon-tag"></i> Tags</div>
+                    <Col style={{ padding: 5 }} md={12} sm={12}>
+                      <div style={{ fontWeight: "300" }}>
+                        <i class="mr-2 icon-tag"></i> Tags
+                      </div>
                       <div>
-                        {this.state.taxonomies.map(tax => <span class="mr-2" key={tax}>#{tax}</span>)}
-                        {this.state.taxonomies.length === 0 && (<Alert color="info" style={{
-                          color: "#125f77", 
-                          backgroundColor: "#d3f1fa",
-                          width: "100%",
-                          paddingTop: "5px",
-                          paddingBottom: "5px",
-                          marginTop: "5px",
-                          opacity: 0.8
-                        }}>
-                        Non ci sono hashtag per questo pacchetto.
-                        </Alert>)}
+                        {this.state.taxonomies.map((tax) => (
+                          <span class="mr-2" key={tax}>
+                            #{tax}
+                          </span>
+                        ))}
+                        {this.state.taxonomies.length === 0 && (
+                          <Alert
+                            color="info"
+                            style={{
+                              color: "#125f77",
+                              backgroundColor: "#d3f1fa",
+                              width: "100%",
+                              paddingTop: "5px",
+                              paddingBottom: "5px",
+                              marginTop: "5px",
+                              opacity: 0.8,
+                            }}
+                          >
+                            Non ci sono hashtag per questo pacchetto.
+                          </Alert>
+                        )}
                       </div>
                     </Col>
                   </DetailGrid>
                 </Col>
               </Row>
-              <div className="mb-5 mt-5" style={{display: "flex", flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
-                <div style={{flex:1, flexDirection: 'column', justifyContent: 'flex-start'}}>
-                  <div style={{flex:1, flexDirection: 'row', justifyContent: 'flex-start'}}>
-                    <h3 style={{marginBottom: 0, display: 'inline-block'}}>
+              <div
+                className="mb-5 mt-5"
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div
+                  style={{
+                    flex: 1,
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <div
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                    }}
+                  >
+                    <h3 style={{ marginBottom: 0, display: "inline-block" }}>
                       Le tue schedine
                     </h3>
-                    <Button style={{position: "absolute",
+                    <Button
+                      style={{
+                        position: "absolute",
                         marginTop: "-2px",
                         height: "30px",
                         width: "30px",
-                        lineHeight: "31px"
+                        lineHeight: "31px",
                       }}
-                      className={"btn bg-primary btn-circle btn-outline ml-2"} onClick={() => this.newService()}>
+                      className={"btn bg-primary btn-circle btn-outline ml-2"}
+                      onClick={() => this.newPool()}
+                    >
                       <em className="fas fa-plus"></em>
                     </Button>
-                    <p style={{fontSize: "1rem", fontWeight: "200"}}>Qui si trovano le schedine del pacchetto selezionato</p>
+                    <p style={{ fontSize: "1rem", fontWeight: "200" }}>
+                      Qui si trovano le schedine del pacchetto selezionato
+                    </p>
                   </div>
                 </div>
               </div>
@@ -352,12 +454,9 @@ class ServiceDetails extends Component {
                     <Button
                       className="btn"
                       onClick={() => {
-                        this.setState(
-                          { noErrors: true, loading: true },
-                          () => {
-                            this.getMyPools();
-                          }
-                        );
+                        this.setState({ noErrors: true, loading: true }, () => {
+                          this.getMyPools();
+                        });
                       }}
                     >
                       Riprova
@@ -382,12 +481,15 @@ class ServiceDetails extends Component {
             </div>
             <div className="form-group row text-center">
               <div className="col-md-12">
-                <div className="h2 mb-4 text-center">
-                  Dettaglio pacchetto
-                </div>
-                <div className="h5 mb-4 text-center" style={{fontWeight: "300", fontSize: '1rem'}}>
-                  Modifica il pacchetto per aiutare gli utenti a capire meglio il servizio che offri. <br/>
-                  Aggiungi una nuova schedina e i relativi eventi, fai vincere i tuoi subscribers!
+                <div className="h2 mb-4 text-center">Dettaglio pacchetto</div>
+                <div
+                  className="h5 mb-4 text-center"
+                  style={{ fontWeight: "300", fontSize: "1rem" }}
+                >
+                  Modifica il pacchetto per aiutare gli utenti a capire meglio
+                  il servizio che offri. <br />
+                  Aggiungi una nuova schedina e i relativi eventi, fai vincere i
+                  tuoi subscribers!
                 </div>
                 <div className="form-group row text-center">
                   <div className="col-md-4"></div>
@@ -408,10 +510,7 @@ class ServiceDetails extends Component {
                     </Button>
                   </div>
                   <div className="col-md-2">
-                    <Button
-                      color="warning"
-                      onClick={() => this.newPool()}
-                    >
+                    <Button color="warning" onClick={() => this.newPool()}>
                       <em className="fas fa-plus mr-2"></em>Aggiungi schedina
                     </Button>
                   </div>
