@@ -85,17 +85,29 @@ class NewPool extends Component {
 
     if (!(hasError || this.state.NewPoolForm.bookmaker === "0")) {
       if (this.state.mode === "new") {
+        var token = await TokenManager.getInstance().getToken();
+        const authorUrl = await fetch(
+          this.props.app.serviceDetails.links.author.href,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "X-Auth": token },
+          }
+        )
+          .then((response) => response.json())
+          .then((response) => {
+            return response._links.self.href;
+          });
+
         const newPool = {
           createdOn: new Date(),
           description: this.state.NewPoolForm.description,
           stake: this.state.NewPoolForm.stake,
           bookmaker: this.state.NewPoolForm.bookmaker,
           events: [],
-          author: this.props.app.serviceDetails.links.author.href,
+          author: authorUrl,
           service: this.props.app.serviceDetails.links.self.href,
         };
 
-        var token = await TokenManager.getInstance().getToken();
         fetch(config.API_URL + "/pools", {
           method: "POST",
           headers: { "Content-Type": "application/json", "X-Auth": token },
@@ -234,15 +246,17 @@ class NewPool extends Component {
                             Stake
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
-                            <CurrencyInput 
+                            <CurrencyInput
                               name="stake"
                               max={1000}
-                              onValueChange={(val) => this.setState({
-                                NewPoolForm: {
-                                  ...this.state["NewPoolForm"],
-                                  stake: val,
-                                },
-                              })}
+                              onValueChange={(val) =>
+                                this.setState({
+                                  NewPoolForm: {
+                                    ...this.state["NewPoolForm"],
+                                    stake: val,
+                                  },
+                                })
+                              }
                               invalid={
                                 this.hasError(
                                   "NewPoolForm",
@@ -253,8 +267,9 @@ class NewPool extends Component {
                               }
                               data-validate='["required", "min"]'
                               className={"form-control form-control"}
-                              style={{ textAlign: 'right' }}
-                              value={this.state.NewPoolForm.stake} />
+                              style={{ textAlign: "right" }}
+                              value={this.state.NewPoolForm.stake}
+                            />
 
                             {this.hasError(
                               "NewPoolForm",
