@@ -7,13 +7,15 @@ import {
   Col,
   FormGroup,
   Spinner,
-  Button,
+  Button
 } from "reactstrap";
 import * as moment from "moment";
 import MyEvents from "../events/MyEvents";
 import { connect } from "react-redux";
 import NewEvent from "../events/NewEvent";
 import NewPool from "./NewPool";
+import DetailGrid from "../../components/layout/DetailGrid";
+import Label from "../../components/layout/Label";
 
 import TokenManager from "../../components/auth/Token";
 
@@ -161,138 +163,241 @@ class PoolDetails extends Component {
               toggleModal={() => this.toggleModalEditPool()}
               refreshService={() => this.getPoolDetails()}
             />
-            <Row>
-              <Col lg="6">
-                <h2>Dettagli schedina "{this.state.pool.description}"</h2>
-              </Col>
-
-              <Col lg="2">
-                <Button
-                  className="btn btn-block btn-secondary"
-                  onClick={() => {
-                    this.editPool(this.state.pool);
+            <Col className={"mb-5"}>
+              <Row>
+                <Col md="12">
+                  <h3 style={{ marginBottom: 0 }}>
+                    {this.state.pool.description}
+                  </h3>
+                  <p style={{ fontSize: "1rem", fontWeight: "200" }}>
+                    Questo è il dettaglio della schedina selezionata e dei relativi eventi collegati
+                  </p>
+                  <DetailGrid className={"mt-4"}>
+                    <Col
+                      style={{
+                        borderRightColor: "#e0e0e0",
+                        borderRightWidth: "1px",
+                        borderRightStyle: "solid",
+                        padding: 5,
+                      }}
+                      md={2}
+                      sm={6}
+                    >
+                      <div style={{ fontWeight: "300" }}>
+                        <i className="icon-graph mr-2"></i> Quota
+                      </div>
+                      <div>{(this.state.pool.quote / 100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                    </Col>
+                    <Col
+                      style={{
+                        borderRightColor: "#e0e0e0",
+                        borderRightWidth: "1px",
+                        borderRightStyle: "solid",
+                        padding: 5,
+                        paddingLeft: 10,
+                      }}
+                      md={2}
+                      sm={6}
+                    >
+                      <div style={{ fontWeight: "300" }}>
+                        <i className="icon-book-open mr-2"></i> Bookmaker
+                      </div>
+                      <div>{this.state.pool.bookmaker}</div>
+                    </Col>
+                    <Col
+                      style={{
+                        borderRightColor: "#e0e0e0",
+                        borderRightWidth: "1px",
+                        borderRightStyle: "solid",
+                        padding: 5,
+                        paddingLeft: 10,
+                      }}
+                      md={2}
+                      sm={6}
+                    >
+                      <div style={{ fontWeight: "300" }}>
+                        <i className="icon-pie-chart mr-2"></i> Stake
+                      </div>
+                      <div>{(this.state.pool.stake / 100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</div>
+                    </Col>
+                    <Col
+                      style={{
+                        borderRightColor: "#e0e0e0",
+                        borderRightWidth: "1px",
+                        borderRightStyle: "solid",
+                        padding: 5,
+                        paddingLeft: 10,
+                      }}
+                      md={2}
+                      sm={6}
+                    >
+                      <div style={{ fontWeight: "300" }}>
+                        <i className="icon-trophy mr-2"></i> Profitto
+                      </div>
+                      <div>{(this.state.pool.profit / 10000).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</div>
+                    </Col>
+                    <Col
+                      style={{
+                        borderRightColor: "#e0e0e0",
+                        borderRightWidth: "1px",
+                        borderRightStyle: "solid",
+                        padding: 5,
+                        paddingLeft: 10,
+                      }}
+                      md={2}
+                      sm={6}
+                    >
+                      <Label style={{ fontWeight: "300" }}>
+                        <i className="mr-2 icon-clock"></i> Creato il
+                      </Label>
+                      <div>
+                        {moment(this.state.pool.createdOn).format(
+                          "DD/MM/YYYY HH:mm"
+                        )}
+                      </div>
+                    </Col>
+                    <Col style={{ padding: 5, paddingLeft: 10 }} md={2} sm={6}>
+                      <Label
+                        style={{ fontSize: "1em", display: "inline-block" }}
+                      >
+                        <i className="mr-2 icon-clock"></i> Modificato il
+                      </Label>
+                      <div>
+                        {moment(this.state.pool.updatedOn).format(
+                          "DD/MM/YYYY HH:mm"
+                        )}
+                      </div>
+                    </Col>
+                  </DetailGrid>
+                </Col>
+              </Row>
+              <div
+                className="mb-5 mt-5"
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div
+                  style={{
+                    flex: 1,
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
                   }}
                 >
-                  Modifica schedina
-                </Button>
-              </Col>
-              <Col lg="2">
-                <Button
-                  className="btn btn-block btn-secondary"
-                  onClick={() => this.newEvent()}
+                  <div
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                    }}
+                  >
+                    <h3 style={{ marginBottom: 0, display: "inline-block" }}>
+                      Eventi collegati
+                    </h3>
+                    <Button
+                      style={{
+                        position: "absolute",
+                        marginTop: "-2px",
+                        height: "30px",
+                        width: "30px",
+                        lineHeight: "31px",
+                      }}
+                      className={"btn bg-primary btn-circle btn-outline ml-2"}
+                      onClick={() => this.newEvent()}
+                    >
+                      <em className="fas fa-plus"></em>
+                    </Button>
+                    <p style={{ fontSize: "1rem", fontWeight: "200" }}>
+                      Qui si trovano gli eventi della schedina selezionata
+                    </p>
+                  </div>
+                </div>
+              </div>
+              {!this.state.eventLoading ? (
+                <div>
+                  <Row lg="12" sm="12" md="12">
+                    <MyEvents
+                      events={this.state.events}
+                      editEvent={(event) => this.editEvent(event)}
+                    />
+                  </Row>
+                </div>
+              ) : this.state.eventNoErrors ? (
+                <div>
+                  <h4> Carico gli eventi...</h4>
+                  <div>
+                    <Spinner />
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div>
+                    <h4>Errore nel caricamento degli eventi</h4>
+                  </div>
+                  <div>
+                    <Button
+                      className="btn"
+                      onClick={() => {
+                        this.setState({ eventNoErrors: true, eventLoading: true }, () => {
+                          this.getMyEvents();
+                        });
+                      }}
+                    >
+                      Riprova
+                    </Button>
+                    <Button
+                      style={{ marginLeft: 10 }}
+                      className="btn"
+                      onClick={() => {
+                        this.props.history.push("/serviceDetails");
+                      }}
+                    >
+                      Torna indietro
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </Col>
+            <div className="form-group row text-center">
+              <div className="col-md-12">
+                <em className="fa-3x mr-2 fas fa-box-open"></em>
+              </div>
+            </div>
+            <div className="form-group row text-center">
+              <div className="col-md-12">
+                <div className="h2 mb-4 text-center">Dettaglio schedina</div>
+                <div
+                  className="h5 mb-4 text-center"
+                  style={{ fontWeight: "300", fontSize: "1rem" }}
                 >
-                  Aggiungi evento
-                </Button>
-              </Col>
-            </Row>
-            <Card className="card-default">
-              <CardBody>
-                <Row>
-                  <Col lg="6">
-                    <FormGroup row>
-                      <Col md="4">Descrizione:</Col>
-                      <Col md="8">
-                        <strong>{this.state.pool.description}</strong>
-                      </Col>
-                      <Col md="4">Quota:</Col>
-                      <Col md="8">
-                        <strong>{(this.state.pool.quote / 100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
-                      </Col>
-                      <Col md="4">Bookmaker:</Col>
-                      <Col md="8">
-                        <strong>{this.state.pool.bookmaker}</strong>
-                      </Col>
-                      <Col md="4">Creato il:</Col>
-                      <Col md="8">
-                        <strong>
-                          {moment(this.state.pool.createdOn).format(
-                            "DD/MM/YYYY HH:mm"
-                          )}
-                        </strong>
-                      </Col>
-                    </FormGroup>
-                  </Col>
-                  <Col lg="6">
-                    <FormGroup row>
-                      <Col md="4">Stake:</Col>
-                      <Col md="8">
-                        <strong>{(this.state.pool.stake / 100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</strong>
-                      </Col>
-                      <Col md="4">Profitto:</Col>
-                      <Col md="8">
-                        <strong>{(this.state.pool.profit / 10000).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</strong>
-                      </Col>
-                      <Col md="4">Modificato il:</Col>
-                      <Col md="8">
-                        <strong>
-                          {moment(this.state.pool.updatedOn).format(
-                            "DD/MM/YYYY HH:mm"
-                          )}
-                        </strong>
-                      </Col>
-                    </FormGroup>
-                  </Col>
-                </Row>
-              </CardBody>
-            </Card>
-            <Row>
-              <Col lg="6">
-                <h3>Eventi</h3>
-              </Col>
-            </Row>
-            <Card className="card-default">
-              <CardBody>
-                {!this.state.eventLoading ? (
-                  <div>
-                    <Row>
-                      <Col md="12">
-                        <MyEvents
-                          events={this.state.events}
-                          editEvent={(event) => this.editEvent(event)}
-                        />
-                      </Col>
-                    </Row>
+                  Modifica la schedina inserendo una descrizione accurata sulla giocata. <br />
+                  Aggiungi un nuovo evento, fai vincere i tuoi subscribers!
+                </div>
+                <div className="form-group row text-center">
+                  <div className="col-md-4"></div>
+                  <div className="col-md-2">
+                    <Button
+                      color="success"
+                      onClick={() => {
+                        this.editPool(this.state.pool);
+                        console.log();
+                      }}
+                    >
+                      <em className="fas fa-edit mr-2"></em>Modifica schedina
+                    </Button>
                   </div>
-                ) : this.state.eventNoErrors ? (
-                  <div>
-                    <h4> Carico gli eventi...</h4>
-                    <div>
-                      <Spinner />
-                    </div>
+                  <div className="col-md-2">
+                    <Button color="warning" onClick={() => this.newEvent()}>
+                      <em className="fas fa-plus mr-2"></em>Aggiungi evento
+                    </Button>
                   </div>
-                ) : (
-                  <div>
-                    <div>
-                      <h4>Errore nel caricamento degli eventi</h4>
-                    </div>
-                    <div>
-                      <Button
-                        className="btn"
-                        onClick={() => {
-                          this.setState(
-                            { eventNoErrors: true, eventLoading: true },
-                            () => {
-                              this.getMyEvents();
-                            }
-                          );
-                        }}
-                      >
-                        Riprova
-                      </Button>
-                      <Button
-                        style={{ marginLeft: 10 }}
-                        className="btn"
-                        onClick={() => {
-                          this.props.history.push("/serviceDetails");
-                        }}
-                      >
-                        Torna indietro
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </CardBody>
-            </Card>
+                  <div className="col-md-4"></div>
+                </div>
+              </div>
+            </div>
           </div>
         ) : this.state.poolNoErrors ? (
           <div>

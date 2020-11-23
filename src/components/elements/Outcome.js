@@ -22,6 +22,6 @@ export default class Outcome extends Component {
                 break;
         }
 
-        return <span class={className} style={{fontSize: "1.1em", padding: 7, opacity: 0.8}}>{this.props.outcome}</span>;
+        return <span className={className} style={{fontSize: "1.1em", padding: 7, opacity: 0.8}}>{this.props.outcome}</span>;
     }
 }
