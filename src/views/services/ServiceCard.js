@@ -27,30 +27,33 @@ class ServiceCard extends Component {
 
   async getTaxonomies() {
     var token = await TokenManager.getInstance().getToken();
-    this.setState({ loading: true, noErrors: true }, () => {
+    
+    async function loadData() {
       try {
-        fetch(this.props.serviceData._links.taxonomies.href, {
+        let response = await fetch(this.props.serviceData._links.taxonomies.href, {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            if (response._embedded) {
-              let arrayTaxonomies = [];
-              for (let taxonomy of response._embedded.taxonomy) {
-                arrayTaxonomies.push(taxonomy.definition);
-              }
-              this.setState({
-                taxonomies: arrayTaxonomies,
-                taxonomiesObjects: response._embedded.taxonomy,
-              });
-            }
+        });
+
+        let responseAsJson = await response.json();
+        
+        if (responseAsJson._embedded) {
+          let arrayTaxonomies = [];
+          for (let taxonomy of responseAsJson._embedded.taxonomy) {
+            arrayTaxonomies.push(taxonomy.definition);
+          }
+          this.setState({
+            taxonomies: arrayTaxonomies,
+            taxonomiesObjects: responseAsJson._embedded.taxonomy,
           });
-      } catch {
-        console.log(this.props.app);
+        }
+      } catch (error) {
+        console.error("Error happened: " + error);
         // this.props.history.push("/login");
       }
-    });
+    }
+
+    this.setState({ loading: true, noErrors: true }, loadData);
   }
 
   render() {
@@ -87,18 +90,19 @@ class ServiceCard extends Component {
                 </Row>
               </Col>
               <Col lg="6">
-                <Row><Label><i class="icon-people mr-2"></i>  Numero max iscritti</Label></Row>
+                <Row><Label><i className="icon-people mr-2"></i>  Numero max iscritti</Label></Row>
                 <Row><span style={{fontSize: "1.2em"}}>{this.props.serviceData.maxSubscribers}</span></Row>
               </Col>
             </div>
-            <div classNamew="mb-1" style={{padding: 10}}>
+            <div className="mb-1" style={{padding: 10}}>
               <Col lg="12">
-                <Row><Label><i class="icon-tag mr-2"></i> Hashtag</Label></Row>
+                <Row><Label><i className="icon-tag mr-2"></i> Hashtag</Label></Row>
                 <Row>
-                  {this.state.taxonomies.map(tax => <span style={{fontSize: "1.1em", 
-                    padding: 3,
-                    display: 'inline-block', 
-                  }}>#{tax}</span>)}
+                  {this.state.taxonomies.map(tax => <span 
+                    key={tax}
+                    style={{fontSize: "1.1em", padding: 3, display: 'inline-block'}}>
+                    #{tax}
+                  </span>)}
                   {this.state.taxonomies.length === 0 && (<Alert color="info" style={{
                       color: "#125f77", 
                       backgroundColor: "#d3f1fa",
