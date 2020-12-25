@@ -4,23 +4,6 @@ stages:
 services:
 - docker:dind
 
-# build:
-#   stage: build
-#   image: node:10.16.0
-#   only:
-#     refs:
-#       - master
-#   script: 
-#     - echo "Start building App"
-#     - npm install
-#     - npm build
-#     - echo "Build successfully!"
-#   artifacts:
-#     expire_in: 1 hour
-#     paths:
-#       - build
-#       - node_modules/
-
 push_image:
   stage: push_image
   image: docker:stable
