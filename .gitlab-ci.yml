@@ -1,6 +1,6 @@
 stages:
   - build
-  - production
+  - push_image
 
 build:
   stage: build
@@ -19,13 +19,10 @@ build:
       - build
       - node_modules/
 
-production:
-  type: deploy
-  stage: production
-  image: ruby:latest
-  only:
-    refs:
-      - master
+push_image:
+  stage: push_image
+  image: dind
   script:
-      - gem install dpl
-      - dpl --provider=heroku --app=godobet-dashboard --api-key=$HEROKU_API_KEY
+    - docker login dhregistry.azurecr.io -u $USERNAME -p $PASSWORD
+    - docker build . -t dhregistry.azurecr.io/godobet-dashboard:latest
+    - docker push dhregistry.azurecr.io/godobet-dashboard:latest
