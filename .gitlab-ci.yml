@@ -2,6 +2,9 @@ stages:
   - build
   - push_image
 
+services:
+- docker:dind
+
 build:
   stage: build
   image: node:10.16.0
@@ -21,7 +24,9 @@ build:
 
 push_image:
   stage: push_image
-  image: dokcer:dind
+  image: docker:stable
+  services:
+  - docker:dind
   script:
     - docker login dhregistry.azurecr.io -u $USERNAME -p $PASSWORD
     - docker build . -t dhregistry.azurecr.io/godobet-dashboard:latest
