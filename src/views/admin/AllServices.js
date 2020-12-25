@@ -5,9 +5,9 @@ import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
 import { connect } from "react-redux";
-import NewService from "../services/NewService.js";
+// import NewService from "../services/NewService.js";
 import Label from "../../components/layout/Label";
-
+import Search from "../../template_components/Extras/Search";
 class AllServices extends Component {
   constructor(props, context) {
     super(props, context);
@@ -16,6 +16,7 @@ class AllServices extends Component {
       noErrors: true,
       modalEditServiceVisible: false,
       services: [],
+      searchPhrase: "",
     };
     this.getAllServices();
   }
@@ -35,10 +36,16 @@ class AllServices extends Component {
     );
   }
 
-  async getAllServices() {
+  async getAllServices(q) {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
-      fetch(config.API_URL + "/services", {
+
+      let url = config.API_URL + "/services";
+      let params = q ? new URLSearchParams({name: q}) : null;
+
+      url = q ? url + "/search/findByName/?" + params : url;
+
+      fetch(url, {
         method: "GET",
         headers: { "Content-Type": "application/json", "X-Auth": token },
       })
@@ -51,86 +58,72 @@ class AllServices extends Component {
               loading: false,
             });
           else this.setState({ noErrors: false, loading: true });
+        })
+        .catch(() => {
+          this.setState({ noErrors: false, loading: false });
         });
     });
-  }
+  };
+
+  updateSearchState = (searchPhrase) => {
+    this.setState({searchPhrase: searchPhrase.target.value});
+  };
+
+  searchClickHandler = () => {
+    this.getAllServices(this.state.searchPhrase);
+  };
 
   render() {
-    if (!this.state.loading)
-      return (
-        <ContentWrapper>
-          <div className="content-heading" style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
-            <div>
-              <div>Tutti i pacchetti</div>
-              <Label>Qua si trovano tutti i pacchetti disponibili nella piattaforma</Label>
-            </div>
+    return (
+      <ContentWrapper>
+        <div className="content-heading" style={{flex: 1, flexDirection: "row", justifyContent: "space-between"}}>
+          <div>
+            <div>Tutti i pacchetti</div>
+            <Label>Qua si trovano tutti i pacchetti disponibili nella piattaforma</Label>
           </div>
-          <Row>
-            {this.state.services.map((service) => (
-              <ServiceCard
-                history={this.props.history}
-                key={service._links.self.href}
-                serviceData={service}
-                editService={(service) => this.editService(service)}
-              ></ServiceCard>
-            ))}
-          </Row>
-          <div className="form-group row text-center">
-            <div className="col-md-12">
-              <em className="fa-4x icon-organization mr-2"></em>
-            </div>
-          </div>
-          <div className="form-group row text-center">
-            <div className="col-md-12">
-              <div className="h2 mb-4 text-center">
-                Crea un pacchetto
+        </div>
+        <>
+          <div className="form-group mb-4">
+              <input className="form-control mb-2" type="text" placeholder="Cerca pacchetti" value={this.state.searchPhrase} onChange={this.updateSearchState} />
+              <div className="d-flex">
+                  <button className="btn btn-secondary" type="button" onClick={this.searchClickHandler}>Cerca</button>
               </div>
-              <div className="h5 mb-4 text-center">
-                I pacchetti aiutano gli utenti a capire meglio il servizio che offri. <br/>
-                Compilalo nei minimi dettagli per aiutare le persone a fare la giusta scelta!
-              </div>
-              <Button color="primary" onClick={() => this.newService()}>
-                <em className="fas fa-plus mr-2"></em>Aggiungi pacchetto
-              </Button>
-              <NewService
-                modalNewServiceVisible={this.state.modalNewServiceVisible}
-                serviceToEdit={this.state.serviceToEdit}
-                toggleModal={() => this.toggleModal()}
-                refreshServiceList={() => this.getMyServices()}
-              ></NewService>
-            </div>
           </div>
-        </ContentWrapper>
-      );
-    else if (this.state.noErrors)
-      return (
-        <ContentWrapper>
-          <h4> Carico i pacchetti...</h4>
-          <div>
-            <Spinner />
-          </div>
-        </ContentWrapper>
-      );
-    else
-      return (
-        <ContentWrapper>
-          <div>
-            <h4>Errore nel caricamento dei pacchetti</h4>
-          </div>
-          <div>
-            <Button
-              className="btn"
-              onClick={() => {
-                this.setState({ noErrors: true, loading: true }, () => {
-                  this.getAllServices();
-                });
-              }}
-            >
-              Riprova
-            </Button>
-          </div>
-        </ContentWrapper>
-      );
+        </>
+        <Row>
+          {
+            this.state.loading && this.state.noErrors
+            ? <div style={{flexDirection: "row", justifyContent: "center", flex: 1}}><Spinner /></div>
+            : !this.state.loading && !this.state.noErrors
+              ? <ContentWrapper>
+                  <div>
+                    <h4>Errore nel caricamento dei pacchetti</h4>
+                  </div>
+                  <div>
+                    <Button
+                      className="btn"
+                      onClick={() => {
+                        this.setState({ noErrors: true, loading: true }, () => {
+                          this.searchClickHandler();
+                        });
+                      }}
+                    >
+                      Riprova
+                    </Button>
+                  </div>
+                </ContentWrapper>
+              : this.state.services.map((service) => (
+                  <ServiceCard
+                    history={this.props.history}
+                    key={service._links.self.href}
+                    serviceData={service}
+                    editService={(service) => this.editService(service)}
+                  ></ServiceCard>
+                ))
+          }
+        </Row>
+      </ContentWrapper>
+    );
   }
 }
 
