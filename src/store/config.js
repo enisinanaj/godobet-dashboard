@@ -1,3 +1,3 @@
 export default {
-    API_URL: "https://godobet-api.herokuapp.com"
+    API_URL: "http://api.godobet.it"
 }

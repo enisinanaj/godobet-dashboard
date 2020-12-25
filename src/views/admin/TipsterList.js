@@ -29,7 +29,7 @@ class TipsterList extends Component {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
       fetch(
-        "https://godobet-api.herokuapp.com/users/search/findByRole/?role=https://godobet-api.herokuapp.com/roles/4",
+        "http://api.godobet.it/users/search/findByRole/?role=http://api.godobet.it/roles/4",
         {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
@@ -51,7 +51,7 @@ class TipsterList extends Component {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
       fetch(
-        "https://godobet-api.herokuapp.com/users/search/findByRole/?role=https://godobet-api.herokuapp.com/roles/4",
+        "http://api.godobet.it/users/search/findByRole/?role=http://api.godobet.it/roles/4",
         {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
