@@ -21,8 +21,8 @@ build:
 
 push_image:
   stage: push_image
-  image: dind
+  image: dokcer:dind
   script:
     - docker login dhregistry.azurecr.io -u $USERNAME -p $PASSWORD
     - docker build . -t dhregistry.azurecr.io/godobet-dashboard:latest
-    - docker push dhregistry.azurecr.io/godobet-dashboard:latest
+    - docker push votingtestapp.azurecr.io/azure-vote:latest
