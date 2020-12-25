@@ -16,6 +16,6 @@ WORKDIR /app/build
 
 RUN npm i -g http-server
 
-EXPOSE 4200
+EXPOSE 80
 
-CMD http-server -p 4200
+CMD http-server -p 80
