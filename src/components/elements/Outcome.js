@@ -7,14 +7,14 @@ export default class Outcome extends Component {
 
         switch(this.props.outcome) {
             case 'win':
-                className = "badge bg-green";
+                className = "badge badge-success";
                 break;
             case 'lose':
-                className = "badge bg-red";
+                className = "badge badge-danger";
                 break;
             case '1/2 win':
             case '1/2 lose':
-                className = "badge bg-orange";
+                className = "badge badge-warning";
                 break;
             default:
             case 'void':

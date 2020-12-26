@@ -3,7 +3,6 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Row,
   Col,
 } from "reactstrap";
 import * as moment from "moment";
@@ -54,25 +53,26 @@ class PoolCard extends Component {
                 </div>
               </Col>
               <Col lg="6" className={"mb-3"}>
-                <div><Label><i class="icon-book-open mr-2"></i> Bookmaker</Label></div>
+                <div><Label><i className="icon-book-open mr-2"></i> Bookmaker</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{this.props.poolData.bookmaker}</span></div>
               </Col>
               <Col lg="6" className={"mb-3"}>
-                <div><Label><i class="icon-graph mr-2"></i> Quota</Label></div>
-                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.quote / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+                <div><Label><i className="icon-graph mr-2"></i> Quota</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.quote).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
               </Col>
               <Col lg="6" className={"mb-3"}>
-                <div><Label><i class="icon-pie-chart mr-2"></i>Stake</Label></div>
+                <div><Label><i className="icon-pie-chart mr-2"></i>Stake</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.stake / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
               </Col>
               <Col lg="6" className={"mb-3"}>
-                <div><Label><i class="icon-trophy mr-2"></i>Profitto</Label></div>
-                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.profit / 10000).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
+                <div><Label><i className="icon-trophy mr-2"></i>Profitto</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.profit).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
+              </Col>
+              <Col lg="12" className={"mb-12"}>
+                <div><Label><i className="icon-trophy mr-2"></i>Eventi</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{this.props.poolData.events.length}</span></div>
               </Col>
             </div>
-            <Row className="mb-3 mt-2" style={{padding: "10px", paddingLeft: "15px", borderTopWidth: "1px", borderTopColor: "rgba(0, 0, 0, 0.125)", borderTopStyle: "solid"}}>
-              <Label style={{fontSize: "1.2em"}}>{this.props.poolData.events.length} Eventi presenti</Label>
-            </Row>
           </CardBody>
           <CardFooter className="d-flex bg-light" style={{flexDirection: "row", justifyContent: "flex-start"}}>
               <Col lg="6" className="p-0">

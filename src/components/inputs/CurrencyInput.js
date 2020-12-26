@@ -62,7 +62,7 @@ const CurrencyInput = ({
   return (
     <input
       name={name}
-      invalid={invalid}
+      invalid={invalid ? invalid : undefined}
       data-validate={dataValidate}
       className={className}
       inputMode="numeric"

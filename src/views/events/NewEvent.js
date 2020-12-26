@@ -81,7 +81,6 @@ class NewEvent extends Component {
         proposal: this.props.eventToEdit.proposal,
         event: this.props.eventToEdit.event,
         quote: this.props.eventToEdit.quote,
-        outcome: this.props.eventToEdit.outcome,
         notes: this.props.eventToEdit.notes,
       },
     });
@@ -121,7 +120,6 @@ class NewEvent extends Component {
     errors["gender"] = genderValidate;
 
     errors["quote"]["gtOne"] = this.state.NewEventForm.quote <= 1;
-    errors["outcome"]["gtOne"] = this.state.NewEventForm.outcome <= 1;
 
     this.setState({
       [form.name]: {
@@ -136,8 +134,7 @@ class NewEvent extends Component {
         this.state.NewEventForm.gender === "0" ||
         !this.state.NewEventForm.eventDate._isValid ||
         this.state.NewEventForm.gender === "0" ||
-        this.state.NewEventForm.quote <= 1 ||
-        this.state.NewEventForm.outcome <= 1
+        this.state.NewEventForm.quote <= 1
       )
     ) {
       if (this.state.mode === "new") {
@@ -149,7 +146,6 @@ class NewEvent extends Component {
           proposal: this.state.NewEventForm.proposal,
           event: this.state.NewEventForm.event,
           quote: this.state.NewEventForm.quote,
-          outcome: this.state.NewEventForm.outcome,
           notes: this.state.NewEventForm.notes,
           pool: this.props.app.poolDetails.links.self.href,
           createdOn: new Date().toISOString(),
@@ -193,7 +189,7 @@ class NewEvent extends Component {
       body: JSON.stringify(editEvent),
     })
       .then((response) => response.json())
-      .then((response) => {
+      .then(_ => {
         this.toggleModal();
         this.props.refreshPool();
       });
@@ -299,11 +295,9 @@ class NewEvent extends Component {
                           <div className="col-xl-10 col-md-9 col-8">
                             <Datetime
                               name="eventDate"
-                              closeOnSelect={false}
+                              closeOnSelect={true}
                               value={this.state.NewEventForm.eventDate}
-                              onChange={(date) =>
-                                this.handleEventDateChange(date)
-                              }
+                              onChange={(date) => this.handleEventDateChange(date)}
                             />
                             {this.hasError(
                               "NewEventForm",
@@ -538,11 +532,10 @@ class NewEvent extends Component {
                             )}
                           </div>
                         </div>
-                        <div className="form-group row">
-                          <label
-                            className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                            htmlFor="inputOutcome"
-                          >
+                        
+                        { this.state.mode !== "new" && <div className="form-group row">
+                          <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                            htmlFor="inputOutcome">
                             Risultato
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">
@@ -551,45 +544,15 @@ class NewEvent extends Component {
                               name="outcome"
                               id="inputOutcome"
                               type="text"
-                              invalid={
-                                this.hasError(
-                                  "NewEventForm",
-                                  "outcome",
-                                  "required"
-                                ) ||
-                                this.hasError(
-                                  "NewEventForm",
-                                  "outcome",
-                                  "gtOne"
-                                )
-                              }
                               data-validate='["required"]'
                               value={this.state.NewEventForm.outcome}
                               onChange={(event) =>
                                 this.validatePositiveNumbers(event)
                               }
                             />
-
-                            {this.hasError(
-                              "NewEventForm",
-                              "outcome",
-                              "required"
-                            ) && (
-                              <span className="invalid-feedback">
-                                Il campo Risultato è obbligatorio
-                              </span>
-                            )}
-                            {this.hasError(
-                              "NewEventForm",
-                              "outcome",
-                              "gtOne"
-                            ) && (
-                              <span className="invalid-feedback">
-                                Il campo Risultato deve essere maggiore di uno
-                              </span>
-                            )}
                           </div>
-                        </div>
+                        </div>}
+
                         <div className="form-group row">
                           <label
                             className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"

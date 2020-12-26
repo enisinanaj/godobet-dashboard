@@ -5,6 +5,7 @@ import { TIPSTER_DETAILS } from "../actions/actions";
 
 const initialState = {
   user: undefined,
+  localUser: undefined,
   loggedIn: false,
   serviceDetails: {},
 };

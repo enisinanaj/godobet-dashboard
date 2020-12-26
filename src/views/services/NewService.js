@@ -284,7 +284,7 @@ class NewService extends Component {
         style={{ maxWidth: "70%" }}
       >
         <ModalHeader toggle={() => this.toggleModal()}>
-          <h4>{this.state.mode === "new" ? "Nuovo" : "Modifica"} pacchetto</h4>
+          <span>{this.state.mode === "new" ? "Nuovo" : "Modifica"} pacchetto</span>
         </ModalHeader>
         <ModalBody>
           <Row>

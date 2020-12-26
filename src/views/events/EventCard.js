@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import {
-  Card,
   CardHeader,
   CardBody,
   CardFooter,
-  Row,
   Col,
-  FormGroup,
+  ButtonDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
 } from "reactstrap";
 import * as moment from "moment";
 import TokenManager from "../../components/auth/Token";
@@ -25,19 +26,46 @@ class EventCard extends Component {
 
   async getGender() {
     var token = await TokenManager.getInstance().getToken();
+    fetch(this.props.data._links.gender.href, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      if (response.value) {
+        this.setState({ gender: response.value });
+      }
+    });
+  }
 
-    try {
-      fetch(this.props.data._links.gender.href, {
-        method: "GET",
-        headers: { "Content-Type": "application/json", "X-Auth": token },
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.value) {
-            this.setState({ gender: response.value });
-          }
-        });
-    } catch {}
+  toggleDropdownMenu() {
+    this.setState({dropdownOpen: !this.state.dropdownOpen})
+  }
+
+  async updateEvent(outcome) {
+    const editEvent = {
+      eventDate: moment(this.props.data.eventDate).toISOString(),
+      sport: this.props.data.sport,
+      competition: this.props.data.competition,
+      gender: this.props.data.gender,
+      proposal: this.props.data.proposal,
+      event: this.props.data.event,
+      quote: this.props.data.quote,
+      outcome,
+      notes: this.props.data.notes,
+      createdOn: this.props.data.createdOn,
+    };
+
+    var token = await TokenManager.getInstance().getToken();
+    fetch(this.props.data._links.self.href, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "X-Auth": token },
+      body: JSON.stringify(editEvent),
+    })
+    .then(_ => this.props.data.outcome = outcome)
+    .catch(e => {
+      console.warn(e);
+    });
   }
 
   render() {
@@ -47,17 +75,31 @@ class EventCard extends Component {
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <strong style={{fontSize: "1.7em"}}>Evento {this.props.data.id}</strong>
             <div style={{float: "right"}}><Outcome outcome={this.props.data.outcome}/></div>
+            {!this.props.data.outcome && 
+              <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={() => this.toggleDropdownMenu()} style={{float: 'right'}}>
+                <DropdownToggle caret>
+                  Imposta esito
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => this.updateEvent("win")}>Won</DropdownItem>
+                  <DropdownItem onClick={() => this.updateEvent("1/2 win")}>1/2 Won</DropdownItem>
+                  <DropdownItem onClick={() => this.updateEvent("1/2 lose")}>1/2 Lose</DropdownItem>
+                  <DropdownItem onClick={() => this.updateEvent("lose")}>Lose</DropdownItem>
+                  <DropdownItem onClick={() => this.updateEvent("void")}>Void</DropdownItem>
+                </DropdownMenu>
+              </ButtonDropdown>
+            }
           </CardHeader>
           <CardBody className={"pb-0"}>
             <div style={{paddingLeft: 10, paddingRight: 10, display: "flex", flexWrap: "wrap"}}>
-              <Col lg="12" className={"mb-3"}>
+              {this.props.data.notes && <Col lg="12" className={"mb-3"}>
                 <div><Label>Description</Label></div>
                 <div>
                   <span style={{fontSize: "1.2em", minHeight: "50px"}} className={"text-truncate"}>
                     {this.props.data.notes}
                   </span>
                 </div>
-              </Col>
+              </Col>}
               <Col lg="6" className={"mb-3"}>
                 <div><Label><i className="icon-tag mr-2"></i>Evento</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{this.props.data.event}</span></div>
@@ -68,10 +110,7 @@ class EventCard extends Component {
               </Col>
               <Col lg="6" className={"mb-3"}>
                 <div><Label><i className="icon-clock mr-2"></i>Data evento</Label></div>
-                <div><span style={{fontSize: "1.2em"}}>
-                  {moment(this.props.data.eventDate).format(
-                    "DD/MM/YYYY HH:mm"
-                  )}</span></div>
+                <div><span style={{fontSize: "1.2em"}}>{moment(this.props.data.eventDate).format("DD/MM/YYYY HH:mm")}</span></div>
               </Col>
               <Col lg="6" className={"mb-3"}>
                 <div><Label><i className="icon-graph mr-2"></i>Quota</Label></div>

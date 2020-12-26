@@ -38,12 +38,8 @@ class ServiceCard extends Component {
         let responseAsJson = await response.json();
         
         if (responseAsJson._embedded) {
-          let arrayTaxonomies = [];
-          for (let taxonomy of responseAsJson._embedded.taxonomy) {
-            arrayTaxonomies.push(taxonomy.definition);
-          }
           this.setState({
-            taxonomies: arrayTaxonomies,
+            taxonomies: responseAsJson._embedded.taxonomy.map(tax => tax.definition),
             taxonomiesObjects: responseAsJson._embedded.taxonomy,
           });
         }
@@ -121,7 +117,7 @@ class ServiceCard extends Component {
           <CardFooter className="bg-light">
             <Row style={{paddingBottom: "10px", paddingLeft: "15px", borderBottomWidth: "1px", borderBottomColor: "rgba(0, 0, 0, 0.125)", borderBottomStyle: "solid"}}
               className={"mb-2"}>
-              <Col lg="2">
+              <Col lg="3">
                 <Label style={{fontSize: "1.2em", display: "inline-block", marginTop: "3px"}}>v0.1{this.props.serviceData.version}</Label>
               </Col>
               <Col lg="10" style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", textAlign: "right"}}>

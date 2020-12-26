@@ -1,9 +1,8 @@
 {
   "name": "godobet",
   "version": "0.1.1",
-  "description": "Angle - Bootstrap Admin Template",
-  "author": "@themicon_co",
-  "license": "https://wrapbootstrap.com/help/licenses",
+  "description": "Godobet",
+  "author": "Eni Sinanaj",
   "private": true,
   "engines": {
     "npm": "6.9.0",

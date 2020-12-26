@@ -7,7 +7,7 @@ class Footer extends Component {
         return (
             <footer className="footer-container">
                 <div className="text-center">
-                    <span className="ml-2">&copy; 2020 Godobet - Powered by NewLine Code</span>
+                    <span className="ml-2">&copy; {year} Godobet - Powered by NewLine Code</span>
                 </div>
             </footer> 
         );

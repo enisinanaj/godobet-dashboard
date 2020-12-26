@@ -5,9 +5,7 @@ import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import config from "../../store/config";
 import { connect } from "react-redux";
-// import NewService from "../services/NewService.js";
 import Label from "../../components/layout/Label";
-import Search from "../../template_components/Extras/Search";
 class AllServices extends Component {
   constructor(props, context) {
     super(props, context);
@@ -43,7 +41,7 @@ class AllServices extends Component {
       let url = config.API_URL + "/services";
       let params = q ? new URLSearchParams({name: q}) : null;
 
-      url = q ? url + "/search/findByName/?" + params : url;
+      url = q ? url + "/search/findByServiceNameStartsWith/?" + params : url;
 
       fetch(url, {
         method: "GET",

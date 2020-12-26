@@ -75,6 +75,7 @@ class AllPools extends Component {
             toggleModal={() => this.toggleModalEditPool()}
             refreshService={() => this.getAllPools()}
           />
+          
           <MyPools
             pools={this.state.pools}
             history={this.props.history}

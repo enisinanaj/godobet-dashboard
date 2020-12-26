@@ -6,6 +6,7 @@ import TokenManager from "../../components/auth/Token";
 import TipsterCard from "./TipsterCard";
 import { connect } from "react-redux";
 import Register from "../auth/Register";
+import config from "../../store/config";
 
 class TipsterList extends Component {
   constructor(props, context) {
@@ -29,7 +30,7 @@ class TipsterList extends Component {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
       fetch(
-        "http://api.godobet.it/users/search/findByRole/?role=http://api.godobet.it/roles/4",
+        `${config.API_URL}/users/search/findByRole/?role=${config.API_URL}/roles/4`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
@@ -51,7 +52,7 @@ class TipsterList extends Component {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
       fetch(
-        "http://api.godobet.it/users/search/findByRole/?role=http://api.godobet.it/roles/4",
+        `${config.API_URL}/users/search/findByRole/?role=${config.API_URL}/roles/4`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },

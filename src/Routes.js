@@ -17,9 +17,7 @@ const Login = lazy(() => import("./views/auth/Login"));
 const Recover = lazy(() => import("./views/auth/Recover"));
 const NotFound = lazy(() => import("./template_components/Pages/NotFound"));
 const Error500 = lazy(() => import("./template_components/Pages/Error500"));
-const Maintenance = lazy(() =>
-import("./template_components/Pages/Maintenance")
-);
+const Maintenance = lazy(() => import("./template_components/Pages/Maintenance"));
 const Profile = lazy(() => import("./views/profile/Profile"));
 const MyServices = lazy(() => import("./views/services/MyServices"));
 const ServiceDetails = lazy(() => import("./views/services/ServiceDetails"));

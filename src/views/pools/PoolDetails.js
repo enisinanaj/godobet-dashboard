@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import {
-  Card,
-  CardBody,
   Row,
   Col,
-  FormGroup,
   Spinner,
   Button
 } from "reactstrap";
@@ -186,7 +183,7 @@ class PoolDetails extends Component {
                       <div style={{ fontWeight: "300" }}>
                         <i className="icon-graph mr-2"></i> Quota
                       </div>
-                      <div>{(this.state.pool.quote / 100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                      <div>{(this.state.pool.quote).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                     </Col>
                     <Col
                       style={{
@@ -234,7 +231,9 @@ class PoolDetails extends Component {
                       <div style={{ fontWeight: "300" }}>
                         <i className="icon-trophy mr-2"></i> Profitto
                       </div>
-                      <div>{(this.state.pool.profit / 10000).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</div>
+                      <div style={{color: this.state.pool.profit < 0 ? 'red' : 'green'}}>
+                        {(this.state.pool.profit).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}
+                      </div>
                     </Col>
                     <Col
                       style={{

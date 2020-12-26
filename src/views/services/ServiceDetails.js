@@ -176,12 +176,8 @@ class ServiceDetails extends Component {
         .then((response) => response.json())
         .then((response) => {
           if (response._embedded) {
-            let arrayTaxonomies = [];
-            for (let taxonomy of response._embedded.taxonomy) {
-              arrayTaxonomies.push(taxonomy.definition);
-            }
             this.setState({
-              taxonomies: arrayTaxonomies,
+              taxonomies: response._embedded.taxonomy.map(tax => tax.definition),
               taxonomiesObjects: response._embedded.taxonomy,
             });
           }
@@ -281,7 +277,7 @@ class ServiceDetails extends Component {
                       sm={6}
                     >
                       <div style={{ fontWeight: "300" }}>
-                        <i class="icon-wallet mr-2"></i> Prezzo
+                        <i className="icon-wallet mr-2"></i> Prezzo
                       </div>
                       <div>{this.state.service.price} €</div>
                     </Col>
@@ -297,7 +293,7 @@ class ServiceDetails extends Component {
                       sm={6}
                     >
                       <div style={{ fontWeight: "300" }}>
-                        <i class="icon-clock mr-2"></i> Durata abbonamento
+                        <i className="icon-clock mr-2"></i> Durata abbonamento
                       </div>
                       <div>{this.state.service.duration} giorni</div>
                     </Col>
@@ -313,7 +309,7 @@ class ServiceDetails extends Component {
                       sm={6}
                     >
                       <div style={{ fontWeight: "300" }}>
-                        <i class="mr-2 icon-people"></i> Massimo abbonati
+                        <i className="mr-2 icon-people"></i> Massimo abbonati
                       </div>
                       <div>{this.state.service.maxSubscribers}</div>
                     </Col>
@@ -329,7 +325,7 @@ class ServiceDetails extends Component {
                       sm={6}
                     >
                       <Label style={{ fontWeight: "300" }}>
-                        <i class="mr-2 icon-clock"></i> Creato il
+                        <i className="mr-2 icon-clock"></i> Creato il
                       </Label>
                       <div>
                         {moment(this.state.service.createdOn).format(
@@ -341,7 +337,7 @@ class ServiceDetails extends Component {
                       <Label
                         style={{ fontSize: "1em", display: "inline-block" }}
                       >
-                        <i class="mr-2 icon-clock"></i> Modificato il
+                        <i className="mr-2 icon-clock"></i> Modificato il
                       </Label>
                       <div>
                         {moment(this.state.service.createdOn).format(
@@ -355,17 +351,16 @@ class ServiceDetails extends Component {
                   <DetailGrid borderTop={0} className={"mb-4"}>
                     <Col style={{ padding: 5 }} md={12} sm={12}>
                       <div style={{ fontWeight: "300" }}>
-                        <i class="mr-2 icon-tag"></i> Tags
+                        <i className="mr-2 icon-tag"></i> Tags
                       </div>
                       <div>
                         {this.state.taxonomies.map((tax) => (
-                          <span class="mr-2" key={tax}>
+                          <span className="mr-2" key={tax}>
                             #{tax}
                           </span>
                         ))}
                         {this.state.taxonomies.length === 0 && (
-                          <Alert
-                            color="info"
+                          <Alert color="info"
                             style={{
                               color: "#125f77",
                               backgroundColor: "#d3f1fa",
@@ -374,8 +369,7 @@ class ServiceDetails extends Component {
                               paddingBottom: "5px",
                               marginTop: "5px",
                               opacity: 0.8,
-                            }}
-                          >
+                            }}>
                             Non ci sono hashtag per questo pacchetto.
                           </Alert>
                         )}
@@ -384,29 +378,15 @@ class ServiceDetails extends Component {
                   </DetailGrid>
                 </Col>
               </Row>
-              <div
-                className="mb-5 mt-5"
+              <div className="mb-5 mt-5"
                 style={{
                   display: "flex",
                   flex: 1,
                   flexDirection: "row",
                   justifyContent: "space-between",
-                }}
-              >
-                <div
-                  style={{
-                    flex: 1,
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <div
-                    style={{
-                      flex: 1,
-                      flexDirection: "row",
-                      justifyContent: "flex-start",
-                    }}
-                  >
+                }}>
+                <div style={{flex: 1, flexDirection: "column", justifyContent: "flex-start"}}>
+                  <div style={{flex: 1,flexDirection: "row",justifyContent: "flex-start",}}>
                     <h3 style={{ marginBottom: 0, display: "inline-block" }}>
                       Le tue schedine
                     </h3>
@@ -419,8 +399,7 @@ class ServiceDetails extends Component {
                         lineHeight: "31px",
                       }}
                       className={"btn bg-primary btn-circle btn-outline ml-2"}
-                      onClick={() => this.newPool()}
-                    >
+                      onClick={() => this.newPool()}>
                       <em className="fas fa-plus"></em>
                     </Button>
                     <p style={{ fontSize: "1rem", fontWeight: "200" }}>
@@ -431,16 +410,16 @@ class ServiceDetails extends Component {
               </div>
 
               {!this.state.poolLoading ? (
-                <div>
+                <Row>
                   <MyPools
                     pools={this.state.pools}
                     history={this.props.history}
                     editPool={(pool) => this.editPool(pool)}
                   />
-                </div>
+                </Row>
               ) : this.state.poolNoErrors ? (
                 <div>
-                  <h4> Carico le tue schedine...</h4>
+                  <h4>Carico le tue schedine...</h4>
                   <div>
                     <Spinner />
                   </div>
