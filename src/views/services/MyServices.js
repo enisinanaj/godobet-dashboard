@@ -3,7 +3,6 @@ import ServiceCard from "./ServiceCard";
 import { Button, Row, Spinner } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
-import config from "../../store/config";
 import NewService from "./NewService.js";
 import { connect } from "react-redux";
 import Label from "../../components/layout/Label";
@@ -19,7 +18,6 @@ class MyServices extends Component {
       services: [],
     };
     this.getMyServices();
-    this.getTaxonomies();
   }
 
   toggleModal = () => {
@@ -50,7 +48,7 @@ class MyServices extends Component {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
       try {
-        fetch(this.props.app.user._links.services.href, {
+        fetch(this.props.app.user._links.services.href.replace("{?projection}", ""), {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
         })
@@ -64,20 +62,8 @@ class MyServices extends Component {
             } else this.setState({ noErrors: false, loading: true });
           });
       } catch {
-        console.log(this.props.app);
-        // this.props.history.push("/login");
       }
     });
-  }
-
-  async getTaxonomies() {
-    var token = await TokenManager.getInstance().getToken();
-    fetch(config.API_URL + "/taxonomies", {
-      method: "GET",
-      headers: { "Content-Type": "application/json", "X-Auth": token },
-    })
-      .then((response) => response.json())
-      .then((response) => console.log(response));
   }
 
   addService(service) {
@@ -86,6 +72,9 @@ class MyServices extends Component {
   }
 
   render() {
+
+    console.warn(this.state.services)
+
     if (!this.state.loading)
         if (this.state.services != null)
         return (

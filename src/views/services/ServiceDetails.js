@@ -140,11 +140,7 @@ class ServiceDetails extends Component {
         poolNoErrors: true,
       },
       () => {
-        fetch(
-          this.props.app.serviceDetails.links.pools.href.replace(
-            "{?projection}",
-            ""
-          ),
+        fetch(this.props.app.serviceDetails.links.pools.href.replace("{?projection}", ""),
           {
             method: "GET",
             headers: { "Content-Type": "application/json", "X-Auth": token },
@@ -159,7 +155,7 @@ class ServiceDetails extends Component {
                 pools: response._embedded.pools,
               });
             } else {
-              this.setState({ poolNoErrors: false });
+              this.setState({ poolNoErrors: false});
             }
           });
       }
@@ -263,7 +259,7 @@ class ServiceDetails extends Component {
                       sm={6}
                     >
                       <div style={{ fontWeight: "300" }}>Versione</div>
-                      <div>v0.1{this.state.service.version}</div>
+                      <div>v {this.state.service.version}</div>
                     </Col>
                     <Col
                       style={{
@@ -410,13 +406,11 @@ class ServiceDetails extends Component {
               </div>
 
               {!this.state.poolLoading ? (
-                <Row>
-                  <MyPools
-                    pools={this.state.pools}
-                    history={this.props.history}
-                    editPool={(pool) => this.editPool(pool)}
-                  />
-                </Row>
+                <MyPools
+                  pools={this.state.pools}
+                  history={this.props.history}
+                  editPool={(pool) => this.editPool(pool)}
+                />
               ) : this.state.poolNoErrors ? (
                 <div>
                   <h4>Carico le tue schedine...</h4>

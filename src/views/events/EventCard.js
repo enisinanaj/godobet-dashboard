@@ -19,61 +19,27 @@ class EventCard extends Component {
   state = {
     gender: "",
   };
-
-  componentDidMount() {
-    this.getGender();
-  }
-
-  async getGender() {
-    var token = await TokenManager.getInstance().getToken();
-    fetch(this.props.data._links.gender.href, {
-      method: "GET",
-      headers: { "Content-Type": "application/json", "X-Auth": token },
-    })
-    .then((response) => response.json())
-    .then((response) => {
-      if (response.value) {
-        this.setState({ gender: response.value });
-      }
-    });
-  }
-
+  
   toggleDropdownMenu() {
     this.setState({dropdownOpen: !this.state.dropdownOpen})
   }
 
   async updateEvent(outcome) {
-    const editEvent = {
-      eventDate: moment(this.props.data.eventDate).toISOString(),
-      sport: this.props.data.sport,
-      competition: this.props.data.competition,
-      gender: this.props.data.gender,
-      proposal: this.props.data.proposal,
-      event: this.props.data.event,
-      quote: this.props.data.quote,
-      outcome,
-      notes: this.props.data.notes,
-      createdOn: this.props.data.createdOn,
-    };
-
     var token = await TokenManager.getInstance().getToken();
-    fetch(this.props.data._links.self.href, {
-      method: "PUT",
+    await fetch(this.props.data._links.self.href.replace("{?projection}", ""), {
+      method: "PATCH",
       headers: { "Content-Type": "application/json", "X-Auth": token },
-      body: JSON.stringify(editEvent),
+      body: JSON.stringify({outcome}),
     })
-    .then(_ => this.props.data.outcome = outcome)
-    .catch(e => {
-      console.warn(e);
-    });
+    .then(e => this.props.refreshPool());
   }
 
   render() {
     return (
-      <Col lg="4" md="6" sm="12" className={"mb-5"}>
+      <Col lg="3" md="6" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
-            <strong style={{fontSize: "1.7em"}}>Evento {this.props.data.id}</strong>
+            <strong style={{fontSize: "1.7em"}}>{this.props.data.event}</strong>
             <div style={{float: "right"}}><Outcome outcome={this.props.data.outcome}/></div>
             {!this.props.data.outcome && 
               <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={() => this.toggleDropdownMenu()} style={{float: 'right'}}>
@@ -109,7 +75,7 @@ class EventCard extends Component {
                 <div><span style={{fontSize: "1.2em"}}>{this.props.data.proposal}</span></div>
               </Col>
               <Col lg="6" className={"mb-3"}>
-                <div><Label><i className="icon-clock mr-2"></i>Data evento</Label></div>
+                <div><Label><i className="icon-clock mr-2"></i>Data e ora</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{moment(this.props.data.eventDate).format("DD/MM/YYYY HH:mm")}</span></div>
               </Col>
               <Col lg="6" className={"mb-3"}>
@@ -126,16 +92,16 @@ class EventCard extends Component {
               </Col>
               <Col lg="6" className={"mb-3"}>
                 <div><Label><i className="icon-symbol-female mr-2"></i><i className="icon-symbol-male mr-2"></i> Sesso</Label></div>
-                <div><span style={{fontSize: "1.2em"}}>{this.state.gender}</span></div>
+                <div><span style={{fontSize: "1.2em"}}>{this.props.data.gender.description}</span></div>
               </Col>
             </div>
           </CardBody>
           <CardFooter className="d-flex bg-light" style={{flexDirection: "row", justifyContent: "flex-start"}}>
               <Col lg="6" className="p-0">
-                <Label style={{fontSize: "1em", display: "inline-block"}}>creato il {moment(this.props.data.createdOn).format( "DD/MM/YYYY HH:mm" )}</Label>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>creato il {moment(this.props.data.createdOn).format( "DD/MM/YYYY" )}</Label>
               </Col>
               <Col lg="6" className="p-0" style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", textAlign: "right"}}>
-                <Label style={{fontSize: "1em", display: "inline-block"}}>modificato il {moment(this.props.data.updatedOn).format( "DD/MM/YYYY HH:mm" )}</Label>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>modificato il {moment(this.props.data.updatedOn).format( "DD/MM/YYYY" )}</Label>
               </Col>
           </CardFooter>
         </ShadowCard>

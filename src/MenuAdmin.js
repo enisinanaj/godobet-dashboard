@@ -1,6 +1,6 @@
 const MenuAdmin = [
   {
-    heading: "Amministrazione",
+    heading: "Statistiche",
   },
   {
     name: "Dashboard",
@@ -8,9 +8,12 @@ const MenuAdmin = [
     path: "/dashboard",
   },
   {
-    name: "Profilo",
-    icon: "icon-user",
-    path: "/profile",
+    name: "Abbonamenti",
+    icon: "icon-people",
+    path: "/mySubscribers",
+  },
+  {
+    heading: "Gestione servizi",
   },
   {
     name: "I miei pacchetti",
@@ -18,27 +21,33 @@ const MenuAdmin = [
     path: "/myServices",
   },
   {
-    name: "Abbonati",
-    icon: "icon-people",
-    path: "/mySubscribers",
-  },
-  {
     name: "Le mie schedine",
     icon: "icon-grid",
     path: "/allPools",
   },
   {
-    heading: "Amministrazione",
-  },
-  {
-    name: "Gestione Tipster",
-    icon: "icon-people",
-    path: "/tipstersList",
+    heading: "Marketplace"
   },
   {
     name: "Tutti i pacchetti",
     icon: "icon-organization",
     path: "/allServices",
+  },
+  {
+    heading: "Amministrazione",
+  },
+  {
+    name: "Gestione Utenti",
+    icon: "icon-people",
+    path: "/tipstersList",
+  },
+  {
+    heading: "Impostazioni",
+  },
+  {
+    name: "Profilo",
+    icon: "icon-user",
+    path: "/profile",
   },
 ];
 

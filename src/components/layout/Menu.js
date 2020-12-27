@@ -10,18 +10,12 @@ const Menu = [
         translate: 'sidebar.nav.DASHBOARD'
     },
     {
-        name: 'Profilo',
-        icon: 'icon-user',
-        path: '/profile',
-        translate: 'sidebar.nav.PROFILE'
-    },
-    {
         name: 'I miei servizi',
         icon: 'icon-layers',
         path: '/my-services',
     },
     {
-        name: 'Abbonati',
+        name: 'Abbonamenti',
         icon: 'icon-people',
         path: '/subscribers',
     },
@@ -37,9 +31,19 @@ const Menu = [
         translate: 'Amministrazione'
     },
     {
-        name: 'Gestione Tipster',
+        name: 'Gestione Utenti',
         icon: 'icon-people',
         path: '/tipsters'
+    },
+    {
+        heading: 'Impostazioni',
+        translate: 'Impostazioni'
+    },
+    {
+        name: 'Profilo',
+        icon: 'icon-user',
+        path: '/profile',
+        translate: 'sidebar.nav.PROFILE'
     },
     {
         name: 'Tutti i servizi',

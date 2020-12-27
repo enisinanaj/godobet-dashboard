@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 
-import { Button, Spinner, Row, Col } from "reactstrap";
+import { Spinner, Row, Col } from "reactstrap";
 import ContentWrapper from "../../components/layout/ContentWrapper";
 import SubscriberCard from "./SubscriberCard";
 import { connect } from "react-redux";
+import config from "../../store/config";
+import TokenManager from "../../components/auth/Token";
+import Label from "../../components/layout/Label";
 
 class MySubscribers extends Component {
   constructor(props, context) {
@@ -11,99 +14,67 @@ class MySubscribers extends Component {
     this.state = {
       loading: true,
       noErrors: true,
-      subscribers: [],
+      subscriptions: [],
+      subscriptionMoney: 0
     };
-    //this.getMySubscribers();
-    this.test();
+    this.getMySubscribers();
   }
 
   async getMySubscribers() {
-    /*var token = await TokenManager.getInstance().getToken();
+    var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
-      fetch(
-        "https://godobet-api.herokuapp.com/users/search/findByRole/?role=https://godobet-api.herokuapp.com/roles/4",
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "X-Auth": token },
-        }
-      )
-        .then((response) => response.json())
-        .then((response) => {
-          if (response._embedded !== undefined) {
-            this.setState({
-              tipsters: response._embedded.users,
-              loading: false,
-            });
-          } else this.setState({ noErrors: false, loading: true });
-        });
+      fetch(`${config.API_URL}/subscriptions/search/findByAuthor/?author=${this.props.user._links.self.href}`,
+        { method: "GET", headers: { "Content-Type": "application/json", "X-Auth": token }})
+      .then((response) => response.json())
+      .then((response) => {
+        if (response._embedded !== undefined) {
+          this.setState({
+            subscriptions: response._embedded.subscriptions,
+            loading: false,
+            subscriptionMoney: response._embedded.subscriptions.reduce((accumulator, sub) => accumulator + sub.service.price, 0)
+          });
+        } else this.setState({ noErrors: false, loading: true });
+      });
     });
-    */
-  }
-
-  async test() {
-    console.log(this.props.app.user._links);
-    /*var token = await TokenManager.getInstance().getToken();
-    this.setState({ loading: true, noErrors: true }, () => {
-      fetch(this.props.app.user._links.subscriptions.href, {
-        method: "GET",
-        headers: { "Content-Type": "application/json", "X-Auth": token },
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          console.log(response);
-        });
-    });*/
   }
 
   render() {
-    if (!this.state.loading)
       return (
         <ContentWrapper>
-          <Row>
-            <Col lg="6">
-              <h2>I miei abbonati</h2>
+          <Row className="content-heading" style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Col xl={4} lg={5} md={5}>Abbonamenti
+                <Label>Elenco degli abbonamenti ai miei servizi</Label>
+            </Col>
+            <Col xl={8} lg={7} md={7} style={{justifyContent: 'flex-end', flex: 'row'}}>
+              <Row style={{justifyContent: 'flex-end', marginRight: 10}}>
+                <Col xl={ 3 } md={ 3 }>
+                  { /* START card */ }
+                  <div className="card flex-row align-items-center align-items-stretch border-0" style={{margin: 0}}>
+                    <div className={"col-4 d-flex align-items-center bg-success-dark justify-content-center rounded-left"}>
+                        <span style={{fontSize: '1.4em'}}>€</span>
+                    </div>
+                    <div className={"col-6 py-3 bg-success rounded-right"}>
+                        <div className="h3 mt-0" style={{margin: 0, paddingTop: 5, paddingBottom: 5}}>
+                            {this.state.subscriptionMoney.toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
             </Col>
           </Row>
 
-          {this.state.subscribers.map((subscriber) => (
-            <SubscriberCard
-              key={subscriber._links.self.href}
-              data={subscriber}
-            />
-          ))}
-        </ContentWrapper>
-      );
-    else if (this.state.noErrors)
-      return (
-        <ContentWrapper>
-          <h4> Carico gli abbonati...</h4>
-          <div>
-            <Spinner />
-          </div>
-        </ContentWrapper>
-      );
-    else
-      return (
-        <ContentWrapper>
-          <div>
-            <h4>Errore nel caricamento degli abbonati</h4>
-          </div>
-          <div>
-            <Button
-              className="btn"
-              onClick={() => {
-                this.setState({ noErrors: true, loading: true }, () => {
-                  this.getMySubscribers();
-                });
-              }}
-            >
-              Riprova
-            </Button>
-          </div>
+          <Row>
+            {!this.state.loading && this.state.subscriptions.map(sub => (
+              <SubscriberCard key={sub._links.self.href} data={sub} />
+            ))}
+
+            {this.state.loading && <Spinner />}
+          </Row>
         </ContentWrapper>
       );
   }
 }
 
-const mapStateToProps = (state) => state;
+const mapStateToProps = (state) => ({user: state.app.user});
 export default connect(mapStateToProps)(MySubscribers);

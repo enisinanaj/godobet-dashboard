@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { CardBody, PopoverBody, Table, Button, Popover } from 'reactstrap';
 import moment from 'moment';
 import ShadowCard from '../../components/layout/ShadowCard'
+import Label from '../../components/layout/Label';
 
 class PopoverItem extends Component {
     state = { popoverOpen: false }
@@ -12,7 +13,7 @@ class PopoverItem extends Component {
     render() {
         return (
             <span>
-                <Button className="mr-1" color="secondary" id={'Popover-' + this.props.id} onClick={this.toggle}><em class="fa fa-info" /></Button>
+                <Button className="mr-1" color="secondary" id={'Popover-' + this.props.id} onClick={this.toggle}><em className="fa fa-info" /></Button>
                 <Popover placement={'top'} isOpen={this.state.popoverOpen} target={'Popover-' + this.props.id} toggle={this.toggle}>
                     <PopoverBody>{this.props.notes}</PopoverBody>
                 </Popover>
@@ -28,16 +29,21 @@ class PoolData extends Component {
 
         switch(outcome) {
             case 'win':
-                result = "bg-success-dark"
+                result = "bg-success-dark";
                 break;
             case 'lose':
-                result = "bg-danger-dark"
+                result = "bg-danger-dark";
                 break;
             case '1/2 win':
-                result = "bg-success-light"
+                result = "bg-success-light";
                 break;
             case '1/2 lose':
-                result = "bg-danger-light"
+                result = "bg-danger-light";
+                break;
+            case 'void':
+                result = "bg-gray";
+                break;
+            default:
                 break;
         }
 
@@ -47,6 +53,9 @@ class PoolData extends Component {
     render() {
         return (
             <ShadowCard className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
+                <div className="card-header">
+                    <Label>Dettaglio risultati</Label>
+                </div>
                 <CardBody>
                     <Table bordered hover responsive>
                         <thead>
@@ -75,10 +84,10 @@ class PoolData extends Component {
                                         return null;
                                     }
 
-                                    return (<tr>
+                                    return (<tr key={pool._links.self.href + "/" + i + "/" + j}>
                                         <td>{moment(event.eventDate).format("DD MMM YYYY HH:mm")}</td>
                                         <td>{event.sport}</td>
-                                        <td>{event.gender}</td>
+                                        <td>{event.genderValue}</td>
                                         <td>{event.competition}</td>
                                         <td>{event.event}</td>
                                         <td>{event.proposal}</td>

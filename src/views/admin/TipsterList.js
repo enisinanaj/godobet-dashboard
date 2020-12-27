@@ -17,7 +17,7 @@ class TipsterList extends Component {
       modalNewTipsterVisible: false,
       tipsters: [],
     };
-    this.getTipsters();
+    this.getUsers();
   }
 
   toggleModal = () => {
@@ -26,11 +26,11 @@ class TipsterList extends Component {
     });
   };
 
-  async getTipsters() {
+  async getUsers() {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
       fetch(
-        `${config.API_URL}/users/search/findByRole/?role=${config.API_URL}/roles/4`,
+        `${config.API_URL}/users`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
@@ -48,30 +48,13 @@ class TipsterList extends Component {
     });
   }
 
-  async test() {
-    var token = await TokenManager.getInstance().getToken();
-    this.setState({ loading: true, noErrors: true }, () => {
-      fetch(
-        `${config.API_URL}/users/search/findByRole/?role=${config.API_URL}/roles/4`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "X-Auth": token },
-        }
-      )
-        .then((response) => response.json())
-        .then((response) => {
-          console.log(response);
-        });
-    });
-  }
-
   render() {
     if (!this.state.loading)
       return (
         <ContentWrapper>
           <Row>
             <Col lg="6">
-              <h2>Gestione Tipster</h2>
+              <h2>Gestione Utenti</h2>
             </Col>
             <Col lg="2">
               <Button
@@ -84,18 +67,20 @@ class TipsterList extends Component {
                 //addService={(newService) => this.addService(newService)}
                 modalNewTipsterVisible={this.state.modalNewTipsterVisible}
                 toggleModal={() => this.toggleModal()}
-                refreshTipsterList={() => this.getTipsters()}
+                refreshTipsterList={() => this.getUsers()}
               />
             </Col>
           </Row>
 
-          {this.state.tipsters.map((tipster) => (
-            <TipsterCard
-              key={tipster._links.self.href}
-              data={tipster}
-              history={this.props.history}
-            />
-          ))}
+          <Row>
+            {this.state.tipsters.map((tipster) => (
+              <TipsterCard
+                key={tipster._links.self.href}
+                data={tipster}
+                history={this.props.history}
+              />
+            ))}
+          </Row>
         </ContentWrapper>
       );
     else if (this.state.noErrors)
@@ -118,7 +103,7 @@ class TipsterList extends Component {
               className="btn"
               onClick={() => {
                 this.setState({ noErrors: true, loading: true }, () => {
-                  this.getTipsters();
+                  this.getUsers();
                 });
               }}
             >

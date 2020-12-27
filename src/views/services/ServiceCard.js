@@ -7,7 +7,6 @@ import {
   Col,
   Alert
 } from "reactstrap";
-import TokenManager from "../../components/auth/Token";
 import { connect } from "react-redux";
 import "@pathofdev/react-tag-input/build/index.css";
 import { bindActionCreators } from "redux";
@@ -17,44 +16,9 @@ import Label from "../../components/layout/Label";
 import moment from 'moment'
 
 class ServiceCard extends Component {
-  state = {
-    taxonomies: [],
-  };
-
-  componentDidMount() {
-    this.getTaxonomies();
-  }
-
-  async getTaxonomies() {
-    var token = await TokenManager.getInstance().getToken();
-    
-    async function loadData() {
-      try {
-        let response = await fetch(this.props.serviceData._links.taxonomies.href, {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "X-Auth": token },
-        });
-
-        let responseAsJson = await response.json();
-        
-        if (responseAsJson._embedded) {
-          this.setState({
-            taxonomies: responseAsJson._embedded.taxonomy.map(tax => tax.definition),
-            taxonomiesObjects: responseAsJson._embedded.taxonomy,
-          });
-        }
-      } catch (error) {
-        console.error("Error happened: " + error);
-        // this.props.history.push("/login");
-      }
-    }
-
-    this.setState({ loading: true, noErrors: true }, loadData);
-  }
-
   render() {
     return (
-      <Col lg="4" md="6" sm="12" className={"mb-5"}>
+      <Col lg="3" md="6" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3">
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 
@@ -94,12 +58,12 @@ class ServiceCard extends Component {
               <Col lg="12">
                 <Row><Label><i className="icon-tag mr-2"></i> Hashtag</Label></Row>
                 <Row>
-                  {this.state.taxonomies.map(tax => <span 
-                    key={tax}
+                  {this.props.serviceData.taxonomies.map(tax => <span 
+                    key={tax.definition}
                     style={{fontSize: "1.1em", padding: 3, display: 'inline-block'}}>
-                    #{tax}
+                    #{tax.definition}
                   </span>)}
-                  {this.state.taxonomies.length === 0 && (<Alert color="info" style={{
+                  {this.props.serviceData.taxonomies.length === 0 && (<Alert color="info" style={{
                       color: "#125f77", 
                       backgroundColor: "#d3f1fa",
                       width: "100%",
@@ -118,7 +82,7 @@ class ServiceCard extends Component {
             <Row style={{paddingBottom: "10px", paddingLeft: "15px", borderBottomWidth: "1px", borderBottomColor: "rgba(0, 0, 0, 0.125)", borderBottomStyle: "solid"}}
               className={"mb-2"}>
               <Col lg="3">
-                <Label style={{fontSize: "1.2em", display: "inline-block", marginTop: "3px"}}>v0.1{this.props.serviceData.version}</Label>
+                <Label style={{fontSize: "1.2em", display: "inline-block", marginTop: "3px"}}>v {this.props.serviceData.version}</Label>
               </Col>
               <Col lg="10" style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", textAlign: "right"}}>
                 <Label display={"inline"}>{this.props.serviceData.price}€ ogni {this.props.serviceData.duration} giorni</Label>
@@ -126,10 +90,10 @@ class ServiceCard extends Component {
             </Row>
             <div className={"d-flex"} style={{flex :1, flexDirection: 'row', justifyContent: 'space-between'}}>
               <Col lg="6" className="p-0">
-                <Label style={{fontSize: "1em", display: "inline-block"}}>creato il {moment(this.props.serviceData.createdOn).format( "DD/MM/YYYY HH:mm" )}</Label>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>creato il {moment(this.props.serviceData.createdOn).format( "DD/MM/YYYY" )}</Label>
               </Col>
               <Col lg="6" className="p-0" style={{textAlign: "right"}}>
-                <Label style={{fontSize: "1em", display: "inline-block"}}>modificato il {moment(this.props.serviceData.updatedOn).format( "DD/MM/YYYY HH:mm" )}</Label>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>modificato il {moment(this.props.serviceData.updatedOn).format( "DD/MM/YYYY" )}</Label>
               </Col>
             </div>
           </CardFooter>

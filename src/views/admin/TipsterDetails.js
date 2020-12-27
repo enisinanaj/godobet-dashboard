@@ -64,24 +64,23 @@ class TipsterDetails extends Component {
         serviceNoErrors: true,
       },
       () => {
-        fetch(this.props.app.tipsterDetails._links.self.href, {
+        fetch(this.props.app.tipsterDetails._links.self.href.replace("{?projection}", ""), {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
         })
-          .then((response) => response.json())
-          .then((response) => {
-            console.log(response);
-            if (response.accessToken !== undefined) {
-              this.setState({
-                tipster: response,
-                tipsterLoading: false,
-                tipsterNoErrors: true,
-              });
-              this.getTipsterServices();
-            } else {
-              this.setState({ serviceNoErrors: false });
-            }
-          });
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.accessToken !== undefined) {
+            this.setState({
+              tipster: response,
+              tipsterLoading: false,
+              tipsterNoErrors: true,
+            });
+            this.getTipsterServices();
+          } else {
+            this.setState({ serviceNoErrors: false });
+          }
+        });
       }
     );
   }
@@ -94,13 +93,12 @@ class TipsterDetails extends Component {
         serviceNoErrors: true,
       },
       () => {
-        fetch(this.props.app.tipsterDetails._links.services.href, {
+        fetch(this.props.app.tipsterDetails._links.services.href.replace("{?projection}", ""), {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
         })
           .then((response) => response.json())
           .then((response) => {
-            console.log(response);
             if (response._embedded !== undefined) {
               this.setState({
                 serviceLoading: false,

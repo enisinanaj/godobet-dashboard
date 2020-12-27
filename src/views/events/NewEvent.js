@@ -66,10 +66,10 @@ class NewEvent extends Component {
       method: "GET",
       headers: { "Content-Type": "application/json", "X-Auth": token },
     })
-      .then((response) => response.json())
-      .then((response) => {
-        return response._links.self.href;
-      });
+    .then((response) => response.json())
+    .then((response) => {
+      return response._links.self.href.replace("{?projection}", "");
+    });
 
     this.setState({
       mode: "edit",
