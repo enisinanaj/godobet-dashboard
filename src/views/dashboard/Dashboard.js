@@ -87,13 +87,29 @@ class DashboardV1 extends Component {
     }
     
     loadData() {
+        let {startDate, endDate} = this.state;
+        startDate = startDate.format("YYYY-MM-DDTHH:mm:ss.SSS");
+        endDate = endDate.format("YYYY-MM-DDTHH:mm:ss.SSS");
+
+        if (this.props.user.roleName === 'Subscriber') {
+            this.loadSubscriperDashboard(startDate, endDate);
+        } else {
+            this.loadTipsterDashboard(startDate, endDate);
+        }
+    }
+
+    loadSubscriperDashboard(startDate, endDate) {
+        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/subscriberStats?start=${startDate}&end=${endDate}&subscriber=${this.props.user._links.self.href}`)
+    }
+
+    loadTipsterDashboard(startDate, endDate) {
+        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/stats?start=${startDate}&end=${endDate}&author=${this.props.user._links.self.href}`);
+    }
+
+    loadDashboardWithUrl(url) {
         TokenManager.getInstance().getToken()
         .then(token => {
-            let {startDate, endDate} = this.state;
-            startDate = startDate.format("YYYY-MM-DDTHH:mm:ss.SSS");
-            endDate = endDate.format("YYYY-MM-DDTHH:mm:ss.SSS");
-    
-            return fetch(`${config.API_URL}/pools/search/stats?start=${startDate}&end=${endDate}&author=${this.props.user._links.self.href}`, {
+            return fetch(url, {
                 method: "GET",
                 headers: { "Content-Type": "application/json", "X-Auth": token },
             })
@@ -105,10 +121,7 @@ class DashboardV1 extends Component {
             var chartData = [];
 
             pools.forEach(pool => {
-                chartData.push([`${pool.description} / ${pool.bookmaker}`, pool.profit])
-                // pool.events.forEach(event => {
-                //     chartData.push([`${event.eventDate}`, (event.quote/100)])
-                // })
+                chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
             });
 
             this.setState({pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}})
@@ -127,35 +140,33 @@ class DashboardV1 extends Component {
         return (
             <ContentWrapper>
                 <Row className="content-heading" style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <Col xl={4} lg={5} md={5}>Dashboard
+                    <Col xl={2} lg={3} md={3} sm={12} >Dashboard
                         <Label>Panoramica dei tuoi tip</Label>
                     </Col>
-                    <Col xl={8} lg={7} md={7} style={{justifyContent: 'flex-end', flex: 'row'}}>
+                    <Col xl={8} lg={7} md={9} sm={12} style={{justifyContent: 'flex-end', flex: 'row'}}>
                         <Row style={{justifyContent: 'flex-end', marginRight: 10}}>
-                            <Col xl={ 3 } md={ 3 }>
-                                { /* START card */ }
-                                <div className="card flex-row align-items-center align-items-stretch border-0" style={{margin: 0}}>
-                                    <div className={"col-2"}></div>
-                                    <div className={"col-4 d-flex align-items-center " + (totalPorfit >= 0 ? "bg-success-dark" : "bg-danger-dark") + " justify-content-center rounded-left"}>
+                            <Col xl={ 3 } md={ 4 }>
+                                <div className="card flex-row align-items-center align-items-stretch border-0" style={{margin: 0, fontSize: "1rem"}}>
+                                    <div className={"col-2 d-flex align-items-center " + (totalPorfit >= 0 ? "bg-success-dark" : "bg-danger-dark") + " justify-content-center rounded-left"}>
                                         {totalPorfit === 0
                                         ? <em className="icon-graph"></em>
                                         : totalPorfit > 0
                                         ? <em className="icon-arrow-up"></em>
                                         : <em className="icon-arrow-down"></em> }
                                     </div>
-                                    <div className={"col-6 py-3 " + (totalPorfit >= 0 ? "bg-success" : "bg-danger") +  " rounded-right"}>
-                                        <div className="h3 mt-0" style={{margin: 0, paddingTop: 5, paddingBottom: 5}}>
+                                    <div className={"col-10 " + (totalPorfit >= 0 ? "bg-success" : "bg-danger") +  " rounded-right"} style={{paddingTop: "0.4rem", paddingBottom: "0.3rem"}}>
+                                        <div className="h3 mt-0" style={{margin: 0, paddingTop: 5, paddingBottom: 5, textAlign: 'right', fontSize: '1.3rem'}}>
                                             {totalPorfit.toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}
                                         </div>
                                     </div>
                                 </div>
                             </Col>
-                            <Col xl={6} md={6}>
+                            <Col xl={6} md={8} style={{padding: "0 5px"}}>
                                 <div className="card flex-row align-items-center align-items-stretch border-0" style={{margin: 0, fontSize: '0.839rem'}}>
                                     <div className={"col-6 d-flex align-items-center bg-gray justify-content-center rounded-left"}>
                                         <Datetime closeOnSelect={true}  inputProps={{className: 'form-control'}} onChange={startDate => this.setState({startDate}, this.loadData)} value={this.state.startDate} />
                                     </div>
-                                    <div className={"col-6 py-3 bg-gray-lighter rounded-right"}>
+                                    <div className={"col-6 bg-gray-lighter rounded-right"} style={{paddingTop: "5px", paddingBottom: "5px"}}>
                                         <Datetime closeOnSelect={true} inputProps={{className: 'form-control'}} onChange={endDate => this.setState({endDate}, this.loadData)} value={this.state.endDate} />
                                     </div>
                                 </div>

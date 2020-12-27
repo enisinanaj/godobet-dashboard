@@ -18,7 +18,7 @@ class PoolCard extends Component {
   render() {
 
     return (
-      <Col lg="3" md="6" sm="12" className={"mb-5"}>
+      <Col lg="4" md="6" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 

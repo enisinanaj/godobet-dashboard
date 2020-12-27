@@ -13,30 +13,98 @@ import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";
 import ShadowCard from "../../components/layout/ShadowCard";
 import Label from "../../components/layout/Label";
-import moment from 'moment'
+import moment from 'moment';
+import TokenManager from "../../components/auth/Token";
+import Swal from "../../components/elements/Swal";
+import config from "../../store/config";
 
 class ServiceCard extends Component {
+
+  state = {
+    swalOption3: {
+      title: 'Sei sicuro?',
+      text: 'Stai per abbonarti al servizio. Conferma l\'iscrizione con cliccando sul pulsante sottostante.',
+      icon: 'warning',
+      buttons: {
+          cancel: true,
+          confirm: {
+              text: 'Confermo',
+              value: true,
+              visible: true,
+              className: "bg-success",
+              closeModal: true
+          }
+      }
+    }
+  }
+
+  openDetail() {
+    let token = "";
+    TokenManager.getInstance().getToken()
+    .then(t => {
+      token = t;
+
+      return fetch(this.props.serviceData._links.author.href, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth": token
+        }
+      });
+    })
+    .then(body => body.json())
+    .then(author => {
+      if (author._links.self.href === this.props.app.user._links.self.href || this.props.app.user.roleName === "God") {
+        this.props.actions.serviceDetails({
+          serviceName: this.props.serviceData.serviceName,
+          description: this.props.serviceData.description,
+          maxSubscribers: this.props.serviceData.maxSubscribers,
+          duration: this.props.serviceData.duration,
+          price: this.props.serviceData.price,
+          version: this.props.serviceData.version,
+          links: this.props.serviceData._links,
+        });
+        
+        this.props.history.push("/serviceDetails");
+      } else if (this.props.app.user.roleName === 'Subscriber') {
+        //TODO: open payment form for subscription
+        fetch(config.API_URL + "/subscriptions", {
+          method: 'POST',
+          headers: {
+            "Content-Type": 'application/json',
+            "X-AUTH": token
+          },
+          body: JSON.stringify({
+            "subscriber": this.props.app.user._links.self.href,
+            "service": this.props.serviceData._links.self.href,
+            "paymentSystemToken": "godobet",
+            "subscribedOn": moment()
+          })
+        })
+
+      }
+    });
+  }
+
+  subscriptionConfirmation(isConfirm, swal) {
+    if (isConfirm) {
+      swal("Confermato!", "Ti sei abbonato al servizio con successo!", "success");
+    } else {
+      return;
+    }
+  }
+
   render() {
     return (
-      <Col lg="3" md="6" sm="12" className={"mb-5"}>
+      <Col lg="4" md="6" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3">
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 
               style={{lineHeight: "35px", cursor: "pointer", flex: 1, flexDirection: "row", justifyContent: "space-between"}} 
-              onClick={() => {
-              this.props.actions.serviceDetails({
-                serviceName: this.props.serviceData.serviceName,
-                description: this.props.serviceData.description,
-                maxSubscribers: this.props.serviceData.maxSubscribers,
-                duration: this.props.serviceData.duration,
-                price: this.props.serviceData.price,
-                version: this.props.serviceData.version,
-                links: this.props.serviceData._links,
-              });
-              this.props.history.push("/serviceDetails");
-            }}>
+              onClick={() => this.openDetail()}>
               <strong style={{fontSize: "1.7em"}}>{this.props.serviceData.serviceName}</strong>
-              <em className="fa fa-arrow-right" style={{float: "right", lineHeight: "38px"}}></em>
+              {this.props.app.user.roleName !== 'Subscriber' && <em className="fa fa-arrow-right" style={{float: "right", lineHeight: "38px"}}></em>}
+              {this.props.app.user.roleName === 'Subscriber' 
+                && <Swal callback={this.subscriptionConfirmation} options={this.state.swalOption3} className={"btn btn-primary float-right"}>Abbonati ora!</Swal>}
             </a>
           </CardHeader>
           <CardBody>

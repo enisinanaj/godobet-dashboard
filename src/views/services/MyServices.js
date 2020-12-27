@@ -72,9 +72,6 @@ class MyServices extends Component {
   }
 
   render() {
-
-    console.warn(this.state.services)
-
     if (!this.state.loading)
         if (this.state.services != null)
         return (

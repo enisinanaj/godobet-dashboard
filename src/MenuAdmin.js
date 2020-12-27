@@ -13,6 +13,11 @@ const MenuAdmin = [
     path: "/mySubscribers",
   },
   {
+    name: "I miei abbonamenti",
+    icon: "icon-people",
+    path: "/subscriptions",
+  },
+  {
     heading: "Gestione servizi",
   },
   {

@@ -48,12 +48,11 @@ class MySubscribers extends Component {
             <Col xl={8} lg={7} md={7} style={{justifyContent: 'flex-end', flex: 'row'}}>
               <Row style={{justifyContent: 'flex-end', marginRight: 10}}>
                 <Col xl={ 3 } md={ 3 }>
-                  { /* START card */ }
                   <div className="card flex-row align-items-center align-items-stretch border-0" style={{margin: 0}}>
-                    <div className={"col-4 d-flex align-items-center bg-success-dark justify-content-center rounded-left"}>
-                        <span style={{fontSize: '1.4em'}}>€</span>
+                    <div className={"col-2 d-flex align-items-center bg-success-dark justify-content-center rounded-left"}>
+                        <span style={{fontSize: '1.4rem'}}>€</span>
                     </div>
-                    <div className={"col-6 py-3 bg-success rounded-right"}>
+                    <div className={"col-10 bg-success rounded-right"} style={{paddingTop: "0.4rem", paddingBottom: "0.3rem"}}>
                         <div className="h3 mt-0" style={{margin: 0, paddingTop: 5, paddingBottom: 5}}>
                             {this.state.subscriptionMoney.toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                         </div>
