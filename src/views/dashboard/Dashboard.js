@@ -7,6 +7,8 @@ import TokenManager from '../../components/auth/Token'
 import { connect } from 'react-redux';
 import moment from 'moment';
 import PoolData from './PoolData';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
@@ -85,6 +87,13 @@ class DashboardV1 extends Component {
     componentDidMount() {
         this.loadData()
     }
+
+    notify = function(message) {
+        toast(message, {
+            type: "info",
+            position: "top-right"
+        })
+    }
     
     loadData() {
         let {startDate, endDate} = this.state;
@@ -100,32 +109,57 @@ class DashboardV1 extends Component {
 
     loadSubscriperDashboard(startDate, endDate) {
         this.loadDashboardWithUrl(`${config.API_URL}/pools/search/subscriberStats?start=${startDate}&end=${endDate}&subscriber=${this.props.user._links.self.href}`)
+        .then(pools => {
+            console.warn(pools);
+
+            var chartData = [];
+            pools.forEach(pool => {
+                chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
+            });
+
+            TokenManager.getInstance().getToken()
+            .then(token => {
+                return fetch(this.props.user._links.playedEvents.href.replace("{?projection}", ""), {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH": token
+                    }
+                })
+            })
+            .then(body => body.json())
+            .then(events => {
+
+                if (events._embedded.events.length === 0) {
+                    this.notify("Non hai giocato nessun evento!");
+                }
+            })
+
+            // TODO
+            // this.setState({pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}});
+        })
     }
 
     loadTipsterDashboard(startDate, endDate) {
-        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/stats?start=${startDate}&end=${endDate}&author=${this.props.user._links.self.href}`);
-    }
-
-    loadDashboardWithUrl(url) {
-        TokenManager.getInstance().getToken()
-        .then(token => {
-            return fetch(url, {
-                method: "GET",
-                headers: { "Content-Type": "application/json", "X-Auth": token },
-            })
-        })
-        .then(result => result.json())
-        .then(response => {
-            let {pools} = response._embedded;
-
+        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/stats?start=${startDate}&end=${endDate}&author=${this.props.user._links.self.href}`)
+        .then(pools => {
             var chartData = [];
-
             pools.forEach(pool => {
                 chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
             });
 
             this.setState({pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}})
-        })
+        });
+    }
+
+    async loadDashboardWithUrl(url) {
+        let token = await TokenManager.getInstance().getToken()
+        let body = await fetch(url, {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "X-Auth": token },
+        });
+
+        let response = await body.json();
+        return response._embedded.pools;
     }
 
     calculateProfit() {
@@ -195,6 +229,7 @@ class DashboardV1 extends Component {
                         <PoolData pools={this.state.pools} endDate={this.state.endDate} ></PoolData>
                     </Col>
                 </Row>
+                <ToastContainer />
             </ContentWrapper>
             );
 

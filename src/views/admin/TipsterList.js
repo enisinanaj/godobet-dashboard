@@ -5,7 +5,6 @@ import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import TipsterCard from "./TipsterCard";
 import { connect } from "react-redux";
-import Register from "../auth/Register";
 import config from "../../store/config";
 
 class TipsterList extends Component {
@@ -52,33 +51,13 @@ class TipsterList extends Component {
     if (!this.state.loading)
       return (
         <ContentWrapper>
-          <Row>
-            <Col lg="6">
-              <h2>Gestione Utenti</h2>
-            </Col>
-            <Col lg="2">
-              <Button
-                className="btn btn-block btn-secondary"
-                onClick={() => this.toggleModal()}
-              >
-                Aggiungi Tipster
-              </Button>
-              <Register
-                //addService={(newService) => this.addService(newService)}
-                modalNewTipsterVisible={this.state.modalNewTipsterVisible}
-                toggleModal={() => this.toggleModal()}
-                refreshTipsterList={() => this.getUsers()}
-              />
-            </Col>
+          <Row className="content-heading" style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Col xl={2} lg={3} md={3} sm={12} >Gestione utenti</Col>
           </Row>
 
           <Row>
             {this.state.tipsters.map((tipster) => (
-              <TipsterCard
-                key={tipster._links.self.href}
-                data={tipster}
-                history={this.props.history}
-              />
+              <TipsterCard key={tipster._links.self.href} data={tipster} history={this.props.history} />
             ))}
           </Row>
         </ContentWrapper>
@@ -105,8 +84,7 @@ class TipsterList extends Component {
                 this.setState({ noErrors: true, loading: true }, () => {
                   this.getUsers();
                 });
-              }}
-            >
+              }}>
               Riprova
             </Button>
           </div>

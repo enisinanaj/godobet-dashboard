@@ -16,21 +16,25 @@ class SubscriberCard extends Component {
     let active = this.props.data.expired || !this.props.data.valid ? false : true;
 
     return (
-      <Col lg={3} md={4} sm={6}>
-        <ShadowCard className="card bg-light mb-3">
+      <Col lg={3} md={4} sm={6} className={"mb-3"}>
+        <ShadowCard className="card bg-light">
           <CardBody className={"pb-0"}>
-            <div style={{paddingLeft: 10, paddingRight: 10, display: "flex", flexWrap: "wrap"}}>
-              <Col lg="8">
-                <div><Label><i className="icon-tag mr-2"></i>Nome pacchetto</Label></div>
+            <div style={{display: "flex", flexWrap: "wrap"}}>
+              <Col lg="12" className={"mb-3"}>
+                <div><Label><i className="icon-info mr-2"></i>Nome pacchetto</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{this.props.data.service.serviceName}</span></div>
               </Col>
-              <Col lg="4">
+              <Col lg="6">
                 <div><Label><i className={(active ? 'icon-check' : 'icon-close') + " mr-2"}></i>Stato</Label></div>
                 <div>
                   <span style={{fontSize: "1.2em", color: active ? 'green' : 'red'}}>
                     {this.props.data.expired ? "Scaduto" : !this.props.data.valid ? "Non attivo" : "Attivo"}
                   </span>
                 </div>
+              </Col>
+              <Col lg="6">
+                <div><Label><i className="icon-wallet mr-2"></i>Prezzo</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{this.props.data.service.price.toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}€</span></div>
               </Col>
             </div>
           </CardBody>
