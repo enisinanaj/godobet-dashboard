@@ -112,8 +112,6 @@ class Register extends Component {
         })
         .then((_) => {
           alert("Utente creato!");
-          this.toggleModal();
-          this.props.refreshTipsterList();
         })
         .catch((_) => {});
     }

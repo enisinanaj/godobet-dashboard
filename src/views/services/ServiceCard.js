@@ -95,7 +95,7 @@ class ServiceCard extends Component {
 
   render() {
     return (
-      <Col lg="4" md="6" sm="12" className={"mb-5"}>
+      <Col xl="6" lg="6" md="6" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3">
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 
@@ -108,24 +108,22 @@ class ServiceCard extends Component {
             </a>
           </CardHeader>
           <CardBody>
-            <div style={{padding: 10}}>
-              <Col lg="12" className={"mb-3"}>
-                <Row><Label>Descrizione</Label></Row>
-                <Row>
+            <Row>
+              <Col lg="6" sm={6} className={"mb-2"}>
+                <div><Label>Descrizione</Label></div>
+                <div>
                   <span style={{fontSize: "1.2em", minHeight: "50px"}} className={"text-truncate"}>
                     {this.props.serviceData.description}
                   </span>
-                </Row>
+                </div>
               </Col>
-              <Col lg="6">
-                <Row><Label><i className="icon-people mr-2"></i>  Numero max iscritti</Label></Row>
-                <Row><span style={{fontSize: "1.2em"}}>{this.props.serviceData.maxSubscribers}</span></Row>
+              <Col lg="6" sm={6} xs={6} className={"mb-2"}>
+                <div><Label><i className="icon-people mr-2"></i>  Numero max iscritti</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{this.props.serviceData.maxSubscribers}</span></div>
               </Col>
-            </div>
-            <div className="mb-1" style={{padding: 10}}>
               <Col lg="12">
-                <Row><Label><i className="icon-tag mr-2"></i> Hashtag</Label></Row>
-                <Row>
+                <div><Label><i className="icon-tag mr-2"></i> Hashtag</Label></div>
+                <div>
                   {this.props.serviceData.taxonomies.map(tax => <span 
                     key={tax.definition}
                     style={{fontSize: "1.1em", padding: 3, display: 'inline-block'}}>
@@ -142,14 +140,14 @@ class ServiceCard extends Component {
                     }}>
                      Non ci sono hashtag per questo pacchetto.
                     </Alert>)}
-                </Row>
+                </div>
               </Col>
-            </div>
+            </Row>
           </CardBody>
           <CardFooter className="bg-light">
             <Row style={{paddingBottom: "10px", paddingLeft: "15px", borderBottomWidth: "1px", borderBottomColor: "rgba(0, 0, 0, 0.125)", borderBottomStyle: "solid"}}
               className={"mb-2"}>
-              <Col lg="3">
+              <Col lg="3" sm={4} xs={4}>
                 <Label style={{fontSize: "1.2em", display: "inline-block", marginTop: "3px"}}>v {this.props.serviceData.version}</Label>
               </Col>
               <Col lg="10" style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", textAlign: "right"}}>

@@ -18,7 +18,7 @@ class PoolCard extends Component {
   render() {
 
     return (
-      <Col lg="4" md="6" sm="12" className={"mb-5"}>
+      <Col xl="4" lg={6} md="6" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 
@@ -52,23 +52,23 @@ class PoolCard extends Component {
                   </span>
                 </div>
               </Col>
-              <Col lg="6" className={"mb-3"}>
+              <Col lg="6" md={6} sm={6} xs={4} className={"mb-3"}>
                 <div><Label><i className="icon-book-open mr-2"></i> Bookmaker</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{this.props.poolData.bookmaker}</span></div>
               </Col>
-              <Col lg="6" className={"mb-3"}>
+              <Col lg="6" md={6} sm={6} xs={4} className={"mb-3"}>
                 <div><Label><i className="icon-graph mr-2"></i> Quota</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.quote).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
               </Col>
-              <Col lg="6" className={"mb-3"}>
+              <Col lg="6" md={6} sm={6} xs={4} className={"mb-3"}>
                 <div><Label><i className="icon-pie-chart mr-2"></i>Stake</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.stake / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
               </Col>
-              <Col lg="6" className={"mb-3"}>
+              <Col lg="6" md={6} sm={6} xs={4} className={"mb-3"}>
                 <div><Label><i className="icon-trophy mr-2"></i>Profitto</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.profit).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
               </Col>
-              <Col lg="12" className={"mb-12"}>
+              <Col lg="6" md={6} sm={6} xs={4} className={"mb-12"}>
                 <div><Label><i className="icon-trophy mr-2"></i>Eventi</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{this.props.poolData.events.length}</span></div>
               </Col>

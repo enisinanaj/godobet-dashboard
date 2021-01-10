@@ -21,7 +21,6 @@ class SubscriberCard extends Component {
           <CardBody className={"pb-0"}>
             <div style={{display: "flex", flexWrap: "wrap"}}>
               <Col lg="12" className={"mb-3"}>
-                <div><Label><i className="icon-info mr-2"></i>Nome pacchetto</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{this.props.data.service.serviceName}</span></div>
               </Col>
               <Col lg="6">

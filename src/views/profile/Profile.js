@@ -404,7 +404,7 @@ class Profile extends Component {
             </div>
           </Col>
 
-          <Col lg="12">
+          {false && <Col lg="12">
             <div className="card card-default">
               <div className="card-header d-flex align-items-center">
                 <div className="d-flex col">
@@ -617,7 +617,7 @@ class Profile extends Component {
                 </div>
               </div>
             </div>
-          </Col>
+          </Col>}
         </Row>
       </ContentWrapper>
     );
