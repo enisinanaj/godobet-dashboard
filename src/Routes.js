@@ -21,11 +21,13 @@ const Error500 = lazy(() => import("./template_components/Pages/Error500"));
 const Maintenance = lazy(() => import("./template_components/Pages/Maintenance"));
 const Profile = lazy(() => import("./views/profile/Profile"));
 const MyServices = lazy(() => import("./views/services/MyServices"));
+const AllSubscriberServices = lazy(() => import("./views/services/AllSubscriberServices"));
 const ServiceDetails = lazy(() => import("./views/services/ServiceDetails"));
 const PoolDetails = lazy(() => import("./views/pools/PoolDetails"));
 const MySubscribers = lazy(() => import("./views/services/MySubscribers"));
 const MySubscriptions = lazy(() => import("./views/services/MySubscriptions"));
 const AllPools = lazy(() => import("./views/pools/AllPools"));
+const SubscriberPools = lazy(() => import("./views/pools/SubscriberPools"));
 const TipsterList = lazy(() => import("./views/admin/TipsterList"));
 const TipsterDetails = lazy(() => import("./views/admin/TipsterDetails"));
 const AllServices = lazy(() => import("./views/admin/AllServices"));
@@ -112,6 +114,9 @@ const Routes = ({ location, app }) => {
                     <Route path="/tipsterDetails" component={waitFor(TipsterDetails)} />
                     <Route path="/allServices" component={waitFor(AllServices)} />
                     <Route path="/profile" component={waitFor(Profile)} />
+
+                    <Route path="/subscriberServices" component={waitFor(AllSubscriberServices)} />
+                    <Route path="/allSubscriberPools" component={waitFor(SubscriberPools)} />
                     <Redirect to="/dashboard" />
                   </Switch>
                 </Suspense>
