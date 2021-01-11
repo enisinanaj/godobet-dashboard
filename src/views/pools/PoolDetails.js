@@ -129,19 +129,19 @@ class PoolDetails extends Component {
       <ContentWrapper>
         {!this.state.poolLoading ? (
           <div>
-            <NewEvent
+            {this.props.app.poolDetails.edittable && <NewEvent
               modalNewEventVisible={this.state.modalNewEventVisible}
               eventToEdit={this.state.eventToEdit}
               toggleModal={() => this.toggleModal()}
               refreshPool={() => this.getPoolDetails()}
-            />
+            />}
 
-            <NewPool
+            {this.props.app.poolDetails.edittable && <NewPool
               modalNewPoolVisible={this.state.modalEditPoolVisible}
               poolToEdit={this.state.poolToEdit}
               toggleModal={() => this.toggleModalEditPool()}
               refreshService={() => this.getPoolDetails()}
-            />
+            />}
             <Col className={"mb-5"}>
               <Row>
                 <Col md="12">
@@ -209,7 +209,7 @@ class PoolDetails extends Component {
                   <div
                     style={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}} >
                     <h3 style={{ marginBottom: 0, display: "inline-block" }}>Eventi collegati</h3>
-                    <Button className={"btn bg-primary btn-circle btn-outline ml-2"}
+                    {this.props.app.poolDetails.edittable && <Button className={"btn bg-primary btn-circle btn-outline ml-2"}
                       onClick={() => this.newEvent()}
                       style={{
                         position: "absolute",
@@ -219,7 +219,7 @@ class PoolDetails extends Component {
                         lineHeight: "31px",
                       }}>
                       <em className="fas fa-plus"></em>
-                    </Button>
+                    </Button>}
                     <p style={{ fontSize: "1rem", fontWeight: "200" }}>
                       Qui si trovano gli eventi della schedina selezionata
                     </p>
@@ -229,7 +229,7 @@ class PoolDetails extends Component {
               {!this.state.eventLoading ? (
                 <div>
                   <Row lg="12" sm="12" md="12">
-                    <MyEvents refreshPool={() => this.getPoolDetails()} events={this.state.events} editEvent={(event) => this.editEvent(event)} />
+                    <MyEvents refreshPool={() => this.getPoolDetails()} events={this.state.events} edittable={this.props.app.poolDetails.edittable} editEvent={(event) => this.editEvent(event)} />
                   </Row>
                 </div>
               ) : this.state.eventNoErrors ? (
@@ -255,12 +255,12 @@ class PoolDetails extends Component {
                 </div>
               )}
             </Col>
-            <div className="form-group row text-center">
+            {this.props.app.poolDetails.edittable && <div className="form-group row text-center">
               <div className="col-md-12">
                 <em className="fa-3x mr-2 fas fa-box-open"></em>
               </div>
-            </div>
-            <div className="form-group row text-center">
+            </div>}
+            {this.props.app.poolDetails.edittable && <div className="form-group row text-center">
               <div className="col-md-12">
                 <div className="h2 mb-4 text-center">Dettaglio schedina</div>
                 <div className="h5 mb-4 text-center" style={{ fontWeight: "300", fontSize: "1rem" }}>
@@ -282,7 +282,7 @@ class PoolDetails extends Component {
                   <div className="col-md-4"></div>
                 </div>
               </div>
-            </div>
+            </div>}
           </div>
         ) : this.state.poolNoErrors ? (
           <div>

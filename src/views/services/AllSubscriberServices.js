@@ -6,6 +6,7 @@ import TokenManager from "../../components/auth/Token";
 import NewService from "./NewService.js";
 import { connect } from "react-redux";
 import Label from "../../components/layout/Label";
+import config from "../../store/config";
 
 class AllSubscriberServices extends Component {
   constructor(props, context) {
@@ -47,22 +48,19 @@ class AllSubscriberServices extends Component {
   async getMyServices() {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
-      try {
-        fetch(this.props.app.user._links.services.href.replace("{?projection}", ""), {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "X-Auth": token },
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            if (response._embedded !== undefined) {
-              this.setState({
-                services: response._embedded.services,
-                loading: false,
-              });
-            } else this.setState({ noErrors: false, loading: true });
-          });
-      } catch {
-      }
+      fetch(`${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.user._links.self.href}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", "X-Auth": token },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response._embedded !== undefined) {
+            this.setState({
+              services: response._embedded.services,
+              loading: false,
+            });
+          } else this.setState({ noErrors: false, loading: true });
+        });
     });
   }
 
@@ -188,5 +186,5 @@ class AllSubscriberServices extends Component {
   }
 }
 
-const mapStateToProps = (state) => state;
+const mapStateToProps = (state) => ({user: state.app.user});
 export default connect(mapStateToProps)(AllSubscriberServices);

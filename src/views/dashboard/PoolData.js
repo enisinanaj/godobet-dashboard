@@ -50,6 +50,18 @@ class PoolData extends Component {
         return result;
     }
 
+    isPlayed(event) {
+        let eventIsPlayed = false;
+        this.props.playedEvents.forEach(played => {
+            if (played.id === event.eventCode) {
+                eventIsPlayed = true;
+                return;
+            }
+        });
+
+        return eventIsPlayed;
+    }
+
     render() {
         return (
             <ShadowCard className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
@@ -89,7 +101,11 @@ class PoolData extends Component {
                                         <td>{event.sport}</td>
                                         <td>{event.genderValue}</td>
                                         <td>{event.competition}</td>
-                                        <td>{event.event}</td>
+                                        <td>
+                                            {event.event}
+                                            <br />
+                                            {this.isPlayed(event) && <span className={"badge bg-green"}>Evento giocato</span>}
+                                        </td>
                                         <td>{event.proposal}</td>
                                         <td className={this.getOutcomeColorClassName(event.outcome)}>{event.outcome}</td>
                                         <td>

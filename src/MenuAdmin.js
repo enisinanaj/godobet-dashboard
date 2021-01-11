@@ -13,13 +13,13 @@ const MenuAdmin = [
     name: "Abbonamenti",
     icon: "icon-people",
     path: "/mySubscribers",
-    role: 4,
+    role: 5,
   },
   {
     name: "I miei abbonamenti",
     icon: "icon-people",
     path: "/subscriptions",
-    role: 5,
+    role: 4,
   },
   {
     heading: "Gestione servizi",
@@ -45,7 +45,7 @@ const MenuAdmin = [
     name: "I miei pacchetti",
     icon: "icon-layers",
     path: "/subscriberServices",
-    role: 4,
+    role: 10000, //disabled for now
   },
   {
     name: "Le mie schedine",

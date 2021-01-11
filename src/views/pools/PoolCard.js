@@ -16,7 +16,6 @@ moment.locale("it");
 
 class PoolCard extends Component {
   render() {
-
     return (
       <Col xl="4" lg={6} md="6" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
@@ -35,6 +34,7 @@ class PoolCard extends Component {
                   totalEvents: this.props.poolData.totalEvents,
                   totalQuote: this.props.poolData.totalQuote,
                   links: this.props.poolData._links,
+                  edittable: this.props.edittable
                 });
               this.props.history.push("/poolDetails");
             }}>

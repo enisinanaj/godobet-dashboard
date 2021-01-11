@@ -8,15 +8,19 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Button
 } from "reactstrap";
 import * as moment from "moment";
 import TokenManager from "../../components/auth/Token";
 import ShadowCard from "../../components/layout/ShadowCard";
 import Label from "../../components/layout/Label";
+import config from "../../store/config";
+import { connect } from "react-redux";
 
 class EventCard extends Component {
   state = {
     gender: "",
+    eventPlayed: false
   };
   
   toggleDropdownMenu() {
@@ -30,17 +34,31 @@ class EventCard extends Component {
       headers: { "Content-Type": "application/json", "X-Auth": token },
       body: JSON.stringify({outcome}),
     })
-    .then(e => this.props.refreshPool());
+    this.props.refreshPool();
+  }
+
+  async markAsPlayed() {
+    var token = await TokenManager.getInstance().getToken();
+    await fetch(config.API_URL + "/played/" + this.props.user.userCode + "/" + this.props.data.id, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Auth": token }
+    });
+
+    this.setState({eventPlayed: true})
   }
 
   render() {
+
+    console.warn("edittable: " + this.props.edittable);
+    console.warn("outcome: " + this.props.data.outcome);
+
     return (
       <Col lg="12" md="12" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}} outcome={this.props.data.outcome}>
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <strong style={{fontSize: "1.7em"}}>{this.props.data.event}</strong>
             {/* <div style={{float: "right"}}><Outcome outcome={this.props.data.outcome}/></div> */}
-            {!this.props.data.outcome && 
+            {!this.props.data.outcome && this.props.edittable && 
               <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={() => this.toggleDropdownMenu()} style={{float: 'right'}}>
                 <DropdownToggle caret>
                   Imposta esito
@@ -53,6 +71,12 @@ class EventCard extends Component {
                   <DropdownItem onClick={() => this.updateEvent("void")}>Void</DropdownItem>
                 </DropdownMenu>
               </ButtonDropdown>
+            }
+            {!this.props.edittable && !this.state.eventPlayed && this.props.user.roleValue == 4 && 
+              <Button onClick={() => this.markAsPlayed()} style={{float: 'right'}}><em className="icon-check mr-1"></em>Evento giocato</Button>
+            }
+            {!this.props.edittable && this.state.eventPlayed && this.props.user.roleValue == 4 && 
+              <span style={{float: 'right'}} className={"btn btn-disabled disabled btn-success"}><em className="icon-check mr-1"></em>Evento giocato</span>
             }
           </CardHeader>
           <CardBody className={"pb-0"} style={{ padding: "10px 0" }}>
@@ -109,4 +133,4 @@ class EventCard extends Component {
   }
 }
 
-export default EventCard;
+export default connect(state => ({user: state.app.user}))(EventCard);

@@ -8,6 +8,7 @@ class MyEvents extends Component {
         refreshPool={() => this.props.refreshPool()}
         key={event._links.self.href}
         data={event}
+        esittable={this.props.edittable}
         editEvent={(eventEdit) => this.props.editEvent(eventEdit)}
       ></EventCard>
     ));

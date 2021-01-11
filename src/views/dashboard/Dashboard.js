@@ -5,6 +5,8 @@ import ContentWrapper from '../../components/layout/ContentWrapper';
 import config from '../../store/config'
 import TokenManager from '../../components/auth/Token'
 import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import * as actions from "../../store/actions/actions";
 import moment from 'moment';
 import PoolData from './PoolData';
 import { ToastContainer, toast } from 'react-toastify';
@@ -20,6 +22,7 @@ class DashboardV1 extends Component {
 
     state = {
         pools: [],
+        playedEvents: [],
         startDate: moment().add(-1, "month"),
         endDate: moment().add(-1, "day"),
         flotData: [{
@@ -88,6 +91,12 @@ class DashboardV1 extends Component {
         this.loadData()
     }
 
+    componentWillUnmount() {
+        this.setState = (state,callback)=>{
+            return;
+        };
+    }
+
     notify = function(message) {
         toast(message, {
             type: "info",
@@ -110,13 +119,6 @@ class DashboardV1 extends Component {
     loadSubscriperDashboard(startDate, endDate) {
         this.loadDashboardWithUrl(`${config.API_URL}/pools/search/subscriberStats?start=${startDate}&end=${endDate}&subscriber=${this.props.user._links.self.href}`)
         .then(pools => {
-            console.warn(pools);
-
-            var chartData = [];
-            pools.forEach(pool => {
-                chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
-            });
-
             TokenManager.getInstance().getToken()
             .then(token => {
                 return fetch(this.props.user._links.playedEvents.href.replace("{?projection}", ""), {
@@ -128,14 +130,17 @@ class DashboardV1 extends Component {
             })
             .then(body => body.json())
             .then(events => {
-
+                var chartData = [];
+                pools.forEach(pool => {
+                    chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
+                });
+                
                 if (events._embedded.events.length === 0) {
                     this.notify("Non hai giocato nessun evento!");
                 }
-            })
 
-            // TODO
-            // this.setState({pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}});
+                this.setState({playedEvents: events._embedded.events, pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}});
+            })
         })
     }
 
@@ -226,7 +231,7 @@ class DashboardV1 extends Component {
                 { /* END cards box */ }
                 <Row style={{justifyContent: 'center'}}>
                     <Col lg={12} md={12} >
-                        <PoolData pools={this.state.pools} endDate={this.state.endDate} ></PoolData>
+                        <PoolData pools={this.state.pools} playedEvents={this.state.playedEvents} endDate={this.state.endDate} ></PoolData>
                     </Col>
                 </Row>
                 <ToastContainer />
@@ -238,4 +243,7 @@ class DashboardV1 extends Component {
 }
 
 const mapStateToProps = (state) => ({user: state.app.user});
-export default withNamespaces('translations')(connect(mapStateToProps)(DashboardV1));
+const mapDispatchToProps = (dispatch) => ({
+    actions: bindActionCreators(actions, dispatch),
+  });
+export default withNamespaces('translations')(connect(mapStateToProps, mapDispatchToProps)(DashboardV1));

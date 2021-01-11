@@ -149,7 +149,7 @@ class Sidebar extends Component {
               {/* Iterates over all sidebar items */}
               {MenuAdmin.map((item, i) => {
                 // heading
-                if(item.role > this.props.app.user.role.lft && item.role < this.props.app.user.role.rgt) {
+                if(this.props.app.user.roleValue < item.role) {
                   return;
                 }
 

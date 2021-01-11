@@ -2,12 +2,14 @@ import { USER_LOGIN } from "../actions/actions";
 import { SERVICE_DETAILS } from "../actions/actions";
 import { POOL_DETAILS } from "../actions/actions";
 import { TIPSTER_DETAILS } from "../actions/actions";
+import { UPDATE_PLAYED_EVENTS } from "../actions/actions";
 
 const initialState = {
   user: undefined,
   localUser: undefined,
   loggedIn: false,
   serviceDetails: {},
+  playedEvents: []
 };
 
 const appReduces = (state = initialState, action) => {
@@ -32,6 +34,12 @@ const appReduces = (state = initialState, action) => {
       return {
         ...state,
         tipsterDetails: action.tipster,
+      };
+
+    case UPDATE_PLAYED_EVENTS:
+      return {
+        ...state,
+        playedEvents: action.events
       };
     default:
       return state;
