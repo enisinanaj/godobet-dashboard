@@ -14,18 +14,20 @@ const waitFor = (Tag) => (props) => <Tag {...props} />;
 
 const Dashboard = lazy(() => import("./views/dashboard/Dashboard"));
 const Login = lazy(() => import("./views/auth/Login"));
+const Register = lazy(() => import("./views/auth/Register"));
 const Recover = lazy(() => import("./views/auth/Recover"));
 const NotFound = lazy(() => import("./template_components/Pages/NotFound"));
 const Error500 = lazy(() => import("./template_components/Pages/Error500"));
-const Maintenance = lazy(() =>
-import("./template_components/Pages/Maintenance")
-);
+const Maintenance = lazy(() => import("./template_components/Pages/Maintenance"));
 const Profile = lazy(() => import("./views/profile/Profile"));
 const MyServices = lazy(() => import("./views/services/MyServices"));
+const AllSubscriberServices = lazy(() => import("./views/services/AllSubscriberServices"));
 const ServiceDetails = lazy(() => import("./views/services/ServiceDetails"));
 const PoolDetails = lazy(() => import("./views/pools/PoolDetails"));
 const MySubscribers = lazy(() => import("./views/services/MySubscribers"));
+const MySubscriptions = lazy(() => import("./views/services/MySubscriptions"));
 const AllPools = lazy(() => import("./views/pools/AllPools"));
+const SubscriberPools = lazy(() => import("./views/pools/SubscriberPools"));
 const TipsterList = lazy(() => import("./views/admin/TipsterList"));
 const TipsterDetails = lazy(() => import("./views/admin/TipsterDetails"));
 const AllServices = lazy(() => import("./views/admin/AllServices"));
@@ -72,6 +74,7 @@ const Routes = ({ location, app }) => {
         <Suspense fallback={<PageLoader />}>
           <Switch location={location}>
             <Route path="/login" component={waitFor(Login)} />
+            <Route path="/register" component={waitFor(Register)} />
             <Route path="/recover" component={waitFor(Recover)} />
             <Route path="/notfound" component={waitFor(NotFound)} />
             <Route path="/error500" component={waitFor(Error500)} />
@@ -102,35 +105,18 @@ const Routes = ({ location, app }) => {
                   <Switch location={location}>
                     <Route path="/dashboard" component={waitFor(Dashboard)} />
                     <Route path="/myServices" component={waitFor(MyServices)} />
-                    <Route
-                      path="/serviceDetails"
-                      component={waitFor(ServiceDetails)}
-                    />
-                    <Route
-                      path="/poolDetails"
-                      component={waitFor(PoolDetails)}
-                    />
-                    <Route
-                      path="/mySubscribers"
-                      component={waitFor(MySubscribers)}
-                    />
+                    <Route path="/serviceDetails" component={waitFor(ServiceDetails)} />
+                    <Route path="/poolDetails" component={waitFor(PoolDetails)} />
+                    <Route path="/mySubscribers" component={waitFor(MySubscribers)} />
+                    <Route path="/subscriptions" component={waitFor(MySubscriptions)} />
                     <Route path="/allPools" component={waitFor(AllPools)} />
-                    <Route
-                      path="/tipstersList"
-                      component={waitFor(TipsterList)}
-                    />
-                    <Route
-                      path="/tipsterDetails"
-                      component={waitFor(TipsterDetails)}
-                    />
-                    <Route
-                      path="/allServices"
-                      component={waitFor(AllServices)}
-                    />
-                    <Route
-                      path="/profile"
-                      component={waitFor(Profile)}
-                    />
+                    <Route path="/tipstersList" component={waitFor(TipsterList)} />
+                    <Route path="/tipsterDetails" component={waitFor(TipsterDetails)} />
+                    <Route path="/allServices" component={waitFor(AllServices)} />
+                    <Route path="/profile" component={waitFor(Profile)} />
+
+                    <Route path="/subscriberServices" component={waitFor(AllSubscriberServices)} />
+                    <Route path="/allSubscriberPools" component={waitFor(SubscriberPools)} />
                     <Redirect to="/dashboard" />
                   </Switch>
                 </Suspense>
@@ -144,31 +130,16 @@ const Routes = ({ location, app }) => {
         //TIPSTER
         <BaseTipster>
           <TransitionGroup>
-            <CSSTransition
-              key={currentKey}
-              timeout={timeout}
-              classNames={animationName}
-              exit={false}
-            >
+            <CSSTransition key={currentKey} timeout={timeout} classNames={animationName} exit={false}>
               <div>
                 <Suspense fallback={<PageLoader />}>
                   <Switch location={location}>
                     <Route path="/profile" component={waitFor(Profile)} />
                     <Route path="/myServices" component={waitFor(MyServices)} />
-                    <Route
-                      path="/serviceDetails"
-                      component={waitFor(ServiceDetails)}
-                    />
-                    <Route
-                      path="/poolDetails"
-                      component={waitFor(PoolDetails)}
-                    />
-                    <Route
-                      path="/mySubscribers"
-                      component={waitFor(MySubscribers)}
-                    />
+                    <Route path="/serviceDetails" component={waitFor(ServiceDetails)} />
+                    <Route path="/poolDetails" component={waitFor(PoolDetails)} />
+                    <Route path="/mySubscribers" component={waitFor(MySubscribers)} />
                     <Route path="/allPools" component={waitFor(AllPools)} />
-
                     <Redirect to="/profile" />
                   </Switch>
                 </Suspense>

@@ -185,11 +185,11 @@ class NewPool extends Component {
         style={{ maxWidth: "70%" }}
       >
         <ModalHeader toggle={() => this.toggleModal()}>
-          <h4>
+          <span style={{fontSize: 20}}>
             {this.state.mode === "new"
               ? "Inserimento schedina"
               : 'Modifica schedina "' + this.props.poolToEdit.description + '"'}
-          </h4>
+          </span>
         </ModalHeader>
         <ModalBody>
           <Row>
@@ -205,10 +205,8 @@ class NewPool extends Component {
                         onSubmit={(e) => this.savePool(e)}
                       >
                         <div className="form-group row">
-                          <label
-                            className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
-                            htmlFor="inputDescription"
-                          >
+                          <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right"
+                            htmlFor="inputDescription">
                             Descrizione
                           </label>
                           <div className="col-xl-10 col-md-9 col-8">

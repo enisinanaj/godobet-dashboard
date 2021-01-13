@@ -1,44 +1,87 @@
 const MenuAdmin = [
   {
-    heading: "Amministrazione",
+    heading: "Statistiche",
+    role: 4,
   },
   {
     name: "Dashboard",
     icon: "icon-graph",
     path: "/dashboard",
+    role: 4,
   },
   {
-    name: "Profilo",
-    icon: "icon-user",
-    path: "/profile",
+    name: "Abbonamenti",
+    icon: "icon-people",
+    path: "/mySubscribers",
+    role: 5,
+  },
+  {
+    name: "I miei abbonamenti",
+    icon: "icon-people",
+    path: "/subscriptions",
+    role: 4,
+  },
+  {
+    heading: "Gestione servizi",
+    role: 5,
   },
   {
     name: "I miei pacchetti",
     icon: "icon-layers",
     path: "/myServices",
-  },
-  {
-    name: "Abbonati",
-    icon: "icon-people",
-    path: "/mySubscribers",
+    role: 5,
   },
   {
     name: "Le mie schedine",
     icon: "icon-grid",
     path: "/allPools",
+    role: 5,
   },
   {
-    heading: "Amministrazione",
+    heading: "Gestione servizi",
+    role: 4,
   },
   {
-    name: "Gestione Tipster",
-    icon: "icon-people",
-    path: "/tipstersList",
+    name: "I miei pacchetti",
+    icon: "icon-layers",
+    path: "/subscriberServices",
+    role: 10000, //disabled for now
+  },
+  {
+    name: "Le mie schedine",
+    icon: "icon-grid",
+    path: "/allSubscriberPools",
+    role: 4,
+  },
+  {
+    heading: "Marketplace",
+    role: 0,
   },
   {
     name: "Tutti i pacchetti",
     icon: "icon-organization",
     path: "/allServices",
+    role: 0,
+  },
+  {
+    heading: "Amministrazione",
+    role: 6,
+  },
+  {
+    name: "Gestione Utenti",
+    icon: "icon-people",
+    path: "/tipstersList",
+    role: 6,
+  },
+  {
+    heading: "Impostazioni",
+    role: 0,
+  },
+  {
+    name: "Profilo",
+    icon: "icon-user",
+    path: "/profile",
+    role: 0,
   },
 ];
 

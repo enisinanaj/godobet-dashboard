@@ -5,7 +5,7 @@ import ContentWrapper from "../../components/layout/ContentWrapper";
 import TokenManager from "../../components/auth/Token";
 import TipsterCard from "./TipsterCard";
 import { connect } from "react-redux";
-import Register from "../auth/Register";
+import config from "../../store/config";
 
 class TipsterList extends Component {
   constructor(props, context) {
@@ -16,7 +16,7 @@ class TipsterList extends Component {
       modalNewTipsterVisible: false,
       tipsters: [],
     };
-    this.getTipsters();
+    this.getUsers();
   }
 
   toggleModal = () => {
@@ -25,11 +25,11 @@ class TipsterList extends Component {
     });
   };
 
-  async getTipsters() {
+  async getUsers() {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
       fetch(
-        "http://api.godobet.it/users/search/findByRole/?role=http://api.godobet.it/roles/4",
+        `${config.API_URL}/users`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
@@ -47,54 +47,19 @@ class TipsterList extends Component {
     });
   }
 
-  async test() {
-    var token = await TokenManager.getInstance().getToken();
-    this.setState({ loading: true, noErrors: true }, () => {
-      fetch(
-        "http://api.godobet.it/users/search/findByRole/?role=http://api.godobet.it/roles/4",
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "X-Auth": token },
-        }
-      )
-        .then((response) => response.json())
-        .then((response) => {
-          console.log(response);
-        });
-    });
-  }
-
   render() {
     if (!this.state.loading)
       return (
         <ContentWrapper>
-          <Row>
-            <Col lg="6">
-              <h2>Gestione Tipster</h2>
-            </Col>
-            <Col lg="2">
-              <Button
-                className="btn btn-block btn-secondary"
-                onClick={() => this.toggleModal()}
-              >
-                Aggiungi Tipster
-              </Button>
-              <Register
-                //addService={(newService) => this.addService(newService)}
-                modalNewTipsterVisible={this.state.modalNewTipsterVisible}
-                toggleModal={() => this.toggleModal()}
-                refreshTipsterList={() => this.getTipsters()}
-              />
-            </Col>
+          <Row className="content-heading" style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Col xl={2} lg={3} md={3} sm={12} >Gestione utenti</Col>
           </Row>
 
-          {this.state.tipsters.map((tipster) => (
-            <TipsterCard
-              key={tipster._links.self.href}
-              data={tipster}
-              history={this.props.history}
-            />
-          ))}
+          <Row>
+            {this.state.tipsters.map((tipster) => (
+              <TipsterCard key={tipster._links.self.href} data={tipster} history={this.props.history} />
+            ))}
+          </Row>
         </ContentWrapper>
       );
     else if (this.state.noErrors)
@@ -117,10 +82,9 @@ class TipsterList extends Component {
               className="btn"
               onClick={() => {
                 this.setState({ noErrors: true, loading: true }, () => {
-                  this.getTipsters();
+                  this.getUsers();
                 });
-              }}
-            >
+              }}>
               Riprova
             </Button>
           </div>

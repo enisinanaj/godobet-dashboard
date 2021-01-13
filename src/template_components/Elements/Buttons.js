@@ -19,7 +19,7 @@ class Buttons extends Component {
         };
     }
 
-    handleSelect(event, selectedEvent) {
+    handleSelect(_, selectedEvent) {
         this.setState({
             activePage: selectedEvent.eventKey
         });

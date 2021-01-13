@@ -15,7 +15,7 @@ const MenuTipster = [
     path: "/myServices",
   },
   {
-    name: "Abbonati",
+    name: "Abbonamenti",
     icon: "icon-people",
     path: "/mySubscribers",
   },

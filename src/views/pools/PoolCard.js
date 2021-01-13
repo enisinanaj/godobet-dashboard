@@ -3,7 +3,6 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Row,
   Col,
 } from "reactstrap";
 import * as moment from "moment";
@@ -17,9 +16,8 @@ moment.locale("it");
 
 class PoolCard extends Component {
   render() {
-
     return (
-      <Col lg="4" md="6" sm="12" className={"mb-5"}>
+      <Col xl="4" lg={6} md="6" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}}>
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 
@@ -36,6 +34,7 @@ class PoolCard extends Component {
                   totalEvents: this.props.poolData.totalEvents,
                   totalQuote: this.props.poolData.totalQuote,
                   links: this.props.poolData._links,
+                  edittable: this.props.edittable
                 });
               this.props.history.push("/poolDetails");
             }}>
@@ -53,33 +52,34 @@ class PoolCard extends Component {
                   </span>
                 </div>
               </Col>
-              <Col lg="6" className={"mb-3"}>
-                <div><Label><i class="icon-book-open mr-2"></i> Bookmaker</Label></div>
+              <Col lg="6" md={6} sm={6} xs={4} className={"mb-3"}>
+                <div><Label><i className="icon-book-open mr-2"></i> Bookmaker</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{this.props.poolData.bookmaker}</span></div>
               </Col>
-              <Col lg="6" className={"mb-3"}>
-                <div><Label><i class="icon-graph mr-2"></i> Quota</Label></div>
-                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.quote / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+              <Col lg="6" md={6} sm={6} xs={4} className={"mb-3"}>
+                <div><Label><i className="icon-graph mr-2"></i> Quota</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.quote).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
               </Col>
-              <Col lg="6" className={"mb-3"}>
-                <div><Label><i class="icon-pie-chart mr-2"></i>Stake</Label></div>
+              <Col lg="6" md={6} sm={6} xs={4} className={"mb-3"}>
+                <div><Label><i className="icon-pie-chart mr-2"></i>Stake</Label></div>
                 <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.stake / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
               </Col>
-              <Col lg="6" className={"mb-3"}>
-                <div><Label><i class="icon-trophy mr-2"></i>Profitto</Label></div>
-                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.profit / 10000).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
+              <Col lg="6" md={6} sm={6} xs={4} className={"mb-3"}>
+                <div><Label><i className="icon-trophy mr-2"></i>Profitto</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{(this.props.poolData.profit).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}</span></div>
+              </Col>
+              <Col lg="6" md={6} sm={6} xs={4} className={"mb-12"}>
+                <div><Label><i className="icon-trophy mr-2"></i>Eventi</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{this.props.poolData.events.length}</span></div>
               </Col>
             </div>
-            <Row className="mb-3 mt-2" style={{padding: "10px", paddingLeft: "15px", borderTopWidth: "1px", borderTopColor: "rgba(0, 0, 0, 0.125)", borderTopStyle: "solid"}}>
-              <Label style={{fontSize: "1.2em"}}>{this.props.poolData.events.length} Eventi presenti</Label>
-            </Row>
           </CardBody>
           <CardFooter className="d-flex bg-light" style={{flexDirection: "row", justifyContent: "flex-start"}}>
               <Col lg="6" className="p-0">
-                <Label style={{fontSize: "1em", display: "inline-block"}}>creato il {moment(this.props.poolData.createdOn).format( "DD/MM/YYYY HH:mm" )}</Label>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>creato il {moment(this.props.poolData.createdOn).format( "DD/MM/YYYY" )}</Label>
               </Col>
               <Col lg="6" className="p-0" style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", textAlign: "right"}}>
-                <Label style={{fontSize: "1em", display: "inline-block"}}>modificato il {moment(this.props.poolData.updatedOn).format( "DD/MM/YYYY HH:mm" )}</Label>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>modificato il {moment(this.props.poolData.updatedOn).format( "DD/MM/YYYY" )}</Label>
               </Col>
           </CardFooter>
         </ShadowCard>

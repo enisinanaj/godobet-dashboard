@@ -6,8 +6,9 @@ import TokenManager from "../../components/auth/Token";
 import { connect } from "react-redux";
 import NewPool from "./NewPool";
 import Label from "../../components/layout/Label";
+import config from "../../store/config";
 
-class AllPools extends Component {
+class SubscriberPools extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -38,16 +39,13 @@ class AllPools extends Component {
     //console.log(this.props.app.user);
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
-      fetch(
-        this.props.app.user._links.pools.href.replace("{?projection}", ""),
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "X-Auth": token },
-        }
-      )
+      fetch(`${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.user._links.self.href}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", "X-Auth": token },
+      })
         .then((response) => response.json())
         .then((response) => {
-          //console.log(response);
+          console.log(response);
           if (response._embedded !== undefined)
             this.setState({
               pools: response._embedded.pools,
@@ -115,5 +113,5 @@ class AllPools extends Component {
   }
 }
 
-const mapStateToProps = (state) => state;
-export default connect(mapStateToProps)(AllPools);
+const mapStateToProps = (state) => ({user: state.app.user});
+export default connect(mapStateToProps)(SubscriberPools);

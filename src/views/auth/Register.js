@@ -1,17 +1,16 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import {
-  Input,
-  Modal,
-  ModalHeader,
-  ModalBody,
+  Input, Row,
 } from "reactstrap";
 
 import FormValidator from "../../template_components/Forms/FormValidator.js";
 import { connect } from "react-redux";
 import { auth } from "../../components/auth/firebase.js";
 import TokenManager from "../../components/auth/Token.js";
+import Footer from '../../components/footer'
 import config from "../../store/config.js";
+import ShadowCard from "../../components/layout/ShadowCard.js";
 
 class Register extends Component {
   state = {
@@ -93,7 +92,6 @@ class Register extends Component {
         )
         .then((e) => {
           e.user.sendEmailVerification();
-          user.name = e.user.displayName;
 
           return TokenManager.getInstance()
             .getToken()
@@ -112,10 +110,8 @@ class Register extends Component {
               });
             });
         })
-        .then((e) => {
+        .then((_) => {
           alert("Utente creato!");
-          this.toggleModal();
-          this.props.refreshTipsterList();
         })
         .catch((_) => {});
     }
@@ -135,177 +131,152 @@ class Register extends Component {
 
   render() {
     return (
-      <Modal
-        isOpen={this.props.modalNewTipsterVisible}
-        toggle={() => this.toggleModal()}
-        style={{ maxWidth: "70%" }}
-      >
-        <ModalHeader toggle={() => this.toggleModal()}>
-          Registrazione nuovo Tipster
-        </ModalHeader>
-        <ModalBody>
-          <div className="block-center mt-4 wd-xl">
-            {/* START card */}
-            <div className="card card-default">
-              <div className="card-body">
-                <p className="text-center py-2">
-                  Crea un nuovo account Tipster su GodoBet
-                </p>
-                <form
-                  className="mb-3"
-                  name="formRegister"
-                  onSubmit={this.onSubmit}
-                >
-                  <div className="form-group">
-                    <label className="text-muted" htmlFor="signupInputEmail1">
-                      Nome Tipster
-                    </label>
-                    <div className="input-group with-focus">
-                      <Input
-                        type="text"
-                        name="nomeTipster"
-                        className="border-right-0"
-                        placeholder="Nome"
-                        invalid={this.hasError(
-                          "formRegister",
-                          "nomeTipster",
-                          "required"
-                        )}
-                        onChange={this.validateOnChange}
-                        data-validate='["required"]'
-                        value={this.state.formRegister.nomeTipster}
-                      />
-                      <div className="input-group-append">
-                        <span className="input-group-text text-muted bg-transparent border-left-0">
-                          <em className="fa fa-user"></em>
-                        </span>
-                      </div>
-                      {this.hasError(
-                        "formRegister",
-                        "nomeTipster",
-                        "required"
-                      ) && (
-                        <span className="invalid-feedback">
-                          Il campo Nome Tipster è obbligatorio
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label className="text-muted" htmlFor="signupInputEmail1">
-                      Indirizzo email
-                    </label>
-                    <div className="input-group with-focus">
-                      <Input
-                        autoComplete="new-password"
-                        type="email"
-                        name="email"
-                        className="border-right-0"
-                        placeholder="Email"
-                        invalid={
-                          this.hasError("formRegister", "email", "required") ||
-                          this.hasError("formRegister", "email", "email")
-                        }
-                        onChange={this.validateOnChange}
-                        data-validate='["required", "email"]'
-                        value={this.state.formRegister.email}
-                      />
-                      <div className="input-group-append">
-                        <span className="input-group-text text-muted bg-transparent border-left-0">
-                          <em className="fa fa-envelope"></em>
-                        </span>
-                      </div>
-                      {this.hasError("formRegister", "email", "required") && (
-                        <span className="invalid-feedback">
-                          Il campo indirizzo email è obbligatorio
-                        </span>
-                      )}
-                      {this.hasError("formRegister", "email", "email") && (
-                        <span className="invalid-feedback">
-                          Inserisci un indirizzo email valido
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label
-                      className="text-muted"
-                      htmlFor="signupInputPassword1"
-                    >
-                      Password
-                    </label>
-                    <div className="input-group with-focus">
-                      <Input
-                        autoComplete="new-password"
-                        type="password"
-                        id="id-password"
-                        name="password"
-                        className="border-right-0"
-                        placeholder="Password"
-                        invalid={this.hasError(
-                          "formRegister",
-                          "password",
-                          "required"
-                        )}
-                        onChange={this.validateOnChange}
-                        data-validate='["required"]'
-                        value={this.state.formRegister.password}
-                      />
-                      <div className="input-group-append">
-                        <span className="input-group-text text-muted bg-transparent border-left-0">
-                          <em className="fa fa-lock"></em>
-                        </span>
-                      </div>
-                      <span className="invalid-feedback">
-                        Il campo password è obbligatorio
-                      </span>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label
-                      className="text-muted"
-                      htmlFor="signupInputRePassword1"
-                    >
-                      Ripeti password
-                    </label>
-                    <div className="input-group with-focus">
-                      <Input
-                        type="password"
-                        name="password2"
-                        className="border-right-0"
-                        placeholder="Ripeti password"
-                        invalid={this.hasError(
-                          "formRegister",
-                          "password2",
-                          "equalto"
-                        )}
-                        onChange={this.validateOnChange}
-                        data-validate='["equalto"]'
-                        value={this.state.formRegister.password2}
-                        data-param="id-password"
-                      />
-                      <div className="input-group-append">
-                        <span className="input-group-text text-muted bg-transparent border-left-0">
-                          <em className="fa fa-lock"></em>
-                        </span>
-                      </div>
-                      <span className="invalid-feedback">
-                        Il campo deve essere uguale al precedente
-                      </span>
-                    </div>
-                  </div>
-                  <button
-                    className="btn btn-block btn-primary mt-3"
-                    type="submit"
-                  >
-                    Crea account
-                  </button>
-                </form>
-              </div>
-            </div>
+      <div className="block-center mt-4 wd-xl">
+        {/* START card */}
+        <ShadowCard className="card bg-light">
+          <div className="card-header text-center bg-accent" style={{borderRadius: 0}}>
+            <a href="">
+              <img className="block-center rounded" src="img/godobet_logo.png" alt="Logo" width={100} />
+            </a>
           </div>
-        </ModalBody>
-      </Modal>
+          <div className="card-body">
+            <p className="text-center py-2">
+              Crea un nuovo account e comincia a guadagnare dai tip
+            </p>
+            <form className="mb-3" name="formRegister" onSubmit={this.onSubmit}>
+              <div className="form-group">
+                <div className="input-group with-focus">
+                  <Input
+                    type="text"
+                    name="nomeTipster"
+                    className="border-right-0"
+                    placeholder="Nome"
+                    invalid={this.hasError(
+                      "formRegister",
+                      "nomeTipster",
+                      "required"
+                    )}
+                    onChange={this.validateOnChange}
+                    data-validate='["required"]'
+                    value={this.state.formRegister.nomeTipster}
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text text-muted bg-transparent border-left-0">
+                      <em className="fa fa-user"></em>
+                    </span>
+                  </div>
+                  {this.hasError(
+                    "formRegister",
+                    "nomeTipster",
+                    "required"
+                  ) && (
+                    <span className="invalid-feedback">
+                      Il campo Nome è obbligatorio
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="form-group">
+                <div className="input-group with-focus">
+                  <Input
+                    autoComplete="new-password"
+                    type="email"
+                    name="email"
+                    className="border-right-0"
+                    placeholder="Email"
+                    invalid={
+                      this.hasError("formRegister", "email", "required") ||
+                      this.hasError("formRegister", "email", "email")
+                    }
+                    onChange={this.validateOnChange}
+                    data-validate='["required", "email"]'
+                    value={this.state.formRegister.email}
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text text-muted bg-transparent border-left-0">
+                      <em className="fa fa-envelope"></em>
+                    </span>
+                  </div>
+                  {this.hasError("formRegister", "email", "required") && (
+                    <span className="invalid-feedback">
+                      Il campo indirizzo email è obbligatorio
+                    </span>
+                  )}
+                  {this.hasError("formRegister", "email", "email") && (
+                    <span className="invalid-feedback">
+                      Inserisci un indirizzo email valido
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="form-group">
+                <div className="input-group with-focus">
+                  <Input
+                    autoComplete="new-password"
+                    type="password"
+                    id="id-password"
+                    name="password"
+                    className="border-right-0"
+                    placeholder="Password"
+                    invalid={this.hasError(
+                      "formRegister",
+                      "password",
+                      "required"
+                    )}
+                    onChange={this.validateOnChange}
+                    data-validate='["required"]'
+                    value={this.state.formRegister.password}
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text text-muted bg-transparent border-left-0">
+                      <em className="fa fa-lock"></em>
+                    </span>
+                  </div>
+                  <span className="invalid-feedback">
+                    Il campo password è obbligatorio
+                  </span>
+                </div>
+              </div>
+              <div className="form-group">
+                <div className="input-group with-focus">
+                  <Input
+                    type="password"
+                    name="password2"
+                    className="border-right-0"
+                    placeholder="Ripeti password"
+                    invalid={this.hasError(
+                      "formRegister",
+                      "password2",
+                      "equalto"
+                    )}
+                    onChange={this.validateOnChange}
+                    data-validate='["equalto"]'
+                    value={this.state.formRegister.password2}
+                    data-param="id-password"
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text text-muted bg-transparent border-left-0">
+                      <em className="fa fa-lock"></em>
+                    </span>
+                  </div>
+                  <span className="invalid-feedback">
+                    Il campo deve essere uguale al precedente
+                  </span>
+                </div>
+              </div>
+              <button className="btn btn-block btn-primary mt-3" type="submit">
+                Crea account
+              </button>
+              <Row style={{flexDirection: 'row', justifyContent: 'center'}} className={"mt-2"}>
+                <Link to="login" className="text-muted">
+                  Vai al Login
+                </Link>
+              </Row>
+            </form>
+          </div>
+        </ShadowCard>
+        <Footer />
+      </div>
     );
   }
 }

@@ -7,103 +7,129 @@ import {
   Col,
   Alert
 } from "reactstrap";
-import TokenManager from "../../components/auth/Token";
 import { connect } from "react-redux";
 import "@pathofdev/react-tag-input/build/index.css";
 import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions/actions";
 import ShadowCard from "../../components/layout/ShadowCard";
 import Label from "../../components/layout/Label";
-import moment from 'moment'
+import moment from 'moment';
+import TokenManager from "../../components/auth/Token";
+import Swal from "../../components/elements/Swal";
+import config from "../../store/config";
 
 class ServiceCard extends Component {
+
   state = {
-    taxonomies: [],
-  };
-
-  componentDidMount() {
-    this.getTaxonomies();
-  }
-
-  async getTaxonomies() {
-    var token = await TokenManager.getInstance().getToken();
-    
-    async function loadData() {
-      try {
-        let response = await fetch(this.props.serviceData._links.taxonomies.href, {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "X-Auth": token },
-        });
-
-        let responseAsJson = await response.json();
-        
-        if (responseAsJson._embedded) {
-          let arrayTaxonomies = [];
-          for (let taxonomy of responseAsJson._embedded.taxonomy) {
-            arrayTaxonomies.push(taxonomy.definition);
+    swalOption3: {
+      title: 'Sei sicuro?',
+      text: 'Stai per abbonarti al servizio. Conferma l\'iscrizione con cliccando sul pulsante sottostante.',
+      icon: 'warning',
+      buttons: {
+          cancel: true,
+          confirm: {
+              text: 'Confermo',
+              value: true,
+              visible: true,
+              className: "bg-success",
+              closeModal: true
           }
-          this.setState({
-            taxonomies: arrayTaxonomies,
-            taxonomiesObjects: responseAsJson._embedded.taxonomy,
-          });
-        }
-      } catch (error) {
-        console.error("Error happened: " + error);
-        // this.props.history.push("/login");
       }
     }
+  }
 
-    this.setState({ loading: true, noErrors: true }, loadData);
+  openDetail() {
+    let token = "";
+    TokenManager.getInstance().getToken()
+    .then(t => {
+      token = t;
+
+      return fetch(this.props.serviceData._links.author.href, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth": token
+        }
+      });
+    })
+    .then(body => body.json())
+    .then(author => {
+      if (author._links.self.href === this.props.app.user._links.self.href || this.props.app.user.roleName === "God") {
+        this.props.actions.serviceDetails({
+          serviceName: this.props.serviceData.serviceName,
+          description: this.props.serviceData.description,
+          maxSubscribers: this.props.serviceData.maxSubscribers,
+          duration: this.props.serviceData.duration,
+          price: this.props.serviceData.price,
+          version: this.props.serviceData.version,
+          links: this.props.serviceData._links,
+        });
+        
+        this.props.history.push("/serviceDetails");
+      } else if (this.props.app.user.roleName === 'Subscriber') {
+        //TODO: open payment form for subscription
+        fetch(config.API_URL + "/subscriptions", {
+          method: 'POST',
+          headers: {
+            "Content-Type": 'application/json',
+            "X-AUTH": token
+          },
+          body: JSON.stringify({
+            "subscriber": this.props.app.user._links.self.href,
+            "service": this.props.serviceData._links.self.href,
+            "paymentSystemToken": "godobet",
+            "subscribedOn": moment()
+          })
+        })
+
+      }
+    });
+  }
+
+  subscriptionConfirmation(isConfirm, swal) {
+    if (isConfirm) {
+      swal("Confermato!", "Ti sei abbonato al servizio con successo!", "success");
+    } else {
+      return;
+    }
   }
 
   render() {
     return (
-      <Col lg="4" md="6" sm="12" className={"mb-5"}>
+      <Col xl="6" lg="6" md="6" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3">
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 
               style={{lineHeight: "35px", cursor: "pointer", flex: 1, flexDirection: "row", justifyContent: "space-between"}} 
-              onClick={() => {
-              this.props.actions.serviceDetails({
-                serviceName: this.props.serviceData.serviceName,
-                description: this.props.serviceData.description,
-                maxSubscribers: this.props.serviceData.maxSubscribers,
-                duration: this.props.serviceData.duration,
-                price: this.props.serviceData.price,
-                version: this.props.serviceData.version,
-                links: this.props.serviceData._links,
-              });
-              this.props.history.push("/serviceDetails");
-            }}>
+              onClick={() => this.openDetail()}>
               <strong style={{fontSize: "1.7em"}}>{this.props.serviceData.serviceName}</strong>
-              <em className="fa fa-arrow-right" style={{float: "right", lineHeight: "38px"}}></em>
+              {this.props.app.user.roleName !== 'Subscriber' && <em className="fa fa-arrow-right" style={{float: "right", lineHeight: "38px"}}></em>}
+              {this.props.app.user.roleName === 'Subscriber' 
+                && <Swal callback={this.subscriptionConfirmation} options={this.state.swalOption3} className={"btn btn-primary float-right"}>Abbonati ora!</Swal>}
             </a>
           </CardHeader>
           <CardBody>
-            <div style={{padding: 10}}>
-              <Col lg="12" className={"mb-3"}>
-                <Row><Label>Descrizione</Label></Row>
-                <Row>
+            <Row>
+              <Col lg="6" sm={6} className={"mb-2"}>
+                <div><Label>Descrizione</Label></div>
+                <div>
                   <span style={{fontSize: "1.2em", minHeight: "50px"}} className={"text-truncate"}>
                     {this.props.serviceData.description}
                   </span>
-                </Row>
+                </div>
               </Col>
-              <Col lg="6">
-                <Row><Label><i className="icon-people mr-2"></i>  Numero max iscritti</Label></Row>
-                <Row><span style={{fontSize: "1.2em"}}>{this.props.serviceData.maxSubscribers}</span></Row>
+              <Col lg="6" sm={6} xs={6} className={"mb-2"}>
+                <div><Label><i className="icon-people mr-2"></i>  Numero max iscritti</Label></div>
+                <div><span style={{fontSize: "1.2em"}}>{this.props.serviceData.maxSubscribers}</span></div>
               </Col>
-            </div>
-            <div className="mb-1" style={{padding: 10}}>
               <Col lg="12">
-                <Row><Label><i className="icon-tag mr-2"></i> Hashtag</Label></Row>
-                <Row>
-                  {this.state.taxonomies.map(tax => <span 
-                    key={tax}
+                <div><Label><i className="icon-tag mr-2"></i> Hashtag</Label></div>
+                <div>
+                  {this.props.serviceData.taxonomies.map(tax => <span 
+                    key={tax.definition}
                     style={{fontSize: "1.1em", padding: 3, display: 'inline-block'}}>
-                    #{tax}
+                    #{tax.definition}
                   </span>)}
-                  {this.state.taxonomies.length === 0 && (<Alert color="info" style={{
+                  {this.props.serviceData.taxonomies.length === 0 && (<Alert color="info" style={{
                       color: "#125f77", 
                       backgroundColor: "#d3f1fa",
                       width: "100%",
@@ -114,15 +140,15 @@ class ServiceCard extends Component {
                     }}>
                      Non ci sono hashtag per questo pacchetto.
                     </Alert>)}
-                </Row>
+                </div>
               </Col>
-            </div>
+            </Row>
           </CardBody>
           <CardFooter className="bg-light">
             <Row style={{paddingBottom: "10px", paddingLeft: "15px", borderBottomWidth: "1px", borderBottomColor: "rgba(0, 0, 0, 0.125)", borderBottomStyle: "solid"}}
               className={"mb-2"}>
-              <Col lg="2">
-                <Label style={{fontSize: "1.2em", display: "inline-block", marginTop: "3px"}}>v0.1{this.props.serviceData.version}</Label>
+              <Col lg="3" sm={4} xs={4}>
+                <Label style={{fontSize: "1.2em", display: "inline-block", marginTop: "3px"}}>v {this.props.serviceData.version}</Label>
               </Col>
               <Col lg="10" style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", textAlign: "right"}}>
                 <Label display={"inline"}>{this.props.serviceData.price}€ ogni {this.props.serviceData.duration} giorni</Label>
@@ -130,10 +156,10 @@ class ServiceCard extends Component {
             </Row>
             <div className={"d-flex"} style={{flex :1, flexDirection: 'row', justifyContent: 'space-between'}}>
               <Col lg="6" className="p-0">
-                <Label style={{fontSize: "1em", display: "inline-block"}}>creato il {moment(this.props.serviceData.createdOn).format( "DD/MM/YYYY HH:mm" )}</Label>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>creato il {moment(this.props.serviceData.createdOn).format( "DD/MM/YYYY" )}</Label>
               </Col>
               <Col lg="6" className="p-0" style={{textAlign: "right"}}>
-                <Label style={{fontSize: "1em", display: "inline-block"}}>modificato il {moment(this.props.serviceData.updatedOn).format( "DD/MM/YYYY HH:mm" )}</Label>
+                <Label style={{fontSize: "1em", display: "inline-block"}}>modificato il {moment(this.props.serviceData.updatedOn).format( "DD/MM/YYYY" )}</Label>
               </Col>
             </div>
           </CardFooter>

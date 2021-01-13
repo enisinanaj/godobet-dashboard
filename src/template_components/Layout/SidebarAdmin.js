@@ -65,7 +65,6 @@ const SidebarSubItem = ({ item, isActive, handler, children, isOpen }) => (
 const SidebarSubHeader = ({ item }) => (
   <li className="sidebar-subnav-header">{item.name}</li>
 );
-
 class Sidebar extends Component {
   state = {
     collapse: {},
@@ -150,6 +149,10 @@ class Sidebar extends Component {
               {/* Iterates over all sidebar items */}
               {MenuAdmin.map((item, i) => {
                 // heading
+                if(this.props.app.user.roleValue < item.role) {
+                  return;
+                }
+
                 if (this.itemType(item) === "heading")
                   return <SidebarItemHeader item={item} key={i} />;
                 else {
@@ -198,7 +201,7 @@ Sidebar.propTypes = {
   settings: PropTypes.object,
 };
 
-const mapStateToProps = (state) => ({ settings: state.settings });
+const mapStateToProps = (state) => ({ settings: state.settings, app: state.app });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });

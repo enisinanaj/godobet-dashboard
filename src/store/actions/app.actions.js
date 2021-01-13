@@ -2,6 +2,7 @@ export const USER_LOGIN = "USER_LOGIN";
 export const SERVICE_DETAILS = "SERVICE_DETAILS";
 export const POOL_DETAILS = "POOL_DETAILS";
 export const TIPSTER_DETAILS = "TIPSTER_DETAILS";
+export const UPDATE_PLAYED_EVENTS = "UPDATE_PLAYED_EVENTS"
 
 /**
  * Login user
@@ -20,4 +21,8 @@ export function poolDetails(pool) {
 
 export function tipsterDetails(tipster) {
   return { type: TIPSTER_DETAILS, tipster };
+}
+
+export function updatePlayedEvents(events) {
+  return {type: UPDATE_PLAYED_EVENTS, events};
 }

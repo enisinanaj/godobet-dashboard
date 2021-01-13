@@ -33,8 +33,6 @@ class NewService extends Component {
   };
 
   componentDidMount() {
-    //this.uploadTaxonomy("Test");
-    //this.test();
   }
 
   async uploadTaxonomy(taxonomy) {
@@ -46,10 +44,7 @@ class NewService extends Component {
         headers: { "Content-Type": "application/json", "X-Auth": token },
         body: JSON.stringify({ definition: taxonomy }),
       })
-        .then((response) => response.json())
-        .then((response) => {
-          return response;
-        });
+      .then((response) => response.json());
     } catch {}
   }
 
@@ -162,7 +157,7 @@ class NewService extends Component {
           body: JSON.stringify(newService),
         })
           .then((response) => response.json())
-          .then((response) => {
+          .then((_) => {
             this.toggleModal();
             this.props.refreshServiceList();
           });
@@ -217,10 +212,7 @@ class NewService extends Component {
       headers: { "Content-Type": "application/json", "X-Auth": token },
       body: JSON.stringify(editTaxonomies),
     })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-      });
+    .then((response) => response.json());
 
     const editService = {
       author: userUrl,
@@ -237,12 +229,11 @@ class NewService extends Component {
       headers: { "Content-Type": "application/json", "X-Auth": token },
       body: JSON.stringify(editService),
     })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        this.toggleModal();
-        this.props.refreshServiceList();
-      });
+    .then((response) => response.json())
+    .then((_) => {
+      this.toggleModal();
+      this.props.refreshServiceList();
+    });
   }
 
   hasError = (formName, inputName, method) => {
@@ -284,7 +275,7 @@ class NewService extends Component {
         style={{ maxWidth: "70%" }}
       >
         <ModalHeader toggle={() => this.toggleModal()}>
-          <h4>{this.state.mode === "new" ? "Nuovo" : "Modifica"} pacchetto</h4>
+          <span>{this.state.mode === "new" ? "Nuovo" : "Modifica"} pacchetto</span>
         </ModalHeader>
         <ModalBody>
           <Row>

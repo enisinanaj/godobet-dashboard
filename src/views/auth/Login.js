@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { withNamespaces } from "react-i18next";
-import { Input, CustomInput, Spinner } from "reactstrap";
+import { Input, CustomInput, Spinner, Row } from "reactstrap";
 import { auth } from "../../components/auth/firebase";
 
 import { connect } from "react-redux";
@@ -12,6 +12,7 @@ import FormValidator from "../../template_components/Forms/FormValidator.js";
 import Footer from "../../components/footer";
 import config from "../../store/config";
 import TokenManager from "../../components/auth/Token";
+import ShadowCard from "../../components/layout/ShadowCard";
 
 class Login extends Component {
   state = {
@@ -114,15 +115,15 @@ class Login extends Component {
             "X-Auth": jwt,
           },
         })
-          .then((e) => e.json())
-          .then((role) => {
-            const roleData = { role };
-            this.props.actions.userLogin({
-              ...user,
-              ...localUser,
-              ...roleData,
-            });
+        .then((e) => e.json())
+        .then((role) => {
+          const roleData = { role };
+          this.props.actions.userLogin({
+            ...user,
+            ...localUser,
+            ...roleData,
           });
+        });
       });
   }
 
@@ -138,31 +139,15 @@ class Login extends Component {
   render() {
     return (
       <div className="block-center mt-4 wd-xl">
-        <div className="card card-flat">
-          <div
-            className="card-header text-center bg-accent"
-            style={{
-              borderRadius: 0,
-              backgroundImage:
-                "linear-gradient(-45deg, rgb(233, 233, 233), rgb(242, 242, 242))",
-            }}
-          >
+        <ShadowCard className="card bg-light">
+          <div className="card-header text-center bg-accent" style={{borderRadius: 0}}>
             <a href="">
-              <img
-                className="block-center rounded"
-                src="img/godobet_logo.png"
-                alt="Logo"
-                width={100}
-              />
+              <img className="block-center rounded" src="img/godobet_logo.png" alt="Logo" width={100} />
             </a>
           </div>
           <div className="card-body">
             <p className="text-center py-2">Accedi</p>
-            <form
-              className="mb-3"
-              name="formUserLogin"
-              onSubmit={this.onSubmit}
-            >
+            <form className="mb-3" name="formUserLogin" onSubmit={this.onSubmit} >
               <div className="form-group">
                 <div className="input-group with-focus">
                   <Input
@@ -170,10 +155,7 @@ class Login extends Component {
                     name="email"
                     className="border-right-0"
                     placeholder="Email"
-                    invalid={
-                      this.hasError("formUserLogin", "email", "required") ||
-                      this.hasError("formUserLogin", "email", "email")
-                    }
+                    invalid={this.hasError("formUserLogin", "email", "required") || this.hasError("formUserLogin", "email", "email")}
                     onChange={this.validateOnChange}
                     data-validate='["required", "email"]'
                     value={this.state.formUserLogin.email}
@@ -244,16 +226,17 @@ class Login extends Component {
                   </span>
                 </div>
               </div>
-              <button
-                className="btn btn-block btn-primary mt-3"
-                type="submit"
-                disabled={this.state.loginLoading}
-              >
+              <button className="btn btn-block btn-primary mt-3" type="submit" disabled={this.state.loginLoading}>
                 {this.state.loginLoading ? <Spinner size="sm" /> : "Login"}
               </button>
+              <Row style={{flexDirection: 'row', justifyContent: 'center'}} className={"mt-2"}>
+                <Link to="register" className="text-muted">
+                  Registrati
+                </Link>
+              </Row>
             </form>
           </div>
-        </div>
+        </ShadowCard>
         <Footer />
       </div>
     );

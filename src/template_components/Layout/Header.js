@@ -92,44 +92,21 @@ class Header extends Component {
 
           {/* START Left navbar */}
           <ul className="navbar-nav mr-auto flex-row">
-            {/* <li className="nav-item">
-                            <a href="" className="nav-link d-none d-md-block d-lg-block d-xl-block" onClick={ this.toggleCollapsed }>
-                                <em className="fas fa-bars"></em>
-                            </a>
-                            <a href=""  className="nav-link sidebar-toggle d-md-none" onClick={ this.toggleAside }>
-                                <em className="fas fa-bars"></em>
-                            </a>
-                        </li> */}
-            {/* START User avatar toggle */}
-            {/* <li className="nav-item d-none d-md-block">
-                            <a  className="nav-link" onClick={ this.toggleUserblock }>
-                                <em className="icon-user"></em>
-                            </a>
-                        </li> */}
-            {/* END User avatar toggle */}
+            <li className="nav-item">
+                <a href=""  className="nav-link sidebar-toggle d-md-none" onClick={ this.toggleAside }>
+                    <em className="fas fa-bars" style={{ color: "#000" }}></em>
+                </a>
+            </li>
           </ul>
           {/* END Left navbar */}
+          
           {/* START Right Navbar */}
           <ul className="navbar-nav flex-row">
-            {/* Eventual top level right menu */}
-            {/* Logout icon */}
             <li className="nav-item">
-              <a
-                className="nav-link"
+              <a className="nav-link"
                 style={{ color: "#000" }}
                 href="#"
-                onClick={() => this.addCredits()}
-              >
-                <em className="mr-1 far fa-gem"></em> 75 GEMS
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className="nav-link"
-                style={{ color: "#000" }}
-                href="#"
-                onClick={() => this.logout()}
-              >
+                onClick={() => this.logout()}>
                 <em className="icon-logout"></em>
               </a>
             </li>

@@ -1,31 +1,15 @@
 stages:
-  - build
-  - production
+  - push_image
 
-build:
-  stage: build
-  image: node:10.16.0
-  only:
-    refs:
-      - master
-  script: 
-    - echo "Start building App"
-    - npm install
-    - npm build
-    - echo "Build successfully!"
-  artifacts:
-    expire_in: 1 hour
-    paths:
-      - build
-      - node_modules/
+services:
+- docker:dind
 
-production:
-  type: deploy
-  stage: production
-  image: ruby:latest
-  only:
-    refs:
-      - master
+push_image:
+  stage: push_image
+  image: docker:stable
+  services:
+  - docker:dind
   script:
-      - gem install dpl
-      - dpl --provider=heroku --app=godobet-dashboard --api-key=$HEROKU_API_KEY
+    - docker login dhregistry.azurecr.io -u $USERNAME -p $PASSWORD
+    - docker build . -t dhregistry.azurecr.io/godobet-dashboard:latest
+    - docker push dhregistry.azurecr.io/godobet-dashboard:latest

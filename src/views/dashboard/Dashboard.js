@@ -1,489 +1,240 @@
 import React, { Component } from 'react';
-import { withNamespaces, Trans } from 'react-i18next';
-import { Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import EasyPieChart from 'easy-pie-chart';
-
-import CardTool from './Common/CardTool'
-import Sparkline from './Common/Sparklines';
-import Scrollable from './Common/Scrollable'
-import FlotChart from './Charts/Flot';
-import Now from './Common/Now';
+import { withNamespaces } from 'react-i18next';
+import { Row, Col } from 'reactstrap';
 import ContentWrapper from '../../components/layout/ContentWrapper';
+import config from '../../store/config'
+import TokenManager from '../../components/auth/Token'
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import * as actions from "../../store/actions/actions";
+import moment from 'moment';
+import PoolData from './PoolData';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import Datetime from 'react-datetime';
+import 'react-datetime/css/react-datetime.css';
+import FlotChart from '../../template_components/Charts/Flot';
+import ShadowCard from '../../components/layout/ShadowCard';
+import Label from '../../components/layout/Label';
 
 class DashboardV1 extends Component {
 
     state = {
+        pools: [],
+        playedEvents: [],
+        startDate: moment().add(-1, "month"),
+        endDate: moment().add(-1, "day"),
         flotData: [{
-            "label": "Uniques",
-            "color": "#768294",
-            "data": [
-                ["Mar", 70],["Apr", 85],["May", 59],["Jun", 93],["Jul", 66],["Aug", 86],["Sep", 60]
-            ]
-        }, {
-            "label": "Recurrent",
-            "color": "#1f92fe",
-            "data": [
-                ["Mar", 21],["Apr", 12],["May", 27],["Jun", 24],["Jul", 16],["Aug", 39],["Sep", 15]
-            ]
+            "label": "Profitto nel tempo",
+            "color": "#828282", //"#1e983b",
+            "data": []
         }],
-
         flotOptions: {
+            legend: {
+                show: false
+            },
             series: {
                 lines: {
-                    show: false
+                    show: true
                 },
                 points: {
                     show: true,
-                    radius: 4
+                    radius: 4,
+                    symbol: "circle", 
+                    symbolTriangle: (ctx, x, y) => {
+                    ctx.beginPath();
+                        ctx.moveTo(x-1.5, y-1.5);
+                        ctx.lineTo(x+1.5, y-1.5);
+                        ctx.lineTo(x, y+1.5);
+                        ctx.closePath();
+                        
+                        // the outline
+                        ctx.lineWidth = 3;
+                        ctx.strokeStyle = '#ff0000';
+                        ctx.stroke();
+                        
+                        // the fill color
+                        ctx.fillStyle = "#FF0000";
+                        ctx.fill();
+                    }
                 },
-                splines: {
+                spline: {
                     show: true,
                     tension: 0.4,
-                    lineWidth: 1,
-                    fill: 0.5
+                    lineWidth: 1
                 }
             },
             grid: {
                 borderColor: '#eee',
                 borderWidth: 1,
                 hoverable: true,
-                backgroundColor: '#fcfcfc'
+                backgroundColor: '#fcfcfc',
+                markings: [{ xaxis: { from: 0 }, yaxis: { from: 0 }, color: "#00ff0005" }, { xaxis: { from: 0 }, yaxis: { from: 0, to: -1000000 }, color: "#ff000005" }]
             },
             tooltip: true,
             tooltipOpts: {
-                content: (label, x, y) => x + ' : ' + y
+                content: (_, x, y) => y.toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"
             },
             xaxis: {
-                tickColor: '#fcfcfc',
-                mode: 'categories'
+                mode: 'categories',
+                min: 0
             },
             yaxis: {
-                min: 0,
-                max: 150, // optional: use it for a clear represetation
-                tickColor: '#eee',
-                //position: 'right' or 'left',
-                tickFormatter: v => v /* + ' visitors'*/
+                tickFormatter: v => v.toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"
             },
             shadowSize: 0
         },
-
-        dropdownOpen: false
-
     }
 
     componentDidMount() {
-        // Easy pie
-        let pieOptions1 = {
-            animate: {
-                duration: 800,
-                enabled: true
-            },
-            barColor: '#23b7e5',
-            trackColor: 'rgba(200,200,200,0.4)',
-            scaleColor: false,
-            lineWidth: 10,
-            lineCap: 'round',
-            size: 145
+        this.loadData()
+    }
+
+    componentWillUnmount() {
+        this.setState = (state,callback)=>{
+            return;
         };
-        new EasyPieChart(this.refs.easypie, pieOptions1);
+    }
+
+    notify = function(message) {
+        toast(message, {
+            type: "info",
+            position: "top-right"
+        })
+    }
+    
+    loadData() {
+        let {startDate, endDate} = this.state;
+        startDate = startDate.format("YYYY-MM-DDTHH:mm:ss.SSS");
+        endDate = endDate.format("YYYY-MM-DDTHH:mm:ss.SSS");
+
+        if (this.props.user.roleName === 'Subscriber') {
+            this.loadSubscriperDashboard(startDate, endDate);
+        } else {
+            this.loadTipsterDashboard(startDate, endDate);
+        }
+    }
+
+    loadSubscriperDashboard(startDate, endDate) {
+        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/subscriberStats?start=${startDate}&end=${endDate}&subscriber=${this.props.user._links.self.href}`)
+        .then(pools => {
+            TokenManager.getInstance().getToken()
+            .then(token => {
+                return fetch(this.props.user._links.playedEvents.href.replace("{?projection}", ""), {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH": token
+                    }
+                })
+            })
+            .then(body => body.json())
+            .then(events => {
+                var chartData = [];
+                pools.forEach(pool => {
+                    chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
+                });
+                
+                if (events._embedded.events.length === 0) {
+                    this.notify("Non hai giocato nessun evento!");
+                }
+
+                this.setState({playedEvents: events._embedded.events, pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}});
+            })
+        })
+    }
+
+    loadTipsterDashboard(startDate, endDate) {
+        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/stats?start=${startDate}&end=${endDate}&author=${this.props.user._links.self.href}`)
+        .then(pools => {
+            var chartData = [];
+            pools.forEach(pool => {
+                chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
+            });
+
+            this.setState({pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}})
+        });
+    }
+
+    async loadDashboardWithUrl(url) {
+        let token = await TokenManager.getInstance().getToken()
+        let body = await fetch(url, {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "X-Auth": token },
+        });
+
+        let response = await body.json();
+        return response._embedded.pools;
+    }
+
+    calculateProfit() {
+        return this.state.pools.reduce((accumulator, pool) => {
+            return accumulator + pool.profit
+        }, 0)
     }
 
     render() {
+        let totalPorfit = this.calculateProfit();
+
         return (
             <ContentWrapper>
-                <div className="content-heading">
-                    <div>Dashboard
-                        <small>Panoramica dei tuoi pacchetti</small>
-                    </div>
-                </div>
-                { /* START cards box */ }
-                <Row>
-                    <Col xl={ 3 } md={ 6 }>
-                        { /* START card */ }
-                        <div className="card flex-row align-items-center align-items-stretch border-0">
-                            <div className="col-4 d-flex align-items-center bg-primary-dark justify-content-center rounded-left">
-                                <em className="icon-layers fa-3x"></em>
-                            </div>
-                            <div className="col-8 py-3 bg-primary rounded-right">
-                                <div className="h2 mt-0">1700</div>
-                                <div className="text-uppercase">Pacchetti</div>
-                            </div>
-                        </div>
+                <Row className="content-heading" style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Col xl={2} lg={3} md={3} sm={12} >Dashboard
+                        <Label>Panoramica dei tuoi tip</Label>
                     </Col>
-                    <Col xl={ 3 } md={ 6 }>
-                        { /* START card */ }
-                        <div className="card flex-row align-items-center align-items-stretch border-0">
-                            <div className="col-4 d-flex align-items-center bg-purple-dark justify-content-center rounded-left">
-                                <em className="icon-people fa-3x"></em>
-                            </div>
-                            <div className="col-8 py-3 bg-purple rounded-right">
-                                <div className="h2 mt-0">700</div>
-                                <div className="text-uppercase">Abbonati</div>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col xl={ 3 } lg={ 6 } md={ 12 }>
-                        { /* START card */ }
-                        <div className="card flex-row align-items-center align-items-stretch border-0">
-                            <div className="col-4 d-flex align-items-center bg-green-dark justify-content-center rounded-left">
-                                <em className="icon-trophy fa-3x"></em>
-                            </div>
-                            <div className="col-8 py-3 bg-green rounded-right">
-                                <div className="h2 mt-0">500€</div>
-                                <div className="text-uppercase">Guadagno nel mese</div>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col xl={ 3 } lg={ 6 } md={ 12 }>
-                        { /* START date card */ }
-                        <div className="card flex-row align-items-center align-items-stretch border-0">
-                            <div className="col-4 d-flex align-items-center bg-green justify-content-center rounded-left">
-                                <div className="text-center">
-                                    <Now format="MMMM" className="text-sm" />
-                                    <br />
-                                    <Now format="D" className="h2 mt0" />
+                    <Col xl={8} lg={7} md={9} sm={12} style={{justifyContent: 'flex-end', flex: 'row'}}>
+                        <Row style={{justifyContent: 'flex-end', marginRight: 10}}>
+                            <Col xl={ 3 } md={ 4 }>
+                                <div className="card flex-row align-items-center align-items-stretch border-0" style={{margin: 0, fontSize: "1rem"}}>
+                                    <div className={"col-2 d-flex align-items-center " + (totalPorfit >= 0 ? "bg-success-dark" : "bg-danger-dark") + " justify-content-center rounded-left"}>
+                                        {totalPorfit === 0
+                                        ? <em className="icon-graph"></em>
+                                        : totalPorfit > 0
+                                        ? <em className="icon-arrow-up"></em>
+                                        : <em className="icon-arrow-down"></em> }
+                                    </div>
+                                    <div className={"col-10 " + (totalPorfit >= 0 ? "bg-success" : "bg-danger") +  " rounded-right"} style={{paddingTop: "0.4rem", paddingBottom: "0.3rem"}}>
+                                        <div className="h3 mt-0" style={{margin: 0, paddingTop: 5, paddingBottom: 5, textAlign: 'right', fontSize: '1.3rem'}}>
+                                            {totalPorfit.toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}
+                                        </div>
+                                    </div>
                                 </div>
+                            </Col>
+                            <Col xl={6} md={8} style={{padding: "0 5px"}}>
+                                <div className="card flex-row align-items-center align-items-stretch border-0" style={{margin: 0, fontSize: '0.839rem'}}>
+                                    <div className={"col-6 d-flex align-items-center bg-gray justify-content-center rounded-left"}>
+                                        <Datetime closeOnSelect={true}  inputProps={{className: 'form-control'}} onChange={startDate => this.setState({startDate}, this.loadData)} value={this.state.startDate} />
+                                    </div>
+                                    <div className={"col-6 bg-gray-lighter rounded-right"} style={{paddingTop: "5px", paddingBottom: "5px"}}>
+                                        <Datetime closeOnSelect={true} inputProps={{className: 'form-control'}} onChange={endDate => this.setState({endDate}, this.loadData)} value={this.state.endDate} />
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+                { /* START cards box */ }
+                <Row className={"mb-3"}>
+                    <Col xl={ 12 }>
+                        { /* START card */ }
+                        <ShadowCard className="card bg-light mb-3">
+                            <div className="card-header">
+                                <Label>Profitti nel tempo</Label>
                             </div>
-                            <div className="col-8 py-3 rounded-right">
-                                <Now format="dddd" className="text-uppercase" />
-                                <br />
-                                <Now format="h:mm" className="h2 mt0 mr-sm" />
-                                <Now format="a" className="text-muted text-sm" />
+                            <div className="card-body">
+                                <FlotChart data={this.state.flotData} options={this.state.flotOptions} height="250px" />
                             </div>
-                        </div>
-                        { /* END date card */ }
+                        </ShadowCard>
+                        { /* END widget */ }
                     </Col>
                 </Row>
                 { /* END cards box */ }
-                <Row>
-                    { /* START dashboard main content */ }
-                    <Col xl={ 9 }>
-                        { /* START chart */ }
-                        <Row>
-                            <Col xl={ 12 }>
-                                { /* START card */ }
-                                <div className="card card-default">
-                                    <div className="card-header">
-                                        <CardTool refresh onRefresh={(_,done) => setTimeout(done,2000)}/>
-                                        <div className="card-title">Abbonamenti e pagamenti</div>
-                                    </div>
-                                    <div className="card-body">
-                                        <FlotChart data={this.state.flotData} options={this.state.flotOptions} height="250px" />
-                                    </div>
-                                </div>
-                                { /* END widget */ }
-                            </Col>
-                        </Row>
-                        { /* END chart */ }
-                        <Row>
-                            <Col xl={ 4 }>
-                                { /* START card */ }
-                                <div className="card border-0">
-                                    <div className="card-body">
-                                        <div className="d-flex">
-                                            <h3 className="text-muted mt-0">300</h3>
-                                            <em className="ml-auto text-muted fa fa-coffee fa-2x"></em>
-                                        </div>
-                                        <Sparkline options={{
-                                                type:'line',
-                                                height:80,
-                                                width:'100%',
-                                                lineWidth:2,
-                                                lineColor:'#7266ba',
-                                                spotColor:'#888',
-                                                fillColor: 'transparent',
-                                                minSpotColor:'#7266ba',
-                                                maxSpotColor:'#7266ba',
-                                                highlightLineColor:'#fff',
-                                                spotRadius:3,
-                                                resize:true
-                                            }}
-                                            values={[1,3,4,7,5,9,4,4,7,5,9,6,4]}
-                                            className="pv-lg"/>
-                                        <p>
-                                            <small className="text-muted">Actual progress</small>
-                                        </p>
-                                        <div className="progress progress-xs">
-                                            <div role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style={{width: "80%"}} className="progress-bar progress-bar-info progress-bar-striped">
-                                                <span className="sr-only">80% Complete</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                { /* END widget */ }
-                            </Col>
-                            <Col xl={ 8 }>
-                                <div className="card card-default">
-                                    <div className="card-header">
-                                        <div className="px-2 float-right badge badge-danger">5</div>
-                                        <div className="px-2 mr-2 float-right badge badge-success">12</div>
-                                        <div className="card-title">Team messages</div>
-                                    </div>
-                                    {/* START list group */}
-                                    <Scrollable className="list-group" height="180">
-                                        {/* START list group item */}
-                                        <div className="list-group-item list-group-item-action">
-                                            <div className="media">
-                                                <img className="align-self-start mx-2 circle thumb32" src="img/user/02.jpg" alt="Avatar" />
-                                                <div className="media-body text-truncate">
-                                                    <p className="mb-1">
-                                                        <strong className="text-primary">
-                                                     <span className="circle bg-success circle-lg text-left"></span>
-                                                     <span>Catherine Ellis</span>
-                                                  </strong>
-                                                    </p>
-                                                    <p className="mb-1 text-sm">Cras sit amet nibh libero, in gravida nulla. Nulla...</p>
-                                                </div>
-                                                <div className="ml-auto">
-                                                    <small className="text-muted ml-2">2h</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* END list group item */}
-                                        {/* START list group item */}
-                                        <div className="list-group-item list-group-item-action">
-                                            <div className="media">
-                                                <img className="align-self-start mx-2 circle thumb32" src="img/user/03.jpg" alt="Avatar" />
-                                                <div className="media-body text-truncate">
-                                                    <p className="mb-1">
-                                                        <strong className="text-primary">
-                                                     <span className="circle bg-success circle-lg text-left"></span>
-                                                     <span>Jessica Silva</span>
-                                                  </strong>
-                                                    </p>
-                                                    <p className="mb-1 text-sm">Cras sit amet nibh libero, in gravida nulla. Nulla...</p>
-                                                </div>
-                                                <div className="ml-auto">
-                                                    <small className="text-muted ml-2">3h</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* END list group item */}
-                                        {/* START list group item */}
-                                        <div className="list-group-item list-group-item-action">
-                                            <div className="media">
-                                                <img className="align-self-start mx-2 circle thumb32" src="img/user/09.jpg" alt="Avatar" />
-                                                <div className="media-body text-truncate">
-                                                    <p className="mb-1">
-                                                        <strong className="text-primary">
-                                                     <span className="circle bg-danger circle-lg text-left"></span>
-                                                     <span>Jessie Wells</span>
-                                                  </strong>
-                                                    </p>
-                                                    <p className="mb-1 text-sm">Cras sit amet nibh libero, in gravida nulla. Nulla...</p>
-                                                </div>
-                                                <div className="ml-auto">
-                                                    <small className="text-muted ml-2">4h</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* END list group item */}
-                                        {/* START list group item */}
-                                        <div className="list-group-item list-group-item-action">
-                                            <div className="media">
-                                                <img className="align-self-start mx-2 circle thumb32" src="img/user/12.jpg" alt="Avatar" />
-                                                <div className="media-body text-truncate">
-                                                    <p className="mb-1">
-                                                        <strong className="text-primary">
-                                                     <span className="circle bg-danger circle-lg text-left"></span>
-                                                     <span>Rosa Burke</span>
-                                                  </strong>
-                                                    </p>
-                                                    <p className="mb-1 text-sm">Cras sit amet nibh libero, in gravida nulla. Nulla...</p>
-                                                </div>
-                                                <div className="ml-auto">
-                                                    <small className="text-muted ml-2">1d</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* END list group item */}
-                                        {/* START list group item */}
-                                        <div className="list-group-item list-group-item-action">
-                                            <div className="media">
-                                                <img className="align-self-start mx-2 circle thumb32" src="img/user/10.jpg" alt="Avatar" />
-                                                <div className="media-body text-truncate">
-                                                    <p className="mb-1">
-                                                        <strong className="text-primary">
-                                                     <span className="circle bg-danger circle-lg text-left"></span>
-                                                     <span>Michelle Lane</span>
-                                                  </strong>
-                                                    </p>
-                                                    <p className="mb-1 text-sm">Mauris eleifend, libero nec cursus lacinia...</p>
-                                                </div>
-                                                <div className="ml-auto">
-                                                    <small className="text-muted ml-2">2d</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* END list group item */}
-                                    </Scrollable>
-                                    {/* END list group */}
-                                    {/* START card footer */}
-                                    <div className="card-footer clearfix">
-                                        <div className="input-group">
-                                            <input className="form-control form-control-sm" type="text" placeholder="Search message .." />
-                                            <span className="input-group-btn">
-                                                <button className="btn btn-secondary btn-sm" type="submit">
-                                                    <i className="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {/* END card-footer */}
-                                </div>
-                            </Col>
-                        </Row>
+                <Row style={{justifyContent: 'center'}}>
+                    <Col lg={12} md={12} >
+                        <PoolData pools={this.state.pools} playedEvents={this.state.playedEvents} endDate={this.state.endDate} ></PoolData>
                     </Col>
-                    { /* END dashboard main content */ }
-                    { /* START dashboard sidebar */ }
-                    <Col xl={ 3 }>
-                        { /* START loader widget */ }
-                        <div className="card card-default">
-                            <div className="card-body">
-                                <a className="text-muted float-right" href="">
-                                    <em className="fa fa-arrow-right"></em>
-                                </a>
-                                <div className="text-info">Vincite</div>
-                                <div className="text-center py-4">
-                                    <div ref="easypie" data-percent="70" className="easypie-chart easypie-chart-lg">
-                                        <span>70%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        { /* END loader widget */ }
-                        { /* START messages and activity */ }
-                        <div className="card card-default">
-                            <div className="card-header">
-                                <div className="card-title">Latest activities</div>
-                            </div>
-                            {/* START list group */}
-                            <div className="list-group">
-                                {/* START list group item */}
-                                <div className="list-group-item">
-                                   <div className="media">
-                                      <div className="align-self-start mr-2">
-                                         <span className="fa-stack">
-                                            <em className="fa fa-circle fa-stack-2x text-purple"></em>
-                                            <em className="fas fa-cloud-upload-alt fa-stack-1x fa-inverse text-white"></em>
-                                         </span>
-                                      </div>
-                                      <div className="media-body text-truncate">
-                                         <p className="mb-1"><a className="text-purple m-0" href="">NEW FILE</a>
-                                         </p>
-                                         <p className="m-0">
-                                            <small><a href="">Bootstrap.xls</a>
-                                            </small>
-                                         </p>
-                                      </div>
-                                      <div className="ml-auto">
-                                         <small className="text-muted ml-2">15m</small>
-                                      </div>
-                                   </div>
-                                </div>
-                                {/* END list group item */}
-                                {/* START list group item */}
-                                <div className="list-group-item">
-                                   <div className="media">
-                                      <div className="align-self-start mr-2">
-                                         <span className="fa-stack">
-                                            <em className="fa fa-circle fa-stack-2x text-info"></em>
-                                            <em className="far fa-file-alt fa-stack-1x fa-inverse text-white"></em>
-                                         </span>
-                                      </div>
-                                      <div className="media-body text-truncate">
-                                         <p className="mb-1"><a className="text-info m-0" href="">NEW DOCUMENT</a>
-                                         </p>
-                                         <p className="m-0">
-                                            <small><a href="">Bootstrap.doc</a>
-                                            </small>
-                                         </p>
-                                      </div>
-                                      <div className="ml-auto">
-                                         <small className="text-muted ml-2">2h</small>
-                                      </div>
-                                   </div>
-                                </div>
-                                {/* END list group item */}
-                                {/* START list group item */}
-                                <div className="list-group-item">
-                                   <div className="media">
-                                      <div className="align-self-start mr-2">
-                                         <span className="fa-stack">
-                                            <em className="fa fa-circle fa-stack-2x text-danger"></em>
-                                            <em className="fa fa-exclamation fa-stack-1x fa-inverse text-white"></em>
-                                         </span>
-                                      </div>
-                                      <div className="media-body text-truncate">
-                                         <p className="mb-1"><a className="text-danger m-0" href="">BROADCAST</a>
-                                         </p>
-                                         <p className="m-0"><a href="">Read</a>
-                                         </p>
-                                      </div>
-                                      <div className="ml-auto">
-                                         <small className="text-muted ml-2">5h</small>
-                                      </div>
-                                   </div>
-                                </div>
-                                {/* END list group item */}
-                                {/* START list group item */}
-                                <div className="list-group-item">
-                                   <div className="media">
-                                      <div className="align-self-start mr-2">
-                                         <span className="fa-stack">
-                                            <em className="fa fa-circle fa-stack-2x text-success"></em>
-                                            <em className="far fa-clock fa-stack-1x fa-inverse text-white"></em>
-                                         </span>
-                                      </div>
-                                      <div className="media-body text-truncate">
-                                         <p className="mb-1"><a className="text-success m-0" href="">NEW MEETING</a>
-                                         </p>
-                                         <p className="m-0">
-                                            <small>On
-                                               <em>10/12/2015 09:00 am</em>
-                                            </small>
-                                         </p>
-                                      </div>
-                                      <div className="ml-auto">
-                                         <small className="text-muted ml-2">15h</small>
-                                      </div>
-                                   </div>
-                                </div>
-                                {/* END list group item */}
-                                {/* START list group item */}
-                                <div className="list-group-item">
-                                   <div className="media">
-                                      <div className="align-self-start mr-2">
-                                         <span className="fa-stack">
-                                            <em className="fa fa-circle fa-stack-2x text-warning"></em>
-                                            <em className="fa fa-tasks fa-stack-1x fa-inverse text-white"></em>
-                                         </span>
-                                      </div>
-                                      <div className="media-body text-truncate">
-                                         <p className="mb-1"><a className="text-warning m-0" href="">TASKS COMPLETION</a>
-                                         </p>
-                                         <div className="progress progress-xs m-0">
-                                            <div className="progress-bar bg-warning progress-bar-striped" role="progressbar" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100" style={{width: '22%'}}>
-                                               <span className="sr-only">22% Complete</span>
-                                            </div>
-                                         </div>
-                                      </div>
-                                      <div className="ml-auto">
-                                         <small className="text-muted ml-2">1w</small>
-                                      </div>
-                                   </div>
-                                </div>
-                                {/* END list group item */}
-                             </div>
-                             {/* END list group */}
-                            {/* START card footer */}
-                            <div className="card-footer"><a className="text-sm" href="">Load more</a></div>
-                            {/* END card-footer */}
-                        </div>
-                        { /* END messages and activity */ }
-                    </Col>
-                    { /* END dashboard sidebar */ }
                 </Row>
+                <ToastContainer />
             </ContentWrapper>
             );
 
@@ -491,4 +242,8 @@ class DashboardV1 extends Component {
 
 }
 
-export default withNamespaces('translations')(DashboardV1);
+const mapStateToProps = (state) => ({user: state.app.user});
+const mapDispatchToProps = (dispatch) => ({
+    actions: bindActionCreators(actions, dispatch),
+  });
+export default withNamespaces('translations')(connect(mapStateToProps, mapDispatchToProps)(DashboardV1));
