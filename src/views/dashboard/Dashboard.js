@@ -246,4 +246,6 @@ const mapStateToProps = (state) => ({user: state.app.user});
 const mapDispatchToProps = (dispatch) => ({
     actions: bindActionCreators(actions, dispatch),
   });
-export default withNamespaces('translations')(connect(mapStateToProps, mapDispatchToProps)(DashboardV1));
+export default withNamespaces('translations')(
+    connect(mapStateToProps, mapDispatchToProps)(DashboardV1)
+);
