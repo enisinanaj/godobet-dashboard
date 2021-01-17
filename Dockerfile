@@ -14,8 +14,8 @@ RUN npm run build
 
 WORKDIR /app/build
 
-RUN npm i -g http-server
+RUN npm i -g serve
 
 EXPOSE 80
 
-CMD http-server -p 80
+CMD serve -s . -l 80
