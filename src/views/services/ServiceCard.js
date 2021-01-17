@@ -35,15 +35,20 @@ class ServiceCard extends Component {
               closeModal: true
           }
       }
-    }
+    },
+    author: null
   }
 
   openDetail() {
     let token = "";
+    if (this.state.author) {
+      this.goToDetail(this.state.author)
+      return;
+    }
+
     TokenManager.getInstance().getToken()
     .then(t => {
       token = t;
-
       return fetch(this.props.serviceData._links.author.href, {
         headers: {
           "Content-Type": "application/json",
@@ -53,25 +58,36 @@ class ServiceCard extends Component {
     })
     .then(body => body.json())
     .then(author => {
-      if (author._links.self.href === this.props.app.user._links.self.href || this.props.app.user.roleName === "God") {
-        this.props.actions.serviceDetails({
-          serviceName: this.props.serviceData.serviceName,
-          description: this.props.serviceData.description,
-          maxSubscribers: this.props.serviceData.maxSubscribers,
-          duration: this.props.serviceData.duration,
-          price: this.props.serviceData.price,
-          version: this.props.serviceData.version,
-          links: this.props.serviceData._links,
-        });
-        
-        this.props.history.push("/serviceDetails");
-      } else if (this.props.app.user.roleName === 'Subscriber') {
-        //TODO: open payment form for subscription
-        fetch(config.API_URL + "/subscriptions", {
+      this.setState({author})
+      this.goToDetail(author)
+    });
+  }
+
+  goToDetail(author) {
+    if (author._links.self.href === this.props.app.user._links.self.href || this.props.app.user.roleName === "God") {
+      this.props.actions.serviceDetails({
+        serviceName: this.props.serviceData.serviceName,
+        description: this.props.serviceData.description,
+        maxSubscribers: this.props.serviceData.maxSubscribers,
+        duration: this.props.serviceData.duration,
+        price: this.props.serviceData.price,
+        version: this.props.serviceData.version,
+        links: this.props.serviceData._links,
+      });
+      
+      this.props.history.push("/serviceDetails");
+    }
+  }
+
+  subscriptionConfirmation(isConfirm, swal) {
+    if (isConfirm) {
+      TokenManager.getInstance().getToken()
+      .then(t => {
+        return fetch(config.API_URL + "/subscriptions", {
           method: 'POST',
           headers: {
             "Content-Type": 'application/json',
-            "X-AUTH": token
+            "X-AUTH": t
           },
           body: JSON.stringify({
             "subscriber": this.props.app.user._links.self.href,
@@ -79,15 +95,9 @@ class ServiceCard extends Component {
             "paymentSystemToken": "godobet",
             "subscribedOn": moment()
           })
-        })
-
-      }
-    });
-  }
-
-  subscriptionConfirmation(isConfirm, swal) {
-    if (isConfirm) {
-      swal("Confermato!", "Ti sei abbonato al servizio con successo!", "success");
+        });
+      })
+      .then(e => swal("Confermato!", "Ti sei abbonato al servizio con successo!", "success"));
     } else {
       return;
     }
@@ -104,7 +114,7 @@ class ServiceCard extends Component {
               <strong style={{fontSize: "1.7em"}}>{this.props.serviceData.serviceName}</strong>
               {this.props.app.user.roleName !== 'Subscriber' && <em className="fa fa-arrow-right" style={{float: "right", lineHeight: "38px"}}></em>}
               {this.props.app.user.roleName === 'Subscriber' 
-                && <Swal callback={this.subscriptionConfirmation} options={this.state.swalOption3} className={"btn btn-primary float-right"}>Abbonati ora!</Swal>}
+                && <Swal callback={(isConfirm, swal) => this.subscriptionConfirmation(isConfirm, swal)} options={this.state.swalOption3} className={"btn btn-primary float-right"}>Abbonati ora!</Swal>}
             </a>
           </CardHeader>
           <CardBody>
