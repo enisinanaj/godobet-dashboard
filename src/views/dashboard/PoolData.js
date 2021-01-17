@@ -90,12 +90,15 @@ class PoolData extends Component {
                         <tbody>
                             {this.props.pools.map((pool, i) => {
                                 var poolDone = false;
-                                return pool.events.map((event, j) => {
-
+                                var events = pool.events.filter(event => {
                                     if (moment(event.eventDate).diff(this.props.endDate) > 0 && !event.outcome) {
-                                        return null;
+                                        return false;
                                     }
+                                    return true;
+                                });
+                                var eventLength = events.length;
 
+                                return events.map((event, j) => {
                                     return (<tr key={pool._links.self.href + "/" + i + "/" + j}>
                                         <td>{moment(event.eventDate).format("DD MMM YYYY HH:mm")}</td>
                                         <td>{event.sport}</td>
@@ -111,15 +114,15 @@ class PoolData extends Component {
                                         <td>
                                             {(event.quote / 100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                                         </td>
-                                        {!poolDone && <td rowSpan={pool.events.length}>
+                                        {!poolDone && <td rowSpan={eventLength}>
                                             {(pool.stake / 100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}
                                         </td>}
                                         
-                                        {!poolDone && <td rowSpan={pool.events.length} className={this.getOutcomeColorClassName(pool.outcome)}>{pool.outcome}</td>}
-                                        {!poolDone && <td rowSpan={pool.events.length}>
+                                        {!poolDone && <td rowSpan={eventLength} className={this.getOutcomeColorClassName(pool.outcome)}>{pool.outcome}</td>}
+                                        {!poolDone && <td rowSpan={eventLength}>
                                             {(pool.profit).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + "%"}
                                         </td>}
-                                        {!poolDone && <td rowSpan={pool.events.length} >{pool.bookmaker}</td>}
+                                        {!poolDone && <td rowSpan={eventLength} >{pool.bookmaker}</td>}
 
                                         <td>
                                             {event.notes && <PopoverItem id={i + "_" + j} notes={event.notes}></PopoverItem>}
