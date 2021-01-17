@@ -39,32 +39,43 @@ class ServiceCard extends Component {
     author: null
   }
 
-  openDetail() {
-    let token = "";
+  checkAuthorAndOpenDetail() {
     if (this.state.author) {
-      this.goToDetail(this.state.author)
+      this.goToDetail()
       return;
     }
 
-    TokenManager.getInstance().getToken()
+    return;
+  }
+
+  loadAuthor() {
+    return TokenManager.getInstance().getToken()
     .then(t => {
-      token = t;
       return fetch(this.props.serviceData._links.author.href, {
         headers: {
           "Content-Type": "application/json",
-          "X-Auth": token
+          "X-Auth": t
         }
       });
     })
     .then(body => body.json())
     .then(author => {
       this.setState({author})
-      this.goToDetail(author)
     });
   }
 
-  goToDetail(author) {
-    if (author._links.self.href === this.props.app.user._links.self.href || this.props.app.user.roleName === "God") {
+  isAuthor() {
+    if (!this.state.author) {
+      this.loadAuthor();
+    } else if (this.state.author._links.self.href === this.props.app.user._links.self.href || this.props.app.user.roleName === "God") {
+        return true;
+    }
+
+    return false;
+  }
+
+  goToDetail() {
+    if (this.isAuthor()) {
       this.props.actions.serviceDetails({
         serviceName: this.props.serviceData.serviceName,
         description: this.props.serviceData.description,
@@ -110,11 +121,10 @@ class ServiceCard extends Component {
           <CardHeader style={{borderBottomColor: "#f0f0f0", borderBottomWidth: 1, borderBottomStyle: "solid"}}>
             <a className="text-muted" 
               style={{lineHeight: "35px", cursor: "pointer", flex: 1, flexDirection: "row", justifyContent: "space-between"}} 
-              onClick={() => this.openDetail()}>
+              onClick={() => this.checkAuthorAndOpenDetail()}>
               <strong style={{fontSize: "1.7em"}}>{this.props.serviceData.serviceName}</strong>
-              {this.props.app.user.roleName !== 'Subscriber' && <em className="fa fa-arrow-right" style={{float: "right", lineHeight: "38px"}}></em>}
-              {this.props.app.user.roleName === 'Subscriber' 
-                && <Swal callback={(isConfirm, swal) => this.subscriptionConfirmation(isConfirm, swal)} options={this.state.swalOption3} className={"btn btn-primary float-right"}>Abbonati ora!</Swal>}
+              {this.isAuthor() && <em className="fa fa-arrow-right" style={{float: "right", lineHeight: "38px"}}></em>}
+              {!this.isAuthor() && <Swal callback={(isConfirm, swal) => this.subscriptionConfirmation(isConfirm, swal)} options={this.state.swalOption3} className={"btn btn-primary float-right"}>Abbonati ora!</Swal>}
             </a>
           </CardHeader>
           <CardBody>

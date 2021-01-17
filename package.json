@@ -38,6 +38,8 @@
     "@fullcalendar/react": "4.3.0",
     "@fullcalendar/timegrid": "4.3.0",
     "@pathofdev/react-tag-input": "^1.0.7",
+    "@stripe/react-stripe-js": "^1.2.0",
+    "@stripe/stripe-js": "^1.11.0",
     "acorn-dynamic-import": "3.0.0",
     "animate.css": "3.7.0",
     "bootstrap": "4.5.0",

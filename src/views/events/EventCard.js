@@ -48,10 +48,6 @@ class EventCard extends Component {
   }
 
   render() {
-
-    console.warn("edittable: " + this.props.edittable);
-    console.warn("outcome: " + this.props.data.outcome);
-
     return (
       <Col lg="12" md="12" sm="12" className={"mb-5"}>
         <ShadowCard className="card bg-light mb-3" style={{height: "100%", borderRight: "1px solid #dedede"}} outcome={this.props.data.outcome}>
@@ -72,10 +68,10 @@ class EventCard extends Component {
                 </DropdownMenu>
               </ButtonDropdown>
             }
-            {!this.props.edittable && !this.state.eventPlayed && this.props.user.roleValue == 4 && 
-              <Button onClick={() => this.markAsPlayed()} style={{float: 'right'}}><em className="icon-check mr-1"></em>Evento giocato</Button>
+            {!this.props.edittable && !this.state.eventPlayed && this.props.user.roleValue >= 4 && 
+              <Button onClick={() => this.markAsPlayed()} style={{float: 'right'}}><em className="icon-check mr-1"></em>Gioca evento</Button>
             }
-            {!this.props.edittable && this.state.eventPlayed && this.props.user.roleValue == 4 && 
+            {!this.props.edittable && this.state.eventPlayed && this.props.user.roleValue >= 4 && 
               <span style={{float: 'right'}} className={"btn btn-disabled disabled btn-success"}><em className="icon-check mr-1"></em>Evento giocato</span>
             }
           </CardHeader>

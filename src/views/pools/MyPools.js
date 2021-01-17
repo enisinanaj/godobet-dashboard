@@ -8,6 +8,7 @@ class MyPools extends Component {
     let authorCode = pool._embedded ? pool._embedded.service.author.userCode : pool.author.userCode;
     let result = this.props.user._links.self.href.endsWith(authorCode);
     console.warn(result);
+    return result;
   }
 
   render() {

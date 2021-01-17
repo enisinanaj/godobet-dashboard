@@ -16,12 +16,6 @@ const MenuAdmin = [
     role: 5,
   },
   {
-    name: "I miei abbonamenti",
-    icon: "icon-people",
-    path: "/subscriptions",
-    role: 4,
-  },
-  {
     heading: "Gestione servizi",
     role: 5,
   },
@@ -38,7 +32,13 @@ const MenuAdmin = [
     role: 5,
   },
   {
-    heading: "Gestione servizi",
+    heading: "Abbonamenti",
+    role: 4,
+  },
+  {
+    name: "I miei abbonamenti",
+    icon: "icon-people",
+    path: "/subscriptions",
     role: 4,
   },
   {
@@ -48,7 +48,7 @@ const MenuAdmin = [
     role: 10000, //disabled for now
   },
   {
-    name: "Le mie schedine",
+    name: "Tutte le schedine",
     icon: "icon-grid",
     path: "/allSubscriberPools",
     role: 4,
@@ -58,7 +58,7 @@ const MenuAdmin = [
     role: 0,
   },
   {
-    name: "Tutti i pacchetti",
+    name: "Sfoglia tutti i pacchetti",
     icon: "icon-organization",
     path: "/allServices",
     role: 0,
