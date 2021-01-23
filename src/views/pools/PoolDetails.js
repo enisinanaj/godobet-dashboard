@@ -105,7 +105,7 @@ class PoolDetails extends Component {
         eventNoErrors: true,
       },
       () => {
-        fetch(this.props.app.poolDetails.links.events.href.replace("{?projection}", ""), {
+        fetch(this.props.app.poolDetails.links.events.href.replace("{?projection}", "").replace("http://", "https://"), {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
         })
