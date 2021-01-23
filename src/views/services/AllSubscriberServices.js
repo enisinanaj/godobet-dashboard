@@ -91,7 +91,7 @@ class AllSubscriberServices extends Component {
                 <ServiceCard
                   history={this.props.history}
                   serviceData={service}
-                  key={service._links.self.href}
+                  key={service._links.self.href.replace("http://", "https://")}
                   editService={(service) => this.editService(service)}
                 ></ServiceCard>
               ))}

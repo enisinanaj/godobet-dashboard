@@ -22,7 +22,8 @@ class MySubscriptions extends Component {
   async getMySubscriptions() {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
-      fetch(this.props.user._links.subscriptions.href.replace("{?projection}", ""), { method: "GET", headers: { "Content-Type": "application/json", "X-Auth": token }})
+      fetch(this.props.user._links.subscriptions.href.replace("{?projection}", "").replace("http://", "https://"), 
+        { method: "GET", headers: { "Content-Type": "application/json", "X-Auth": token }})
       .then((response) => response.json())
       .then((response) => {
         if (response._embedded !== undefined) {

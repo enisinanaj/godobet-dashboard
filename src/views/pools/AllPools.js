@@ -38,8 +38,7 @@ class AllPools extends Component {
     //console.log(this.props.app.user);
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
-      fetch(
-        this.props.app.user._links.pools.href.replace("{?projection}", ""),
+      fetch(this.props.app.user._links.pools.href.replace("{?projection}", "").replace("http://", "https://"),
         {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },

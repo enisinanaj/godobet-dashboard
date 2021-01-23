@@ -109,7 +109,7 @@ class Login extends Component {
     TokenManager.getInstance()
       .getToken()
       .then((jwt) => {
-        fetch(url, {
+        fetch(url.replace("http://", "https://"), {
           headers: {
             "Content-Type": "application/json",
             "X-Auth": jwt,

@@ -72,7 +72,7 @@ class TipsterDetails extends Component {
         serviceNoErrors: true,
       },
       () => {
-        fetch(this.props.app.tipsterDetails._links.self.href.replace("{?projection}", ""), {
+        fetch(this.props.app.tipsterDetails._links.self.href.replace("{?projection}", "").replace("http://", "https://"), {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
         })
@@ -101,7 +101,7 @@ class TipsterDetails extends Component {
         serviceNoErrors: true,
       },
       () => {
-        fetch(this.props.app.tipsterDetails._links.services.href.replace("{?projection}", ""), {
+        fetch(this.props.app.tipsterDetails._links.services.href.replace("{?projection}", "").replace("http://", "https://"), {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
         })

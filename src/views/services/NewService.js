@@ -134,12 +134,12 @@ class NewService extends Component {
         let arrayUrlTaxonomies = [];
         await Promise.all(arrayFetch).then((results) => {
           for (let result of results) {
-            arrayUrlTaxonomies.push(result._links.self.href);
+            arrayUrlTaxonomies.push(result._links.self.href.replace("http://", "https://"));
           }
         });
 
         const newService = {
-          author: this.props.app.user._links.user.href,
+          author: this.props.app.user._links.user.href.replace("http://", "https://"),
           taxonomies: arrayUrlTaxonomies,
           serviceName: this.state.NewServiceForm.serviceName,
           description: this.state.NewServiceForm.description,
@@ -176,7 +176,7 @@ class NewService extends Component {
         }
       );
       if (existingUrl.length === 0) arrayTaxonomiesWithNoUrl.push(taxonomy);
-      else arrayUrlExistingTaxonomies.push(existingUrl[0]._links.self.href);
+      else arrayUrlExistingTaxonomies.push(existingUrl[0]._links.self.href.replace("http://", "https://"));
     }
 
     //carico le taxonomies rimanenti
@@ -189,25 +189,25 @@ class NewService extends Component {
 
     await Promise.all(arrayFetch).then((results) => {
       for (let result of results) {
-        arrayUrlExistingTaxonomies.push(result._links.self.href);
+        arrayUrlExistingTaxonomies.push(result._links.self.href.replace("http://", "https://"));
       }
     });
 
     var token = await TokenManager.getInstance().getToken();
-    var userUrl = await fetch(this.props.serviceToEdit._links.author.href, {
+    var userUrl = await fetch(this.props.serviceToEdit._links.author.href.replace("http://", "https://"), {
       method: "GET",
       headers: { "Content-Type": "application/json", "X-Auth": token },
     })
       .then((response) => response.json())
       .then((response) => {
-        return response._links.self.href;
+        return response._links.self.href.replace("http://", "https://");
       });
 
     const editTaxonomies = {
       taxonomies: arrayUrlExistingTaxonomies,
     };
     //carico i nuovi tag
-    await fetch(this.props.serviceToEdit._links.self.href, {
+    await fetch(this.props.serviceToEdit._links.self.href.replace("http://", "https://"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json", "X-Auth": token },
       body: JSON.stringify(editTaxonomies),
@@ -224,7 +224,7 @@ class NewService extends Component {
       version: parseInt(this.state.NewServiceForm.version),
     };
 
-    fetch(this.props.serviceToEdit._links.self.href, {
+    fetch(this.props.serviceToEdit._links.self.href.replace("http://", "https://"), {
       method: "PUT",
       headers: { "Content-Type": "application/json", "X-Auth": token },
       body: JSON.stringify(editService),

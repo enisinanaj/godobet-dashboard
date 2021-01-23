@@ -121,7 +121,7 @@ class DashboardV1 extends Component {
         .then(pools => {
             TokenManager.getInstance().getToken()
             .then(token => {
-                return fetch(this.props.user._links.playedEvents.href.replace("{?projection}", ""), {
+                return fetch(this.props.user._links.playedEvents.href.replace("{?projection}", "").replace("http://", "https://"), {
                     headers: {
                         "Content-Type": "application/json",
                         "X-AUTH": token

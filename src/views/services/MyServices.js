@@ -48,7 +48,7 @@ class MyServices extends Component {
     var token = await TokenManager.getInstance().getToken();
     this.setState({ loading: true, noErrors: true }, () => {
       try {
-        fetch(this.props.app.user._links.services.href.replace("{?projection}", ""), {
+        fetch(this.props.app.user._links.services.href.replace("{?projection}", "").replace("http://", "https://"), {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
         })
@@ -93,7 +93,7 @@ class MyServices extends Component {
                 <ServiceCard
                   history={this.props.history}
                   serviceData={service}
-                  key={service._links.self.href}
+                  key={service._links.self.href.replace("http://", "https://")}
                   editService={(service) => this.editService(service)}
                 ></ServiceCard>
               ))}

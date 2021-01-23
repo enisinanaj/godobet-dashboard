@@ -59,13 +59,13 @@ class Profile extends Component {
       const serverUserInfo = {
         loginProvider: config.API_URL + "/items/6",
         password: "",
-        role: this.props.app.user.role._links.self.href,
+        role: this.props.app.user.role._links.self.href.replace("http://", "https://"),
         email: this.state.formUserInfo.email,
         accessToken: this.props.app.user.accessToken,
       };
 
       var token = await TokenManager.getInstance().getToken();
-      fetch(this.props.app.user._links.self.href, {
+      fetch(this.props.app.user._links.self.href.replace("http://", "https://"), {
         method: "PUT",
         headers: { "Content-Type": "application/json", "X-Auth": token },
         body: JSON.stringify({ ...updatedUser, ...serverUserInfo }),

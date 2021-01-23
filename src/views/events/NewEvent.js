@@ -62,13 +62,13 @@ class NewEvent extends Component {
 
   async prepareToEdit() {
     var token = await TokenManager.getInstance().getToken();
-    var gender = await fetch(this.props.eventToEdit._links.gender.href, {
+    var gender = await fetch(this.props.eventToEdit._links.gender.href.replace("http://", "https://"), {
       method: "GET",
       headers: { "Content-Type": "application/json", "X-Auth": token },
     })
     .then((response) => response.json())
     .then((response) => {
-      return response._links.self.href.replace("{?projection}", "");
+      return response._links.self.href.replace("{?projection}", "").replace("http://", "https://");
     });
 
     this.setState({
@@ -183,7 +183,7 @@ class NewEvent extends Component {
     };
 
     var token = await TokenManager.getInstance().getToken();
-    fetch(this.props.eventToEdit._links.self.href, {
+    fetch(this.props.eventToEdit._links.self.href.replace("http://", "https://"), {
       method: "PUT",
       headers: { "Content-Type": "application/json", "X-Auth": token },
       body: JSON.stringify(editEvent),

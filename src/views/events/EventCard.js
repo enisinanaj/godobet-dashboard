@@ -29,7 +29,7 @@ class EventCard extends Component {
 
   async updateEvent(outcome) {
     var token = await TokenManager.getInstance().getToken();
-    await fetch(this.props.data._links.self.href.replace("{?projection}", ""), {
+    await fetch(this.props.data._links.self.href.replace("{?projection}", "").replace("http://", "https://"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json", "X-Auth": token },
       body: JSON.stringify({outcome}),

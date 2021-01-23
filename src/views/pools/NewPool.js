@@ -87,7 +87,7 @@ class NewPool extends Component {
       if (this.state.mode === "new") {
         var token = await TokenManager.getInstance().getToken();
         const authorUrl = await fetch(
-          this.props.app.serviceDetails.links.author.href,
+          this.props.app.serviceDetails.links.author.href.replace("http://", "https://"),
           {
             method: "GET",
             headers: { "Content-Type": "application/json", "X-Auth": token },
@@ -95,7 +95,7 @@ class NewPool extends Component {
         )
           .then((response) => response.json())
           .then((response) => {
-            return response._links.self.href;
+            return response._links.self.href.replace("http://", "https://");
           });
 
         const newPool = {
@@ -134,7 +134,7 @@ class NewPool extends Component {
     };
 
     var token = await TokenManager.getInstance().getToken();
-    fetch(this.props.poolToEdit._links.self.href, {
+    fetch(this.props.poolToEdit._links.self.href.replace("http://", "https://"), {
       method: "PUT",
       headers: { "Content-Type": "application/json", "X-Auth": token },
       body: JSON.stringify(editedPool),

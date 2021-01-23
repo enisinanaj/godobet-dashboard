@@ -51,7 +51,7 @@ class ServiceCard extends Component {
   loadAuthor() {
     return TokenManager.getInstance().getToken()
     .then(t => {
-      return fetch(this.props.serviceData._links.author.href, {
+      return fetch(this.props.serviceData._links.author.href.replace("http://", "https://"), {
         headers: {
           "Content-Type": "application/json",
           "X-Auth": t
@@ -67,7 +67,8 @@ class ServiceCard extends Component {
   isAuthor() {
     if (!this.state.author) {
       this.loadAuthor();
-    } else if (this.state.author._links.self.href === this.props.app.user._links.self.href || this.props.app.user.roleName === "God") {
+    } else if (this.state.author._links.self.href.replace("http://", "https://") === this.props.app.user._links.self.href.replace("http://", "https://")
+       || this.props.app.user.roleName === "God") {
         return true;
     }
 
@@ -101,8 +102,8 @@ class ServiceCard extends Component {
             "X-AUTH": t
           },
           body: JSON.stringify({
-            "subscriber": this.props.app.user._links.self.href,
-            "service": this.props.serviceData._links.self.href,
+            "subscriber": this.props.app.user._links.self.href.replace("http://", "https://"),
+            "service": this.props.serviceData._links.self.href.replace("http://", "https://"),
             "paymentSystemToken": "godobet",
             "subscribedOn": moment()
           })
