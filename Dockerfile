@@ -15,4 +15,4 @@ FROM node:10.16-alpine
 WORKDIR /app/build
 COPY --from=build /app /app
 EXPOSE 80
-ENTRYPOINT [ "/app/node_modules/.bin/serve", "-l", "80" ]
+ENTRYPOINT [ "/app/node_modules/.bin/serve", "-s", ".", "-l", "80" ]
