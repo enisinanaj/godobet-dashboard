@@ -1,21 +1,18 @@
-FROM node:10.16
-
+FROM node:10.16-alpine as packages
 RUN mkdir -p /app
-
 WORKDIR /app
-
+RUN ["apk", "add", "git"]
 COPY package.json package.json
-
 RUN npm install
 
+FROM node:10.16-alpine as build
+WORKDIR /app
 COPY . .
-
+COPY --from=packages /app /app
 RUN npm run build
 
+FROM node:10.16-alpine
 WORKDIR /app/build
-
-RUN npm i -g serve
-
+COPY --from=build /app /app
 EXPOSE 80
-
-CMD serve -s . -l 80
+ENTRYPOINT [ "/app/node_modules/.bin/serve", "-l", "80" ]

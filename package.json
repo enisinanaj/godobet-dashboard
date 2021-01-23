@@ -121,6 +121,7 @@
     "rtlcss": "2.4.0",
     "sass-loader": "7.1.0",
     "screenfull": "3.3.3",
+    "serve": "^11.3.2",
     "simple-line-icons": "2.4.1",
     "spinkit": "1.2.5",
     "style-loader": "0.23.1",
