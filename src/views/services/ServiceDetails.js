@@ -140,7 +140,7 @@ class ServiceDetails extends Component {
         poolNoErrors: true,
       },
       () => {
-        fetch(this.props.app.serviceDetails.links.pools.href.replace("{?projection}", ""),
+        fetch(this.props.app.serviceDetails.links.pools.href.replace("{?projection}", "").replace("http://", "https://"),
           {
             method: "GET",
             headers: { "Content-Type": "application/json", "X-Auth": token },
@@ -165,7 +165,7 @@ class ServiceDetails extends Component {
   async getTaxonomies() {
     var token = await TokenManager.getInstance().getToken();
     try {
-      fetch(this.props.app.serviceDetails.links.taxonomies.href, {
+      fetch(this.props.app.serviceDetails.links.taxonomies.href.replace("http://", "https://"), {
         method: "GET",
         headers: { "Content-Type": "application/json", "X-Auth": token },
       })
