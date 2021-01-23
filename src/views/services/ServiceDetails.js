@@ -110,7 +110,7 @@ class ServiceDetails extends Component {
         poolNoErrors: true,
       },
       () => {
-        fetch(this.props.app.serviceDetails.links.self.href, {
+        fetch(this.props.app.serviceDetails.links.self.href.replace("http://", "https://"), {
           method: "GET",
           headers: { "Content-Type": "application/json", "X-Auth": token },
         })
