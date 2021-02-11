@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  portainer:
+    image: "registry.e2n.me/godobet-dashboard:2.0.7"
+    restart: unless-stopped
+    environment:
+      - VIRTUAL_HOST=dashboard.godobet.it
+      - LETSENCRYPT_HOST=dashboard.godobet.it
+      - LETSENCRYPT_EMAIL=enisinanaj@outlook.com
+      - LETSENCRYPT_ENABLED=1
+    networks:
+      - tier_1
+
+networks:
+  tier_1:
+    external:
+      name: network_tier_1

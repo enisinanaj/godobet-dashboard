@@ -6,6 +6,8 @@ const initialState = {
     isTrigger: [], //for active default menu, set blank for horizontal
     ...config,
     isFullScreen: false, // static can't change
+    user: undefined,
+    loggedIn: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -137,6 +139,12 @@ const reducer = (state = initialState, action) => {
                 navFixedLayout: initialState.navFixedLayout,
                 headerFixedLayout: initialState.headerFixedLayout,
                 boxLayout: initialState.boxLayout
+            };
+        case actionTypes.USER_LOGIN:
+            return {
+                ...state,
+                user: action.user,
+                loggedIn: !!action.user,
             };
         default:
             return state;
