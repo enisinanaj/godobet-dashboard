@@ -84,7 +84,6 @@ class AdminLayout extends Component {
                             </div>
                         </div>
                     </div>
-                    <Configuration />
                 </Fullscreen>
             </Aux>
         );
