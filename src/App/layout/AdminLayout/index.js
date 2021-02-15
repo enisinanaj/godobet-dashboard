@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import {Route, Switch, Redirect} from 'react-router-dom';
+import {Route, Switch, Redirect, BrowserRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Fullscreen from "react-full-screen";
 import windowSize from 'react-window-size';
@@ -72,10 +72,12 @@ class AdminLayout extends Component {
                                     <div className="main-body">
                                         <div className="page-wrapper">
                                             <Suspense fallback={<Loader/>}>
-                                                <Switch>
-                                                    {menu}
-                                                    <Redirect from="/" to={this.props.defaultPath} />
-                                                </Switch>
+                                                <BrowserRouter>
+                                                    <Switch>
+                                                        {menu}
+                                                        <Redirect from="/" to={this.props.defaultPath} />
+                                                    </Switch>
+                                                </BrowserRouter>
                                             </Suspense>
                                         </div>
                                     </div>
@@ -95,7 +97,9 @@ const mapStateToProps = state => {
         isFullScreen: state.isFullScreen,
         collapseMenu: state.collapseMenu,
         layout: state.layout,
-        subLayout: state.subLayout
+        subLayout: state.subLayout,
+        user: state.user,
+        loggedIn: state.loggedIn,
     }
 };
 

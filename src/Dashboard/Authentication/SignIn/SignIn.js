@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect, Switch } from 'react-router-dom';
 import validator from 'validator';
 import { ValidationForm, TextInput } from 'react-bootstrap4-form-validation';
 import { connect } from 'react-redux';
@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import './../../../assets/scss/style.scss';
 import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
-import logoDark from '../../../assets/images/logo-dark.png';
+import logoDark from '../../../assets/images/godobet_logo_small.png';
 import { auth } from "../../../App/auth/firebase";
 import TokenManager from "../../../App/auth/TokenManager";
 import config from "../../../store/config";
@@ -23,6 +23,7 @@ class SignIn extends React.Component {
         },
         formError: "",
         loginLoading: false,
+        loggedIn: false,
     };
 
     validateOnChange = (event) => {
@@ -90,8 +91,6 @@ class SignIn extends React.Component {
                     this.getUserRole(localUser._links.role.href, user, localUser);
                 });
             });
-
-            //this.props.actions.userLogin(user);
         });
     };
 
@@ -109,13 +108,10 @@ class SignIn extends React.Component {
             .then((role) => {
                 const roleData = { role };
                 this.props.actions.userLogin({
-                    ...user,
+                    user,
                     ...localUser,
                     ...roleData,
                 });
-            })
-            .then(() => {
-                // window.location.href = window.location.href + '/dashboard/default';
             });
         });
     }
@@ -177,7 +173,7 @@ class SignIn extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({ signin: state.signin });
+const mapStateToProps = (state) => ({ user: state.user, loggedIn: state.loggedIn });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
