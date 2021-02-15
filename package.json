@@ -95,6 +95,7 @@
     "reactour": "^1.15.0",
     "recharts": "^1.6.2",
     "redux": "^4.0.5",
+    "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^4.3.2",
     "sweetalert2": "^8.13.0",
