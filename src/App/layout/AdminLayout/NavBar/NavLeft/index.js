@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import windowSize from 'react-window-size';
 
-import NavSearch from './NavSearch';
 import Aux from "../../../../../hoc/_Aux";
 import * as actionTypes from "../../../../../store/actions";
 
