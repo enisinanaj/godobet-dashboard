@@ -11,9 +11,7 @@ class NavLeft extends Component {
     render() {
         return (
             <Aux>
-                <ul className="navbar-nav mr-auto">
-                    <li className="nav-item"><NavSearch/></li>
-                </ul>
+                <ul className="navbar-nav mr-auto"></ul>
             </Aux>
         );
     }
