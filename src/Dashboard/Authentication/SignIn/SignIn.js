@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Redirect, Switch } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import validator from 'validator';
 import { ValidationForm, TextInput } from 'react-bootstrap4-form-validation';
 import { connect } from 'react-redux';

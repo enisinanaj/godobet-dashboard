@@ -2,17 +2,21 @@ import React, { Component } from 'react';
 import {Dropdown} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import md5 from 'md5';
 
 import Aux from "../../../../../hoc/_Aux";
 import DEMO from "../../../../../store/constant";
-
-import Avatar1 from '../../../../../assets/images/user/avatar-1.jpg';
 import * as actions from "../../../../../store/actions";
 
 class NavRight extends Component {
     state = {
         listOpen: false
     };
+
+    avatar = (email) => {
+        console.log(email);
+        return 'http://www.gravatar.com/avatar/' + md5(email) + '?s=32';
+    }
 
     render() {
 
@@ -26,7 +30,7 @@ class NavRight extends Component {
                             </Dropdown.Toggle>
                             <Dropdown.Menu alignRight className="profile-notification">
                                 <div className="pro-head">
-                                    <img src={Avatar1} className="img-radius" alt="User Profile"/>
+                                    <img src={this.avatar(this.props.user)} className="img-radius" alt="User Profile"/>
                                     <span>{ this.props.user?.name }</span>
                                     <a onClick={() => this.props.actions.userLogout(null)} href="#" className="dud-logout" title="Logout">
                                         <i className="feather icon-log-out"/>
