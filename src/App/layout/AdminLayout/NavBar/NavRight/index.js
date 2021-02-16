@@ -14,8 +14,7 @@ class NavRight extends Component {
     };
 
     avatar = (email) => {
-        console.log(email);
-        return 'http://www.gravatar.com/avatar/' + md5(email) + '?s=32';
+        return 'http://www.gravatar.com/avatar/' + md5(email.email.toLowerCase().trim()) + '?s=32';
     }
 
     render() {
@@ -37,9 +36,8 @@ class NavRight extends Component {
                                     </a>
                                 </div>
                                 <ul className="pro-body">
-                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-settings"/> Settings</a></li>
+                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-settings"/> All Users</a></li>
                                     <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-user"/> Profile</a></li>
-                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-mail"/> My Messages</a></li>
                                 </ul>
                             </Dropdown.Menu>
                         </Dropdown>
