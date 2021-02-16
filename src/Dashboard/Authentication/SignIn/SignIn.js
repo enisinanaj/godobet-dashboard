@@ -160,7 +160,7 @@ class SignIn extends React.Component {
                                             />
                                         </div>
                                         <button className="btn btn-block btn-primary mb-4">Accedi</button>
-                                        <p className="mb-2 text-muted"><NavLink to="/auth/reset-password-1" className="f-w-400">Password dimenticata?</NavLink></p>
+                                        <p className="mb-2 text-muted"><NavLink to="/auth/forgot-password" className="f-w-400">Password dimenticata?</NavLink></p>
                                         <p className="mb-0 text-muted"><NavLink to="/auth/signup" className="f-w-400">Registrati</NavLink></p>
                                     </ValidationForm>
                                 </div>
