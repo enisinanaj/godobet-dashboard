@@ -35,6 +35,7 @@ class SignIn extends React.Component {
                 ...this.state.formUserLogin,
                 [input.name]: value,
             },
+            formError: "",
         });
     };
 
@@ -53,6 +54,7 @@ class SignIn extends React.Component {
                 this.state.formUserLogin.email,
                 this.state.formUserLogin.password
             )
+            .then(this.addUserStateChangeEvent)
             .catch((e) => {
                 this.setState({
                     loginLoading: false,
@@ -60,7 +62,7 @@ class SignIn extends React.Component {
                 });
             });
 
-        this.addUserStateChangeEvent();
+        // this.addUserStateChangeEvent();
 
         e.preventDefault();
     };
@@ -70,6 +72,10 @@ class SignIn extends React.Component {
             if (!user) {
                 return;
             }
+
+            this.setState({
+                formError: ""
+            });
 
             TokenManager
             .getInstance()
@@ -158,7 +164,9 @@ class SignIn extends React.Component {
                                                 onChange={this.validateOnChange}
                                                 autoComplete="off"
                                             />
+                                        { this.state.formError && <div><div className="is-invalid"></div><div className="invalid-feedback">{this.state.formError}</div></div>}
                                         </div>
+                                        
                                         <button className="btn btn-block btn-primary mb-4">Accedi</button>
                                         <p className="mb-2 text-muted"><NavLink to="/auth/forgot-password" className="f-w-400">Password dimenticata?</NavLink></p>
                                         <p className="mb-0 text-muted"><NavLink to="/auth/signup" className="f-w-400">Registrati</NavLink></p>
