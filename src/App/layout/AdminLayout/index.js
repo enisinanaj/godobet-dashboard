@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import {Route, Switch, Redirect} from 'react-router-dom';
+import {Route, Switch, Redirect, BrowserRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Fullscreen from "react-full-screen";
 import windowSize from 'react-window-size';
@@ -7,9 +7,10 @@ import windowSize from 'react-window-size';
 import Navigation from './Navigation';
 import NavBar from './NavBar';
 import Breadcrumb from './Breadcrumb';
-import Configuration from './Configuration';
 import Loader from "../Loader";
-import routes from "../../../routes";
+import Routes from "../../../routes";
+import AdminRoutes from "../../../routes.admin";
+import DemoRoutes from "../../../routes.original";
 import Aux from "../../../hoc/_Aux";
 import * as actionTypes from "../../../store/actions";
 
@@ -43,7 +44,33 @@ class AdminLayout extends Component {
         document.addEventListener('mozfullscreenchange', this.fullScreenExitHandler);
         document.addEventListener('MSFullscreenChange', this.fullScreenExitHandler);
 
-        const menu = routes.map((route, index) => {
+        const menu = Routes.map((route, index) => {
+            return (route.component) ? (
+                <Route
+                    key={index}
+                    path={route.path}
+                    exact={route.exact}
+                    name={route.name}
+                    render={props => (
+                        <route.component {...props} />
+                    )} />
+            ) : (null);
+        });
+        
+        const admin = AdminRoutes.map((route, index) => {
+            return (route.component) ? (
+                <Route
+                    key={index}
+                    path={route.path}
+                    exact={route.exact}
+                    name={route.name}
+                    render={props => (
+                        <route.component {...props} />
+                    )} />
+            ) : (null);
+        });
+        
+        const demo = DemoRoutes.map((route, index) => {
             return (route.component) ? (
                 <Route
                     key={index}
@@ -73,10 +100,14 @@ class AdminLayout extends Component {
                                     <div className="main-body">
                                         <div className="page-wrapper">
                                             <Suspense fallback={<Loader/>}>
-                                                <Switch>
-                                                    {menu}
-                                                    <Redirect from="/" to={this.props.defaultPath} />
-                                                </Switch>
+                                                <BrowserRouter>
+                                                    <Switch>
+                                                        {menu}
+                                                        {admin}
+                                                        {demo}
+                                                        <Redirect from="/" to={this.props.defaultPath} />
+                                                    </Switch>
+                                                </BrowserRouter>
                                             </Suspense>
                                         </div>
                                     </div>
@@ -84,7 +115,6 @@ class AdminLayout extends Component {
                             </div>
                         </div>
                     </div>
-                    <Configuration />
                 </Fullscreen>
             </Aux>
         );
@@ -97,7 +127,9 @@ const mapStateToProps = state => {
         isFullScreen: state.isFullScreen,
         collapseMenu: state.collapseMenu,
         layout: state.layout,
-        subLayout: state.subLayout
+        subLayout: state.subLayout,
+        user: state.user,
+        loggedIn: state.loggedIn,
     }
 };
 

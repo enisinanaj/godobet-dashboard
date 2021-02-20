@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
 import Loadable from 'react-loadable';
 
 import '../../node_modules/font-awesome/scss/font-awesome.scss';
@@ -7,7 +7,11 @@ import '../../node_modules/font-awesome/scss/font-awesome.scss';
 import Loader from './layout/Loader'
 import Aux from "../hoc/_Aux";
 import ScrollToTop from './layout/ScrollToTop';
-import routes from "../route.auth";
+import AuthRoutes from "../route.auth";
+import MaintenanceRoutes from "../route.maintenance";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as actions from '../store/actions';
 
 const AdminLayout = Loadable({
     loader: () => import('./layout/AdminLayout'),
@@ -16,8 +20,8 @@ const AdminLayout = Loadable({
 
 class App extends Component {
     render() {
-        const menu = routes.map((route, index) => {
-          return (route.component) ? (
+        const menu = AuthRoutes.map((route, index) => {
+          return (route.component && !this.props.loggedIn) ? (
               <Route
                   key={index}
                   path={route.path}
@@ -29,14 +33,32 @@ class App extends Component {
           ) : (null);
         });
 
+        const maintenance = MaintenanceRoutes.map((route, index) => {
+            return (route.component) ? (
+                <Route
+                    key={index}
+                    path={route.path}
+                    exact={route.exact}
+                    name={route.name}
+                    render={props => (
+                        <route.component {...props} />
+                    )} />
+            ) : (null);
+          });
+
         return (
             <Aux>
                 <ScrollToTop>
                     <Suspense fallback={<Loader/>}>
-                        <Switch>
-                            {menu}
-                            <Route path="/" component={AdminLayout} />
-                        </Switch>
+                        <BrowserRouter>
+                            <Switch>
+                                {menu}
+                                {maintenance}
+                                <Route path="/">
+                                    {!this.props.loggedIn ? <Redirect to="/auth/signin" /> : <AdminLayout />}
+                                </Route>
+                            </Switch>
+                        </BrowserRouter>
                     </Suspense>
                 </ScrollToTop>
             </Aux>
@@ -44,4 +66,13 @@ class App extends Component {
     }
 }
 
-export default App;
+
+const mapStateToProps = (state) => ({ user: state.user, loggedIn: state.loggedIn, registered: state.registered });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

@@ -8,7 +8,7 @@ import Aux from "../../../../hoc/_Aux";
 import DEMO from "../../../../store/constant";
 import * as actionTypes from "../../../../store/actions";
 
-import logo from '../../../../assets/images/logo.png';
+import logo from '../../../../assets/images/godobet_logo_small.png';
 
 class NavBar extends Component {
     state = {

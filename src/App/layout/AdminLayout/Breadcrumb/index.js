@@ -90,7 +90,7 @@ class Breadcrumb extends Component {
 
         }
 
-        document.title = title + ' | Able Pro Premium React + Redux Admin Template';
+        document.title = title + ' | GODOBET';
 
         return (
             <Aux>
