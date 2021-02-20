@@ -8,7 +8,9 @@ import Navigation from './Navigation';
 import NavBar from './NavBar';
 import Breadcrumb from './Breadcrumb';
 import Loader from "../Loader";
-import routes from "../../../routes";
+import Routes from "../../../routes";
+import AdminRoutes from "../../../routes.admin";
+import DemoRoutes from "../../../routes.original";
 import Aux from "../../../hoc/_Aux";
 import * as actionTypes from "../../../store/actions";
 
@@ -42,7 +44,33 @@ class AdminLayout extends Component {
         document.addEventListener('mozfullscreenchange', this.fullScreenExitHandler);
         document.addEventListener('MSFullscreenChange', this.fullScreenExitHandler);
 
-        const menu = routes.map((route, index) => {
+        const menu = Routes.map((route, index) => {
+            return (route.component) ? (
+                <Route
+                    key={index}
+                    path={route.path}
+                    exact={route.exact}
+                    name={route.name}
+                    render={props => (
+                        <route.component {...props} />
+                    )} />
+            ) : (null);
+        });
+        
+        const admin = AdminRoutes.map((route, index) => {
+            return (route.component) ? (
+                <Route
+                    key={index}
+                    path={route.path}
+                    exact={route.exact}
+                    name={route.name}
+                    render={props => (
+                        <route.component {...props} />
+                    )} />
+            ) : (null);
+        });
+        
+        const demo = DemoRoutes.map((route, index) => {
             return (route.component) ? (
                 <Route
                     key={index}
@@ -75,6 +103,8 @@ class AdminLayout extends Component {
                                                 <BrowserRouter>
                                                     <Switch>
                                                         {menu}
+                                                        {admin}
+                                                        {demo}
                                                         <Redirect from="/" to={this.props.defaultPath} />
                                                     </Switch>
                                                 </BrowserRouter>
