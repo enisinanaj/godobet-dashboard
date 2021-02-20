@@ -146,6 +146,12 @@ const reducer = (state = initialState, action) => {
                 user: action.user,
                 loggedIn: !!action.user,
             };
+        case actionTypes.USER_LOGOUT:
+            return {
+                ...state,
+                user: null,
+                loggedIn: false,
+            };
         default:
             return state;
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavLink, Redirect} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import validator from 'validator';
 import { ValidationForm, TextInput } from 'react-bootstrap4-form-validation';
 import { connect } from 'react-redux';
@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import './../../../assets/scss/style.scss';
 import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
-import logoDark from '../../../assets/images/logo-dark.png';
+import logoDark from '../../../assets/images/godobet_logo_small.png';
 import { auth } from "../../../App/auth/firebase";
 import TokenManager from "../../../App/auth/TokenManager";
 import config from "../../../store/config";
@@ -23,6 +23,7 @@ class SignIn extends React.Component {
         },
         formError: "",
         loginLoading: false,
+        loggedIn: false,
     };
 
     validateOnChange = (event) => {
@@ -34,6 +35,7 @@ class SignIn extends React.Component {
                 ...this.state.formUserLogin,
                 [input.name]: value,
             },
+            formError: "",
         });
     };
 
@@ -52,6 +54,7 @@ class SignIn extends React.Component {
                 this.state.formUserLogin.email,
                 this.state.formUserLogin.password
             )
+            .then(this.addUserStateChangeEvent)
             .catch((e) => {
                 this.setState({
                     loginLoading: false,
@@ -59,7 +62,7 @@ class SignIn extends React.Component {
                 });
             });
 
-        this.addUserStateChangeEvent();
+        // this.addUserStateChangeEvent();
 
         e.preventDefault();
     };
@@ -69,6 +72,10 @@ class SignIn extends React.Component {
             if (!user) {
                 return;
             }
+
+            this.setState({
+                formError: ""
+            });
 
             TokenManager
             .getInstance()
@@ -90,8 +97,6 @@ class SignIn extends React.Component {
                     this.getUserRole(localUser._links.role.href, user, localUser);
                 });
             });
-
-            //this.props.actions.userLogin(user);
         });
     };
 
@@ -109,13 +114,10 @@ class SignIn extends React.Component {
             .then((role) => {
                 const roleData = { role };
                 this.props.actions.userLogin({
-                    ...user,
+                    user,
                     ...localUser,
                     ...roleData,
                 });
-            })
-            .then(() => {
-                window.location.href = window.location.href + '/dashboard/default';
             });
         });
     }
@@ -162,9 +164,11 @@ class SignIn extends React.Component {
                                                 onChange={this.validateOnChange}
                                                 autoComplete="off"
                                             />
+                                        { this.state.formError && <div><div className="is-invalid"></div><div className="invalid-feedback">{this.state.formError}</div></div>}
                                         </div>
+                                        
                                         <button className="btn btn-block btn-primary mb-4">Accedi</button>
-                                        <p className="mb-2 text-muted"><NavLink to="/auth/reset-password-1" className="f-w-400">Password dimenticata?</NavLink></p>
+                                        <p className="mb-2 text-muted"><NavLink to="/auth/forgot-password" className="f-w-400">Password dimenticata?</NavLink></p>
                                         <p className="mb-0 text-muted"><NavLink to="/auth/signup" className="f-w-400">Registrati</NavLink></p>
                                     </ValidationForm>
                                 </div>
@@ -177,7 +181,7 @@ class SignIn extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({ signin: state.signin });
+const mapStateToProps = (state) => ({ user: state.user, loggedIn: state.loggedIn });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
