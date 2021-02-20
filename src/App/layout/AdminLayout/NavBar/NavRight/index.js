@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import md5 from 'md5';
 
 import Aux from "../../../../../hoc/_Aux";
-import DEMO from "../../../../../store/constant";
 import * as actions from "../../../../../store/actions";
 
 class NavRight extends Component {
@@ -31,7 +30,7 @@ class NavRight extends Component {
                                 <div className="pro-head">
                                     <img src={this.avatar(this.props.user)} className="img-radius" alt="User Profile"/>
                                     <span>{ this.props.user?.name }</span>
-                                    <a onClick={() => this.props.actions.userLogout(null)} href="#" className="dud-logout" title="Logout">
+                                    <a onClick={() => this.props.actions.userLogout(null)} href="#logout" className="dud-logout" title="Logout">
                                         <i className="feather icon-log-out"/>
                                     </a>
                                 </div>

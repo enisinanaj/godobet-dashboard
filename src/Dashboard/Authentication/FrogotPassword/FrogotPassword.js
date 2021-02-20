@@ -10,8 +10,6 @@ import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
 import logoDark from '../../../assets/images/godobet_logo_small.png';
 import { auth } from "../../../App/auth/firebase";
-import TokenManager from "../../../App/auth/TokenManager";
-import config from "../../../store/config";
 import * as actions from "../../../store/actions";
 
 class FrogotPassword extends React.Component {
