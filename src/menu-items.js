@@ -35,7 +35,7 @@ export default {
                     title: 'Servizi attivi',
                     type: 'item',
                     icon: 'feather icon-printer',
-                    url: '/dashboard/allServices',
+                    url: '/dashboard/all-services',
                     role: 0,
                 },
                 {
@@ -50,7 +50,7 @@ export default {
                             title: 'I miei servizi',
                             type: 'item',
                             icon: 'feather icon-book',
-                            url: '/dashboard/subscriberServices',
+                            url: '/dashboard/subscriber-services',
                             role: 4,
                         },
                         {
@@ -58,7 +58,7 @@ export default {
                             title: 'I miei Tip',
                             type: 'item',
                             icon: 'feather icon-bookmark',
-                            url: '/dashboard/allSubscriberPools',
+                            url: '/dashboard/subscriber-pools',
                             role: 4,
                         },
                     ]
