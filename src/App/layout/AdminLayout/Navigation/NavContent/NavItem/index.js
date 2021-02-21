@@ -32,12 +32,15 @@ class NavItem extends Component {
 				</a>
             );
         } else {
+            console.log(this.props.item, this.props);
             subContent = (
-                <NavLink to={this.props.item.url} className="nav-link" exact={true} target={itemTarget}>
-                    <NavIcon items={this.props.item}/>
-                    {itemTitle}
-                    <NavBadge layout={this.props.layout} items={this.props.item}/>
-                </NavLink>
+                // <NavLink to={this.props.item.url} className="nav-link" exact={true} target={itemTarget}>
+                    <a href={this.props.item.url} className={"nav-link" + (this.props.location.pathname == this.props.item.url ? ' active' : '')} target={itemTarget}>
+                        <NavIcon items={this.props.item}/>
+                        {itemTitle}
+                        <NavBadge layout={this.props.layout} items={this.props.item}/>
+                    </a>
+                // </NavLink>
             );
         }
         let mainContent = '';

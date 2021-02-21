@@ -6,6 +6,7 @@ import md5 from 'md5';
 
 import Aux from "../../../../../hoc/_Aux";
 import * as actions from "../../../../../store/actions";
+import { withRouter } from 'react-router-dom';
 
 class NavRight extends Component {
     state = {
@@ -52,7 +53,7 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(NavRight);
+)(NavRight));

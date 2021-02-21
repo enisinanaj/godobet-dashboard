@@ -3,6 +3,11 @@ import {Row, Col} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
+import { withRouter } from 'react-router-dom';
+
+import * as actions from "../../store/actions";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 class SamplePage extends Component {
     render() {
@@ -25,4 +30,12 @@ class SamplePage extends Component {
     }
 }
 
-export default SamplePage;
+const mapStateToProps = (state) => ({ user: state.user, loggedIn: state.loggedIn, registered: state.registered });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+
+export default withRouter(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SamplePage));

@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import Aux from "../../../../../hoc/_Aux";
 import DEMO from "../../../../../store/constant";
 import * as actionTypes from "../../../../../store/actions";
+import { withRouter } from 'react-router-dom';
 
 class Layout extends Component {
     render () {
@@ -40,4 +41,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps) (Layout);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps) (Layout));

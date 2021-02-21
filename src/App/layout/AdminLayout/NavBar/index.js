@@ -9,6 +9,7 @@ import DEMO from "../../../../store/constant";
 import * as actionTypes from "../../../../store/actions";
 
 import logo from '../../../../assets/images/godobet_logo_small.png';
+import { withRouter } from 'react-router-dom';
 
 class NavBar extends Component {
     state = {
@@ -111,4 +112,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps) (windowSize(NavBar));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps) (windowSize(NavBar)));
