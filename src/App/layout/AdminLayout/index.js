@@ -47,7 +47,7 @@ class AdminLayout extends Component {
         const menu = Routes.map((route, index) => {
             return (route.component) ? (
                 <Route
-                    key={index}
+                    key={index + "-" + Math.floor(Math.random() * Math.floor(999))}
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
@@ -60,7 +60,7 @@ class AdminLayout extends Component {
         const admin = AdminRoutes.map((route, index) => {
             return (route.component) ? (
                 <Route
-                    key={index}
+                    key={index + "-" + Math.floor(Math.random() * Math.floor(999))}
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
@@ -73,7 +73,7 @@ class AdminLayout extends Component {
         const demo = DemoRoutes.map((route, index) => {
             return (route.component) ? (
                 <Route
-                    key={index}
+                    key={index + "-" + Math.floor(Math.random() * Math.floor(999))}
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
