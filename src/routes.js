@@ -6,6 +6,7 @@ window.$ = $;
 global.jQuery = $;
 
 const DashboardDefault = React.lazy(() => import('./Demo/Dashboard/Default'));
+const Marketplace = React.lazy(() => import('./Dashboard/Marketplace/Marketplace'));
 
 const PendingTips = React.lazy(() => import('./Dashboard/PendingTips/PendingTips'));
 const Balance = React.lazy(() => import('./Dashboard/Balance/Balance'));
@@ -17,6 +18,7 @@ const Profile = React.lazy(() => import('./Dashboard/Profile/Profile'));
 
 const routes = [
     { path: '/dashboard/default', exact: true, name: 'Analytics', component: DashboardDefault },
+    { path: '/dashboard/marketplace', exact: true, name: 'Marketplace', component: Marketplace },
     
     { path: '/dashboard/pending-tips', exact: true, name: 'Pending Tips', component: PendingTips },
     { path: '/dashboard/balance', exact: true, name: 'Balance', component: Balance },

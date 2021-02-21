@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import validator from 'validator';
 import { ValidationForm, TextInput } from 'react-bootstrap4-form-validation';
 import { connect } from 'react-redux';
@@ -186,7 +186,7 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(SignIn);
+)(SignIn));
