@@ -6,6 +6,7 @@ import md5 from 'md5';
 
 import Aux from "../../../../../hoc/_Aux";
 import * as actions from "../../../../../store/actions";
+import { withRouter } from 'react-router-dom';
 
 class NavRight extends Component {
     state = {
@@ -21,6 +22,12 @@ class NavRight extends Component {
         return (
             <Aux>
                 <ul className="navbar-nav ml-auto">
+                    <li>
+                        <a href="/dashboard/marketplace" data-toggle="tab" aria-expanded="false" class="nav-link has-ripple">
+                            <i class="fas fa-shopping-cart f-18"></i>
+                            <span class="d-none d-lg-inline-block m-l-10">Marketplace</span>
+                        </a>
+                    </li>
                     <li>
                         <Dropdown alignRight={!this.props.rtlLayout} className="drp-user">
                             <Dropdown.Toggle variant={'link'} id="dropdown-basic">
@@ -52,7 +59,7 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(NavRight);
+)(NavRight));
