@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import {Route, Switch, Redirect, BrowserRouter} from 'react-router-dom';
+import {Route, Switch, Redirect, BrowserRouter, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Fullscreen from "react-full-screen";
 import windowSize from 'react-window-size';
@@ -140,4 +140,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps) (windowSize(AdminLayout));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps) (windowSize(AdminLayout)));
