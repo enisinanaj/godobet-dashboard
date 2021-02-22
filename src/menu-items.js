@@ -12,7 +12,7 @@ export default {
                     type: 'item',
                     icon: 'feather icon-home',
                     url: '/dashboard/default',
-                    role: 0,
+                    role: 4,
                 },
                 {
                     id: 'pending-tips',
@@ -20,7 +20,7 @@ export default {
                     type: 'item',
                     icon: 'feather icon-clock',
                     url: '/dashboard/pending-tips',
-                    role: 0,
+                    role: 4,
                 },
                 {
                     id: 'balance',
@@ -28,7 +28,7 @@ export default {
                     type: 'item',
                     icon: 'feather icon-credit-card',
                     url: '/dashboard/balance',
-                    role: 0,
+                    role: 4,
                 },
                 {
                     id: 'active-services',
@@ -36,14 +36,14 @@ export default {
                     type: 'item',
                     icon: 'feather icon-printer',
                     url: '/dashboard/all-services',
-                    role: 0,
+                    role: 4,
                 },
                 {
                     id: 'manage',
                     title: 'Gestione',
                     type: 'collapse',
                     icon: 'feather icon-settings',
-                    role: 4,
+                    role: 5,
                     children: [
                         {
                             id: 'my-services',
@@ -51,7 +51,7 @@ export default {
                             type: 'item',
                             icon: 'feather icon-book',
                             url: '/dashboard/subscriber-services',
-                            role: 4,
+                            role: 5,
                         },
                         {
                             id: 'my-tips',
@@ -59,7 +59,26 @@ export default {
                             type: 'item',
                             icon: 'feather icon-bookmark',
                             url: '/dashboard/subscriber-pools',
-                            role: 4,
+                            role: 5,
+                        },
+                    ]
+                },
+                {
+                    id: 'admin',
+                    title: 'Amministratore',
+                    type: 'collapse',
+                    icon: 'feather icon-settings',
+                    hidden: true,
+                    role: 5,
+                    children: [
+                        {
+                            id: 'Users',
+                            title: 'Utenti',
+                            type: 'item',
+                            icon: 'feather icon-users',
+                            url: '/users',
+                            role: 5,
+                            hidden: true,
                         },
                     ]
                 },

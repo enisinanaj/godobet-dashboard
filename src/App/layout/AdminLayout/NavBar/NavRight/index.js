@@ -18,14 +18,13 @@ class NavRight extends Component {
     }
 
     render() {
-
         return (
             <Aux>
                 <ul className="navbar-nav ml-auto">
                     <li>
-                        <a href="/dashboard/marketplace" data-toggle="tab" aria-expanded="false" class="nav-link has-ripple">
-                            <i class="fas fa-shopping-cart f-18"></i>
-                            <span class="d-none d-lg-inline-block m-l-10">Marketplace</span>
+                        <a href="/dashboard/marketplace" data-toggle="tab" aria-expanded="false" className="nav-link has-ripple">
+                            <i className="fas fa-shopping-cart f-18"></i>
+                            <span className="d-none d-lg-inline-block m-l-10">Marketplace</span>
                         </a>
                     </li>
                     <li>
@@ -42,7 +41,11 @@ class NavRight extends Component {
                                     </a>
                                 </div>
                                 <ul className="pro-body">
-                                    <li><a href="/users" className="dropdown-item"><i className="feather icon-settings"/> All Users</a></li>
+                                    {
+                                        this.props.user.roleValue >= 5
+                                        ? <li><a href="/users" className="dropdown-item"><i className="feather icon-settings"/> All Users</a></li>
+                                        : <></>
+                                    }
                                     <li><a href="/profile" className="dropdown-item"><i className="feather icon-user"/> Profile</a></li>
                                 </ul>
                             </Dropdown.Menu>

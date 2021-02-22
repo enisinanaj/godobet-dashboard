@@ -31,8 +31,7 @@ class NavItem extends Component {
                     <NavBadge layout={this.props.layout} items={this.props.item}/>
 				</a>
             );
-        } else {
-            console.log(this.props.item, this.props);
+        } else if(!this.props.item.hidden) {
             subContent = (
                 // <NavLink to={this.props.item.url} className="nav-link" exact={true} target={itemTarget}>
                     <a href={this.props.item.url} className={"nav-link" + (this.props.location.pathname === this.props.item.url ? ' active' : '')} target={itemTarget}>
