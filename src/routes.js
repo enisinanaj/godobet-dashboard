@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+import Settings from './Dashboard/Profile/Settings';
 
 window.jQuery = $;
 window.$ = $;
@@ -24,6 +25,7 @@ const routes = [
     { path: '/dashboard/subscriber-services', exact: true, name: 'My Services', component: SubscriberServices },
     { path: '/dashboard/subscriber-pools', exact: true, name: 'My Tips', component: SubscriberPools },
 
+    { path: '/settings', exact: true, name: 'Settings', component: Settings },
     { path: '/profile', exact: true, name: 'Profile', component: Profile },
 ];
 

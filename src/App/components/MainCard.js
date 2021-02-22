@@ -46,14 +46,14 @@ class MainCard extends Component {
                                 <i className={this.state.collapseCard ? 'feather icon-plus' : 'feather icon-minus'}/>
                                 <a href={DEMO.BLANK_LINK}> {this.state.collapseCard ? 'Expand' : 'Collapse'} </a>
                             </Dropdown.Item>
-                            <Dropdown.Item as='li' className="dropdown-item" onClick={this.cardReloadHandler}>
+                            {/* <Dropdown.Item as='li' className="dropdown-item" onClick={this.cardReloadHandler}>
                                 <i className='feather icon-refresh-cw'/>
                                 <a href={DEMO.BLANK_LINK}> Reload </a>
                             </Dropdown.Item>
                             <Dropdown.Item as='li' className="dropdown-item" onClick={this.cardRemoveHandler}>
                                 <i className='feather icon-trash'/>
                                 <a href={DEMO.BLANK_LINK}> Remove </a>
-                            </Dropdown.Item>
+                            </Dropdown.Item> */}
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>

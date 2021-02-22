@@ -14,8 +14,6 @@ import DemoRoutes from "../../../routes.original";
 import Aux from "../../../hoc/_Aux";
 import * as actionTypes from "../../../store/actions";
 
-//import '../../../app.scss';
-
 class AdminLayout extends Component {
 
     fullScreenExitHandler = () => {

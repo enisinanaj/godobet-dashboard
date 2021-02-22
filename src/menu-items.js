@@ -63,6 +63,14 @@ export default {
                         },
                     ]
                 },
+                {
+                    id: 'account',
+                    title: 'Impostazioni profilo',
+                    type: 'item',
+                    icon: 'feather icon-user',
+                    url: '/settings',
+                    role: 0
+                }
             ]
         }
     ]

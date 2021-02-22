@@ -12,6 +12,7 @@ import MaintenanceRoutes from "../route.maintenance";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions';
+import "../App/auth/firebase"
 
 const AdminLayout = Loadable({
     loader: () => import('./layout/AdminLayout'),
@@ -19,6 +20,7 @@ const AdminLayout = Loadable({
 });
 
 class App extends Component {
+
     render() {
         const menu = AuthRoutes.map((route, index) => {
           return (route.component && !this.props.loggedIn) ? (
