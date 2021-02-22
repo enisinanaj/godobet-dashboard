@@ -17,16 +17,16 @@ const SubscriberPools = React.lazy(() => import('./Dashboard/SubscriberPools/Sub
 const Profile = React.lazy(() => import('./Dashboard/Profile/Profile'));
 
 const routes = [
-    { path: '/dashboard/default', exact: true, name: 'Analytics', component: DashboardDefault },
-    { path: '/dashboard/marketplace', exact: true, name: 'Marketplace', component: Marketplace },
+    { path: '/dashboard/default', exact: true, name: 'Analytics', component: DashboardDefault, role: 4 },
+    { path: '/dashboard/marketplace', exact: true, name: 'Marketplace', component: Marketplace, role: 4 },
     
-    { path: '/dashboard/pending-tips', exact: true, name: 'Pending Tips', component: PendingTips },
-    { path: '/dashboard/balance', exact: true, name: 'Balance', component: Balance },
-    { path: '/dashboard/all-services', exact: true, name: 'Services', component: AllServices },
-    { path: '/dashboard/subscriber-services', exact: true, name: 'My Services', component: SubscriberServices },
-    { path: '/dashboard/subscriber-pools', exact: true, name: 'My Tips', component: SubscriberPools },
+    { path: '/dashboard/pending-tips', exact: true, name: 'Pending Tips', component: PendingTips, role: 4 },
+    { path: '/dashboard/balance', exact: true, name: 'Balance', component: Balance, role: 4 },
+    { path: '/dashboard/all-services', exact: true, name: 'Services', component: AllServices, role: 4 },
+    { path: '/dashboard/subscriber-services', exact: true, name: 'My Services', component: SubscriberServices, role: 4 },
+    { path: '/dashboard/subscriber-pools', exact: true, name: 'My Tips', component: SubscriberPools, role: 4 },
 
-    { path: '/profile', exact: true, name: 'Profile', component: Profile },
+    { path: '/profile', exact: true, name: 'Profile', component: Profile, role: 4 },
 ];
 
 export default routes;

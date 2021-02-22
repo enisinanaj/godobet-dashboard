@@ -45,7 +45,8 @@ class AdminLayout extends Component {
         document.addEventListener('MSFullscreenChange', this.fullScreenExitHandler);
 
         const menu = Routes.map((route, index) => {
-            return (route.component) ? (
+            const guard = (this.props.user.roleValue >= (route.role));
+            return (route.component && guard) ? (
                 <Route
                     key={index + "-" + Math.floor(Math.random() * Math.floor(999))}
                     path={route.path}
@@ -58,7 +59,8 @@ class AdminLayout extends Component {
         });
         
         const admin = AdminRoutes.map((route, index) => {
-            return (route.component) ? (
+            const guard = (this.props.user.roleValue >= (route.role));
+            return (route.component && guard) ? (
                 <Route
                     key={index + "-" + Math.floor(Math.random() * Math.floor(999))}
                     path={route.path}
