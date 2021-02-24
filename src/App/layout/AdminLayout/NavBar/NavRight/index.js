@@ -13,6 +13,12 @@ class NavRight extends Component {
     };
 
     avatar = (email) => {
+
+        console.warn(this.props.user._embedded)
+
+        if (this.props.user._embedded.media.length > 0) {
+            return this.props.user._embedded.media.sort((a, b) => a.id - b.id)[0].url;
+        }
         return 'http://www.gravatar.com/avatar/' + md5(email.email.toLowerCase().trim()) + '?s=32';
     }
 
@@ -28,8 +34,8 @@ class NavRight extends Component {
                             </Dropdown.Toggle>
                             <Dropdown.Menu alignRight className="profile-notification">
                                 <div className="pro-head">
-                                    <img src={this.avatar(this.props.user)} className="img-radius" alt="User Profile"/>
-                                    <span>{ this.props.user?.name }</span>
+                                    <img src={this.avatar(this.props.user)} style={{objectFit: "cover", height: 40}} className="img-radius" alt="User Profile"/>
+                                    <span>{ this.props.user?.name ? this.props.user?.name : this.props.user?.email }</span>
                                     <a onClick={() => this.props.actions.userLogout(null)} href="#logout" className="dud-logout" title="Logout">
                                         <i className="feather icon-log-out"/>
                                     </a>

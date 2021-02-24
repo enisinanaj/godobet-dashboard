@@ -104,7 +104,7 @@ class SignIn extends React.Component {
         TokenManager.getInstance()
         .getToken()
         .then((jwt) => {
-            fetch(url.replace("http://", "https://"), {
+            fetch(url, {
                 headers: {
                 "Content-Type": "application/json",
                 "X-Auth": jwt,

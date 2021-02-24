@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 import { DropzoneComponent } from 'react-dropzone-component';
 import { auth, storage } from 'firebase';
 import TokenManager from '../../App/auth/TokenManager'
+import * as API from '../../store/config';
 
 const Settings = (props) => {
     const [imageAsFile, setImageAsFile] = useState('')
@@ -35,7 +36,7 @@ const Settings = (props) => {
         }
         
         var token = auth().currentUser.uid;
-        const uploadTask = storage().ref(`/avatars/${token}/${imageAsFile.name}`).put(imageAsFile)
+        const uploadTask = storage().ref(`/avatars/${token}/avatar_${imageAsFile.name}`).put(imageAsFile)
         
         uploadTask.on('state_changed', (snapShot) => {
             //takes a snap shot of the process as it is happening
@@ -46,19 +47,27 @@ const Settings = (props) => {
         }, () => {
             // gets the functions from storage refences the image storage in firebase by the children
             // gets the download url then sets the image from firebase as the value for the imgUrl key:
-            storage().ref(`/avatars/${token}`).child(imageAsFile.name).getDownloadURL()
+            storage().ref(`/avatars/${token}`).child("userAvatar_" + imageAsFile.name).getDownloadURL()
             .then(fireBaseUrl => {
                 return fireBaseUrl;
             })
             .then(imageUrl => {
                 TokenManager.getInstance().getToken()
                 .then(jwt => {
-                    fetch(props.applicationState.user._links.self.href, {
-                            method: 'PATCH',
+                    fetch(API.default.API_URL + "/userMedias/", {
+                            method: 'POST',
                             headers: {
                                 "Content-Type": "application/json",
                                 "X-Auth": jwt,
                             },
+                            body: JSON.stringify({
+                                url: imageUrl,
+                                owner: props.applicationState.user._links.self.href,
+                                mediaType: "avatar"
+                            })
+                        })
+                        .then(_ => {
+                            reloadUser()
                         })
                         .catch(error => {
                             console.warn(error);
@@ -66,6 +75,47 @@ const Settings = (props) => {
                 })
             })
         })
+    }
+
+    const reloadUser = () => {
+        TokenManager
+        .getInstance()
+        .getToken()
+        .then((jwt) => {
+            fetch( props.applicationState.user._links.self.href,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Auth": jwt,
+                },
+            })
+            .then((e) => e.json())
+            .then((localUser) => {
+                getUserRole(localUser._links.role.href, auth().currentUser, localUser);
+            });
+        });
+    };
+
+    const getUserRole = async (url, user, localUser) => {
+        TokenManager.getInstance()
+        .getToken()
+        .then((jwt) => {
+            fetch(url, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Auth": jwt,
+                },
+            })
+            .then((e) => e.json())
+            .then((role) => {
+                const roleData = { role };
+                props.actions.userLogin({
+                    user,
+                    ...localUser,
+                    ...roleData,
+                });
+            });
+        });
     }
 
     return (
@@ -139,7 +189,7 @@ const Settings = (props) => {
                                 <Form>
                                     <Form.Group controlId="nomeBanca">
                                         <Form.Label>Nome banca</Form.Label>
-                                        <Form.Control type="text" placeholder="" />
+                                        <Form.Control type="text" placeholder="Revolut" />
                                     </Form.Group>
 
                                     <Form.Group controlId="indirizzoBanca">
@@ -152,16 +202,41 @@ const Settings = (props) => {
                                     </Form.Group>
                                     <Form.Group controlId="abiCab">
                                         <Form.Label>ABI / CAB</Form.Label>
-                                        <Form.Control type="text" placeholder="" />
+                                        <Form.Control type="text" placeholder="011683" />
                                     </Form.Group>
                                     <Form.Group controlId="swift">
                                         <Form.Label>SWIFT</Form.Label>
-                                        <Form.Control type="text" placeholder="" />
+                                        <Form.Control type="text" placeholder="GIBAATWWXXX" />
                                     </Form.Group>
                                     
                                     <Button variant="primary">
                                         Salva
                                     </Button>
+                                </Form>
+                            </Col>
+                        </Row>
+                    </Card>
+                    <Card title='Documenti' isOption={true}>
+                        <Row>
+                            <Col md={12} sm={12}>
+                                <Form>
+                                    <Form.Group controlId="swift">
+                                        <Form.Label>Numero documento d'identità</Form.Label>
+                                        <Form.Control type="text" placeholder="AX 074 JJ" />
+                                    </Form.Group>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Documento d'identità (Fronte)</Form.Label>
+                                        <DropzoneComponent config={config} eventHandlers={eventHandlers} djsConfig={djsConfig} />
+                                    </Form.Group>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Documento d'identità (Retro)</Form.Label>
+                                        <DropzoneComponent config={config} eventHandlers={eventHandlers} djsConfig={djsConfig} />
+                                    </Form.Group>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Bolletta</Form.Label>
+                                        <DropzoneComponent config={config} eventHandlers={eventHandlers} djsConfig={djsConfig} />
+                                    </Form.Group>
+                                    <Button variant={"primary"} onClick={() => {}}>Carica i documenti</Button>
                                 </Form>
                             </Col>
                         </Row>
