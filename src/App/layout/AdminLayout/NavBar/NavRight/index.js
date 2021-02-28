@@ -13,11 +13,9 @@ class NavRight extends Component {
     };
 
     avatar = (email) => {
-
-        console.warn(this.props.user._embedded)
-
-        if (this.props.user._embedded.media.length > 0) {
-            return this.props.user._embedded.media.sort((a, b) => a.id - b.id)[0].url;
+        console.warn(this.props.user._embedded.media.filter(m => m.mediaType === 'avatar'))
+        if (this.props.user._embedded.media && this.props.user._embedded.media.filter(m => m.mediaType === 'avatar').length > 0) {
+            return this.props.user._embedded.media.filter(m => m.mediaType === 'avatar').sort((a, b) => b.id - a.id)[0].url;
         }
         return 'http://www.gravatar.com/avatar/' + md5(email.email.toLowerCase().trim()) + '?s=32';
     }
