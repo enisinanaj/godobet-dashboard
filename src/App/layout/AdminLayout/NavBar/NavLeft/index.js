@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import windowSize from 'react-window-size';
 
 import Aux from "../../../../../hoc/_Aux";
@@ -29,4 +30,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(windowSize(NavLeft));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(windowSize(NavLeft)));

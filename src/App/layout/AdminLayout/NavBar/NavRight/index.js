@@ -6,6 +6,7 @@ import md5 from 'md5';
 
 import Aux from "../../../../../hoc/_Aux";
 import * as actions from "../../../../../store/actions";
+import { withRouter } from 'react-router-dom';
 
 class NavRight extends Component {
     state = {
@@ -20,10 +21,15 @@ class NavRight extends Component {
     }
 
     render() {
-
         return (
             <Aux>
                 <ul className="navbar-nav ml-auto">
+                    <li>
+                        <a href="/dashboard/marketplace" data-toggle="tab" aria-expanded="false" className="nav-link has-ripple">
+                            <i className="fas fa-shopping-cart f-18"></i>
+                            <span className="d-none d-lg-inline-block m-l-10">Marketplace</span>
+                        </a>
+                    </li>
                     <li>
                         <Dropdown alignRight={!this.props.rtlLayout} className="drp-user">
                             <Dropdown.Toggle variant={'link'} id="dropdown-basic">
@@ -39,6 +45,11 @@ class NavRight extends Component {
                                 </div>
                                 <ul className="pro-body">
                                     <li><a href="/settings" className="dropdown-item"><i className="feather icon-settings"/> Impostazioni</a></li>
+                                    {
+                                        this.props.user.roleValue >= 5
+                                        ? <li><a href="/users" className="dropdown-item"><i className="feather icon-settings"/> All Users</a></li>
+                                        : <></>
+                                    }
                                     <li><a href="/profile" className="dropdown-item"><i className="feather icon-user"/> Profile</a></li>
                                 </ul>
                             </Dropdown.Menu>
@@ -55,7 +66,7 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(NavRight);
+)(NavRight));

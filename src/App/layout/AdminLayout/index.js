@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import {Route, Switch, Redirect, BrowserRouter} from 'react-router-dom';
+import {Route, Switch, Redirect, BrowserRouter, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Fullscreen from "react-full-screen";
 import windowSize from 'react-window-size';
@@ -43,9 +43,10 @@ class AdminLayout extends Component {
         document.addEventListener('MSFullscreenChange', this.fullScreenExitHandler);
 
         const menu = Routes.map((route, index) => {
-            return (route.component) ? (
+            const guard = (this.props.user.roleValue >= (route.role));
+            return (route.component && guard) ? (
                 <Route
-                    key={index}
+                    key={index + "-" + Math.floor(Math.random() * Math.floor(999))}
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
@@ -56,9 +57,10 @@ class AdminLayout extends Component {
         });
         
         const admin = AdminRoutes.map((route, index) => {
-            return (route.component) ? (
+            const guard = (this.props.user.roleValue >= (route.role));
+            return (route.component && guard) ? (
                 <Route
-                    key={index}
+                    key={index + "-" + Math.floor(Math.random() * Math.floor(999))}
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
@@ -71,7 +73,7 @@ class AdminLayout extends Component {
         const demo = DemoRoutes.map((route, index) => {
             return (route.component) ? (
                 <Route
-                    key={index}
+                    key={index + "-" + Math.floor(Math.random() * Math.floor(999))}
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
@@ -138,4 +140,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps) (windowSize(AdminLayout));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps) (windowSize(AdminLayout)));

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {NavLink} from 'react-router-dom';
+// import {NavLink} from 'react-router-dom';
 import {withRouter} from 'react-router-dom';
 import windowSize from 'react-window-size';
 
@@ -31,13 +31,15 @@ class NavItem extends Component {
                     <NavBadge layout={this.props.layout} items={this.props.item}/>
 				</a>
             );
-        } else {
+        } else if(!this.props.item.hidden) {
             subContent = (
-                <NavLink to={this.props.item.url} className="nav-link" exact={true} target={itemTarget}>
-                    <NavIcon items={this.props.item}/>
-                    {itemTitle}
-                    <NavBadge layout={this.props.layout} items={this.props.item}/>
-                </NavLink>
+                // <NavLink to={this.props.item.url} className="nav-link" exact={true} target={itemTarget}>
+                    <a href={this.props.item.url} className={"nav-link" + (this.props.location.pathname === this.props.item.url ? ' active' : '')} target={itemTarget}>
+                        <NavIcon items={this.props.item}/>
+                        {itemTitle}
+                        <NavBadge layout={this.props.layout} items={this.props.item}/>
+                    </a>
+                // </NavLink>
             );
         }
         let mainContent = '';

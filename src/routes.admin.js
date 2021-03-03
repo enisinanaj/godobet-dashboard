@@ -8,7 +8,7 @@ global.jQuery = $;
 const Users = React.lazy(() => import('./Dashboard/Profile/Users'));
 
 const routes = [
-    { path: '/users', exact: true, name: 'Profile', component: Users },
+    { path: '/users', exact: true, name: 'Profile', component: Users, role: 5 },
 ];
 
 export default routes;

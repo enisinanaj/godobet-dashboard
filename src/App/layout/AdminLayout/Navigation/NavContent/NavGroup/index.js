@@ -1,7 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Aux from "../../../../../../hoc/_Aux";
 import NavCollapse from './../NavCollapse';
 import NavItem from './../NavItem';
+
+import * as actions from '../../../../../../store/actions';
+import { withRouter } from 'react-router-dom';
 
 const navGroup = (props) => {
     let navItems = '';
@@ -9,6 +14,15 @@ const navGroup = (props) => {
         const groups = props.group.children;
         navItems = Object.keys(groups).map(item => {
             item = groups[item];
+
+            if (props.user.roleValue < item.role) {
+                return false;
+            }
+
+            if (item.hidden) {
+                return false;
+            }
+
             switch (item.type) {
                 case 'collapse':
                     return <NavCollapse key={item.id} collapse={item} type="main" />;
@@ -28,4 +42,14 @@ const navGroup = (props) => {
     );
 };
 
-export default navGroup;
+
+
+const mapStateToProps = (state) => ({ user: state.user, loggedIn: state.loggedIn, registered: state.registered });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+
+export default withRouter(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(navGroup));

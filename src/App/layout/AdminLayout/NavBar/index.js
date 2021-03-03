@@ -9,6 +9,7 @@ import DEMO from "../../../../store/constant";
 import * as actionTypes from "../../../../store/actions";
 
 import logo from '../../../../assets/images/godobet_logo_small.png';
+import { withRouter } from 'react-router-dom';
 
 class NavBar extends Component {
     state = {
@@ -67,7 +68,7 @@ class NavBar extends Component {
             <Aux>
                 <div className="m-header">
                     <a className={toggleClass.join(' ')} id="mobile-collapse1" href={DEMO.BLANK_LINK} onClick={this.props.onToggleNavigation}><span/></a>
-                    <a href={DEMO.BLANK_LINK} className="b-brand">
+                    <a href="/dashboard/default" className="b-brand">
                         <img id="main-logo" src={mainLogo} alt="" className="logo" />
                     </a>
                     <a className="mob-toggler" href={DEMO.BLANK_LINK} onClick={() => this.setState(prevState => {return {rightToggle: !prevState.rightToggle}})}><i className="feather icon-more-vertical"/></a>
@@ -111,4 +112,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps) (windowSize(NavBar));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps) (windowSize(NavBar)));

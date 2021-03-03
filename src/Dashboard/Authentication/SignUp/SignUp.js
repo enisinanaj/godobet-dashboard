@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, withRouter} from 'react-router-dom';
 
 import './../../../assets/scss/style.scss';
 import Aux from "../../../hoc/_Aux";
@@ -166,4 +166,4 @@ const mapDispatchToProps = (dispatch) => ({
     actions: bindActionCreators(actions, dispatch),
   });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SignUp));

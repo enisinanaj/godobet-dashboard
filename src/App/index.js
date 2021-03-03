@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, Redirect, BrowserRouter, withRouter } from 'react-router-dom';
 import Loadable from 'react-loadable';
 
 import '../../node_modules/font-awesome/scss/font-awesome.scss';
@@ -25,7 +25,7 @@ class App extends Component {
         const menu = AuthRoutes.map((route, index) => {
           return (route.component && !this.props.loggedIn) ? (
               <Route
-                  key={index}
+                  key={index + "-" + Math.floor(Math.random() * Math.floor(999))}
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
@@ -38,7 +38,7 @@ class App extends Component {
         const maintenance = MaintenanceRoutes.map((route, index) => {
             return (route.component) ? (
                 <Route
-                    key={index}
+                    key={index + "-" + Math.floor(Math.random() * Math.floor(999))}
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
@@ -74,7 +74,7 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(App));
