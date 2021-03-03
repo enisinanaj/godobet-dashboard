@@ -58,8 +58,11 @@ const Settings = (props) => {
             })
             .then((e) => e.json())
             .then((banks) => {
+                if (!banks._embedded.bankAccounts) {
+                    return;
+                }
+
                 var sortedBanks = banks._embedded.bankAccounts.sort((a, b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime());
-                console.warn(user)
                 setBank(sortedBanks.length > 0 ? sortedBanks[0]: {});
             });
         });

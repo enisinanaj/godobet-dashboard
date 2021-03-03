@@ -1,6 +1,5 @@
 import React from 'react';
 import $ from 'jquery';
-import Settings from './Dashboard/Profile/Settings';
 
 window.jQuery = $;
 window.$ = $;
@@ -15,6 +14,7 @@ const AllServices = React.lazy(() => import('./Dashboard/AllServices/AllServices
 const SubscriberServices = React.lazy(() => import('./Dashboard/SubscriberServices/SubscriberServices'));
 const SubscriberPools = React.lazy(() => import('./Dashboard/SubscriberPools/SubscriberPools'));
 
+const Settings = React.lazy(() => import('./Dashboard/Profile/Settings'));
 const Profile = React.lazy(() => import('./Dashboard/Profile/Profile'));
 
 const routes = [
@@ -27,8 +27,8 @@ const routes = [
     { path: '/dashboard/subscriber-services', exact: true, name: 'My Services', component: SubscriberServices, role: 4 },
     { path: '/dashboard/subscriber-pools', exact: true, name: 'My Tips', component: SubscriberPools, role: 4 },
 
-    { path: '/settings', exact: true, name: 'Settings', component: Settings },
-    { path: '/profile', exact: true, name: 'Profile', component: Profile },
+    { path: '/settings', exact: true, name: 'Settings', component: Settings, role: 3 },
+    { path: '/profile', exact: true, name: 'Profile', component: Profile, role: 3},
 ];
 
 export default routes;
