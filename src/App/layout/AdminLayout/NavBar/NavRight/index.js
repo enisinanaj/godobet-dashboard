@@ -13,7 +13,6 @@ class NavRight extends Component {
     };
 
     avatar = (email) => {
-        console.warn(this.props.user._embedded.media.filter(m => m.mediaType === 'avatar'))
         if (this.props.user._embedded.media && this.props.user._embedded.media.filter(m => m.mediaType === 'avatar').length > 0) {
             return this.props.user._embedded.media.filter(m => m.mediaType === 'avatar').sort((a, b) => b.id - a.id)[0].url;
         }
@@ -39,7 +38,6 @@ class NavRight extends Component {
                                     </a>
                                 </div>
                                 <ul className="pro-body">
-                                    {/* <li><a href="/users" className="dropdown-item"><i className="feather icon-settings"/> All Users</a></li> */}
                                     <li><a href="/settings" className="dropdown-item"><i className="feather icon-settings"/> Impostazioni</a></li>
                                     <li><a href="/profile" className="dropdown-item"><i className="feather icon-user"/> Profile</a></li>
                                 </ul>
