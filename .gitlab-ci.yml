@@ -6,7 +6,7 @@ stages:
 
 push_image:
   stage: push_image
-  image: docker:stable
+  # image: docker:stable
   # services:
   # - docker:dind
   script:
