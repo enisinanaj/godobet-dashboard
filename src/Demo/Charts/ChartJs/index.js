@@ -5,7 +5,7 @@ import Aux from "../../../hoc/_Aux/index";
 import BarBasicChart from "./BarBasicChart";
 import BarStackedChart from "./BarStackedChart";
 import BarHorizontalChart from "./BarHorizontalChart";
-import LineInterpolationChart from "./LineInterpolationChart";
+import LineInterpolationChart from "../../../Dashboard/Charts/LineInterpolationChart";
 import LineOriginChart from "./LineOriginChart";
 import LineFillEndChart from "./LineFillEndChart";
 import LineBasicChart from "./LineBasicChart";
