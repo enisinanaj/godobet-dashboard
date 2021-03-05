@@ -128,7 +128,7 @@ const FileUpload = (props) => {
         <Form>
             {props.type === 'avatar' && user._embedded.media && user._embedded.media.filter(m => m.mediaType === 'avatar').length > 0 && 
                 <div style={{flexDirection: 'row', justifyContent: 'center', textAlign: 'center'}}>
-                    <img src={user._embedded.media.filter(m => m.mediaType === 'avatar').sort((a, b) => b.id - a.id)[0].url} style={{width: 180, margin: 10, height: 180, borderRadius: 90, objectFit: 'cover'}} />
+                    <img src={user._embedded.media.filter(m => m.mediaType === 'avatar').sort((a, b) => b.id - a.id)[0].url} style={{width: 180, margin: 10, height: 180, borderRadius: 90, objectFit: 'cover'}} alt=""/>
                 </div>
             }
             <Form.Group controlId="formBasicEmail">
