@@ -46,7 +46,6 @@ const Settings = (props) => {
 
 
     useEffect(() => {
-
         TokenManager.getInstance().getToken()
         .then((jwt) => {
             fetch( props.applicationState.user._links.bankAccounts.href,
@@ -65,9 +64,8 @@ const Settings = (props) => {
                 var sortedBanks = banks._embedded.bankAccounts.sort((a, b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime());
                 setBank(sortedBanks.length > 0 ? sortedBanks[0]: {});
             });
-        });
-        
-    }, [])
+        }); 
+    });
 
     const reloadUser = () => {
         TokenManager.getInstance().getToken()
