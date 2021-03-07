@@ -14,8 +14,8 @@ const PendingTips = React.lazy(() =>
   import("./Dashboard/PendingTips/PendingTips")
 );
 const Balance = React.lazy(() => import("./Dashboard/Balance/Balance"));
-const AllServices = React.lazy(() =>
-  import("./Dashboard/AllServices/AllServices")
+const MyServices = React.lazy(() =>
+  import("./Dashboard/MyServices/MyServices")
 );
 const SubscriberServices = React.lazy(() =>
   import("./Dashboard/SubscriberServices/SubscriberServices")
@@ -58,10 +58,10 @@ const routes = [
     role: 4,
   },
   {
-    path: "/dashboard/all-services",
+    path: "/dashboard/my-services",
     exact: true,
     name: "Services",
-    component: AllServices,
+    component: MyServices,
     role: 4,
   },
   {
