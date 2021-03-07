@@ -1,7 +1,8 @@
 .adv-task-board {
   background-color: transparent !important;
   height: auto !important;
-  .react-trello-board, .sc-htpNat {
+  .react-trello-board,
+  .sc-htpNat {
     background-color: #fff;
     border: 1px solid #ddd;
 
@@ -21,7 +22,7 @@
     }
 
     .react-trello-lane {
-      border: 1px solid rgba(0,0,0,.125);
+      border: 1px solid rgba(0, 0, 0, 0.125);
       background-color: #f8f9fa;
     }
 
@@ -37,7 +38,8 @@
           &:hover {
             color: #ea1b0d;
           }
-          &:before,&:after{
+          &:before,
+          &:after {
             right: 0;
             left: 0;
             margin: 0 auto;
@@ -54,6 +56,4 @@
       border: 1px solid #ccc;
     }
   }
-
-
 }

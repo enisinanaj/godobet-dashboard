@@ -20,7 +20,8 @@
       z-index: 1;
       top: 22px;
       right: 22px;
-      &:before, &:after {
+      &:before,
+      &:after {
         background: #fff;
       }
     }
@@ -43,5 +44,4 @@
       }
     }
   }
-
 }

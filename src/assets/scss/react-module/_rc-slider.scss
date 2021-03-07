@@ -1,5 +1,5 @@
-@import '~rc-slider/assets/index.css';
-@import '~rc-tooltip/assets/bootstrap.css';
+@import "~rc-slider/assets/index.css";
+@import "~rc-tooltip/assets/bootstrap.css";
 
 .pc-range-slider {
   &.rc-slider {
@@ -29,7 +29,9 @@
       }
     }
 
-    .rc-slider-step, .rc-slider-rail, .rc-slider-track {
+    .rc-slider-step,
+    .rc-slider-rail,
+    .rc-slider-track {
       height: 8px;
     }
 

@@ -1,4 +1,4 @@
-$black:  #000 !default;
+$black: #000 !default;
 $spacer: 1rem !default;
 $gray-300: #dee2e6 !default;
 $border-color: $gray-300 !default;
@@ -6,16 +6,16 @@ $border-color: $gray-300 !default;
 $header-height: 3.5rem !default;
 $header-footer-height: ($header-height * 2) !default;
 $enable-rounded: true !default;
-$border-radius: .125rem !default;
-$border-radius-lg: .25rem !default;
-$border-radius-sm: .0625rem !default;
+$border-radius: 0.125rem !default;
+$border-radius-lg: 0.25rem !default;
+$border-radius-sm: 0.0625rem !default;
 $font-family-headers: "Mada", sans-serif !default;
 
-$card-border-radius: .125rem !default;
-$card-spacer-y:            1rem !default;
-$card-border-width:        0 !default;
-$card-border-color:        rgba($black,.06) !default;
-$card-cap-bg:              white !default;
+$card-border-radius: 0.125rem !default;
+$card-spacer-y: 1rem !default;
+$card-border-width: 0 !default;
+$card-border-color: rgba($black, 0.06) !default;
+$card-cap-bg: white !default;
 
 @mixin border-radius($radius: $border-radius) {
   @if $enable-rounded {
