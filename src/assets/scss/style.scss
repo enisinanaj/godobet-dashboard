@@ -21,7 +21,6 @@ File: style.css
 =================================================================================
 =================================================================================== */
 
-
 // Theme Font
 @import "themes/font/theme-font";
 
@@ -40,7 +39,6 @@ File: style.css
 // bootstrap
 @import "~bootstrap/scss/bootstrap";
 
-
 // icon
 @import "themes/font/next-icon";
 @import "themes/font/feather";
@@ -58,7 +56,6 @@ File: style.css
 @import "themes/general";
 @import "themes/generic";
 @import "themes/plugin/animate";
-
 
 // theme layouts
 @import "themes/layouts/menu-lite";
@@ -86,7 +83,6 @@ File: style.css
 // Charts
 @import "themes/plugin/highcharts";
 @import "themes/plugin/peitychart";
-
 
 // pages
 @import "themes/pages/authentication";

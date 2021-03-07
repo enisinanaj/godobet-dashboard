@@ -7,13 +7,14 @@
   border-top: 2px solid #ddd;
   border-bottom: 2px solid #ddd;
 
-  .nestable-item, .nestable-item-copy {
+  .nestable-item,
+  .nestable-item-copy {
     margin: 5px 0;
     .nestable-list {
       margin: 5px 0;
     }
 
-    &.is-dragging:before{
+    &.is-dragging:before {
       background: #f2fbff;
     }
   }
@@ -43,7 +44,7 @@
     height: 30px;
     text-indent: 100%;
     border: 1px solid #aaa;
-    background: linear-gradient(to bottom,#ddd 0,#bbb 100%);
+    background: linear-gradient(to bottom, #ddd 0, #bbb 100%);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 

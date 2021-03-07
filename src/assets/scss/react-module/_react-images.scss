@@ -3,8 +3,8 @@
   .figure_10ki57k {
     background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid rgba(0,0,0,.2);
-    border-radius: .3rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3rem;
     outline: 0;
     padding: 1rem;
     .footer_60scne {
@@ -18,7 +18,9 @@
   }
 }
 
-.video_thumbnail_u4nzsx, .gallery_1s3fnxy .source_video_oqobck, .gallery_1s3fnxy .video_thumbnail_3a3o1y {
+.video_thumbnail_u4nzsx,
+.gallery_1s3fnxy .source_video_oqobck,
+.gallery_1s3fnxy .video_thumbnail_3a3o1y {
   width: 100%;
   height: auto;
   max-width: 100%;
@@ -35,6 +37,7 @@
   border-image: initial;
 }
 
-.jss62, .jss1 {
+.jss62,
+.jss1 {
   z-index: 1;
 }

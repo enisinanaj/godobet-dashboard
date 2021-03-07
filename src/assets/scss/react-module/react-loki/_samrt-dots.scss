@@ -53,7 +53,7 @@
         z-index: 96;
         display: block;
         &:before {
-          content: ' ';
+          content: " ";
           position: absolute;
           bottom: 2px;
           left: 40%;
@@ -69,7 +69,7 @@
           z-index: 98;
         }
         &:after {
-          content: ' ';
+          content: " ";
           position: relative;
           left: 43%;
           bottom: 2px;

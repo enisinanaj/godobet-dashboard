@@ -3,11 +3,13 @@
 @font-face {
   font-family: "pct";
   src: url("./fonts/pct.eot");
-  src: url("./fonts/pct.eot?#iefix") format("embedded-opentype"), url("./fonts/pct.woff") format("woff"), url("./fonts/pct.ttf") format("truetype"), url("./fonts/pct.svg#pct") format("svg");
+  src: url("./fonts/pct.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/pct.woff") format("woff"),
+    url("./fonts/pct.ttf") format("truetype"),
+    url("./fonts/pct.svg#pct") format("svg");
   font-weight: normal;
   font-style: normal;
 }
-
 
 [data-icon]:before {
   font-family: "pct" !important;
@@ -22,7 +24,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-[class^="pct-"]:before, [class*=" pct-"]:before {
+[class^="pct-"]:before,
+[class*=" pct-"]:before {
   font-family: "pct" !important;
   font-style: normal !important;
   font-weight: normal !important;

@@ -1,13 +1,12 @@
 .board {
-
   // VARIABLES
-  $dark-yellow-color: #FFAE17;
-  $light-yellow-color: #FFC43A;
-  $second-yellow-color: #FFDA65;
-  $turquoise-color: #1AB188;
+  $dark-yellow-color: #ffae17;
+  $light-yellow-color: #ffc43a;
+  $second-yellow-color: #ffda65;
+  $turquoise-color: #1ab188;
   $blue-color: #1496bb;
   $white-color: white;
-  $body-background: #24313C;
+  $body-background: #24313c;
 
   // MIXINS
   @mixin transition($args...) {
@@ -28,9 +27,9 @@
 
   @mixin box-shadow($top, $left, $blur, $color, $inset: false) {
     @if $inset {
-      -webkit-box-shadow:inset $top $left $blur $color;
-      -moz-box-shadow:inset $top $left $blur $color;
-      box-shadow:inset $top $left $blur $color;
+      -webkit-box-shadow: inset $top $left $blur $color;
+      -moz-box-shadow: inset $top $left $blur $color;
+      box-shadow: inset $top $left $blur $color;
     } @else {
       -webkit-box-shadow: $top $left $blur $color;
       -moz-box-shadow: $top $left $blur $color;
@@ -52,14 +51,16 @@
     height: 15px;
     overflow: hidden;
     &:hover {
-      &::before, &::after {
+      &::before,
+      &::after {
         background: #f44236;
         color: #f44236;
       }
     }
 
-    &::before, &::after {
-      content: '';
+    &::before,
+    &::after {
+      content: "";
       position: absolute;
       width: 100%;
       top: 50%;
@@ -90,7 +91,7 @@
       line-height: 230px;
       text-transform: uppercase;
       font-weight: 100;
-      @include transition(all .3s ease);
+      @include transition(all 0.3s ease);
     }
 
     .main-header__text {
@@ -129,7 +130,7 @@
     .note__header {
       height: 40px;
       width: 100%;
-      background: #FFD248;
+      background: #ffd248;
     }
 
     .note__footer {
@@ -156,14 +157,13 @@
         border: none;
 
         &:hover {
-          background: #FFC43D;
+          background: #ffc43d;
         }
       }
     }
   }
 
   .wrapper-tooltip {
-
     &:hover .tooltip {
       opacity: 1;
       pointer-events: auto;
@@ -189,7 +189,7 @@
       position: relative;
       width: 100%;
       @include transform(translateY(10px));
-      @include transition(all .25s ease-out);
+      @include transition(all 0.25s ease-out);
       @include transition(2px 2px 6px rgba(0, 0, 0, 0.28));
 
       &:before {
@@ -225,10 +225,10 @@
 
   @keyframes fadein {
     from {
-      opacity:0;
+      opacity: 0;
     }
     to {
-      opacity:1;
+      opacity: 1;
     }
   }
 }

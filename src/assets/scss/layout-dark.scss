@@ -36,7 +36,7 @@ body.able-pro-dark {
 
   .bg-light,
   .bg-white {
-    background-color: lighten($dark-layout, 3%)!important;
+    background-color: lighten($dark-layout, 3%) !important;
   }
 
   .text-white {
@@ -106,7 +106,7 @@ body.able-pro-dark {
     }
 
     &.btn,
-    &.btn:Active,
+    &.btn:active,
     &.btn:focus,
     &.btn:hover {
       color: #fff !important;
@@ -123,18 +123,22 @@ body.able-pro-dark {
   }
 
   .user-card .user-about-block img {
-    box-shadow: 0 0 0 5px lighten($dark-layout,7%);
+    box-shadow: 0 0 0 5px lighten($dark-layout, 7%);
   }
 
-  .latest-update-card .card-body .latest-update-box .update-meta .update-icon.ring,
+  .latest-update-card
+    .card-body
+    .latest-update-box
+    .update-meta
+    .update-icon.ring,
   .page-header.breadcumb-sticky,
   .user-card .user-about-block .certificated-badge,
   .user-card-3 .certificated-badge {
-    background: lighten($dark-layout,7%);
+    background: lighten($dark-layout, 7%);
   }
   /* ==========  card css start  =========== */
   .card:not([class*="bg-"]) {
-    background: lighten($dark-layout,7%);
+    background: lighten($dark-layout, 7%);
     box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.08);
 
     .card-header {
@@ -162,7 +166,7 @@ body.able-pro-dark {
 
     &.card-load {
       .card-loader {
-        background-color: transparentize($dark-layout,.2%);
+        background-color: transparentize($dark-layout, 0.2%);
 
         i {
           color: $primary-color;
@@ -189,17 +193,17 @@ body.able-pro-dark {
 
   .user-profile,
   .user-profile-list table tr td {
-    background: lighten($dark-layout,7%);
+    background: lighten($dark-layout, 7%);
     box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.08);
   }
   /* ================================    Dropdown Start  ===================== */
   .dropdown-menu {
-    background-color: lighten($dark-layout,15%);
+    background-color: lighten($dark-layout, 15%);
     box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.08);
 
     &.show {
       &:before {
-        color: lighten($dark-layout,7%);
+        color: lighten($dark-layout, 7%);
         text-shadow: 0 -2px 2px rgba(0, 0, 0, 0.08);
       }
     }
@@ -214,7 +218,7 @@ body.able-pro-dark {
       &:active,
       &:focus,
       &:hover {
-        background: transparentize($dark-layout-font,0.9);
+        background: transparentize($dark-layout-font, 0.9);
 
         > a {
           background: transparent;
@@ -228,7 +232,7 @@ body.able-pro-dark {
     &:focus,
     &:hover {
       color: #fff !important;
-      background-color: transparentize($dark-layout-font,0.9);
+      background-color: transparentize($dark-layout-font, 0.9);
     }
   }
   /* ====================  Navbar Start  ===================== */
@@ -250,9 +254,9 @@ body.able-pro-dark {
     }
 
     .navbar-content {
-      box-shadow: 2px 0 20px 0 rgba(0,0,0,0.08);
+      box-shadow: 2px 0 20px 0 rgba(0, 0, 0, 0.08);
     }
-    .pcoded-inner-navbar .pcoded-submenu li > a.active{
+    .pcoded-inner-navbar .pcoded-submenu li > a.active {
       color: #fff;
     }
   }
@@ -268,40 +272,40 @@ body.able-pro-dark {
   }
   /* ===================  Navbar end  ===================== */
   .pcoded-header {
-    &:not([class*='header-']) {
-      background: nth($color-header-color,5);
-      color: transparentize($header-dark-text-color,0.2);
+    &:not([class*="header-"]) {
+      background: nth($color-header-color, 5);
+      color: transparentize($header-dark-text-color, 0.2);
       box-shadow: 0 1px 0 0 $dark-layout;
       .main-search {
-          .search-close > .input-group-text {
-              color: $dark-layout-font;
-          }
+        .search-close > .input-group-text {
+          color: $dark-layout-font;
+        }
 
-          &.open {
-              .input-group {
-                  background: lighten($dark-layout,5%);
-                  border-color: darken($dark-layout-font,40%);
+        &.open {
+          .input-group {
+            background: lighten($dark-layout, 5%);
+            border-color: darken($dark-layout-font, 40%);
 
-                  .search-btn {
-                      .input-group-text {
-                          color: #fff;
-                      }
-                  }
+            .search-btn {
+              .input-group-text {
+                color: #fff;
               }
+            }
           }
+        }
       }
     }
 
     .dropdown-menu {
-      color: transparentize($header-dark-text-color,0.2) !important;
+      color: transparentize($header-dark-text-color, 0.2) !important;
 
       a {
-        color: transparentize($header-dark-text-color,0.2) !important;
+        color: transparentize($header-dark-text-color, 0.2) !important;
       }
 
       > li {
         > a {
-          color: transparentize($header-dark-text-color,0.2);
+          color: transparentize($header-dark-text-color, 0.2);
         }
 
         &.active,
@@ -318,18 +322,17 @@ body.able-pro-dark {
     .input-group .input-group-text,
     a,
     dropdown-toggle {
-      color: transparentize($header-dark-text-color,0.2);
+      color: transparentize($header-dark-text-color, 0.2);
 
       &:hover {
         color: #fff;
       }
     }
 
-
     .dropdown {
       &.show {
         &:before {
-          color: lighten($dark-layout,7%);
+          color: lighten($dark-layout, 7%);
           text-shadow: 0 -1px 2px rgba(0, 0, 0, 0.12);
         }
       }
@@ -337,13 +340,13 @@ body.able-pro-dark {
       .notification {
         .noti-head {
           border-bottom: 1px solid lighten($dark-layout, 5%);
-          background: lighten($dark-layout,7%);
+          background: lighten($dark-layout, 7%);
         }
 
         .noti-body {
           li {
             &.notification:hover {
-              background: transparentize($primary-color,0.9);
+              background: transparentize($primary-color, 0.9);
             }
 
             p {
@@ -356,7 +359,7 @@ body.able-pro-dark {
 
         .noti-footer {
           border-top: 1px solid lighten($dark-layout, 5%);
-          background: lighten($dark-layout,7%);
+          background: lighten($dark-layout, 7%);
         }
       }
 
@@ -378,7 +381,7 @@ body.able-pro-dark {
       }
 
       .pro-body li a:hover {
-        background: transparentize($dark-layout-font,0.9);
+        background: transparentize($dark-layout-font, 0.9);
         background: transparent;
       }
     }
@@ -386,11 +389,11 @@ body.able-pro-dark {
 
   .mobile-menu {
     span {
-      background-color: transparentize($header-dark-text-color,0.2);
+      background-color: transparentize($header-dark-text-color, 0.2);
 
       &:after,
       &:before {
-        background-color: transparentize($header-dark-text-color,0.2);
+        background-color: transparentize($header-dark-text-color, 0.2);
       }
     }
 
@@ -459,13 +462,13 @@ body.able-pro-dark {
         &:after {
           color: lighten($dark-layout, 3%);
           box-shadow: none;
-          background: lighten($dark-layout,12%);
+          background: lighten($dark-layout, 12%);
         }
       }
 
       &.msg-open {
         &:after {
-          color: transparentize($primary-color,0.9);
+          color: transparentize($primary-color, 0.9);
         }
       }
     }
@@ -473,18 +476,18 @@ body.able-pro-dark {
 
   .header-chat {
     .h-list-body {
-      background: lighten($dark-layout,0%);
+      background: lighten($dark-layout, 0%);
 
       .chat-messages {
         .chat-menu-reply {
           > div {
             p {
-              background: lighten($dark-layout,5%);
+              background: lighten($dark-layout, 5%);
               box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
             }
 
             &:before {
-              color: lighten($dark-layout,5%);
+              color: lighten($dark-layout, 5%);
               text-shadow: 7px 10px 20px rgba(0, 0, 0, 0.1);
               border-bottom-color: lighten($dark-layout, 5%);
               border-right-color: lighten($dark-layout, 5%);
@@ -495,16 +498,16 @@ body.able-pro-dark {
         .chat-menu-content {
           > div {
             p {
-              background: darken($dark-layout,8%);
+              background: darken($dark-layout, 8%);
               color: #fff;
-              box-shadow: 0 10px 20px 0 rgba(0,0,0,0.1);
+              box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
             }
 
             &:before {
-              color: darken($dark-layout,8%);
+              color: darken($dark-layout, 8%);
               text-shadow: -4px 4px 10px rgba(0, 0, 0, 0.15);
-              border-left-color: darken($dark-layout,8%);
-              border-top-color: darken($dark-layout,8%);
+              border-left-color: darken($dark-layout, 8%);
+              border-top-color: darken($dark-layout, 8%);
             }
           }
         }
@@ -512,10 +515,10 @@ body.able-pro-dark {
     }
 
     .h-list-footer {
-      background: lighten($dark-layout,0%);
+      background: lighten($dark-layout, 0%);
 
       .input-group {
-        background: lighten($dark-layout,10%);
+        background: lighten($dark-layout, 10%);
         box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
 
         .form-control,
@@ -531,18 +534,18 @@ body.able-pro-dark {
         }
 
         &:after {
-          color: lighten($dark-layout,10%);
+          color: lighten($dark-layout, 10%);
           text-shadow: 4px 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .btn-primary {
-          background: darken($dark-layout,7%);
-          border-color: darken($dark-layout,7%);
+          background: darken($dark-layout, 7%);
+          border-color: darken($dark-layout, 7%);
         }
 
         .btn-success {
-          background: lighten($dark-layout,0%);
-          border-color: lighten($dark-layout,0%);
+          background: lighten($dark-layout, 0%);
+          border-color: lighten($dark-layout, 0%);
         }
       }
     }
@@ -640,8 +643,8 @@ body.able-pro-dark {
     color: darken($dark-layout-font, 10%);
   }
 
-  .support-bar [class*=col],
-  .support-bar1 [class*=col],
+  .support-bar [class*="col"],
+  .support-bar1 [class*="col"],
   .table th,
   .table thead th,
   .table-bordered td,
@@ -653,7 +656,7 @@ body.able-pro-dark {
   .footable .pagination > .disabled > a,
   .footable .pagination > li > a,
   .footable.table-striped > tbody > tr:nth-child(odd) {
-    background-color: transparentize(darken($dark-layout, 10%),0.75);
+    background-color: transparentize(darken($dark-layout, 10%), 0.75);
     border: 1px solid lighten($dark-layout, 5%);
     color: darken($dark-layout-font, 10%);
   }
@@ -687,11 +690,11 @@ body.able-pro-dark {
   }
 
   table.DTFC_Cloned tr {
-    background-color: lighten($dark-layout,7%);
+    background-color: lighten($dark-layout, 7%);
   }
 
   .highcharts-background {
-    fill: lighten($dark-layout,7%) !important;
+    fill: lighten($dark-layout, 7%) !important;
   }
 
   .progress {
@@ -707,7 +710,7 @@ body.able-pro-dark {
     .nav-link.active {
       color: #fff;
       border-color: lighten($dark-layout, 3%);
-      background: lighten($dark-layout,7%) !important;
+      background: lighten($dark-layout, 7%) !important;
     }
   }
 
@@ -716,7 +719,7 @@ body.able-pro-dark {
     .show > .nav-link {
       color: #fff !important;
       background: $primary-color;
-      box-shadow: 0 10px 20px 0 rgba(0,0,0,0.2);
+      box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -730,47 +733,47 @@ body.able-pro-dark {
   }
 
   .input-group-text {
-    border-color: darken($dark-layout,3%);
+    border-color: darken($dark-layout, 3%);
     color: $dark-layout-font;
   }
 
   .custom-file-label,
   .custom-select,
   .form-control {
-    background: lighten($dark-layout,3%);
+    background: lighten($dark-layout, 3%);
     color: $dark-layout-font;
-    border-color: darken($dark-layout,3%);
+    border-color: darken($dark-layout, 3%);
 
     &:focus {
-      background: lighten($dark-layout,2%);
+      background: lighten($dark-layout, 2%);
       color: $dark-layout-font;
-      border-color: lighten($dark-layout,2%);
+      border-color: lighten($dark-layout, 2%);
     }
   }
 
-  .switch input[type=checkbox]+.cr {
+  .switch input[type="checkbox"] + .cr {
     border: 1px solid $dark-layout-font;
   }
 
   .custom-file-label::after {
     background-color: darken($dark-layout, 3%);
     color: $dark-layout-font;
-    border-left: 1px solid lighten($dark-layout,3%);
+    border-left: 1px solid lighten($dark-layout, 3%);
   }
 
   .form-control:disabled,
   .form-control[readonly] {
-    background: lighten($dark-layout,1%);
-    color: darken($dark-layout-font,3%);
+    background: lighten($dark-layout, 1%);
+    color: darken($dark-layout-font, 3%);
   }
 
   .bootstrap-tagsinput {
-    background: lighten($dark-layout,3%);
+    background: lighten($dark-layout, 3%);
     border: 1px solid lighten($dark-layout, 3%);
   }
 
   .input-group {
-    background-color: lighten($dark-layout,3%);
+    background-color: lighten($dark-layout, 3%);
   }
 
   .dtp-content text {
@@ -780,7 +783,7 @@ body.able-pro-dark {
   .select2-container--default {
     .select2-selection--multiple,
     .select2-selection--single {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
       border: 1px solid $dark-layout;
 
       .select2-selection__rendered {
@@ -789,8 +792,9 @@ body.able-pro-dark {
     }
   }
 
-  .select2-container--default.select2-container--disabled .select2-selection--single {
-    background: lighten($dark-layout,3%);
+  .select2-container--default.select2-container--disabled
+    .select2-selection--single {
+    background: lighten($dark-layout, 3%);
   }
 
   .ms-container {
@@ -804,31 +808,31 @@ body.able-pro-dark {
 
     .ms-selectable,
     .ms-selection {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
       color: $dark-layout-font;
 
       li.ms-elem-selectable,
       li.ms-elem-selection {
         border-bottom: 1px solid $dark-layout;
         color: $dark-layout-font;
-        background: lighten($dark-layout,3%);
+        background: lighten($dark-layout, 3%);
       }
     }
   }
 
   .sw-theme-default {
     .step-anchor {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
     }
 
     .step-content,
     .sw-container {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
     }
 
     ul.step-anchor > li a {
       color: $dark-layout-font;
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
 
       > h6,
       p {
@@ -841,7 +845,7 @@ body.able-pro-dark {
   .sw-theme-circles,
   .sw-theme-dots {
     .sw-container {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
     }
   }
 
@@ -850,12 +854,12 @@ body.able-pro-dark {
 
     .step-content,
     .sw-container {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
     }
 
     ul.step-anchor > li a {
       color: $dark-layout-font;
-      background: lighten($dark-layout,3%) !important;
+      background: lighten($dark-layout, 3%) !important;
 
       > h6,
       p {
@@ -863,7 +867,7 @@ body.able-pro-dark {
       }
 
       &:after {
-        border-left: 30px solid lighten($dark-layout,3%);
+        border-left: 30px solid lighten($dark-layout, 3%);
       }
 
       &:before {
@@ -874,14 +878,14 @@ body.able-pro-dark {
 
   .sw-theme-arrows {
     > ul.step-anchor {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
       border: 1px solid lighten($dark-layout, 1%);
 
       > li {
         > a {
           &:hover {
             &:after {
-              border-left: 30px solid lighten($dark-layout,3%);
+              border-left: 30px solid lighten($dark-layout, 3%);
             }
           }
         }
@@ -889,13 +893,15 @@ body.able-pro-dark {
     }
   }
 
-  .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background: lighten($dark-layout,1%);
+  .select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice {
+    background: lighten($dark-layout, 1%);
     border: 1px solid lighten($dark-layout, 7%);
   }
 
   .sw-theme-default > ul.step-anchor > li.done > a.nav-link:after {
-    background: lighten($dark-layout,10%);
+    background: lighten($dark-layout, 10%);
   }
 
   .sw-theme-default > ul.step-anchor > li > a.nav-link:after {
@@ -905,14 +911,14 @@ body.able-pro-dark {
   .sw-theme-dots .step-content,
   .sw-theme-dots .sw-toolbar,
   .sw-theme-dots > ul.step-anchor {
-    background: lighten($dark-layout,3%);
+    background: lighten($dark-layout, 3%);
   }
 
   .sw-theme-arrows > ul.step-anchor > li.done > a {
-    background: lighten($dark-layout,3%) !important;
+    background: lighten($dark-layout, 3%) !important;
 
     &:after {
-      border-left: 30px solid lighten($dark-layout,3%) !important;
+      border-left: 30px solid lighten($dark-layout, 3%) !important;
     }
   }
 
@@ -941,7 +947,7 @@ body.able-pro-dark {
   }
 
   .ck.ck-editor__main > .ck-editor__editable {
-    background: lighten($dark-layout,3%) !important;
+    background: lighten($dark-layout, 3%) !important;
   }
 
   .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
@@ -953,10 +959,10 @@ body.able-pro-dark {
   }
 
   .document-editor__editable-container {
-    background: lighten($dark-layout,0%);
+    background: lighten($dark-layout, 0%);
 
     .ck-editor__editable.ck-editor__editable_inline {
-      background: lighten($dark-layout,0%);
+      background: lighten($dark-layout, 0%);
       border: 1px solid darken($dark-layout, 7%);
     }
   }
@@ -969,16 +975,16 @@ body.able-pro-dark {
   .ck-content .table table td,
   .ck-content .table table th {
     border-color: darken($dark-layout, 7%);
-    background: lighten($dark-layout,0%);
+    background: lighten($dark-layout, 0%);
   }
 
   .ck.ck-toolbar {
-    background: lighten($dark-layout,0%);
+    background: lighten($dark-layout, 0%);
     border: 1px solid lighten($dark-layout, 0%);
   }
 
   .document-editor__toolbar {
-    border-bottom: 1px solid darken($dark-layout,7%);
+    border-bottom: 1px solid darken($dark-layout, 7%);
   }
 
   .ck.ck-button .ck-button__label,
@@ -999,7 +1005,7 @@ body.able-pro-dark {
   }
 
   .fullcalendar-card .fc-button {
-    border-color: lighten($dark-layout,7%);
+    border-color: lighten($dark-layout, 7%);
   }
 
   .h-list-body .chat-messages .chat-menu-reply > div {
@@ -1047,12 +1053,12 @@ body.able-pro-dark {
   }
 
   .invoice-total.table {
-    background: lighten($dark-layout,3%);
+    background: lighten($dark-layout, 3%);
   }
 
   .filter-bar {
     .navbar {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
     }
   }
 
@@ -1079,45 +1085,45 @@ body.able-pro-dark {
   .h-list-body {
     .userlist-box {
       &:after {
-        background: lighten($dark-layout,3%);
+        background: lighten($dark-layout, 3%);
       }
     }
 
     .userlist-box.active {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
     }
   }
 
   .msg-card {
     .msg-block > .row > div {
       &:before {
-        background: lighten($dark-layout,3%);
+        background: lighten($dark-layout, 3%);
       }
     }
 
     .msg-user-chat {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
     }
   }
 
   .note-card {
     .note-box-aside {
-      border-right: 1px solid lighten($dark-layout,3%);
+      border-right: 1px solid lighten($dark-layout, 3%);
     }
 
     .note-write {
-      background: lighten($dark-layout,3%);
+      background: lighten($dark-layout, 3%);
 
       &:after,
       &:before {
-        border-left: 1px solid lighten($dark-layout,1%);
+        border-left: 1px solid lighten($dark-layout, 1%);
       }
     }
 
     .list-group-item,
     .list-group-item.active {
-      background: lighten($dark-layout,3%);
-      border-color: lighten($dark-layout,1%);
+      background: lighten($dark-layout, 3%);
+      border-color: lighten($dark-layout, 1%);
       color: $dark-layout-font;
     }
   }
@@ -1142,7 +1148,7 @@ body.able-pro-dark {
   .table-columned > tbody {
     > tr {
       > td {
-        border-left: 1px solid lighten($dark-layout,4%);
+        border-left: 1px solid lighten($dark-layout, 4%);
       }
     }
   }
@@ -1151,22 +1157,23 @@ body.able-pro-dark {
     li {
       background: $dark-layout;
       border: 1px solid $dark-layout;
-      border-top: 5px solid lighten($dark-layout,5%);
+      border-top: 5px solid lighten($dark-layout, 5%);
       color: $dark-layout-font;
     }
   }
 
   .bd-example-modal,
   .bd-example-row {
-    background: lighten($dark-layout,3%);
+    background: lighten($dark-layout, 3%);
   }
 
-  pre[class*=language-] > code {
-    box-shadow: -1px 0 0 0 lighten($dark-layout,1%), 0 0 0 1px lighten($dark-layout,3%);
+  pre[class*="language-"] > code {
+    box-shadow: -1px 0 0 0 lighten($dark-layout, 1%),
+      0 0 0 1px lighten($dark-layout, 3%);
   }
 
   .modal-content {
-    background: lighten($dark-layout,0%);
+    background: lighten($dark-layout, 0%);
     border: 1px solid lighten($dark-layout, 5%);
   }
 
@@ -1191,7 +1198,7 @@ body.able-pro-dark {
         // background: transparentize($dark-layout ,0.7);
         tr {
           &.read {
-            background: transparentize($dark-layout ,0.3);
+            background: transparentize($dark-layout, 0.3);
           }
 
           &:hover {
@@ -1306,7 +1313,7 @@ body.able-pro-dark {
 
   .support-bar {
     .card-footer {
-      background: lighten($dark-layout,7%) !important;
+      background: lighten($dark-layout, 7%) !important;
       border-top: 1px solid $dark-layout;
     }
   }
@@ -1334,32 +1341,32 @@ body.able-pro-dark {
   }
 
   .grid-stack {
-    background: lighten($dark-layout,3%);
+    background: lighten($dark-layout, 3%);
   }
 
   .slider-track {
     background: $dark-layout;
   }
 
-  :not(pre) > code[class*=language-],
-  pre[class*=language-] {
-    background: lighten($dark-layout,7%);
+  :not(pre) > code[class*="language-"],
+  pre[class*="language-"] {
+    background: lighten($dark-layout, 7%);
 
     code {
-      background-color: lighten($dark-layout,7%);
+      background-color: lighten($dark-layout, 7%);
     }
   }
 
-  .card .card-body pre[class*=language-] > code {
-    box-shadow: -1px 0 0 0 $primary-color, 0 0 0 1px lighten($dark-layout,5%);
-    background: lighten($dark-layout,7%);
+  .card .card-body pre[class*="language-"] > code {
+    box-shadow: -1px 0 0 0 $primary-color, 0 0 0 1px lighten($dark-layout, 5%);
+    background: lighten($dark-layout, 7%);
     background-size: 3em 3em;
     background-origin: content-box;
     background-attachment: local;
   }
 
-  code[class*=language-],
-  pre[class*=language-] {
+  code[class*="language-"],
+  pre[class*="language-"] {
     color: $dark-layout-font;
   }
 
@@ -1371,8 +1378,8 @@ body.able-pro-dark {
   }
 
   .nestable-lists {
-    border-top: 2px solid lighten($dark-layout,3%);
-    border-bottom: 2px solid lighten($dark-layout,3%);
+    border-top: 2px solid lighten($dark-layout, 3%);
+    border-bottom: 2px solid lighten($dark-layout, 3%);
   }
 
   #nestable2 .dd-item > button:before,
@@ -1386,30 +1393,30 @@ body.able-pro-dark {
     border: 1px solid $dark-layout;
 
     &:hover {
-      color: lighten($dark-layout-font,3%);
+      color: lighten($dark-layout-font, 3%);
       background: $dark-layout;
     }
   }
 
   .dd-placeholder {
-    background: lighten($dark-layout,3%);
+    background: lighten($dark-layout, 3%);
     border-color: $dark-layout-font;
   }
 
   .dd3-content,
   .dd3-handle {
     color: $dark-layout-font;
-    border: 1px solid lighten($dark-layout,7%);
+    border: 1px solid lighten($dark-layout, 7%);
     background: $dark-layout;
   }
 
   .dd3-content:hover {
-    color: lighten($dark-layout-font,3%);
+    color: lighten($dark-layout-font, 3%);
     background: $dark-layout;
   }
 
   .dropzone .dz-message {
-    color: lighten($dark-layout-font,3%);
+    color: lighten($dark-layout-font, 3%);
   }
 
   .datepicker {
@@ -1474,7 +1481,7 @@ body.able-pro-dark {
 
   .trash {
     background: $dark-layout;
-    border-color: lighten($dark-layout,7%);
+    border-color: lighten($dark-layout, 7%);
   }
 
   .syntax-output {
@@ -1487,7 +1494,7 @@ body.able-pro-dark {
 
   .profile-card ~ .card-footer [class*="col-"],
   .blur-user-card .blur-footer [class*="col-"],
-  .widget-profile-card-1 ~ .card-footer [class*=col-] {
+  .widget-profile-card-1 ~ .card-footer [class*="col-"] {
     border-color: $dark-layout;
   }
 
@@ -1497,7 +1504,7 @@ body.able-pro-dark {
 
   .ck-content .image > figcaption {
     color: $dark-layout-font !important;
-    background: lighten($dark-layout,7%) !important;
+    background: lighten($dark-layout, 7%) !important;
   }
 
   .message-mobile .task-right-header-status {
@@ -1508,7 +1515,8 @@ body.able-pro-dark {
     color: #fff !important;
   }
 
-  &.box-layout .pcoded-header ~ .pcoded-main-container, .pcoded-main-container {
+  &.box-layout .pcoded-header ~ .pcoded-main-container,
+  .pcoded-main-container {
     background: $dark-layout;
   }
 
@@ -1522,17 +1530,17 @@ body.able-pro-dark {
   }
 
   .cd-timeline__content::before {
-    border-left-color: lighten($dark-layout,7%);
-    filter: drop-shadow(1px 0 1px lighten($dark-layout,7%));
+    border-left-color: lighten($dark-layout, 7%);
+    filter: drop-shadow(1px 0 1px lighten($dark-layout, 7%));
   }
 
   .cd-timeline__block:nth-child(even) .cd-timeline__content::before {
-    border-right-color: lighten($dark-layout,7%);
-    filter: drop-shadow(-1px 0 1px lighten($dark-layout,7%));
+    border-right-color: lighten($dark-layout, 7%);
+    filter: drop-shadow(-1px 0 1px lighten($dark-layout, 7%));
   }
 
   .cd-timeline__container::before {
-    background: lighten($dark-layout,7%);
+    background: lighten($dark-layout, 7%);
   }
 
   .cd-timeline__date {
@@ -1540,7 +1548,8 @@ body.able-pro-dark {
   }
 
   .cd-timeline__img {
-    box-shadow: 0 0 0 4px lighten($dark-layout,7%), inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 0 4px lighten($dark-layout, 7%),
+      inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
   }
 
   .cd-timeline-navigation a {
@@ -1570,7 +1579,8 @@ body.able-pro-dark {
             th {
               &.select-checkbox {
                 &:after {
-                  text-shadow: 1px 1px $dark-layout, -1px -1px $dark-layout, 1px -1px $dark-layout, -1px 1px $dark-layout;
+                  text-shadow: 1px 1px $dark-layout, -1px -1px $dark-layout,
+                    1px -1px $dark-layout, -1px 1px $dark-layout;
                 }
               }
             }
@@ -1593,11 +1603,11 @@ body.able-pro-dark {
   }
 
   .questions input {
-    background: lighten($dark-layout,7%);
+    background: lighten($dark-layout, 7%);
     color: $dark-layout-font;
   }
 
-  .checkbox.checkbox-fill input[type=checkbox] + .cr:after {
+  .checkbox.checkbox-fill input[type="checkbox"] + .cr:after {
     border: 2px solid rgba(233, 234, 236, 0.31);
   }
 
@@ -1605,7 +1615,7 @@ body.able-pro-dark {
     ~ .pcoded-header {
       color: #fff;
       // ==============
-      color: rgba(256,256,256,0.8);
+      color: rgba(256, 256, 256, 0.8);
 
       .profile-notification {
         li {
@@ -1620,7 +1630,7 @@ body.able-pro-dark {
       }
 
       .dropdown-menu {
-        color: transparentize($header-dark-text-color,0.2) !important;
+        color: transparentize($header-dark-text-color, 0.2) !important;
 
         a {
           color: $theme-font-color;
@@ -1642,7 +1652,7 @@ body.able-pro-dark {
       // .input-group .input-group-text,
       a,
       dropdown-toggle {
-        color: rgba(256,256,256,0.8);
+        color: rgba(256, 256, 256, 0.8);
 
         &:hover {
           color: #fff;
@@ -1676,11 +1686,11 @@ body.able-pro-dark {
   }
   @media only screen and (max-width: 991px) {
     .pcoded-header {
-      background: lighten($dark-layout,7%);
+      background: lighten($dark-layout, 7%);
       color: #fff;
 
       > .collapse:not(.show) {
-        background: lighten($dark-layout,10%);
+        background: lighten($dark-layout, 10%);
         box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.08);
 
         a {
@@ -1688,7 +1698,7 @@ body.able-pro-dark {
         }
       }
 
-      &[class*='header-'] .main-search.open .input-group {
+      &[class*="header-"] .main-search.open .input-group {
         background: rgba(255, 255, 255, 0.25);
       }
     }

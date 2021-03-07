@@ -1,15 +1,18 @@
-.DraftEditor-root, .public-DraftEditor-block {
+.DraftEditor-root,
+.public-DraftEditor-block {
   position: relative;
 }
 
-.DraftEditor-editorContainer, .DraftEditor-root, .public-DraftEditor-content {
+.DraftEditor-editorContainer,
+.DraftEditor-root,
+.public-DraftEditor-content {
   height: inherit;
   text-align: initial;
 }
 
 .DraftEditor-editorContainer {
   background-color: rgba(255, 255, 255, 0);
-  border-left: .1px solid transparent;
+  border-left: 0.1px solid transparent;
   position: relative;
   z-index: 1;
 }
@@ -82,7 +85,8 @@
   direction: rtl;
 }
 
-.public-DraftStyleDefault-ol, .public-DraftStyleDefault-ul {
+.public-DraftStyleDefault-ol,
+.public-DraftStyleDefault-ul {
   margin: 16px 0;
   padding: 0;
 }

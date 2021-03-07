@@ -1,9 +1,9 @@
-.masonry-container{
+.masonry-container {
   width: 80%;
   margin: auto;
   margin-top: 10px;
-  border: 1px solid rgba(0,0,0,.1);
-  p{
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  p {
     text-align: center;
     padding: 4px;
     font-family: monospace;
@@ -30,9 +30,9 @@
   }
 }
 .tile {
-  margin: .75rem;
+  margin: 0.75rem;
   img {
-    border-radius: calc(.25rem - 1px);
+    border-radius: calc(0.25rem - 1px);
     width: 100%;
   }
 }
