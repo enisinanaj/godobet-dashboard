@@ -81,7 +81,7 @@ class NavBar extends Component {
             <span />
           </a>
           <a href="/dashboard/default" className="b-brand">
-            <img id="main-logo" src={mainLogo} alt="" className="logo" />
+            <img id="main-logo" src={mainLogo} alt="" className="logo" style={{width: 140}} />
           </a>
           <a
             className="mob-toggler"

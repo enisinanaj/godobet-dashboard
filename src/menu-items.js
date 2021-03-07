@@ -83,12 +83,22 @@ export default {
           ],
         },
         {
+          id: "profile",
+          title: "Profilo",
+          type: "item",
+          icon: "feather icon-user",
+          url: "/profile",
+          role: 0,
+          hidden: true
+        },
+        {
           id: "account",
           title: "Impostazioni profilo",
           type: "item",
           icon: "feather icon-user",
           url: "/settings",
           role: 0,
+          hidden: true
         },
       ],
     },

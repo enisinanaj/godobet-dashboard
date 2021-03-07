@@ -47,7 +47,21 @@ class Breadcrumb extends Component {
 
   render() {
     let main, item;
-    let breadcrumb = "";
+    let breadcrumb = (children) => (
+      <div className="page-header">
+        <div className="page-block">
+          <div className="row align-items-center">
+            <div className="col-md-12">
+              <div className="page-header-title">
+                <h5 className="m-b-10">{title}</h5>
+              </div>
+              {children}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
     let title = "Welcome";
     if (this.state.main && this.state.main.type === "collapse") {
       main = (
@@ -59,41 +73,30 @@ class Breadcrumb extends Component {
 
     if (this.state.item && this.state.item.type === "item") {
       title = this.state.item.title;
-      item = (
-        <li className="breadcrumb-item">
-          <a href={DEMO.BLANK_LINK}>{title}</a>
-        </li>
-      );
-
-      if (this.state.item.breadcrumbs !== false) {
-        breadcrumb = (
-          <div className="page-header">
-            <div className="page-block">
-              <div className="row align-items-center">
-                <div className="col-md-12">
-                  <div className="page-header-title">
-                    <h5 className="m-b-10">{title}</h5>
-                  </div>
-                  <ul className="breadcrumb">
-                    <li className="breadcrumb-item">
-                      <Link to="/">
-                        <i className="feather icon-home" />
-                      </Link>
-                    </li>
-                    {main}
-                    {item}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+      if (this.state.item.hidden) {
+        item = "";
+      } else {
+        item = (
+          <li className="breadcrumb-item">
+            <a href={DEMO.BLANK_LINK}>{title}</a>
+          </li>
         );
       }
+      
+      document.title = title + " | GODOBET";
     }
 
-    document.title = title + " | GODOBET";
-
-    return <Aux>{breadcrumb}</Aux>;
+    return (<Aux>{breadcrumb(
+      <ul className="breadcrumb">
+        {item !== '' && main !== '' &&
+        <li className="breadcrumb-item">
+          <Link to="/">
+            <i className="feather icon-home" />
+          </Link>
+        </li>}
+        {main}
+        {item}
+      </ul>)}</Aux>);
   }
 }
 
