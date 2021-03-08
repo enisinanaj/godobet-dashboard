@@ -65,14 +65,14 @@ const routes = [
     role: 4,
   },
   {
-    path: "/dashboard/subscriber-services",
+    path: "/dashboard/tipster/services",
     exact: true,
     name: "My Services",
     component: SubscriberServices,
     role: 4,
   },
   {
-    path: "/dashboard/subscriber-pools",
+    path: "/dashboard/tipster/pools",
     exact: true,
     name: "My Tips",
     component: SubscriberPools,

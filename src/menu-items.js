@@ -50,7 +50,7 @@ export default {
               title: "I miei servizi",
               type: "item",
               icon: "feather icon-book",
-              url: "/dashboard/subscriber-services",
+              url: "/dashboard/tipster/services",
               role: 5,
             },
             {
@@ -58,7 +58,7 @@ export default {
               title: "I miei Tip",
               type: "item",
               icon: "feather icon-bookmark",
-              url: "/dashboard/subscriber-pools",
+              url: "/dashboard/tipster/pools",
               role: 5,
             },
           ],
