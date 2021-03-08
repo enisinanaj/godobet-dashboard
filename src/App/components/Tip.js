@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Card, Carousel, Dropdown } from "react-bootstrap";
+import { Col, Card, Carousel, Dropdown, Row } from "react-bootstrap";
 import moment from 'moment'
 import TokenManager from "../../App/auth/TokenManager";
 import 'moment/locale/it';
@@ -76,22 +76,38 @@ const Tip = props => {
             <Carousel controls={false}>
             {pool.events.map(event => (
                 <Carousel.Item key={event.eventCode}>
-                    <div style={{height: 140, marginBottom: 15, padding: "0 20px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
-                        <div className={"hei-80"}>
-                        {event.event} <strong>{event.proposal}</strong> {(pool.stake/100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%'} {pool.bookmaker} {event.quote.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                        </div>
-                        <div style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
-                            <div style={{display: 'inline'}}>
-                                {moment(event.eventDate).calendar()}
-                            </div>
-                        </div>
+                    <div style={{height: 170, marginBottom: 15, padding: "0 20px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                        <Row className={"hei-110"}>
+                            <Col lg={12} sm={12} xs={12} xl={12}>
+                                <em className={"feather icon-aperture"}></em> {event.sport} / {event.competition} / {event.event}
+                            </Col>
+                            <Col lg={6} sm={12} xs={12} xl={6}>
+                                <i className="feather icon-play" /> {event.proposal}
+                            </Col>
+                            <Col lg={6} sm={12} xs={12} xl={6}>
+                                <i className="feather icon-at-sign" /> {(event.quote / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                            </Col>
+                            <Col lg={6} sm={12} xs={12} xl={6}>
+                                <i className="feather icon-book" /> {pool.bookmaker}
+                            </Col>
+                            <Col lg={6} sm={12} xs={12} xl={6}>
+                                <i className="feather icon-pie-chart" /> {(pool.stake/100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%'}
+                            </Col>
+                        </Row>
+                        <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
+                            <Col  lg={6} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
+                                {pool.outcome && <div style={{display: 'inline'}}>
+                                    Esito: {pool.outcome}
+                                </div>}
+                            </Col>
+                            <Col  lg={6} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
+                                <em className="feather icon-clock"></em> {moment(event.eventDate).format("DD/MM/yyyy HH:mm")}
+                            </Col>
+                        </Row>
                     </div>
                 </Carousel.Item>
             ))}
             </Carousel>
-            {pool.outcome && <div style={{display: 'inline'}}>
-            Esito: {pool.outcome}
-            </div>}
         </Card.Body>
         </Card>
     </Col>);

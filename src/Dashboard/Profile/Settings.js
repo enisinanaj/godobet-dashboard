@@ -77,7 +77,7 @@ const Settings = (props) => {
             setBank(sortedBanks.length > 0 ? sortedBanks[0] : {});
           });
       });
-  });
+  }, []);
 
   const reloadUser = () => {
     TokenManager.getInstance()
