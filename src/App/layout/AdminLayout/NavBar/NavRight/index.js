@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { Dropdown } from "react-bootstrap";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import md5 from "md5";
+import React, { Component } from 'react';
+import { Dropdown } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import md5 from 'md5';
 
-import Aux from "../../../../../hoc/_Aux";
-import * as actions from "../../../../../store/actions";
-import { withRouter } from "react-router-dom";
+import Aux from '../../../../../hoc/_Aux';
+import * as actions from '../../../../../store/actions';
+import { withRouter } from 'react-router-dom';
 
 class NavRight extends Component {
   state = {
@@ -15,18 +15,19 @@ class NavRight extends Component {
 
   avatar = (email) => {
     if (
+      this.props.user._embedded &&
       this.props.user._embedded.media &&
-      this.props.user._embedded.media.filter((m) => m.mediaType === "avatar")
+      this.props.user._embedded.media.filter((m) => m.mediaType === 'avatar')
         .length > 0
     ) {
       return this.props.user._embedded.media
-        .filter((m) => m.mediaType === "avatar")
+        .filter((m) => m.mediaType === 'avatar')
         .sort((a, b) => b.id - a.id)[0].url;
     }
     return (
-      "http://www.gravatar.com/avatar/" +
+      'http://www.gravatar.com/avatar/' +
       md5(email.email.toLowerCase().trim()) +
-      "?s=32"
+      '?s=32'
     );
   };
 
@@ -49,14 +50,14 @@ class NavRight extends Component {
           </li>
           <li>
             <Dropdown alignRight={!this.props.rtlLayout} className="drp-user">
-              <Dropdown.Toggle variant={"link"} id="dropdown-basic">
+              <Dropdown.Toggle variant={'link'} id="dropdown-basic">
                 <i className="icon feather icon-user" />
               </Dropdown.Toggle>
               <Dropdown.Menu alignRight className="profile-notification">
                 <div className="pro-head">
                   <img
                     src={this.avatar(this.props.user)}
-                    style={{ objectFit: "cover", height: 40 }}
+                    style={{ objectFit: 'cover', height: 40 }}
                     className="img-radius"
                     alt="User Profile"
                   />
