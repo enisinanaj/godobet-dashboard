@@ -30,6 +30,8 @@ class Breadcrumb extends Component {
     });
   };
 
+  rightButton = null;
+
   getCollapse = (item) => {
     if (item.children) {
       item.children.filter((collapse) => {
@@ -37,6 +39,7 @@ class Breadcrumb extends Component {
           this.getCollapse(collapse);
         } else if (collapse.type && collapse.type === "item") {
           if (document.location.pathname === config.basename + collapse.url) {
+            this.rightButton = collapse.rightButton;
             this.setState({ item: collapse, main: item });
           }
         }
@@ -87,16 +90,22 @@ class Breadcrumb extends Component {
     }
 
     return (<Aux>{breadcrumb(
-      <ul className="breadcrumb">
-        {item !== '' && main !== '' &&
-        <li className="breadcrumb-item">
-          <Link to="/">
-            <i className="feather icon-home" />
-          </Link>
-        </li>}
-        {main}
-        {item}
-      </ul>)}</Aux>);
+      <Aux>
+        <ul className="breadcrumb">
+          {item !== '' && main !== '' &&
+          <li className="breadcrumb-item">
+            <Link to="/">
+              <i className="feather icon-home" />
+            </Link>
+          </li>}
+          {main}
+          {item}
+        </ul>
+        <div style={{float: "right", top: 0, position: "absolute", right: 29}}>
+          {this.rightButton}
+        </div>
+      </Aux>
+      )}</Aux>);
   }
 }
 

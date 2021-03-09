@@ -1,5 +1,6 @@
 import React from "react";
 import $ from "jquery";
+import CreateTip from "./Dashboard/SubscriberPools/CreateTip";
 
 window.jQuery = $;
 window.$ = $;
@@ -77,6 +78,13 @@ const routes = [
     name: "My Tips",
     component: SubscriberPools,
     role: 4,
+  },
+  {
+    path: "/dashboard/tipster/createTip",
+    exact: true,
+    name: "Create Tips",
+    component: CreateTip,
+    role: 5,
   },
 
   {

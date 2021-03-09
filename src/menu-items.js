@@ -1,3 +1,6 @@
+import React from 'react';
+import CreateTipButton from "./App/components/CreateTipButton";
+
 export default {
   items: [
     {
@@ -59,6 +62,16 @@ export default {
               type: "item",
               icon: "feather icon-bookmark",
               url: "/dashboard/tipster/pools",
+              role: 5,
+              rightButton: <CreateTipButton />
+            },
+            {
+              id: "new-tips",
+              title: "Crea tip",
+              type: "item",
+              icon: "feather icon-bookmark",
+              url: "/dashboard/tipster/createTip",
+              hidden: true,
               role: 5,
             },
           ],
