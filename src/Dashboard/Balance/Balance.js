@@ -1,47 +1,208 @@
 import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Card, Toast } from "react-bootstrap";
 
 import Aux from "../../hoc/_Aux";
-import Card from "../../App/components/MainCard";
 import { withRouter } from "react-router-dom";
+import Chart from "react-apexcharts";
 
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { Table } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import moment from 'moment';
+
+import barChart from './chart/bar-chart';
+import LineInterpolationChart from '../Charts/LineInterpolationChart';
+
+import config from '../../store/config';
+import TokenManager from '../../App/auth/TokenManager';
+import Events from './events';
 
 class SamplePage extends Component {
-  render() {
-    return (
-      <Aux>
-        <Row>
-          <Col>
-            <Card title="Hello Card" isOption>
-              <p>
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum."
-              </p>
-            </Card>
-          </Col>
-        </Row>
-      </Aux>
-    );
-  }
+    state = {
+        pools: [],
+        playedEvents: [],
+        startDate: moment().add(-1, "month").toDate(),
+        endDate: moment().add(-1, "day").toDate(),
+        flotData: [],
+    }
+
+    loadData() {
+        let {startDate, endDate} = this.state;
+        startDate = moment(startDate).format("YYYY-MM-DDTHH:mm:ss.SSS");
+        endDate = moment(endDate).format("YYYY-MM-DDTHH:mm:ss.SSS");
+
+        if (this.props.user.roleName === 'Subscriber') {
+            this.loadSubscriperDashboard(startDate, endDate);
+        } else {
+            this.loadTipsterDashboard(startDate, endDate);
+        }
+    }
+
+    notify = function(message) {
+        Toast(message, {
+            type: "info",
+            position: "top-right"
+        })
+    }
+
+    loadSubscriperDashboard(startDate, endDate) {
+        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/subscriberStats?start=${startDate}&end=${endDate}&subscriber=${this.props.user._links.self.href}`)
+        .then(pools => {
+            TokenManager.getInstance().getToken()
+            .then(token => {
+                return fetch(this.props.user._links.playedEvents.href.replace("{?projection}", "").replace("http://", "https://"), {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH": token
+                    }
+                })
+            })
+            .then(body => body.json())
+            .then(events => {
+                var chartData = [];
+                pools.forEach(pool => {
+                    chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
+                });
+                
+                if (events._embedded.events.length === 0) {
+                    this.notify("Non hai giocato nessun evento!");
+                }
+
+                this.setState({playedEvents: events._embedded.events, pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}});
+            })
+        })
+    }
+
+    loadTipsterDashboard(startDate, endDate) {
+        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/stats?start=${startDate}&end=${endDate}&author=${this.props.user._links.self.href}`)
+        .then(pools => {
+            var chartData = [];
+            pools.forEach(pool => {
+                chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
+            });
+
+            console.log(chartData);
+
+            this.setState({pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}})
+        });
+    }
+
+    async loadDashboardWithUrl(url) {
+        let token = await TokenManager.getInstance().getToken()
+        let body = await fetch(url, {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "X-Auth": token },
+        });
+
+        let response = await body.json();
+        return response._embedded.pools;
+    }
+
+    calculateProfit() {
+        return this.state.pools.reduce((accumulator, pool) => {
+            return accumulator + pool.profit
+        }, 0)
+    }
+
+    componentDidMount() {
+        this.loadData()
+    }
+
+    handleStartDateChange(e) {
+        this.setState({
+            startDate: e
+        });
+
+        this.loadData();
+    }
+
+    handleEndDateChange(e) {
+        this.setState({
+            endDate: e
+        });
+
+        this.loadData();
+    }
+
+    render() {
+        return (
+            <Aux>
+                <Row>
+                    <Col md={12}>
+                        <Card>
+                            <Card.Header>
+                                <Row>
+                                    <Col md={6}>
+                                        <Card.Title as="h5">
+                                            Bilancio
+                                        </Card.Title>
+                                    </Col>
+                                    <Col md={6}>
+                                        <Card.Title as="h5">
+                                            Dal: <DatePicker
+                                                    selected={this.state.startDate}
+                                                    onChange={(e) => this.handleStartDateChange(e)}
+                                                    className="form-control"
+                                                    minDate={moment().add(-32, "day").toDate()}
+                                                    maxDate={moment().add(-1, "day").toDate()}
+                                                    placeholderText="Seleziona una data"
+                                                />
+                                        </Card.Title>
+                                        <Card.Title as="h5">
+                                            al: <DatePicker
+                                                    selected={this.state.endDate}
+                                                    onChange={(e) => this.handleEndDateChange(e)}
+                                                    className="form-control"
+                                                    minDate={this.state.startDate}
+                                                    maxDate={new Date()}
+                                                    placeholderText="Seleziona una data"
+                                                />
+                                        </Card.Title>
+                                    </Col>
+                                </Row>
+                            </Card.Header>
+                            <Card.Body>
+                                <Row>
+                                    <Col md={6}>
+                                        <Card>
+                                            <Card.Body>
+                                                <Chart {...barChart} />
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                    <Col md={6}>
+                                        <Card>
+                                            <Card.Body>
+                                                <LineInterpolationChart data={this.state.flotData} />
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                </Row>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Events data={[1,2,3]}/>
+                    </Col>
+                </Row>
+            </Aux>
+        );
+    }
 }
 
 const mapStateToProps = (state) => ({
-  user: state.user,
-  loggedIn: state.loggedIn,
-  registered: state.registered,
+    user: state.user,
+    loggedIn: state.loggedIn,
+    registered: state.registered,
 });
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch),
+    actions: bindActionCreators(actions, dispatch),
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(SamplePage)
+    connect(mapStateToProps, mapDispatchToProps)(SamplePage)
 );
