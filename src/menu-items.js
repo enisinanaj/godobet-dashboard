@@ -1,3 +1,6 @@
+import React from 'react';
+import CreateTipButton from "./App/components/CreateTipButton";
+
 export default {
   items: [
     {
@@ -50,7 +53,7 @@ export default {
               title: "I miei servizi",
               type: "item",
               icon: "feather icon-book",
-              url: "/dashboard/subscriber-services",
+              url: "/dashboard/tipster/services",
               role: 5,
             },
             {
@@ -58,7 +61,17 @@ export default {
               title: "I miei Tip",
               type: "item",
               icon: "feather icon-bookmark",
-              url: "/dashboard/subscriber-pools",
+              url: "/dashboard/tipster/pools",
+              role: 5,
+              rightButton: <CreateTipButton />
+            },
+            {
+              id: "new-tips",
+              title: "Crea tip",
+              type: "item",
+              icon: "feather icon-bookmark",
+              url: "/dashboard/tipster/createTip",
+              hidden: true,
               role: 5,
             },
           ],
@@ -83,12 +96,22 @@ export default {
           ],
         },
         {
+          id: "profile",
+          title: "Profilo",
+          type: "item",
+          icon: "feather icon-user",
+          url: "/profile",
+          role: 0,
+          hidden: true
+        },
+        {
           id: "account",
           title: "Impostazioni profilo",
           type: "item",
           icon: "feather icon-user",
           url: "/settings",
           role: 0,
+          hidden: true
         },
       ],
     },

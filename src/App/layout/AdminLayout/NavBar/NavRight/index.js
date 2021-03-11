@@ -77,8 +77,8 @@ class NavRight extends Component {
                 </div>
                 <ul className="pro-body">
                   <li>
-                    <a href="/settings" className="dropdown-item">
-                      <i className="feather icon-settings" /> Impostazioni
+                    <a href="/profile" className="dropdown-item">
+                      <i className="feather icon-user" /> Profile
                     </a>
                   </li>
                   {this.props.user.roleValue >= 5 ? (
@@ -91,8 +91,8 @@ class NavRight extends Component {
                     <></>
                   )}
                   <li>
-                    <a href="/profile" className="dropdown-item">
-                      <i className="feather icon-user" /> Profile
+                    <a href="/settings" className="dropdown-item">
+                      <i className="feather icon-settings" /> Impostazioni
                     </a>
                   </li>
                 </ul>
