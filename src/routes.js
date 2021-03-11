@@ -5,7 +5,7 @@ window.jQuery = $;
 window.$ = $;
 global.jQuery = $;
 
-const DashboardDefault = React.lazy(() => import("./Demo/Dashboard/Default"));
+const DashboardDefault = React.lazy(() => import("./Dashboard/Home"));
 const Marketplace = React.lazy(() =>
   import("./Dashboard/Marketplace/Marketplace")
 );
