@@ -13,7 +13,7 @@ const TipsterPools = (props) =>  {
 
   useEffect(() => {
     loadPools()
-  }, []);
+  })
   
 
   const loadPools = () => {
