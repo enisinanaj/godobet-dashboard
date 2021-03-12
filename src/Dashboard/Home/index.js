@@ -131,8 +131,8 @@ class Default extends React.Component {
                                 <Card.Body>
                                     <Row className="align-items-center">
                                         <Col sm={8}>
-                                            <h6 className="text-muted m-b-0">All Earnings</h6>
-                                            <h4 className="text-c-yellow">$30200</h4>
+                                            <h6 className="text-muted m-b-0">Pending tips</h6>
+                                            <h4 className="text-c-yellow">1540</h4>
                                         </Col>
                                         <Col sm={4} className="text-right">
                                             <i className="feather icon-bar-chart-2 f-28"/>
@@ -146,8 +146,8 @@ class Default extends React.Component {
                                 <Card.Body>
                                     <Row className="align-items-center">
                                         <Col sm={8}>
-                                            <h6 className="text-muted m-b-0">All Earnings</h6>
-                                            <h4 className="text-c-yellow">$30200</h4>
+                                            <h6 className="text-muted m-b-0">Iscrizioni attive</h6>
+                                            <h4 className="text-c-yellow">25</h4>
                                         </Col>
                                         <Col sm={4} className="text-right">
                                             <i className="feather icon-bar-chart-2 f-28"/>
