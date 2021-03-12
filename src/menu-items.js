@@ -35,7 +35,7 @@ export default {
           title: "Servizi attivi",
           type: "item",
           icon: "feather icon-printer",
-          url: "/dashboard/all-services",
+          url: "/dashboard/my-services",
           role: 4,
         },
         {
