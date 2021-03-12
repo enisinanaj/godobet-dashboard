@@ -13,10 +13,11 @@ class events extends Component {
     
     getRows() {
         return this.props.data.map((d, index) => {
+            console.log(d);
             return <tr key={index}>
-                <td>54822</td>
-                <td>Product 1</td>
-                <td>2</td>
+                <td>{d.quote}</td>
+                <td>{d.description}</td>
+                <td>{d.outcome}</td>
             </tr>
         })
     }
