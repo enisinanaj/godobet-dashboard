@@ -24,7 +24,7 @@ class SamplePage extends Component {
         playedEvents: [],
         startDate: moment().add(-1, "month").toDate(),
         endDate: moment().add(-1, "day").toDate(),
-        flotData: [],
+        statusData: [],
     }
 
     loadData() {
@@ -68,8 +68,9 @@ class SamplePage extends Component {
                 if (events._embedded.events.length === 0) {
                     this.notify("Non hai giocato nessun evento!");
                 }
+                const statusData = pools.map(p => p.profit);
 
-                this.setState({playedEvents: events._embedded.events, pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}});
+                this.setState({playedEvents: events._embedded.events, pools, statusData});
             })
         })
     }
@@ -82,9 +83,9 @@ class SamplePage extends Component {
                 chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
             });
 
-            console.log(chartData);
+            const statusData = pools.map(p => p.profit);
 
-            this.setState({pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}})
+            this.setState({pools, statusData})
         });
     }
 
@@ -174,7 +175,7 @@ class SamplePage extends Component {
                                     <Col md={6}>
                                         <Card>
                                             <Card.Body>
-                                                <LineInterpolationChart data={this.state.flotData} />
+                                                <LineInterpolationChart data={this.state.statusData} />
                                             </Card.Body>
                                         </Card>
                                     </Col>
@@ -185,7 +186,7 @@ class SamplePage extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        <Events data={[1,2,3]}/>
+                        <Events data={this.state.pools}/>
                     </Col>
                 </Row>
             </Aux>
