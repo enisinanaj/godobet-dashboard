@@ -8,7 +8,6 @@ import Chart from "react-apexcharts";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Table } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import moment from 'moment';
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { withRouter } from "react-router";
-import { Link } from "react-router-dom";
 
 const CreateTipButton = () => {
 

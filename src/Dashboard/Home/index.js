@@ -2,7 +2,6 @@ import React from 'react';
 import { Row, Col, Card, Toast } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import DatePicker from "react-datepicker";
 import moment from 'moment';
 import Chart from "react-apexcharts";
 
