@@ -10,11 +10,11 @@ class LineInterpolationChart extends React.Component {
       theme_g2.addColorStop(1, "#828282");
 
       return {
-        labels: [0, 1, 2, 3, 4, 5, 6],
+        labels: this.props.data.map((a, i) => (i + 1)),
         datasets: [
           {
-            label: "Andamento",
-            data: [55, 70, 62, 81, 56, 70, 90],
+            label: "Profitto",
+            data: this.props.data,
             fill: true,
             borderWidth: 4,
             borderColor: theme_g2,
