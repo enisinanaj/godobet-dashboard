@@ -1,28 +1,47 @@
-import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
+import React, { Component } from 'react';
+import { Row, Col, Card } from 'react-bootstrap';
 
-import Aux from "../../hoc/_Aux";
-import Card from "../../App/components/MainCard";
+import Aux from '../../hoc/_Aux';
+import TipCard from '../../App/components/TipCard';
+
+const tempData = [
+  { id: 1, text: ['aaaa', 'bbbb', 'ccccc'] },
+  { id: 2, text: ['ccccc'] },
+  { id: 3, text: ['ccccc'] },
+  { id: 4, text: ['aaaa'] },
+  { id: 5, text: ['axxxa'] },
+];
+
+const getTipCards = (list) => {
+  return list.map((item, i) => {
+    return (
+      <Col md={6}>
+        <TipCard key={`tip-card-${i}`} {...item} />
+      </Col>
+    );
+  });
+};
 
 class SamplePage extends Component {
   render() {
     return (
       <Aux>
-        <Row>
-          <Col>
-            <Card title="Hello Card" isOption>
-              <p>
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum."
-              </p>
-            </Card>
-          </Col>
-        </Row>
+        <Card>
+          <Card.Body>
+            <div>
+              <h1>Tip in corso</h1>
+              <Row>{getTipCards(tempData)}</Row>
+            </div>
+          </Card.Body>
+        </Card>
+        <Card>
+          <Card.Body>
+            <div>
+              <h1>Tip consclusi</h1>
+              <Row>{getTipCards(tempData)}</Row>
+            </div>
+          </Card.Body>
+        </Card>
       </Aux>
     );
   }

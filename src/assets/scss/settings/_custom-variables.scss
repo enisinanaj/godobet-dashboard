@@ -21,15 +21,15 @@ $grays: ();
 // stylelint-disable-next-line scss/dollar-variable-default
 $grays: map-merge(
   (
-    "100": $gray-100,
-    "200": $gray-200,
-    "300": $gray-300,
-    "400": $gray-400,
-    "500": $gray-500,
-    "600": $gray-600,
-    "700": $gray-700,
-    "800": $gray-800,
-    "900": $gray-900,
+    '100': $gray-100,
+    '200': $gray-200,
+    '300': $gray-300,
+    '400': $gray-400,
+    '500': $gray-500,
+    '600': $gray-600,
+    '700': $gray-700,
+    '800': $gray-800,
+    '900': $gray-900,
   ),
   $grays
 );
@@ -49,19 +49,19 @@ $colors: ();
 // stylelint-disable-next-line scss/dollar-variable-default
 $colors: map-merge(
   (
-    "blue": $blue,
-    "indigo": $indigo,
-    "purple": $purple,
-    "pink": $pink,
-    "red": $red,
-    "orange": $orange,
-    "yellow": $yellow,
-    "green": $green,
-    "teal": $teal,
-    "cyan": $cyan,
-    "white": $white,
-    "gray": $gray-600,
-    "gray-dark": $gray-800,
+    'blue': $blue,
+    'indigo': $indigo,
+    'purple': $purple,
+    'pink': $pink,
+    'red': $red,
+    'orange': $orange,
+    'yellow': $yellow,
+    'green': $green,
+    'teal': $teal,
+    'cyan': $cyan,
+    'white': $white,
+    'gray': $gray-600,
+    'gray-dark': $gray-800,
   ),
   $colors
 );
@@ -79,14 +79,14 @@ $theme-colors: (); // change
 // stylelint-disable-next-line scss/dollar-variable-default
 $theme-colors: map-merge(
   (
-    "primary": $primary,
-    "secondary": $secondary,
-    "success": $success,
-    "info": $info,
-    "warning": $warning,
-    "danger": $danger,
-    "light": $light,
-    "dark": $dark,
+    'primary': $primary,
+    'secondary': $secondary,
+    'success': $success,
+    'info': $info,
+    'warning': $warning,
+    'danger': $danger,
+    'light': $light,
+    'dark': $dark,
   ),
   $theme-colors
 );
@@ -173,7 +173,7 @@ $body-color: #373a3c; // change
 //
 // Style anchor elements.
 
-$link-color: theme-color("primary"); // change
+$link-color: theme-color('primary'); // change
 $link-decoration: none;
 $link-hover-color: $link-color; // change
 $link-hover-decoration: underline;
@@ -200,8 +200,8 @@ $grid-breakpoints: (
   xl: 1200px,
 );
 
-@include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
-@include _assert-starts-at-zero($grid-breakpoints, "$grid-breakpoints");
+@include _assert-ascending($grid-breakpoints, '$grid-breakpoints');
+@include _assert-starts-at-zero($grid-breakpoints, '$grid-breakpoints');
 
 // Grid containers
 //
@@ -214,7 +214,7 @@ $container-max-widths: (
   xl: 1140px,
 );
 
-@include _assert-ascending($container-max-widths, "$container-max-widths");
+@include _assert-ascending($container-max-widths, '$container-max-widths');
 
 // Grid columns
 //
@@ -244,7 +244,7 @@ $box-shadow: 0 0.5rem 1rem rgba($black, 0.15);
 $box-shadow-lg: 0 1rem 3rem rgba($black, 0.175);
 
 $component-active-color: $white;
-$component-active-bg: theme-color("primary"); // change
+$component-active-bg: theme-color('primary'); // change
 
 $caret-width: 0.3em;
 $caret-vertical-align: $caret-width * 0.85;
@@ -266,9 +266,9 @@ $embed-responsive-aspect-ratios: join(
 // Font, line-height, and color for body text, headings, and more.
 
 // stylelint-disable value-keyword-case
-$font-family-sans-serif: "Open Sans", sans-serif; // change
+$font-family-sans-serif: 'Open Sans', sans-serif; // change
 $font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
-  "Liberation Mono", "Courier New", monospace;
+  'Liberation Mono', 'Courier New', monospace;
 $font-family-base: $font-family-sans-serif;
 // stylelint-enable value-keyword-case
 
@@ -545,7 +545,7 @@ $custom-control-label-disabled-color: $gray-600;
 $custom-control-indicator-checked-color: $component-active-color;
 $custom-control-indicator-checked-bg: $component-active-bg;
 $custom-control-indicator-checked-disabled-bg: rgba(
-  theme-color("primary"),
+  theme-color('primary'),
   0.5
 );
 $custom-control-indicator-checked-box-shadow: none;
@@ -562,16 +562,16 @@ $custom-control-indicator-active-border-color: $custom-control-indicator-active-
 $custom-checkbox-indicator-border-radius: $border-radius;
 $custom-checkbox-indicator-icon-checked: str-replace(
   url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='#{$custom-control-indicator-checked-color}' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e"),
-  "#",
-  "%23"
+  '#',
+  '%23'
 );
 
 $custom-checkbox-indicator-indeterminate-bg: $component-active-bg;
 $custom-checkbox-indicator-indeterminate-color: $custom-control-indicator-checked-color;
 $custom-checkbox-indicator-icon-indeterminate: str-replace(
   url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3e%3cpath stroke='#{$custom-checkbox-indicator-indeterminate-color}' d='M0 2h4'/%3e%3c/svg%3e"),
-  "#",
-  "%23"
+  '#',
+  '%23'
 );
 $custom-checkbox-indicator-indeterminate-box-shadow: none;
 $custom-checkbox-indicator-indeterminate-border-color: $custom-checkbox-indicator-indeterminate-bg;
@@ -579,8 +579,8 @@ $custom-checkbox-indicator-indeterminate-border-color: $custom-checkbox-indicato
 $custom-radio-indicator-border-radius: 50%;
 $custom-radio-indicator-icon-checked: str-replace(
   url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='#{$custom-control-indicator-checked-color}'/%3e%3c/svg%3e"),
-  "#",
-  "%23"
+  '#',
+  '%23'
 );
 
 $custom-switch-width: $custom-control-indicator-size * 1.75;
@@ -606,8 +606,8 @@ $custom-select-bg-size: 8px 10px; // In pixels because image dimensions
 $custom-select-indicator-color: $gray-800;
 $custom-select-indicator: str-replace(
   url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='#{$custom-select-indicator-color}' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e"),
-  "#",
-  "%23"
+  '#',
+  '%23'
 );
 $custom-select-background: $custom-select-indicator no-repeat right
   $custom-select-padding-x center / $custom-select-bg-size; // Used so we can have multiple background elements (e.g., arrow and feedback icon)
@@ -680,40 +680,40 @@ $custom-file-box-shadow: $input-box-shadow;
 $custom-file-button-color: $custom-file-color;
 $custom-file-button-bg: $input-group-addon-bg;
 $custom-file-text: (
-  en: "Browse",
+  en: 'Browse',
 );
 
 // Form validation
 
 $form-feedback-margin-top: $form-text-margin-top;
 $form-feedback-font-size: $small-font-size;
-$form-feedback-valid-color: theme-color("success");
-$form-feedback-invalid-color: theme-color("danger");
+$form-feedback-valid-color: theme-color('success');
+$form-feedback-invalid-color: theme-color('danger');
 
 $form-feedback-icon-valid-color: $form-feedback-valid-color;
 $form-feedback-icon-valid: str-replace(
   url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='#{$form-feedback-icon-valid-color}' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e"),
-  "#",
-  "%23"
+  '#',
+  '%23'
 );
 $form-feedback-icon-invalid-color: $form-feedback-invalid-color;
 $form-feedback-icon-invalid: str-replace(
   url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-feedback-icon-invalid-color}' viewBox='-2 -2 7 7'%3e%3cpath stroke='#{$form-feedback-icon-invalid-color}' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E"),
-  "#",
-  "%23"
+  '#',
+  '%23'
 );
 
 $form-validation-states: ();
 // stylelint-disable-next-line scss/dollar-variable-default
 $form-validation-states: map-merge(
   (
-    "valid": (
-      "color": $form-feedback-valid-color,
-      "icon": $form-feedback-icon-valid,
+    'valid': (
+      'color': $form-feedback-valid-color,
+      'icon': $form-feedback-icon-valid,
     ),
-    "invalid": (
-      "color": $form-feedback-invalid-color,
-      "icon": $form-feedback-icon-invalid,
+    'invalid': (
+      'color': $form-feedback-invalid-color,
+      'icon': $form-feedback-icon-invalid,
     ),
   ),
   $form-validation-states
@@ -777,8 +777,8 @@ $navbar-dark-active-color: $white;
 $navbar-dark-disabled-color: rgba($white, 0.25);
 $navbar-dark-toggler-icon-bg: str-replace(
   url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='#{$navbar-dark-color}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"),
-  "#",
-  "%23"
+  '#',
+  '%23'
 );
 $navbar-dark-toggler-border-color: rgba($white, 0.1);
 
@@ -788,8 +788,8 @@ $navbar-light-active-color: rgba($black, 0.9);
 $navbar-light-disabled-color: rgba($black, 0.3);
 $navbar-light-toggler-icon-bg: str-replace(
   url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='#{$navbar-light-color}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"),
-  "#",
-  "%23"
+  '#',
+  '%23'
 );
 $navbar-light-toggler-border-color: rgba($black, 0.1);
 
@@ -1032,7 +1032,7 @@ $progress-bg: $body-bg; // change
 $progress-border-radius: $border-radius;
 $progress-box-shadow: inset 0 0.1rem 0.1rem rgba($black, 0.1);
 $progress-bar-color: $white;
-$progress-bar-bg: theme-color("primary"); // change
+$progress-bar-bg: theme-color('primary'); // change
 $progress-bar-animation-timing: 1s linear infinite;
 $progress-bar-transition: width 0.6s ease;
 
@@ -1086,23 +1086,23 @@ $breadcrumb-margin-bottom: 1rem;
 $breadcrumb-bg: $body-bg; // change
 $breadcrumb-divider-color: $gray-600;
 $breadcrumb-active-color: $gray-600;
-$breadcrumb-divider: quote("/");
+$breadcrumb-divider: quote('/');
 
 $breadcrumb-border-radius: $border-radius;
 
 // Carousel
 
-$carousel-control-color: $white;
-$carousel-control-width: 15%;
+$carousel-control-color: $gray-700;
+$carousel-control-width: 5%;
 $carousel-control-opacity: 0.5;
 $carousel-control-hover-opacity: 0.9;
 $carousel-control-transition: opacity 0.15s ease;
 
 $carousel-indicator-width: 30px;
 $carousel-indicator-height: 3px;
-$carousel-indicator-hit-area-height: 10px;
+$carousel-indicator-hit-area-height: 2px;
 $carousel-indicator-spacer: 3px;
-$carousel-indicator-active-bg: $white;
+$carousel-indicator-active-bg: $gray-700;
 $carousel-indicator-transition: opacity 0.6s ease;
 
 $carousel-caption-width: 70%;
@@ -1112,13 +1112,13 @@ $carousel-control-icon-width: 20px;
 
 $carousel-control-prev-icon-bg: str-replace(
   url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color}' viewBox='0 0 8 8'%3e%3cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3e%3c/svg%3e"),
-  "#",
-  "%23"
+  '#',
+  '%23'
 );
 $carousel-control-next-icon-bg: str-replace(
   url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color}' viewBox='0 0 8 8'%3e%3cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3e%3c/svg%3e"),
-  "#",
-  "%23"
+  '#',
+  '%23'
 );
 
 $carousel-transition-duration: 0.6s;
@@ -1165,4 +1165,4 @@ $positions: static, relative, absolute, fixed, sticky;
 // Printing
 
 $print-page-size: a3;
-$print-body-min-width: map-get($grid-breakpoints, "lg");
+$print-body-min-width: map-get($grid-breakpoints, 'lg');
