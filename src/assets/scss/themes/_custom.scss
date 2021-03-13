@@ -11,6 +11,11 @@
   border-color: $primary-color;
 }
 
+.carousel-indicators {
+  margin-bottom: 0 !important;
+  bottom: -3px;
+}
+
 .drp-tipster-pool {
   display: inline;
   float: right;
