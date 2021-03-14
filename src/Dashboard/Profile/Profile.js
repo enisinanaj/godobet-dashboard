@@ -3,11 +3,6 @@ import {Row, Col, Card } from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import DEMO from "../../store/constant";
-import avatar1 from '../../assets/images/user/avatar-1.jpg';
-import avatar2 from '../../assets/images/user/avatar-2.jpg';
-import avatar3 from '../../assets/images/user/avatar-3.jpg';
-import avatar4 from '../../assets/images/user/avatar-4.jpg';
-import avatar5 from '../../assets/images/user/avatar-5.jpg';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
