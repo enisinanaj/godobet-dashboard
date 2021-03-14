@@ -52,63 +52,63 @@ const Tip = props => {
 
 
     return (
-    <Col key={pool.id} md={4} lg={4} xl={3} xs={12} sm={6}>
+    <Col key={pool.id} md={4} lg={4} xl={4} xs={12} sm={6}>
         {/* style={{background: "#e83e8c"}} */}
         <Card className={"light"} text={''}>
-        <Card.Body>
-            {/* className={'text-white'} */}
-            <Card.Title as="h5">
-            {pool.description}
-            <Dropdown className="drp-tipster-pool">
-                <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
-                {props.author && <Dropdown.Menu alignRight className="profile-notification">
-                    <Dropdown.Item onClick={() => {updateTip("win")}}>Win</Dropdown.Item>
-                    <Dropdown.Item onClick={() => {updateTip("1/2 win")}}>1/2 Win</Dropdown.Item>
-                    <Dropdown.Item onClick={() => {updateTip("lose")}}>Lose</Dropdown.Item>
-                    <Dropdown.Item onClick={() => {updateTip("1/2 lose")}}>1/2 Lose</Dropdown.Item>
-                    <Dropdown.Item onClick={() => {updateTip("void")}}>Void</Dropdown.Item>
-                </Dropdown.Menu>}
-                {!props.author && <Dropdown.Menu alignRight className="profile-notification">
-                    <Dropdown.Item onClick={() => {playTip(pool)}}>Tip seguita</Dropdown.Item>
-                </Dropdown.Menu>}
-            </Dropdown>
-            </Card.Title>
-            <Carousel controls={false}>
-            {pool.events.map(event => (
-                <Carousel.Item key={event.eventCode}>
-                    <div style={{height: 170, marginBottom: 15, padding: "0 20px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
-                        <Row className={"hei-110"}>
-                            <Col lg={12} sm={12} xs={12} xl={12}>
-                                <em className={"feather icon-aperture"}></em> {event.sport} / {event.competition} / {event.event}
-                            </Col>
-                            <Col lg={6} sm={12} xs={12} xl={6}>
-                                <i className="feather icon-play" /> {event.proposal}
-                            </Col>
-                            <Col lg={6} sm={12} xs={12} xl={6}>
-                                <i className="feather icon-at-sign" /> {(event.quote / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                            </Col>
-                            <Col lg={6} sm={12} xs={12} xl={6}>
-                                <i className="feather icon-book" /> {pool.bookmaker}
-                            </Col>
-                            <Col lg={6} sm={12} xs={12} xl={6}>
-                                <i className="feather icon-pie-chart" /> {(pool.stake/100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%'}
-                            </Col>
-                        </Row>
-                        <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
-                            <Col  lg={6} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
-                                {pool.outcome && <div style={{display: 'inline'}}>
-                                    Esito: {pool.outcome}
-                                </div>}
-                            </Col>
-                            <Col  lg={6} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
-                                <em className="feather icon-clock"></em> {moment(event.eventDate).format("DD/MM/yyyy HH:mm")}
-                            </Col>
-                        </Row>
-                    </div>
-                </Carousel.Item>
-            ))}
-            </Carousel>
-        </Card.Body>
+            <Card.Body>
+                {/* className={'text-white'} */}
+                <Card.Title as="h5">
+                {pool.description}
+                <Dropdown className="drp-tipster-pool">
+                    <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
+                    {props.author && <Dropdown.Menu alignRight className="profile-notification">
+                        <Dropdown.Item onClick={() => {updateTip("win")}}>Win</Dropdown.Item>
+                        <Dropdown.Item onClick={() => {updateTip("1/2 win")}}>1/2 Win</Dropdown.Item>
+                        <Dropdown.Item onClick={() => {updateTip("lose")}}>Lose</Dropdown.Item>
+                        <Dropdown.Item onClick={() => {updateTip("1/2 lose")}}>1/2 Lose</Dropdown.Item>
+                        <Dropdown.Item onClick={() => {updateTip("void")}}>Void</Dropdown.Item>
+                    </Dropdown.Menu>}
+                    {!props.author && <Dropdown.Menu alignRight className="profile-notification">
+                        <Dropdown.Item onClick={() => {playTip(pool)}}>Tip seguita</Dropdown.Item>
+                    </Dropdown.Menu>}
+                </Dropdown>
+                </Card.Title>
+                <Carousel controls={false} interval={null}>
+                {pool.events.map(event => (
+                    <Carousel.Item key={event.eventCode}>
+                        <div style={{height: 170, marginBottom: 15, padding: "0 20px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                            <Row className={"hei-110"}>
+                                <Col lg={12} sm={12} xs={12} xl={12}>
+                                    <em className={"feather icon-aperture"}></em> {event.sport} / {event.competition} / {event.event}
+                                </Col>
+                                <Col lg={6} sm={12} xs={12} xl={6}>
+                                    <i className="feather icon-play" /> {event.proposal}
+                                </Col>
+                                <Col lg={6} sm={12} xs={12} xl={6}>
+                                    <i className="feather icon-at-sign" /> {(event.quote / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                </Col>
+                                <Col lg={6} sm={12} xs={12} xl={6}>
+                                    <i className="feather icon-book" /> {pool.bookmaker}
+                                </Col>
+                                <Col lg={6} sm={12} xs={12} xl={6}>
+                                    <i className="feather icon-pie-chart" /> {(pool.stake/100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%'}
+                                </Col>
+                            </Row>
+                            <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
+                                <Col  lg={6} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
+                                    {pool.outcome && <div style={{display: 'inline'}}>
+                                        Esito: {pool.outcome}
+                                    </div>}
+                                </Col>
+                                <Col  lg={6} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
+                                    <em className="feather icon-clock"></em> {moment(event.eventDate).format("DD/MM/yyyy HH:mm")}
+                                </Col>
+                            </Row>
+                        </div>
+                    </Carousel.Item>
+                ))}
+                </Carousel>
+            </Card.Body>
         </Card>
     </Col>);
 }
