@@ -1,45 +1,107 @@
 import React, { Component } from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import Aux from '../../hoc/_Aux';
-import TipCard from '../../App/components/TipCard';
+import TipCard from './TipCard';
+import * as actions from '../../store/actions';
+import TokenManager from '../../App/auth/TokenManager';
+import config from '../../store/config';
 
-const tempData = [
-  { id: 1, text: ['aaaa', 'bbbb', 'ccccc'] },
-  { id: 2, text: ['ccccc'] },
-  { id: 3, text: ['ccccc'] },
-  { id: 4, text: ['aaaa'] },
-  { id: 5, text: ['axxxa'] },
-];
-
-const getTipCards = (list) => {
-  return list.map((item, i) => {
+const getTipCards = (dropdownHidden) => (pools) => {
+  return pools.map((pool, i) => {
     return (
-      <Col md={6}>
-        <TipCard key={`tip-card-${i}`} {...item} />
+      <Col md={6} key={`tip-card-column-${i + (new Date())}`}>
+        <TipCard key={`tip-card-${i + (new Date())}`} pool={pool} dropdownHidden={dropdownHidden} />
       </Col>
     );
   });
 };
 
-class SamplePage extends Component {
+const loadAllPools = (url) => {
+  return TokenManager
+    .getInstance()
+    .getToken()
+    .then(jwt => {
+        return fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+        })
+        .then((e) => e.json())
+        .then(json => json._embedded.pools)
+      }
+    );
+}
+
+class PendingTips extends Component {
+
+  state = {
+    expiredPools: [],
+    ongoingPools: []
+  }
+
+  getExpiredPools() {
+    return loadAllPools(config.API_URL + "/pools")
+      .then(pools => pools.filter(pool => pool.outcome != null))
+      .catch(console.error);
+  }
+
+  getOngoingPools() {
+    return loadAllPools(config.API_URL + "/pools")
+      .then(pools => pools.filter(pool => pool.outcome === null))
+      .catch(console.error);
+  }
+
+  filterMyPools = (pools) => {
+    const myPools = this.props.user._embedded.playedPools.map(pool => pool.id);
+    return pools.filter(pool => !myPools.includes(pool.id));
+  }
+
+  getOngoingPoolsCards() {
+    this.getOngoingPools()
+    .then(this.filterMyPools)
+    .then(getTipCards(false))
+    .then(ongoingPools => this.setState({
+      ...this.state,
+      ongoingPools
+    }))
+  }
+
+  getExpiredPoolsCards() {
+    this.getExpiredPools()
+    .then(this.filterMyPools)
+    .then(getTipCards(true))
+    .then(expiredPools => this.setState({
+      ...this.state,
+      expiredPools
+    }))
+  }
+
+  componentDidMount() {
+    this.getOngoingPoolsCards();
+    this.getExpiredPoolsCards();
+  }
+
   render() {
     return (
       <Aux>
         <Card>
           <Card.Body>
-            <div>
-              <h1>Tip in corso</h1>
-              <Row>{getTipCards(tempData)}</Row>
-            </div>
+            <Card.Title>
+              <Card.Text as="h3">Tip in corso</Card.Text>
+            </Card.Title>
+            <Row>{this.state.ongoingPools}</Row>
           </Card.Body>
         </Card>
         <Card>
           <Card.Body>
-            <div>
-              <h1>Tip consclusi</h1>
-              <Row>{getTipCards(tempData)}</Row>
-            </div>
+            <Card.Title>
+              <Card.Text as="h3">Tip conclusi</Card.Text>
+            </Card.Title>
+            <Row>{this.state.expiredPools}</Row>
           </Card.Body>
         </Card>
       </Aux>
@@ -47,4 +109,13 @@ class SamplePage extends Component {
   }
 }
 
-export default SamplePage;
+const mapStateToProps = state => ({
+  applicationState: state,
+  user: state.user,
+  loggedIn: state.loggedIn
+});
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PendingTips);
