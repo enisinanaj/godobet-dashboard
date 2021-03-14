@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Form, Row, Alert } from "react-bootstrap";
+import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import Aux from "../../hoc/_Aux";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -29,6 +29,10 @@ const CreateTip = (props) =>  {
   };
 
   useEffect(() => {
+    console.log(errorMessage);
+  }, [errorMessage]);
+
+  useEffect(() => {
     validateEvents();
   }, [stake, description, bookmaker, service]);
 
@@ -44,7 +48,7 @@ const CreateTip = (props) =>  {
   }, []);
 
   const validateEvents = () => {
-    if (events.length == 0) {
+    if (events.length === 0) {
       setEvents([{}]);
       setErrorMessage("È obbligatorio inserire almeno un evento nella tip per poterla salvare.")
     }
@@ -157,7 +161,6 @@ const CreateTip = (props) =>  {
                         name="stake"
                         placeholder="0.0%"
                         suffix={"%"}
-                        value={stake}
                         onChange={({ target }) => {setStake(target.value)}} />
                     </Form.Group>
                   </Col>
@@ -188,7 +191,7 @@ const CreateTip = (props) =>  {
               })}
 
               <Button onClick={e => setEvents([...events, {}])}>+ Aggiungi evento</Button>
-              <Button className={"float-right"} onClick={() => {}} disabled={!validEvents} onClick={() => saveTip()} >Salva</Button>
+              <Button className={"float-right"} disabled={!validEvents} onClick={() => saveTip()} >Salva</Button>
             </Col>
           </Row>
         </Form>

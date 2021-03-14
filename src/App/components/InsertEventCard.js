@@ -20,7 +20,7 @@ const InsertEventCard = (props) => {
             quote,
             notes
         });
-    }, [eventDate, competition, event, proposal, quote, notes])
+    }, [eventDate, competition, event, proposal, quote, notes, props])
 
     return (<Card className={"p-15"}>
         <Card.Body>
