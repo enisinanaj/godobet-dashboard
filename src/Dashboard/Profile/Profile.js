@@ -95,7 +95,7 @@ class Profile extends Component {
                 </div>
                 <Row>
                     <Col md={4} className='order-md-1'>
-                        <Card>
+                        {/* <Card>
                             <Card.Header className='d-flex align-items-center justify-content-between'>
                                 <h5 className="mb-0">Friends</h5>
                                 <span className="badge badge-light-primary float-right">100+</span>
@@ -112,7 +112,7 @@ class Profile extends Component {
                                     <li className="list-inline-item"><a href={DEMO.BLANK_LINK}><img src={avatar3} alt="user" className="img-radius wid-50" data-toggle="tooltip" title="John Doe"/></a></li>
                                 </ul>
                             </Card.Body>
-                        </Card>
+                        </Card> */}
                     </Col>
                 </Row>
             </Aux>

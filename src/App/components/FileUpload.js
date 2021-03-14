@@ -141,6 +141,7 @@ const FileUpload = (props) => {
   return (
     <Form>
       {props.type === "avatar" &&
+        user._embedded &&
         user._embedded.media &&
         user._embedded.media.filter((m) => m.mediaType === "avatar").length >
           0 && (
