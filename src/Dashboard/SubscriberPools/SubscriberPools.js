@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as actions from '../../store/actions'
 import TokenManager from "../../App/auth/TokenManager";
-import Tip from "../../App/components/Tip";
+import Tip from "./Tip";
 
 const TipsterPools = (props) =>  {
   const [pools, setPools] = useState([]);
