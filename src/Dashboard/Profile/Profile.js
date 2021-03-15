@@ -90,24 +90,6 @@ class Profile extends Component {
                 </div>
                 <Row>
                     <Col md={4} className='order-md-1'>
-                        {/* <Card>
-                            <Card.Header className='d-flex align-items-center justify-content-between'>
-                                <h5 className="mb-0">Friends</h5>
-                                <span className="badge badge-light-primary float-right">100+</span>
-                            </Card.Header>
-                            <Card.Body>
-                                <ul className="list-inline">
-                                    <li className="list-inline-item"><a href={DEMO.BLANK_LINK}><img src={avatar1} alt="user" className="img-radius mb-2 wid-50" data-toggle="tooltip" title="Joseph William"/></a></li>
-                                    <li className="list-inline-item"><a href={DEMO.BLANK_LINK}><img src={avatar2} alt="user" className="img-radius mb-2 wid-50" data-toggle="tooltip" title="Sara Soudein"/></a></li>
-                                    <li className="list-inline-item"><a href={DEMO.BLANK_LINK}><img src={avatar3} alt="user" className="img-radius mb-2 wid-50" data-toggle="tooltip" title="John Doe"/></a></li>
-                                    <li className="list-inline-item"><a href={DEMO.BLANK_LINK}><img src={avatar4} alt="user" className="img-radius mb-2 wid-50" data-toggle="tooltip" title="Joseph William"/></a></li>
-                                    <li className="list-inline-item"><a href={DEMO.BLANK_LINK}><img src={avatar5} alt="user" className="img-radius wid-50" data-toggle="tooltip" title="Sara Soudein"/></a></li>
-                                    <li className="list-inline-item"><a href={DEMO.BLANK_LINK}><img src={avatar1} alt="user" className="img-radius wid-50" data-toggle="tooltip" title="Joseph William"/></a></li>
-                                    <li className="list-inline-item"><a href={DEMO.BLANK_LINK}><img src={avatar2} alt="user" className="img-radius wid-50" data-toggle="tooltip" title="Sara Soudein"/></a></li>
-                                    <li className="list-inline-item"><a href={DEMO.BLANK_LINK}><img src={avatar3} alt="user" className="img-radius wid-50" data-toggle="tooltip" title="John Doe"/></a></li>
-                                </ul>
-                            </Card.Body>
-                        </Card> */}
                     </Col>
                 </Row>
             </Aux>

@@ -17,9 +17,8 @@ const CreateTip = (props) =>  {
   const [events, setEvents] = useState([{}]);
   const [bookmaker, setBookmaker] = useState();
   const [validEvents, setValidEvents] = useState(false);
-  const [service, setService] = useState("")
-  const [services, setServices] = useState()
-  const [errorMessage, setErrorMessage] = useState("")
+  const [service, setService] = useState("");
+  const [services, setServices] = useState();
 
   const updateEvents = (event) => {
     let newEvents = events;
@@ -50,7 +49,6 @@ const CreateTip = (props) =>  {
   const validateEvents = () => {
     if (events.length === 0) {
       setEvents([{}]);
-      setErrorMessage("È obbligatorio inserire almeno un evento nella tip per poterla salvare.")
     }
 
     let errors = events.filter(event => {
@@ -70,7 +68,6 @@ const CreateTip = (props) =>  {
     });
 
     if (errors.length > 0) {
-      setErrorMessage("Controlla che tutti i campi obbligatori siano stati compilati.");
       setValidEvents(false);
     } else {
       setValidEvents(true);
@@ -101,8 +98,9 @@ const CreateTip = (props) =>  {
 
     let poolResult = await result.json();
 
+    let updateEvents = []
     events.forEach(event => {
-      return fetch(config.API_URL + "/events/", {    
+      updateEvents.push(fetch(config.API_URL + "/events/", {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Auth": token },
         body: JSON.stringify({
@@ -117,8 +115,12 @@ const CreateTip = (props) =>  {
           sport: "",
           gender: "http://localhost:5005/items/3"
         })
-      })
+      }));
     });
+
+    Promise.all(updateEvents).then(result => {
+      window.location = '/dashboard/tipster/pools'
+    })
   };
 
   return (
@@ -157,7 +159,6 @@ const CreateTip = (props) =>  {
                     <Form.Group controlId="cap">
                       <Form.Label>Stake (%) <span className={"text-danger"}>*</span></Form.Label>
                       <NumberFormat className={"form-control"} 
-                        value={stake}
                         name="stake"
                         placeholder="0.0%"
                         suffix={"%"}
@@ -178,13 +179,6 @@ const CreateTip = (props) =>  {
                   </Col>
                 </Row>
               </Card>
-
-              {/* {errorMessage !== "" &&
-                <Alert variant="warning">
-                    <Alert.Heading as="h4">Attenzione!</Alert.Heading>
-                    <p>{errorMessage}</p>
-                </Alert>
-              } */}
 
               {events.map((e, index) => {
                 return <InsertEventCard key={index} onValueChange={updateEvents} index={index} onRemove={removeEvent} />

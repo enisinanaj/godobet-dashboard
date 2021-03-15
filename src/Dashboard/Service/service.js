@@ -28,11 +28,6 @@ class ServiceCard extends Component {
                                         </li>
                                         <li>
                                             <a href="/profile" className="dropdown-item">
-                                                <i className="feather icon-user" /> Modifica
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/profile" className="dropdown-item">
                                                 <i className="feather icon-user" /> Annulla l'iscrizione
                                             </a>
                                         </li>
