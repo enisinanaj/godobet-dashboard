@@ -31,7 +31,7 @@ const loadAllPools = (url) => {
           },
         })
         .then((e) => e.json())
-        .then(json => json._embedded.pools)
+        .then(json => json._embedded ? json._embedded.pools : [])
       }
     );
 }
@@ -50,7 +50,9 @@ class PendingTips extends Component {
   }
 
   filterMyPools = (pools) => {
-    const myPools = this.props.user._embedded.playedPools.map(pool => pool.id);
+    const myPools = this.props.user._embedded && this.props.user._embedded.playedPools 
+      ? this.props.user._embedded.playedPools.map(pool => pool.id)
+      : [];
     return pools.filter(pool => !myPools.includes(pool.id));
   }
 

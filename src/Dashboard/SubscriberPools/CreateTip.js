@@ -28,10 +28,6 @@ const CreateTip = (props) =>  {
   };
 
   useEffect(() => {
-    console.log(errorMessage);
-  }, [errorMessage]);
-
-  useEffect(() => {
     validateEvents();
   }, [stake, description, bookmaker, service]);
 
