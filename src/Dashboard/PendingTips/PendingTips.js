@@ -43,15 +43,9 @@ class PendingTips extends Component {
     ongoingPools: []
   }
 
-  getExpiredPools() {
+  filterPools = (condition) => {
     return loadAllPools(config.API_URL + "/pools")
-      .then(pools => pools.filter(pool => pool.outcome != null))
-      .catch(console.error);
-  }
-
-  getOngoingPools() {
-    return loadAllPools(config.API_URL + "/pools")
-      .then(pools => pools.filter(pool => pool.outcome === null))
+      .then(pools => pools.filter(condition))
       .catch(console.error);
   }
 
@@ -60,29 +54,24 @@ class PendingTips extends Component {
     return pools.filter(pool => !myPools.includes(pool.id));
   }
 
-  getOngoingPoolsCards() {
-    this.getOngoingPools()
-    .then(this.filterMyPools)
-    .then(getTipCards(false))
-    .then(ongoingPools => this.setState({
-      ...this.state,
-      ongoingPools
-    }))
-  }
-
-  getExpiredPoolsCards() {
-    this.getExpiredPools()
-    .then(this.filterMyPools)
-    .then(getTipCards(true))
-    .then(expiredPools => this.setState({
-      ...this.state,
-      expiredPools
-    }))
+  getPoolsCards = (filter) => {
+    return this.filterPools(filter)
+      .then(this.filterMyPools)
+      .then(pool => getTipCards( !filter(pool) )(pool))
   }
 
   componentDidMount() {
-    this.getOngoingPoolsCards();
-    this.getExpiredPoolsCards();
+    this.getPoolsCards(p => !p.outcome)
+    .then(ongoingPools => this.setState({
+      ...this.state,
+      ongoingPools
+    }));
+
+    this.getPoolsCards(p => !!p.outcome)
+    .then(expiredPools => this.setState({
+      ...this.state,
+      expiredPools
+    }));
   }
 
   render() {
