@@ -1,31 +1,76 @@
-import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 import Aux from "../../hoc/_Aux";
-import Card from "../../App/components/MainCard";
+import SubscriberCard from "./SubscriberCard";
 
-class SamplePage extends Component {
-  render() {
-    return (
-      <Aux>
-        <Row>
-          <Col>
-            <Card title="Hello Card" isOption>
-              <p>
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum."
-              </p>
-            </Card>
-          </Col>
-        </Row>
-      </Aux>
-    );
-  }
-}
+import Swal from "sweetalert2";
+import TokenManager from "../../App/auth/TokenManager";
+import { connect } from "react-redux";
+import * as actions from "../../store/actions";
+import { bindActionCreators } from "redux";
+import BASE_CONFIG from "../../store/config";
 
-export default SamplePage;
+const SubscriberServices = (props) => {
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    getServices();
+  }, []);
+
+  const getServices = () => {
+    TokenManager.getInstance()
+      .getToken()
+      .then((jwt) => {
+        fetch(
+          BASE_CONFIG.API_URL +
+            "/users/" +
+            props.applicationState.user.userCode +
+            "/services",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-Auth": jwt,
+            },
+          }
+        )
+          .then((e) => e.json())
+          .then((res) => {
+            if (!res._embedded.services) {
+              return;
+            }
+            let sortedServices = res._embedded.services.sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            );
+            setServices(sortedServices);
+            console.log(sortedServices);
+          });
+      });
+  };
+
+  return (
+    <Aux>
+      <h1>I miei servizi</h1>
+      <div style={{ textAlign: "center" }}>
+        <Link to="create-new">
+          <button className="btn btn-primary shadow-2 mb-4">
+            Nuovo servizio
+          </button>
+        </Link>
+      </div>
+      <Row md={12}>
+        <SubscriberCard services={services} setServices={setServices} />
+      </Row>
+    </Aux>
+  );
+};
+
+const mapStateToProps = (state) => ({ applicationState: state });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SubscriberServices);

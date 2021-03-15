@@ -1,5 +1,8 @@
 import React from "react";
 import $ from "jquery";
+import CreateNewCard from "./Dashboard/SubscriberServices/CreateNewCard";
+import EditCard from "./Dashboard/SubscriberServices/EditCard";
+import CardDetails from "./Dashboard/Details/CardDetails";
 import CreateTip from "./Dashboard/SubscriberPools/CreateTip";
 
 window.jQuery = $;
@@ -70,6 +73,28 @@ const routes = [
     exact: true,
     name: "My Services",
     component: SubscriberServices,
+    role: 4,
+  },
+  {
+
+    path: "/dashboard/create-new",
+    exact: true,
+    name: "Create new",
+    component: CreateNewCard,
+    role: 4,
+  },
+  {
+    path: "/dashboard/edit-card/",
+    exact: false,
+    name: "Edit Card",
+    component: EditCard,
+    role: 4,
+  },
+  {
+    path: "/dashboard/details/",
+    exact: false,
+    name: "Card details",
+    component: CardDetails,
     role: 4,
   },
   {

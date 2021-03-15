@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import windowSize from "react-window-size";
+// import windowSize from "react-window-size";
 
 import NavLeft from "./NavLeft";
 import NavRight from "./NavRight";
@@ -131,6 +131,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(windowSize(NavBar))
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar));

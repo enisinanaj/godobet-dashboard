@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { connect } from "react-redux";
 import Fullscreen from "react-full-screen";
-import windowSize from "react-window-size";
+// import windowSize from "react-window-size";
 
 import Navigation from "./Navigation";
 import NavBar from "./NavBar";
@@ -164,5 +164,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(windowSize(AdminLayout))
+  connect(mapStateToProps, mapDispatchToProps)(AdminLayout)
 );

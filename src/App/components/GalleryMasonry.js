@@ -4,28 +4,28 @@ class GalleryMasonry extends React.Component {
   constructor(props) {
     super(props);
     this.state = { columns: 1 };
-    this.onResize = this.onResize.bind(this);
+    // this.onResize = this.onResize.bind(this);
   }
 
-  componentDidMount() {
-    this.onResize();
-    window.addEventListener("resize", this.onResize);
-  }
+  // componentDidMount() {
+  //   this.onResize();
+  //   window.addEventListener("resize", this.onResize);
+  // }
 
-  getColumns(w) {
-    return (
-      this.props.brakePoints.reduceRight((p, c, i) => {
-        return c < w ? p : i;
-      }, this.props.brakePoints.length) + 1
-    );
-  }
+  // getColumns(w) {
+  //   return (
+  //     this.props.brakePoints.reduceRight((p, c, i) => {
+  //       return c < w ? p : i;
+  //     }, this.props.brakePoints.length) + 1
+  //   );
+  // }
 
-  onResize() {
-    const columns = this.getColumns(this.refs.Masonry.offsetWidth);
-    if (columns !== this.state.columns) {
-      this.setState({ columns: columns });
-    }
-  }
+  // onResize() {
+  //   const columns = this.getColumns(this.refs.Masonry.offsetWidth);
+  //   if (columns !== this.state.columns) {
+  //     this.setState({ columns: columns });
+  //   }
+  // }
 
   mapChildren() {
     let col = [];
