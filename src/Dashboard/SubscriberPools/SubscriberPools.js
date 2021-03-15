@@ -1,31 +1,56 @@
-import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Row } from "react-bootstrap";
 
 import Aux from "../../hoc/_Aux";
-import Card from "../../App/components/MainCard";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as actions from '../../store/actions'
+import TokenManager from "../../App/auth/TokenManager";
+import Tip from "./Tip";
 
-class SamplePage extends Component {
-  render() {
-    return (
-      <Aux>
-        <Row>
-          <Col>
-            <Card title="Hello Card" isOption>
-              <p>
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum."
-              </p>
-            </Card>
-          </Col>
-        </Row>
-      </Aux>
-    );
+const TipsterPools = (props) =>  {
+  const [pools, setPools] = useState([]);
+
+  useEffect(() => {
+    loadPools()
+  });
+
+  const loadPools = () => {
+    TokenManager.getInstance()
+      .getToken()
+      .then((jwt) => {
+        fetch(props.applicationState.user._links.pools.href.replace("{?projection}", ""), {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+        })
+          .then((e) => e.json())
+          .then((pools) => {
+            console.warn('load pools called');
+            setPools(pools._embedded.pools);
+          });
+      });
   }
+
+  return (
+    <Aux>
+      <Row>
+        {
+          pools.map(pool => (
+            <Tip key={pool.id} pool={pool} callback={loadPools} user={props.applicationState.user} author={true} />
+          ))
+        }
+      </Row>
+    </Aux>
+  );
+
+
 }
 
-export default SamplePage;
+const mapStateToProps = state => ({applicationState: state});
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TipsterPools);

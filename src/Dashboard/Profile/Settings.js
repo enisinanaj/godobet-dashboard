@@ -23,7 +23,7 @@ const Settings = (props) => {
 
   const SHOW_FULL_PROFILE = user.roleValue > 4;
 
-  var sortedAddresses = props.applicationState.user._embedded.addresses
+  var sortedAddresses = props.applicationState.user._embedded && props.applicationState.user._embedded.addresses
     ? props.applicationState.user._embedded.addresses.sort(
         (a, b) =>
           new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime()

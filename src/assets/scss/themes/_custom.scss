@@ -10,3 +10,22 @@
   background: $primary-color;
   border-color: $primary-color;
 }
+
+.carousel-indicators {
+  margin-bottom: 0 !important;
+  bottom: -3px;
+}
+
+.drp-tipster-pool {
+  display: inline;
+  float: right;
+}
+
+.drp-tipster-pool button {
+  padding: 0 5px;
+  color: #000;
+}
+
+.carousel-indicators li {
+  background-color: darkgray; //this can be whatever color you want
+}

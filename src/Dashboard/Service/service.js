@@ -11,8 +11,8 @@ class ServiceCard extends Component {
                     <Card.Img variant="top" src={imgSlide3} alt="CardImageCap"/>
                     <Card.ImgOverlay>
                         <Card.Title className="text-right">
-                            <Dropdown className="drp-user">
-                                <Dropdown.Toggle variant={"light"} id="dropdown-basic"></Dropdown.Toggle>
+                            <Dropdown className="drp-tipster-pool">
+                                <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
                                 <Dropdown.Menu alignRight className="profile-notification">
                                     <div className="pro-head"></div>
                                     <ul className="pro-body" style={{listStyle: "none", padding: "5px 0 5px 0", margin: 0}}>
@@ -24,11 +24,6 @@ class ServiceCard extends Component {
                                         <li>
                                             <a href="/profile" className="dropdown-item">
                                                 <i className="feather icon-user" /> Disattiva notifiche per il servizio
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/profile" className="dropdown-item">
-                                                <i className="feather icon-user" /> Modifica
                                             </a>
                                         </li>
                                         <li>

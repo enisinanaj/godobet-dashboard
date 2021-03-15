@@ -3,12 +3,13 @@ import $ from "jquery";
 import CreateNewCard from "./Dashboard/SubscriberServices/CreateNewCard";
 import EditCard from "./Dashboard/SubscriberServices/EditCard";
 import CardDetails from "./Dashboard/Details/CardDetails";
+import CreateTip from "./Dashboard/SubscriberPools/CreateTip";
 
 window.jQuery = $;
 window.$ = $;
 global.jQuery = $;
 
-const DashboardDefault = React.lazy(() => import("./Demo/Dashboard/Default"));
+const DashboardDefault = React.lazy(() => import("./Dashboard/Home"));
 const Marketplace = React.lazy(() =>
   import("./Dashboard/Marketplace/Marketplace")
 );
@@ -68,13 +69,14 @@ const routes = [
     role: 4,
   },
   {
-    path: "/dashboard/subscriber-services",
+    path: "/dashboard/tipster/services",
     exact: true,
     name: "My Services",
     component: SubscriberServices,
     role: 4,
   },
   {
+
     path: "/dashboard/create-new",
     exact: true,
     name: "Create new",
@@ -96,11 +98,18 @@ const routes = [
     role: 4,
   },
   {
-    path: "/dashboard/subscriber-pools",
+    path: "/dashboard/tipster/pools",
     exact: true,
     name: "My Tips",
     component: SubscriberPools,
     role: 4,
+  },
+  {
+    path: "/dashboard/tipster/createTip",
+    exact: true,
+    name: "Create Tips",
+    component: CreateTip,
+    role: 5,
   },
 
   {

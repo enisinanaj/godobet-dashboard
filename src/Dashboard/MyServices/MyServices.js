@@ -10,7 +10,7 @@ class MyServices extends Component {
   }
 
   getServicesDom() {
-    return this.state.services.map((service, key) => <Col md={6}><ServiceCard data={service} key={key}></ServiceCard></Col>);
+    return this.state.services.map((service, key) => <Col md={4}><ServiceCard data={service} key={key}></ServiceCard></Col>);
   }
 
   render() {
