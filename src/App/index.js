@@ -20,6 +20,11 @@ import { connect } from "react-redux";
 import * as actions from "../store/actions";
 import "../App/auth/firebase";
 
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY);
+
 const AdminLayout = Loadable({
   loader: () => import("./layout/AdminLayout"),
   loading: Loader,
@@ -53,23 +58,25 @@ class App extends Component {
 
     return (
       <Aux>
-        <ScrollToTop>
-          <Suspense fallback={<Loader />}>
-            <BrowserRouter>
-              <Switch>
-                {menu}
-                {maintenance}
-                <Route path="/">
-                  {!this.props.loggedIn ? (
-                    <Redirect to="/auth/signin" />
-                  ) : (
-                    <AdminLayout />
-                  )}
-                </Route>
-              </Switch>
-            </BrowserRouter>
-          </Suspense>
-        </ScrollToTop>
+        <Elements stripe={stripePromise}>
+          <ScrollToTop>
+            <Suspense fallback={<Loader />}>
+              <BrowserRouter>
+                <Switch>
+                  {menu}
+                  {maintenance}
+                  <Route path="/">
+                    {!this.props.loggedIn ? (
+                      <Redirect to="/auth/signin" />
+                    ) : (
+                      <AdminLayout />
+                    )}
+                  </Route>
+                </Switch>
+              </BrowserRouter>
+            </Suspense>
+          </ScrollToTop>
+        </Elements>
       </Aux>
     );
   }

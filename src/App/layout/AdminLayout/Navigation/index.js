@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import windowSize from "react-window-size";
+// import windowSize from "react-window-size";
 
 import NavContent from "./NavContent";
 import OutsideClick from "./OutsideClick";
@@ -10,22 +10,22 @@ import * as actionTypes from "./../../../../store/actions";
 import navigation from "../../../../menu-items";
 
 class Navigation extends Component {
-  resize = () => {
-    const contentWidth = document.getElementById("root").clientWidth;
+  // resize = () => {
+  //   const contentWidth = document.getElementById("root").clientWidth;
 
-    if (this.props.layout === "horizontal" && contentWidth < 992) {
-      this.props.onChangeLayout("vertical");
-    }
-  };
+  //   if (this.props.layout === "horizontal" && contentWidth < 992) {
+  //     this.props.onChangeLayout("vertical");
+  //   }
+  // };
 
-  componentDidMount() {
-    this.resize();
-    window.addEventListener("resize", this.resize);
-  }
+  // componentDidMount() {
+  //   this.resize();
+  //   window.addEventListener("resize", this.resize);
+  // }
 
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.resize);
-  }
+  // componentWillUnmount() {
+  //   window.removeEventListener("resize", this.resize);
+  // }
 
   scroll = () => {
     if (this.props.navFixedLayout && this.props.headerFixedLayout === false) {
@@ -143,5 +143,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(windowSize(Navigation))
+  connect(mapStateToProps, mapDispatchToProps)(Navigation)
 );
