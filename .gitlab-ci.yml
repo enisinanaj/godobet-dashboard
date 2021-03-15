@@ -1,13 +1,15 @@
 stages:
   - push_image
 
-# services:
-# - docker:dind
+services:
+- docker:dind
 
 push_image:
   stage: push_image
-  # image: docker:stable
-  # services:
-  # - docker:dind
+  image: docker:stable
+  services:
+  - docker:dind
   script:
-    - echo "OK"
+    # - docker login registry.e2n.me -u $USERNAME -p $PASSWORD
+    - docker build . -t registry.e2n.me/godobet-dashboard:$CI_COMMIT_SHORT_SHA
+    - docker push registry.e2n.me/godobet-dashboard:$CI_COMMIT_SHORT_SHA
