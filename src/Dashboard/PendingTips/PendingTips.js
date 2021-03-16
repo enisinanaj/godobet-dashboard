@@ -8,6 +8,8 @@ import TipCard from './TipCard';
 import * as actions from '../../store/actions';
 import TokenManager from '../../App/auth/TokenManager';
 import config from '../../store/config';
+import { Tab } from 'bootstrap';
+import { Tabs } from 'react-bootstrap';
 
 const getTipCards = (dropdownHidden) => (pools) => {
   return pools.map((pool, i) => {
@@ -19,7 +21,7 @@ const getTipCards = (dropdownHidden) => (pools) => {
   });
 };
 
-const loadAllPools = (url) => {
+const loadAllPools = (url, args = {}) => {
   return TokenManager
     .getInstance()
     .getToken()
@@ -29,6 +31,7 @@ const loadAllPools = (url) => {
             "Content-Type": "application/json",
             "X-Auth": jwt,
           },
+          ...args
         })
         .then((e) => e.json())
         .then(json => json._embedded ? json._embedded.pools : [])
@@ -37,10 +40,15 @@ const loadAllPools = (url) => {
 }
 
 class PendingTips extends Component {
-
   state = {
     expiredPools: [],
     ongoingPools: []
+  }
+
+  getMyPools = (condition) => {
+    return loadAllPools(`${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.user._links.self.href}`)
+      .then(pools => pools.filter(condition))
+      .catch(console.error);
   }
 
   filterPools = (condition) => {
@@ -57,7 +65,7 @@ class PendingTips extends Component {
   }
 
   getPoolsCards = (filter) => {
-    return this.filterPools(filter)
+    return this.getMyPools(filter)
       .then(this.filterMyPools)
       .then(pool => getTipCards( !filter(pool) )(pool))
   }
@@ -79,23 +87,23 @@ class PendingTips extends Component {
   render() {
     return (
       <Aux>
-        <Card>
-          <Card.Body>
-            <Card.Title>
-              <Card.Text as="h3">Tip in corso</Card.Text>
-            </Card.Title>
-            <Row>{this.state.ongoingPools}</Row>
-          </Card.Body>
-        </Card>
-        <Card>
-          <Card.Body>
-            <Card.Title>
-              <Card.Text as="h3">Tip conclusi</Card.Text>
-            </Card.Title>
-            <Row>{this.state.expiredPools}</Row>
-          </Card.Body>
-        </Card>
-      </Aux>
+        <Row>
+          <Col sm={12} className="tab-user-card">
+            <Tabs
+              variant="pills"
+              defaultActiveKey="pending"
+              id="uncontrolled-tab-example"
+            >
+              <Tab eventKey="pending" title="Tip in corso">
+                <Row>{this.state.ongoingPools}</Row>
+              </Tab>
+              <Tab eventKey="expired" title="Tip conclusi">
+                <Row>{this.state.expiredPools}</Row>
+              </Tab>
+            </Tabs>
+        </Col>
+      </Row>
+    </Aux>
     );
   }
 }
