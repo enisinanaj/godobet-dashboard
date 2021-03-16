@@ -2,7 +2,6 @@
 // import { Row, Col, Card, Button } from "react-bootstrap";
 // import Gallery from "../../../App/components/Gallery";
 // // import ReactImageVideoLightbox from 'react-image-video-lightbox';
-
 // import image1 from "../../../assets/images/light-box/l1.jpg";
 // import image2 from "../../../assets/images/light-box/l2.jpg";
 // import image3 from "../../../assets/images/light-box/l3.jpg";
