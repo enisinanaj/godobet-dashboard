@@ -19,6 +19,7 @@ class Profile extends Component {
 
     avatar = (email) => {
         if (
+            this.props.user._embedded &&
             this.props.user._embedded.media &&
             this.props.user._embedded.media.filter((m) => m.mediaType === "avatar").length > 0) {
             return this.props.user._embedded.media
@@ -26,7 +27,7 @@ class Profile extends Component {
                 .sort((a, b) => b.id - a.id)[0].url;
         }
 
-        return ("http://www.gravatar.com/avatar/" + md5(email.email.toLowerCase().trim()) + "?s=32");
+        return ("http://www.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?s=32");
     }
 
     componentDidMount() {
@@ -34,7 +35,7 @@ class Profile extends Component {
     }
 
     address = () => {
-        var sortedAddresses = this.props.user._embedded.addresses
+        var sortedAddresses = this.props.user._embedded && this.props.user._embedded.addresses
             ? this.props.user._embedded.addresses.sort((a, b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime())
             : [];
         
