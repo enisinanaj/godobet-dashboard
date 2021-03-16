@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Col, Form, Card, Row } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Col, Form, Card, Row, Button } from "react-bootstrap";
 import { DropzoneComponent } from "react-dropzone-component";
 import Swal from "sweetalert2";
 
@@ -11,8 +11,9 @@ import BASE_CONFIG from "../../store/config";
 import Aux from "../../hoc/_Aux";
 
 const CreateNewCard = (props) => {
-  const [image, setImage] = useState();
-  const [loading, setLoading] = useState(false);
+  // const [image, setImage] = useState();
+  const [validFields, setValidFields] = useState(false);
+
   const [newObject, setNewObject] = useState({
     author: "",
     price: "",
@@ -31,6 +32,11 @@ const CreateNewCard = (props) => {
     addRemoveLinks: true,
     acceptedFiles: "image/jpeg,image/png,application/pdf",
   };
+
+  useEffect(() => {
+    validate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newObject]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,30 +72,143 @@ const CreateNewCard = (props) => {
               title: "Oops...",
               text: "Something went wrong!",
             });
-            setLoading(false);
+
             console.log(e);
           } else {
             Swal.fire({
               type: "success",
               title: "Servizio creato!",
             });
-            setLoading(false);
           }
         });
       });
   };
 
-  console.log(image);
+  const validate = () => {
+    if (
+      newObject.serviceName &&
+      newObject.description &&
+      newObject.price &&
+      newObject.duration &&
+      newObject.maxSubscribers
+    ) {
+      setValidFields(true);
+    } else {
+      setValidFields(false);
+    }
+  };
 
   return (
     <Aux>
-      <Row>
+      <Form>
+        <Row>
+          <Col md={12} sm={12} lg={12} xl={12}>
+            <Card className={"p-15"}>
+              <Row>
+                <Col md={12} sm={12} lg={3} xl={3}>
+                  <Form.Group controlId="infirizzo">
+                    <Form.Label>
+                      Titolo <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Titolo"
+                      onChange={handleChange}
+                      name="serviceName"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={12} sm={12} lg={3} xl={3}>
+                  <Form.Group controlId="citta">
+                    <Form.Label>
+                      Prezzo (€) <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="price"
+                      onChange={handleChange}
+                      placeholder="Prezzo"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={12} sm={12} lg={3} xl={3}>
+                  <Form.Group>
+                    <Form.Label>
+                      Durata iscrizione (giorni){" "}
+                      <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      placeholder="Durata iscrizione"
+                      onChange={handleChange}
+                      name="duration"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={12} sm={12} lg={3} xl={3}>
+                  <Form.Group>
+                    <Form.Label>
+                      Massimo iscrizioni <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      placeholder="Massimo iscrizioni"
+                      onChange={handleChange}
+                      name="maxSubscribers"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Group controlId="infirizzo">
+                    <Form.Label>
+                      Descrizione <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      style={{ minHeight: "200px" }}
+                      as="textarea"
+                      placeholder="Descrizione"
+                      name="description"
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <DropzoneComponent config={config} djsConfig={djsConfig} />
+                </Col>
+              </Row>
+            </Card>
+
+            <Button
+              onClick={handleCreateCard}
+              className="float-right"
+              disabled={!validFields}
+            >
+              Salva
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </Aux>
+  );
+};
+
+const mapStateToProps = (state) => ({ applicationState: state });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateNewCard);
+
+/* <Row>
         <Col>
           <Card title="Crea nuovo servizio">
             <Card.Body>
-              <Card.Title>
-                <h4>Crea nuovo servizio</h4>
-              </Card.Title>
               <Card.Text>
                 <ul className="list-group">
                   <li className="list-group-item">
@@ -169,14 +288,4 @@ const CreateNewCard = (props) => {
             </div>
           </Card>
         </Col>
-      </Row>
-    </Aux>
-  );
-};
-
-const mapStateToProps = (state) => ({ applicationState: state });
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateNewCard);
+      </Row> */

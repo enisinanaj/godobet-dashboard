@@ -9,7 +9,6 @@ import { connect } from "react-redux";
 import TokenManager from "../../App/auth/TokenManager";
 import BASE_CONFIG from "../../store/config";
 import Loader from "../../App/layout/Loader";
-import ScrollToTop from "../../App/layout/ScrollToTop";
 
 const EditCard = (props) => {
   const [currentObject, setCurrentObject] = useState();
@@ -36,6 +35,7 @@ const EditCard = (props) => {
             getService();
           });
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getService = () => {
@@ -51,8 +51,8 @@ const EditCard = (props) => {
           .then((e) => e.json())
           .then((object) => {
             setCurrentObject(object);
-            console.log(object);
-            console.log(props.applicationState.user);
+            // console.log(object);
+            // console.log(props.applicationState.user);
           });
       });
   };
@@ -89,87 +89,97 @@ const EditCard = (props) => {
 
   return (
     <Aux>
-      <h1>Modifica servizio</h1>
       {currentObject ? (
-        <Card
-          style={{
-            width: "70%",
-            margin: "auto",
-            marginTop: "5%",
-            padding: "30px",
-          }}
-        >
+        <Form>
           <Row>
-            <Col>
-              <Card.Img variant="top" src={currentObject.img} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Label>Titolo</Form.Label>
-              <Form.Control
-                type="text"
-                value={currentObject.serviceName}
-                name="serviceName"
-                onChange={handleChange}
-              />
-            </Col>
-            <Col>
-              <Form.Label>Numero massimo iscrizioni</Form.Label>
-              <Form.Control
-                type="number"
-                name="maxSubscribers"
-                value={currentObject.maxSubscribers}
-                onChange={handleChange}
-              />
-            </Col>
-            <Col>
-              <Form.Label>Durata</Form.Label>
-              <Form.Control
-                type="number"
-                value={currentObject.duration}
-                name="duration"
-                onChange={handleChange}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Label>Descrizione</Form.Label>
-              <Form.Control
-                as="textarea"
-                style={{ height: "400px" }}
-                name="description"
-                value={currentObject.description}
-                onChange={handleChange}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={4}>
-              <Form.Label>Price</Form.Label>
-              <Form.Control
-                type="number"
-                value={currentObject.price}
-                name="price"
-                onChange={handleChange}
-              />{" "}
-              <span>€</span>
-            </Col>
-            <Col md={4}></Col>
-            <Col
-              md={4}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Button onClick={handleUpdate} style={{ alignSelf: "flex-end" }}>
+            <Col md={12} sm={12} lg={12} xl={12}>
+              <Card className={"p-15"}>
+                <Row>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group controlId="infirizzo">
+                      <Form.Label>
+                        Titolo <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Titolo"
+                        value={currentObject.serviceName}
+                        onChange={handleChange}
+                        name="serviceName"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group controlId="citta">
+                      <Form.Label>
+                        Prezzo (€) <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="number"
+                        name="price"
+                        value={currentObject.price}
+                        onChange={handleChange}
+                        placeholder="Prezzo"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group>
+                      <Form.Label>
+                        Durata iscrizione <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="number"
+                        min="0"
+                        placeholder="Durata iscrizione"
+                        onChange={handleChange}
+                        value={currentObject.duration}
+                        name="duration"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group>
+                      <Form.Label>
+                        Massimo iscrizioni{" "}
+                        <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="number"
+                        min="0"
+                        placeholder="Massimo iscrizioni"
+                        value={currentObject.maxSubscribers}
+                        onChange={handleChange}
+                        name="maxSubscribers"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Group controlId="infirizzo">
+                      <Form.Label>
+                        Descrizione <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        style={{ minHeight: "200px" }}
+                        as="textarea"
+                        placeholder="Descrizione"
+                        value={currentObject.description}
+                        name="description"
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card>
+
+              <Button onClick={handleUpdate} className="float-right">
                 Salva
               </Button>
             </Col>
           </Row>
-        </Card>
+        </Form>
       ) : (
         <Loader />
       )}
@@ -181,4 +191,6 @@ const mapStateToProps = (state) => ({ applicationState: state });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(EditCard);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(EditCard)
+);

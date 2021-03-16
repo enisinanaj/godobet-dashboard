@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Col, Row, Dropdown, Button, Table } from "react-bootstrap";
+import { Card, Col, Row, Button, Table } from "react-bootstrap";
 import TokenManager from "../../App/auth/TokenManager";
 import Aux from "../../hoc/_Aux";
 import BASE_CONFIG from "../../store/config";
@@ -29,6 +29,7 @@ const CardDetails = () => {
             console.log(object);
           });
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -136,7 +137,9 @@ const CardDetails = () => {
                           height="48"
                         />
                         <p className="m-0 d-inline-block align-middle font-16">
-                          <a className="text-body">title</a>
+                          <a href="/" className="text-body">
+                            title
+                          </a>
                         </p>
                       </td>
                       <td className="align-middle">{item.description}</td>

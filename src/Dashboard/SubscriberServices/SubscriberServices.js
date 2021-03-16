@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
 import Aux from "../../hoc/_Aux";
 import SubscriberCard from "./SubscriberCard";
 
-import Swal from "sweetalert2";
 import TokenManager from "../../App/auth/TokenManager";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
@@ -17,6 +15,7 @@ const SubscriberServices = (props) => {
 
   useEffect(() => {
     getServices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getServices = () => {
@@ -46,21 +45,12 @@ const SubscriberServices = (props) => {
                 new Date(a.createdAt).getTime()
             );
             setServices(sortedServices);
-            console.log(sortedServices);
           });
       });
   };
 
   return (
     <Aux>
-      <h1>I miei servizi</h1>
-      <div style={{ textAlign: "center" }}>
-        <Link to="create-new">
-          <button className="btn btn-primary shadow-2 mb-4">
-            Nuovo servizio
-          </button>
-        </Link>
-      </div>
       <Row md={12}>
         <SubscriberCard services={services} setServices={setServices} />
       </Row>

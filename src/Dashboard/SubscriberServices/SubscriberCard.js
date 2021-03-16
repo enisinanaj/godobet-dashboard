@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import { Card, Col, Form } from "react-bootstrap";
+import React from "react";
+import { Card, Col } from "react-bootstrap";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
 
 const SubscriberCard = (props) => {
-  console.log(props.services);
-
   return props.services.map((item, index) => {
     return (
       <Col md={4} key={index}>
@@ -21,7 +19,7 @@ const SubscriberCard = (props) => {
             <Card.ImgOverlay>
               <Card.Title className="text-right">
                 <Link to={`edit-card/${item.id}`}>
-                  <a title="Modifica">
+                  <a href="/" title="Modifica">
                     <i
                       className="feather icon-edit-2"
                       style={{

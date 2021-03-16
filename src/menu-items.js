@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import CreateNewServiceButton from "./App/components/CreateNewServiceButton";
 import CreateTipButton from "./App/components/CreateTipButton";
 
 export default {
@@ -55,6 +56,7 @@ export default {
               icon: "feather icon-book",
               url: "/dashboard/tipster/services",
               role: 5,
+              rightButton: <CreateNewServiceButton />,
             },
             {
               id: "my-tips",
@@ -63,7 +65,7 @@ export default {
               icon: "feather icon-bookmark",
               url: "/dashboard/tipster/pools",
               role: 5,
-              rightButton: <CreateTipButton />
+              rightButton: <CreateTipButton />,
             },
             {
               id: "new-tips",
@@ -102,7 +104,7 @@ export default {
           icon: "feather icon-user",
           url: "/profile",
           role: 0,
-          hidden: true
+          hidden: true,
         },
         {
           id: "account",
@@ -111,7 +113,7 @@ export default {
           icon: "feather icon-user",
           url: "/settings",
           role: 0,
-          hidden: true
+          hidden: true,
         },
       ],
     },

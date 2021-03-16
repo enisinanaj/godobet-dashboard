@@ -76,15 +76,14 @@ const routes = [
     role: 4,
   },
   {
-
-    path: "/dashboard/create-new",
+    path: "/dashboard/tipster/create-new",
     exact: true,
     name: "Create new",
     component: CreateNewCard,
     role: 4,
   },
   {
-    path: "/dashboard/edit-card/",
+    path: "/dashboard/tipster/edit-card/",
     exact: false,
     name: "Edit Card",
     component: EditCard,

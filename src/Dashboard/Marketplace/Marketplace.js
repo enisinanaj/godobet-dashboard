@@ -37,7 +37,6 @@ const Marketplace = () => {
               return;
             }
             setMarketData(res._embedded.services);
-            console.log(res);
           });
       });
   };
@@ -50,7 +49,6 @@ const Marketplace = () => {
 
   return (
     <Aux>
-      <h1 style={{ paddingBottom: "40px", paddingTop: "20px" }}>Marketplace</h1>
       <Modal show={show} onHide={handleClose}>
         <div>
           <ul className="list-group">

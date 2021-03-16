@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, ButtonGroup, Card, Col } from "react-bootstrap";
-import image from "../../assets/images/gallery-grid/img-grd-gal-6.jpg";
+import { Button, Card, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
@@ -66,7 +65,9 @@ const MarketCard = ({ marketData, setShow }) => {
             <Card.Text style={{ overflowY: "scroll", maxHeight: "160px" }}>
               {item.description}
             </Card.Text>
-            <Button className="pull-right">Abbonati</Button>
+            <Button className="pull-right" onClick={subscribe}>
+              Abbonati
+            </Button>
           </Card.Body>
         </Card>
       </Col>
