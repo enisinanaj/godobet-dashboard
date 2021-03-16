@@ -40,10 +40,10 @@ class SamplePage extends Component {
     }
 
     notify = function(message) {
-        Toast(message, {
-            type: "info",
-            position: "top-right"
-        })
+        // Toast(message, {
+        //     type: "info",
+        //     position: "top-right"
+        // })
     }
 
     loadSubscriperDashboard(startDate, endDate) {

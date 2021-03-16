@@ -6,6 +6,14 @@ import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
 
 const SubscriberCard = (props) => {
+
+  const getLatestImage = (media) => {
+    if (!media || media.length == 0) {
+      return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
+    }
+    return media.sort((a, b) => b.mediaIteration - a.mediaIteration)[0].url
+  }
+
   return props.services.map((item, index) => {
     return (
       <Col md={4} key={index}>
@@ -13,7 +21,7 @@ const SubscriberCard = (props) => {
           <div className="profile-card" style={{ minHeight: 200 }}>
             <Card.Img
               variant="top"
-              src={item._links.serviceMedia.href}
+              src={getLatestImage(item.media)}
               alt="CardImageCap"
             />
             <Card.ImgOverlay>

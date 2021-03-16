@@ -13,6 +13,13 @@ const CardDetails = () => {
     window.location.href.lastIndexOf("/") + 1
   );
 
+  const getLatestImage = (media) => {
+    if (!media || media.length == 0) {
+      return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
+    }
+    return media.sort((a, b) => b.id - a.id)[0].url
+  }
+
   useEffect(() => {
     TokenManager.getInstance()
       .getToken()
@@ -38,25 +45,25 @@ const CardDetails = () => {
         <div>
           <Row>
             <Col></Col>
-            <Col sm={8}>
+            <Col sm={12}>
               <Card
-                className="user-card user-card-2 shape-right"
+                className="user-card user-card-1"
                 style={{ minHeight: "700px" }}
               >
                 <Card.Header className="border-0 p-2 pb-0">
                   <div className="cover-img-block">
-                    <img src={cover} alt="" className="img-fluid" />
+                    <img 
+                      style={{
+                        maxHeight: "300px",
+                        objectFit: "cover",
+                        width: "100%"
+                      }}
+                      src={getLatestImage(currentObject._embedded.serviceMedia)} alt="" 
+                      className="img-fluid" />
                   </div>
                 </Card.Header>
                 <Card.Body className="pt-0">
                   <div className="user-about-block">
-                    <Row className="align-items-center">
-                      <Col>
-                        <h2 className="text-center mb-3">
-                          {currentObject.serviceName}
-                        </h2>
-                      </Col>
-                    </Row>
                     <Row>
                       <Col>
                         <h3 className="text-center mb-3">
@@ -66,43 +73,38 @@ const CardDetails = () => {
                               className="feather icon-dollar-sign"
                               style={{ paddingRight: "5px" }}
                             />{" "}
-                            {currentObject.price} €
+                            {currentObject.price.toLocaleString("it-IT", { maximumFractionDigits: 2 })} €
                           </span>
                         </h3>
                       </Col>
                     </Row>
                   </div>
                   <Row>
-                    <Col md={6}>
-                      <h6 className="text-center text-muted mb-3">
-                        <span>
-                          {" "}
-                          <i
-                            className="feather icon-calendar"
-                            style={{ paddingRight: "5px" }}
-                          />{" "}
-                          Durata iscrizione: {currentObject.duration} giorni
-                        </span>
-                      </h6>
-                    </Col>
-                    <Col md={6}>
-                      <h6 className="text-center text-muted mb-3">
-                        <span>
-                          {" "}
-                          <i
-                            className="feather icon-users"
-                            style={{ paddingRight: "5px" }}
-                          />{" "}
-                          Massimo iscrizioni: {currentObject.maxSubscribers}
-                        </span>
-                      </h6>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <h4 className="mb-3 text-muted text-center">
-                        {currentObject.description}
-                      </h4>
+                    <Col md={12}>
+                    <div className="">
+                        <h6 className="mb-1 mt-3">{currentObject.serviceName}</h6>
+                        <br />
+                        <p className="mb-3 text-muted">
+                          <span>
+                            {" "}
+                            <i
+                              className="feather icon-users"
+                              style={{ paddingRight: "5px" }}
+                            />{" "}
+                            Numero massimo iscrizioni: {currentObject.maxSubscribers}
+                          </span>
+                          <br />
+                          <span>
+                            {" "}
+                            <i
+                              className="feather icon-calendar"
+                              style={{ paddingRight: "5px" }}
+                            />{" "}
+                            Durata iscrizione: {currentObject.duration} giorni
+                          </span>
+                        </p>
+                        <p className="mb-1">{currentObject.description}</p>
+                    </div>
                     </Col>
                   </Row>
                 </Card.Body>
@@ -127,7 +129,7 @@ const CardDetails = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentObject._embedded.pools.map((item) => (
+                  {currentObject._embedded && currentObject._embedded.pools && currentObject._embedded.pools.map((item) => (
                     <tr>
                       <td className="align-middle">
                         <img
