@@ -58,7 +58,7 @@ const CardDetails = () => {
                         objectFit: "cover",
                         width: "100%"
                       }}
-                      src={getLatestImage(currentObject._embedded.serviceMedia)} alt="" 
+                      src={getLatestImage(currentObject._embedded && currentObject._embedded.serviceMedia ? currentObject._embedded.serviceMedia : [])} alt="" 
                       className="img-fluid" />
                   </div>
                 </Card.Header>
