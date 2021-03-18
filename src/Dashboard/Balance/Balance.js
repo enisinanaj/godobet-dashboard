@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Card, Toast } from "react-bootstrap";
+import { Row, Col, Card } from "react-bootstrap";
 
 import Aux from "../../hoc/_Aux";
 import { withRouter } from "react-router-dom";
@@ -39,13 +39,6 @@ class SamplePage extends Component {
         }
     }
 
-    notify = function(message) {
-        Toast(message, {
-            type: "info",
-            position: "top-right"
-        })
-    }
-
     loadSubscriperDashboard(startDate, endDate) {
         this.loadDashboardWithUrl(`${config.API_URL}/pools/search/subscriberStats?start=${startDate}&end=${endDate}&subscriber=${this.props.user._links.self.href}`)
         .then(pools => {
@@ -64,10 +57,6 @@ class SamplePage extends Component {
                 pools.forEach(pool => {
                     chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
                 });
-                
-                if (events._embedded.events.length === 0) {
-                    this.notify("Non hai giocato nessun evento!");
-                }
                 const statusData = pools.map(p => p.profit);
 
                 this.setState({playedEvents: events._embedded.events, pools, statusData});

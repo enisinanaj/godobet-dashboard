@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Card, Toast } from 'react-bootstrap';
+import { Row, Col, Card } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
@@ -35,13 +35,6 @@ class Default extends React.Component {
         }
     }
 
-    notify = function(message) {
-        // Toast(message, {
-        //     type: "info",
-        //     position: "top-right"
-        // })
-    }
-
     loadSubscriperDashboard(startDate, endDate) {
         this.loadDashboardWithUrl(`${config.API_URL}/pools/search/subscriberStats?start=${startDate}&end=${endDate}&subscriber=${this.props.user._links.self.href}`)
         .then(pools => {
@@ -60,10 +53,6 @@ class Default extends React.Component {
                 pools.forEach(pool => {
                     chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
                 });
-                
-                if (events._embedded.events.length === 0) {
-                    this.notify("Non hai giocato nessun evento!");
-                }
 
                 this.setState({playedEvents: events._embedded.events, pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}});
             })
