@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-// import windowSize from "react-window-size";
+import windowSize from "react-window-size";
 
 import NavContent from "./NavContent";
 import OutsideClick from "./OutsideClick";
@@ -143,5 +143,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Navigation)
+  connect(mapStateToProps, mapDispatchToProps)(windowSize(Navigation))
 );

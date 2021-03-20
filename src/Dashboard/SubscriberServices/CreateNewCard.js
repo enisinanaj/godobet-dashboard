@@ -55,6 +55,7 @@ const CreateNewCard = (props) => {
 
   const eventHandlers = {
     addedfile: (file) => setImageAsFile(file),
+    removedfile: () => setImageAsFile(""),
   };
 
   const handleCreateCard = () => {
@@ -83,15 +84,12 @@ const CreateNewCard = (props) => {
               title: "Oops...",
               text: "Something went wrong!",
             });
-
-            console.log(e);
           } else {
             Swal.fire({
               type: "success",
               title: "Servizio creato!",
             });
-
-            uploadServiceCover(e.headers.get('Location'));
+            uploadServiceCover(e.headers.get("Location"));
           }
         });
       });
@@ -103,7 +101,7 @@ const CreateNewCard = (props) => {
       newObject.description &&
       newObject.price &&
       newObject.duration &&
-      newObject.maxSubscribers && 
+      newObject.maxSubscribers &&
       imageAsFile &&
       imageAsFile.name
     ) {
@@ -221,7 +219,11 @@ const CreateNewCard = (props) => {
   return (
     <Aux>
       <Form>
-        <DropzoneComponent config={config} djsConfig={djsConfig} eventHandlers={eventHandlers} />
+        <DropzoneComponent
+          config={config}
+          djsConfig={djsConfig}
+          eventHandlers={eventHandlers}
+        />
         <Row>
           <Col md={12} sm={12} lg={12} xl={12}>
             <Card className={"p-15"}>
@@ -247,6 +249,7 @@ const CreateNewCard = (props) => {
                     <Form.Control
                       type="number"
                       name="price"
+                      min="0"
                       onChange={handleChange}
                       placeholder="Prezzo"
                     />
@@ -299,9 +302,7 @@ const CreateNewCard = (props) => {
                 </Col>
               </Row>
               <Row>
-                <Col>
-                  
-                </Col>
+                <Col></Col>
               </Row>
             </Card>
 

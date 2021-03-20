@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-// import windowSize from "react-window-size";
+import windowSize from "react-window-size";
 
 import NavLeft from "./NavLeft";
 import NavRight from "./NavRight";
@@ -81,7 +81,13 @@ class NavBar extends Component {
             <span />
           </a>
           <a href="/dashboard/default" className="b-brand">
-            <img id="main-logo" src={mainLogo} alt="" className="logo" style={{width: 140}} />
+            <img
+              id="main-logo"
+              src={mainLogo}
+              alt=""
+              className="logo"
+              style={{ width: 140 }}
+            />
           </a>
           <a
             className="mob-toggler"
@@ -131,4 +137,6 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(windowSize(NavBar))
+);

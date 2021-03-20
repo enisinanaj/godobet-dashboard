@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-// import windowSize from "react-window-size";
+import windowSize from "react-window-size";
 
 import * as actionTypes from "../../../../../store/actions";
 
@@ -56,4 +56,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(OutsideClick);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(windowSize(OutsideClick));

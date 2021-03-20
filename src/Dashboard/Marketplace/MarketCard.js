@@ -1,28 +1,13 @@
 import React from "react";
 import { Button, Card, Col } from "react-bootstrap";
-import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
-const MarketCard = ({ marketData, setShow }) => {
-  const subscribe = () => {
-    Swal.fire({
-      title: "Sei sicuro?",
-      text:
-        "Stai per abbonarti al servizio. Conferma l'iscrizione con cliccando sul pulsante sottostante.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#1e983b",
-      cancelButtonColor: "#e8e8e8",
-      confirmButtonText: "Confermo",
-    }).then((result) => {
-      if (result.value) {
-        Swal.fire(
-          "Confermato!",
-          "Ti sei abbonato al servizio con successo!",
-          "success"
-        );
-      }
-    });
+const MarketCard = ({ marketData, handlePurchase }) => {
+  const getLatestImage = (media) => {
+    if (!media || media.length === 0) {
+      return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
+    }
+    return media.sort((a, b) => b.mediaIteration - a.mediaIteration)[0].url;
   };
 
   return marketData.map((item, index) => {
@@ -30,7 +15,11 @@ const MarketCard = ({ marketData, setShow }) => {
       <Col md={4} key={index}>
         <Card>
           <div className="profile-card" style={{ minHeight: 200 }}>
-            <Card.Img variant="top" src={item.img} alt="CardImageCap" />
+            <Card.Img
+              variant="top"
+              src={getLatestImage(item.media)}
+              alt="CardImageCap"
+            />
             <Card.Body className="text-left">
               <Card.Title as="h2" style={{ color: "white" }}>
                 {item.price} €
@@ -62,10 +51,10 @@ const MarketCard = ({ marketData, setShow }) => {
               <br />
             </Card.Text>
 
-            <Card.Text style={{ overflowY: "scroll", maxHeight: "160px" }}>
+            <Card.Text style={{ overflowY: "auto", maxHeight: "160px" }}>
               {item.description}
             </Card.Text>
-            <Button className="pull-right" onClick={subscribe}>
+            <Button className="pull-right" onClick={() => handlePurchase(item)}>
               Abbonati
             </Button>
           </Card.Body>

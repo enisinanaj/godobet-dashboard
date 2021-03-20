@@ -6,13 +6,12 @@ import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
 
 const SubscriberCard = (props) => {
-
   const getLatestImage = (media) => {
-    if (!media || media.length == 0) {
+    if (!media || media.length === 0) {
       return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
     }
-    return media.sort((a, b) => b.mediaIteration - a.mediaIteration)[0].url
-  }
+    return media.sort((a, b) => b.mediaIteration - a.mediaIteration)[0].url;
+  };
 
   return props.services.map((item, index) => {
     return (
@@ -27,17 +26,17 @@ const SubscriberCard = (props) => {
             <Card.ImgOverlay>
               <Card.Title className="text-right">
                 <Link to={`edit-card/${item.id}`}>
-                  <a href="/" title="Modifica">
-                    <i
-                      className="feather icon-edit-2"
-                      style={{
-                        cursor: "pointer",
-                        background: "white",
-                        borderRadius: "50%",
-                        padding: "5px",
-                      }}
-                    />
-                  </a>
+                  <i
+                    title="Modifica"
+                    className="feather icon-edit-2"
+                    style={{
+                      cursor: "pointer",
+                      background: "white",
+                      color: "gray",
+                      borderRadius: "50%",
+                      padding: "5px",
+                    }}
+                  />
                 </Link>
               </Card.Title>
             </Card.ImgOverlay>
@@ -72,7 +71,7 @@ const SubscriberCard = (props) => {
               <br />
             </Card.Text>
 
-            <Card.Text style={{ overflowY: "scroll", maxHeight: "160px" }}>
+            <Card.Text style={{ overflowY: "auto", maxHeight: "160px" }}>
               {item.description}
             </Card.Text>
           </Card.Body>

@@ -97,6 +97,13 @@ const routes = [
     role: 4,
   },
   {
+    path: "/dashboard/tipster/details/",
+    exact: false,
+    name: "Card details",
+    component: CardDetails,
+    role: 4,
+  },
+  {
     path: "/dashboard/tipster/pools",
     exact: true,
     name: "My Tips",
