@@ -15,7 +15,7 @@ const getTipCards = (dropdownHidden) => (pools) => {
   return pools.map((pool, i) => {
     return (
       <Col md={6} key={`tip-card-column-${i + (new Date())}`}>
-        <TipCard key={`tip-card-${i + (new Date())}`} pool={pool} dropdownHidden={dropdownHidden} />
+        <TipCard key={`tip-card-${i + (new Date())}`} pool={pool} dropdownHidden={dropdownHidden || pool.followed} />
       </Col>
     );
   });
@@ -61,12 +61,19 @@ class PendingTips extends Component {
     const myPools = this.props.user._embedded && this.props.user._embedded.playedPools 
       ? this.props.user._embedded.playedPools.map(pool => pool.id)
       : [];
-    return pools.filter(pool => !myPools.includes(pool.id));
+    return pools.map(pool => {return {...pool, followed: myPools.includes(pool.id)}});
   }
 
   getPoolsCards = (filter) => {
     return this.getMyPools(filter)
       .then(this.filterMyPools)
+      .then(pool => getTipCards( !filter(pool) )(pool))
+  }
+
+  getExpiredPoolsCards = (filter) => {
+    return this.getMyPools(filter)
+      .then(this.filterMyPools)
+      .then(p => p.filter(p1 => !p1.followed) )
       .then(pool => getTipCards( !filter(pool) )(pool))
   }
 
@@ -77,7 +84,7 @@ class PendingTips extends Component {
       ongoingPools
     }));
 
-    this.getPoolsCards(p => !!p.outcome)
+    this.getExpiredPoolsCards(p => !!p.outcome)
     .then(expiredPools => this.setState({
       ...this.state,
       expiredPools

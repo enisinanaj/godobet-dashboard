@@ -33,13 +33,13 @@ class SamplePage extends Component {
         endDate = moment(endDate).format("YYYY-MM-DDTHH:mm:ss.SSS");
 
         if (this.props.user.roleName === 'Subscriber') {
-            this.loadSubscriperDashboard(startDate, endDate);
+            this.loadSubscriberDashboard(startDate, endDate);
         } else {
             this.loadTipsterDashboard(startDate, endDate);
         }
     }
 
-    loadSubscriperDashboard(startDate, endDate) {
+    loadSubscriberDashboard(startDate, endDate) {
         this.loadDashboardWithUrl(`${config.API_URL}/pools/search/subscriberStats?start=${startDate}&end=${endDate}&subscriber=${this.props.user._links.self.href}`)
         .then(pools => {
             TokenManager.getInstance().getToken()
