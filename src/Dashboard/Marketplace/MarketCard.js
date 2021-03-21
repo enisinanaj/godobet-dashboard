@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, Card, Col } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Esaurito from '../../App/components/Esaurito'
 
 const MarketCard = ({ marketData, handlePurchase }) => {
   const getLatestImage = (media) => {
@@ -14,50 +15,65 @@ const MarketCard = ({ marketData, handlePurchase }) => {
     return (
       <Col md={4} key={index}>
         <Card>
-          <div className="profile-card" style={{ minHeight: 200 }}>
+          <div className="">
             <Card.Img
               variant="top"
               src={getLatestImage(item.media)}
               alt="CardImageCap"
+              style={{
+                width: "80px",
+                height: "80px",
+                objectFit: "cover",
+                margin: "20px",
+                display: "inline",
+              }}
             />
-            <Card.Body className="text-left">
-              <Card.Title as="h2" style={{ color: "white" }}>
-                {item.price} €
-              </Card.Title>
-            </Card.Body>
+            
+            <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline"}}>
+              <Link to={`details/${item.id}`}>{item.serviceName}</Link>
+            </Card.Title>
           </div>
+
           <Card.Body>
-            <Link to={`details/${item.id}`}>
-              <Card.Title as="h5">{item.serviceName}</Card.Title>
-            </Link>
             <Card.Text>
               <span>
-                {" "}
-                <i
-                  className="feather icon-users"
-                  style={{ paddingRight: "5px" }}
-                />{" "}
+                {" "}<i className="feather icon-users" style={{ paddingRight: "5px" }} />{" "}
                 Numero massimo iscrizioni: {item.maxSubscribers}
               </span>
               <br />
               <span>
-                {" "}
-                <i
-                  className="feather icon-calendar"
-                  style={{ paddingRight: "5px" }}
-                />{" "}
-                Durata iscrizione: {item.duration} giorni
+                {" "}<i className="feather icon-users" style={{ paddingRight: "5px" }}/>{" "}
+                Posizioni aperte: {item.maxSubscribers - item.subscribersCount === 0 ? <Esaurito /> : item.maxSubscribers - item.subscribersCount}
               </span>
               <br />
             </Card.Text>
 
             <Card.Text style={{ overflowY: "auto", maxHeight: "160px" }}>
-              {item.description}
+              {item.excerpt}
             </Card.Text>
+
+            <div>
             <Button className="pull-right" onClick={() => handlePurchase(item)}>
-              Abbonati
+              Attiva subito a soli {item.price.toFixed(2)} &euro;
             </Button>
+            </div>
           </Card.Body>
+          <Card.Footer>
+              <Row className="text-center">
+                  <Col>
+                      <h6 className="mb-1"><i className="feather icon-users" style={{ paddingRight: "5px" }} /> {item.subscribersCount}</h6>
+                      <p className="mb-0">Iscrizioni</p>
+                  </Col>
+                  <Col>
+                      <h6 className="mb-1"><i className="feather icon-calendar" style={{ paddingRight: "5px" }} /> {item.duration} giorni</h6>
+                      <p className="mb-0">Durata</p>
+                  </Col>
+                  <Col>
+                      <h6 className={"mb-1" + ((item.totalProfit >= 0) ? " text-success" : " text-danger")}>{item.totalProfit.toFixed(2)}%</h6>
+                      <p className="mb-0">Profitto</p>
+                  </Col>
+              </Row>
+          </Card.Footer>
         </Card>
       </Col>
     );

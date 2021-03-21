@@ -87,6 +87,7 @@ const EditCard = (props) => {
             description: currentObject.description,
             maxSubscribers: currentObject.maxSubscribers,
             duration: currentObject.duration,
+            excerpt: currentObject.excerpt,
             price: currentObject.price,
           }),
         }).then((e) => {
@@ -296,6 +297,23 @@ const EditCard = (props) => {
                         value={currentObject.maxSubscribers}
                         onChange={handleChange}
                         name="maxSubscribers"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Group controlId="infirizzo">
+                      <Form.Label>
+                        Descrizione corta <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        style={{ minHeight: "100px", maxHeight: 100 }}
+                        as="textarea"
+                        placeholder="Descrizione corta"
+                        value={currentObject.excerpt}
+                        name="excerpt"
+                        onChange={handleChange}
                       />
                     </Form.Group>
                   </Col>

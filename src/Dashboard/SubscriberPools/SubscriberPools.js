@@ -13,7 +13,7 @@ const TipsterPools = (props) =>  {
 
   useEffect(() => {
     loadPools()
-  });
+  }, []);
 
   const loadPools = () => {
     TokenManager.getInstance()
@@ -27,7 +27,6 @@ const TipsterPools = (props) =>  {
         })
           .then((e) => e.json())
           .then((pools) => {
-            console.warn('load pools called');
             setPools(pools._embedded.pools);
           });
       });

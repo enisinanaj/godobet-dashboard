@@ -45,7 +45,7 @@ const CreateTip = (props) => {
           .then((services) =>
             setServices(
               services._embedded.services.map((service) => ({
-                label: service.description,
+                label: service.serviceName,
                 value: service._links.self.href,
               }))
             )
@@ -66,6 +66,7 @@ const CreateTip = (props) => {
         event.evemt === "" ||
         event.proposal === "" ||
         event.quota === "" ||
+        event.sport === "" ||
         description === "" ||
         stake === "" ||
         bookmaker === "" ||
@@ -118,12 +119,12 @@ const CreateTip = (props) => {
             author: props.applicationState.user._links.self.href,
             eventDate: event.eventDate,
             proposal: event.proposal,
+            sport: event.sport.value,
             event: event.event,
             quote: Number(event.quote.replace("_", "")) * 100,
             notes: event.notes,
             pool: poolResult._links.self.href,
             competition: event.competition,
-            sport: "",
             gender: "http://localhost:5005/items/3",
           }),
         })

@@ -77,7 +77,7 @@ const Settings = (props) => {
             setBank(sortedBanks.length > 0 ? sortedBanks[0] : {});
           });
       });
-  });
+  }, []);
 
   const reloadUser = () => {
     TokenManager.getInstance()
@@ -325,8 +325,7 @@ const Settings = (props) => {
     var notice = dynamicProgressButtonPNotify();
     const interval = setInterval(function () {
       let percent =
-        (100.0 * uploadTask.snapshot.bytesTransferred) /
-        uploadTask.snapshot.totalBytes;
+        (100.0 * uploadTask.snapshot.bytesTransferred) / uploadTask.snapshot.totalBytes;
       const options = {
         text:
           percent.toLocaleString("it-IT", { maximumFractionDigits: 2 }) +

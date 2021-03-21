@@ -4,6 +4,8 @@ import moment from 'moment'
 import TokenManager from "../../App/auth/TokenManager";
 import 'moment/locale/it';
 import config from "../../store/config";
+import Sports from '../../App/components/Sports'
+
 moment.locale("it")
 
 const Tip = props => {
@@ -59,7 +61,7 @@ const Tip = props => {
                 {/* className={'text-white'} */}
                 <Card.Title as="h5">
                 {pool.description}
-                <Dropdown className="drp-tipster-pool">
+                {!pool.outcome && <Dropdown className="drp-tipster-pool">
                     <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
                     {props.author && <Dropdown.Menu alignRight className="profile-notification">
                         <Dropdown.Item onClick={() => {updateTip("win")}}>Win</Dropdown.Item>
@@ -71,7 +73,7 @@ const Tip = props => {
                     {!props.author && <Dropdown.Menu alignRight className="profile-notification">
                         <Dropdown.Item onClick={() => {playTip(pool)}}>Tip seguita</Dropdown.Item>
                     </Dropdown.Menu>}
-                </Dropdown>
+                </Dropdown>}
                 </Card.Title>
                 <Carousel controls={false} interval={null}>
                 {pool.events.map(event => (
@@ -79,7 +81,8 @@ const Tip = props => {
                         <div style={{height: 170, marginBottom: 15, padding: "0 20px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
                             <Row className={"hei-110"}>
                                 <Col lg={12} sm={12} xs={12} xl={12}>
-                                    <em className={"feather icon-aperture"}></em> {event.competition} / {event.event}
+                                    {Sports.find(s => s.value === event.sport) ? Sports.find(s => s.value === event.sport).icon : <em className={"feather icon-aperture"}></em>}{" "}
+                                    {event.competition} / {event.event}
                                 </Col>
                                 <Col lg={6} sm={12} xs={12} xl={6}>
                                     <i className="feather icon-play" /> {event.proposal}

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Form, Row, Dropdown } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
+import Select from 'react-select';
+import Sports from '../../App/components/Sports'
 
 const InsertEventCard = (props) => {
     const [eventDate, setEventDate] = useState("");
@@ -8,6 +10,7 @@ const InsertEventCard = (props) => {
     const [event, setEvent] = useState("");
     const [proposal, setProposal] = useState("");
     const [quote, setQuote] = useState("");
+    const [sport, setSport] = useState("");
     const [notes, setNotes] = useState("");
 
     useEffect(() => {
@@ -18,6 +21,7 @@ const InsertEventCard = (props) => {
             event,
             proposal,
             quote,
+            sport,
             notes
         });
     }, [eventDate, competition, event, proposal, quote, notes, props])
@@ -43,6 +47,21 @@ const InsertEventCard = (props) => {
                             value={eventDate}
                             onChange={({ target }) => { setEventDate(target.value) }}
                             placeholder="dd/mm/yyyy hh:mm" />
+                    </Form.Group>
+                </Col>
+                <Col md={12} sm={12} lg={4} xl={4}>
+                    <Form.Group controlId="infirizzo">
+                        <Form.Label>Sport <span className={"text-danger"}>*</span></Form.Label>
+                        <Select
+                            isClearable
+                            isSearchable
+                            className="basic-single"
+                            classNamePrefix="select"
+                            name="sport"
+                            options={Sports}
+                            value={sport}
+                            onChange={(sport) => setSport(sport)}
+                            />
                     </Form.Group>
                 </Col>
                 <Col md={12} sm={12} lg={4} xl={4}>
@@ -91,7 +110,7 @@ const InsertEventCard = (props) => {
                             value={quote} />
                     </Form.Group>
                 </Col>
-                <Col md={12} sm={12} lg={4} xl={4}>
+                <Col md={12} sm={12} lg={12} xl={12}>
                     <Form.Group controlId="notes">
                     <Form.Label>Notes <em>(Opzione)</em></Form.Label>
                     <Form.Control
