@@ -12,102 +12,96 @@ import * as actions from '../../store/actions';
 import config from '../../store/config';
 import TokenManager from '../../App/auth/TokenManager';
 import satisfactionChart from './charts/pie';
-// import FlotChart from '../../Dashboard/Charts/Flot';
 
 class Default extends React.Component {
     state = {
         pools: [],
         playedEvents: [],
+        pendingTipsCount: 0,
+        activeTipsCount: 0,
+        totalProfit: 0,
+        monthProfit: 0,
+        subscribedPools: [],
         startDate: moment().add(-1, "month").toDate(),
         endDate: moment().add(-1, "day").toDate(),
         flotData: [],
     }
 
-    loadData() {
-        let {startDate, endDate} = this.state;
-        startDate = moment(startDate).format("YYYY-MM-DDTHH:mm:ss.SSS");
-        endDate = moment(endDate).format("YYYY-MM-DDTHH:mm:ss.SSS");
+    getMyPools = () => this.load(`${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.user._links.self.href}`)
+        .then(p => p._embedded.pools)
+        .then(this.filterMyPools);
 
-        if (this.props.user.roleName === 'Subscriber') {
-            this.loadSubscriperDashboard(startDate, endDate);
-        } else {
-            this.loadTipsterDashboard(startDate, endDate);
-        }
+    getStatsForMonth = () => this.load(`${config.API_URL}/pools/search/subscriberStats?start=${moment(this.state.startDate).format("YYYY-MM-DDTHH:mm:ss.SSS")}&end=${moment(this.state.endDate).format("YYYY-MM-DDTHH:mm:ss.SSS")}&subscriber=${this.props.user._links.self.href}`)
+        .then(stats => stats?._embedded?.pools);
+
+    getUserSubscriptions = () => this.load(`${config.API_URL}/users/${this.props.user.userCode}/subscriptions`)
+        .then(subs => subs?._embedded?.subscriptions);
+
+    getTipsterOpenPools = () => this.load(`${config.API_URL}/users/${this.props.user.userCode}/pools`)
+        .then(openPools => openPools?._embedded?.pools);
+
+    getTipsterTotalSubscribers = () => this.load(`${config.API_URL}/users/${this.props.user.userCode}`)
+        .then(totalSubscribers => totalSubscribers?.totalSubscribers);
+
+    filterMyPools = (pools) => {
+        const myPools = this.props.user._embedded && this.props.user._embedded.playedPools 
+        ? this.props.user._embedded.playedPools.map(pool => pool.id)
+        : [];
+        return pools.filter(pool => !(myPools.includes(pool.id) && pool.outcome));
+    }
+    load(url, args = {}) {
+        return TokenManager
+            .getInstance()
+            .getToken()
+            .then(jwt => fetch(url, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Auth": jwt,
+                },
+                ...args
+            }))
+            .then((e) => e.json());
     }
 
-    loadSubscriperDashboard(startDate, endDate) {
-        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/subscriberStats?start=${startDate}&end=${endDate}&subscriber=${this.props.user._links.self.href}`)
-        .then(pools => {
-            TokenManager.getInstance().getToken()
-            .then(token => {
-                return fetch(this.props.user._links.playedEvents.href.replace("{?projection}", "").replace("http://", "https://"), {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-AUTH": token
-                    }
-                })
-            })
-            .then(body => body.json())
-            .then(events => {
-                var chartData = [];
-                pools.forEach(pool => {
-                    chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
-                });
-
-                this.setState({playedEvents: events._embedded.events, pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}});
-            })
+    getUserStats() {
+        const activeTipsCount = this.props.user._embedded.playedPools.length
+        Promise.all([
+            this.getMyPools(),
+            this.getUserSubscriptions(),
+            this.getStatsForMonth(),
+            this.getTipsterOpenPools(),
+            this.getTipsterTotalSubscribers()
+        ]).then((p) => {
+            this.setState({
+                totalProfit: this.props.user.totalProfit,
+                pendingTipsCount: p[0].length,
+                subscribedPools: [...this.props.user._embedded.playedPools, ...p[0]],
+                activeTipsCount: p[1]?.filter(s => !s.expired)?.length,
+                monthProfit: p[2]?.reduce((a, b) => (a + b.profit), 0),
+                openPools: p[3].length,
+                totalSubscribers: p[4],
+            });
         })
     }
-
-    loadTipsterDashboard(startDate, endDate) {
-        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/stats?start=${startDate}&end=${endDate}&author=${this.props.user._links.self.href}`)
-        .then(pools => {
-            var chartData = [];
-            pools.forEach(pool => {
-                chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
-            });
-
-            console.log(chartData);
-
-            this.setState({pools, flotData: [ {...this.state.flotData[0], data: chartData} ], flotOptions: {...this.state.flotOptions}})
-        });
-    }
-
-    async loadDashboardWithUrl(url) {
-        let token = await TokenManager.getInstance().getToken()
-        let body = await fetch(url, {
-            method: "GET",
-            headers: { "Content-Type": "application/json", "X-Auth": token },
-        });
-
-        let response = await body.json();
-        return response._embedded.pools;
-    }
-
-    calculateProfit() {
-        return this.state.pools.reduce((accumulator, pool) => {
-            return accumulator + pool.profit
-        }, 0)
-    }
-
+    
     componentDidMount() {
-        this.loadData()
+        this.getUserStats();
+        this.getCreampieData();
     }
 
-    handleStartDateChange(e) {
-        this.setState({
-            startDate: e
-        });
+    //creampie is for last
+    getCreampieData = () => {
+        const data = satisfactionChart;
 
-        this.loadData();
-    }
+        const map = this.props.user._embedded.playedPools.reduce((pie, pool) => {
+            const h = {...pie};
+            h[pool.outcome] = parseInt(pie[pool.outcome]) >= 0 ? parseInt(pie[pool.outcome]) : 1;
+            return h;
+        }, {});
 
-    handleEndDateChange(e) {
-        this.setState({
-            endDate: e
-        });
-
-        this.loadData();
+        data.options.labels = Object.keys(map);
+        data.series = Object.values(map);
+        return data;
     }
 
     render() {
@@ -121,7 +115,7 @@ class Default extends React.Component {
                                     <Row className="align-items-center">
                                         <Col sm={8}>
                                             <h6 className="text-muted m-b-0">Pending tips</h6>
-                                            <h4 className="text-c-yellow">1540</h4>
+                                            <h4 className="text-c-yellow">{this.state.pendingTipsCount}</h4>
                                         </Col>
                                         <Col sm={4} className="text-right">
                                             <i className="feather icon-bar-chart-2 f-28"/>
@@ -136,7 +130,7 @@ class Default extends React.Component {
                                     <Row className="align-items-center">
                                         <Col sm={8}>
                                             <h6 className="text-muted m-b-0">Iscrizioni attive</h6>
-                                            <h4 className="text-c-yellow">25</h4>
+                                            <h4 className="text-c-yellow">{this.state.activeTipsCount}</h4>
                                         </Col>
                                         <Col sm={4} className="text-right">
                                             <i className="feather icon-bar-chart-2 f-28"/>
@@ -149,25 +143,68 @@ class Default extends React.Component {
                     <Row md={12}>
                         <Col md={6}>
                             <Card md={12}>
-                                <Card.Header>
-                                    <Card.Title as="h5">Profitto mensile</Card.Title>
-                                </Card.Header>
                                 <Card.Body>
-                                    <LineInterpolationChart data={this.state.flotData} />
+                                    <Row className="align-items-center">
+                                        <Col sm={8}>
+                                            <h6 className="text-muted m-b-0">Profitto Totale</h6>
+                                            <h4 className="text-c-yellow">{this.state.totalProfit}%</h4>
+                                        </Col>
+                                        <Col sm={4} className="text-right">
+                                            <i className="feather icon-bar-chart-2 f-28"/>
+                                        </Col>
+                                    </Row>
                                 </Card.Body>
                             </Card>
-                        </Col>
-                        <Col md={6}>
+                        </Col><Col md={6}>
                             <Card md={12}>
-                                <Card.Header>
-                                    <Card.Title as="h5">Profitto totale</Card.Title>
-                                </Card.Header>
                                 <Card.Body>
-                                    <LineInterpolationChart data={this.state.flotData} />
+                                    <Row className="align-items-center">
+                                        <Col sm={8}>
+                                            <h6 className="text-muted m-b-0">Profitto mensile</h6>
+                                            <h4 className="text-c-yellow">{this.state.monthProfit}%</h4>
+                                        </Col>
+                                        <Col sm={4} className="text-right">
+                                            <i className="feather icon-bar-chart-2 f-28"/>
+                                        </Col>
+                                    </Row>
                                 </Card.Body>
                             </Card>
                         </Col>
                     </Row>
+                    {
+                        this.props.user.roleValue >= 5 && 
+                        <Row md={12}>
+                            <Col md={6}>
+                                <Card md={12}>
+                                    <Card.Body>
+                                        <Row className="align-items-center">
+                                            <Col sm={8}>
+                                                <h6 className="text-muted m-b-0">Tips da refertare</h6>
+                                                <h4 className="text-c-yellow">{this.state.openPools}</h4>
+                                            </Col>
+                                            <Col sm={4} className="text-right">
+                                                <i className="feather icon-bar-chart-2 f-28"/>
+                                            </Col>
+                                        </Row>
+                                    </Card.Body>
+                                </Card>
+                            </Col><Col md={6}>
+                                <Card md={12}>
+                                    <Card.Body>
+                                        <Row className="align-items-center">
+                                            <Col sm={8}>
+                                                <h6 className="text-muted m-b-0">Numero abbonati</h6>
+                                                <h4 className="text-c-yellow">{this.state.totalSubscribers}</h4>
+                                            </Col>
+                                            <Col sm={4} className="text-right">
+                                                <i className="feather icon-bar-chart-2 f-28"/>
+                                            </Col>
+                                        </Row>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                    }
                     <Row>
                         <Col>
                             <Card md={12}>
@@ -175,7 +212,7 @@ class Default extends React.Component {
                                     <Card.Title as="h5">Vincita/Perdita</Card.Title>
                                 </Card.Header>
                                 <Card.Body>
-                                    <Chart {...satisfactionChart}/>
+                                    <Chart {...this.getCreampieData()}/>
                                 </Card.Body>
                             </Card>
                         </Col>
@@ -186,7 +223,7 @@ class Default extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({user: state.user});
+const mapStateToProps = (state) => ({user: state.user, appState: state});
 const mapDispatchToProps = (dispatch) => ({
     actions: bindActionCreators(actions, dispatch),
   });
