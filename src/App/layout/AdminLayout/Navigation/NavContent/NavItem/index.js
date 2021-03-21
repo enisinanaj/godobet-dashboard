@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 // import {NavLink} from 'react-router-dom';
 import { withRouter } from "react-router-dom";
-// import windowSize from "react-window-size";
+import windowSize from "react-window-size";
 
 import Aux from "../../../../../../hoc/_Aux";
 import NavIcon from "./../NavIcon";
@@ -87,5 +87,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NavItem)
+  connect(mapStateToProps, mapDispatchToProps)(windowSize(NavItem))
 );

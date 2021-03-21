@@ -3,7 +3,6 @@ import { Card, Col, Row, Button, Table } from "react-bootstrap";
 import TokenManager from "../../App/auth/TokenManager";
 import Aux from "../../hoc/_Aux";
 import BASE_CONFIG from "../../store/config";
-import cover from "../../assets/images/user/cover.jpg";
 import Loader from "../../App/layout/Loader";
 
 const CardDetails = () => {
@@ -12,6 +11,18 @@ const CardDetails = () => {
   let id = window.location.href.substring(
     window.location.href.lastIndexOf("/") + 1
   );
+
+  const getLatestImage = (media) => {
+    if (
+      !media._embedded ||
+      media.length === 0 ||
+      !media._embedded.serviceMedia
+    ) {
+      return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
+    }
+
+    return media._embedded.serviceMedia.sort((a, b) => b.id - a.id)[0].url;
+  };
 
   useEffect(() => {
     TokenManager.getInstance()
@@ -38,71 +49,70 @@ const CardDetails = () => {
         <div>
           <Row>
             <Col></Col>
-            <Col sm={8}>
+            <Col sm={12}>
               <Card
-                className="user-card user-card-2 shape-right"
+                className="user-card user-card-1"
                 style={{ minHeight: "700px" }}
               >
-                <Card.Header className="border-0 p-2 pb-0">
+                {/* <Card.Header className="border-0 p-2 pb-0">
                   <div className="cover-img-block">
-                    <img src={cover} alt="" className="img-fluid" />
+                    <img
+                      style={{
+                        maxHeight: "300px",
+                        objectFit: "cover",
+                        width: "100%",
+                      }}
+                      src={getLatestImage(currentObject)}
+                      alt=""
+                      className="img-fluid"
+                    />
                   </div>
-                </Card.Header>
+                </Card.Header> */}
+                <div className="profile-card" style={{ maxHeight: "250px" }}>
+                  <Card.Img
+                    variant="top"
+                    src={getLatestImage(currentObject)}
+                    alt="CardImage"
+                  />
+                  <Card.Body className="text-left">
+                    <Card.Title as="h2" style={{ color: "white" }}>
+                      {currentObject.price.toLocaleString("it-IT", {
+                        maximumFractionDigits: 2,
+                      })}
+                      {""} €
+                    </Card.Title>
+                  </Card.Body>
+                </div>
                 <Card.Body className="pt-0">
-                  <div className="user-about-block">
-                    <Row className="align-items-center">
-                      <Col>
-                        <h2 className="text-center mb-3">
+                  <Row>
+                    <Col md={12}>
+                      <div className="">
+                        <h6 className="mb-1 mt-3">
                           {currentObject.serviceName}
-                        </h2>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <h3 className="text-center mb-3">
+                        </h6>
+                        <br />
+                        <p className="mb-3 text-muted">
                           <span>
                             {" "}
                             <i
-                              className="feather icon-dollar-sign"
+                              className="feather icon-users"
                               style={{ paddingRight: "5px" }}
                             />{" "}
-                            {currentObject.price} €
+                            Numero massimo iscrizioni:{" "}
+                            {currentObject.maxSubscribers}
                           </span>
-                        </h3>
-                      </Col>
-                    </Row>
-                  </div>
-                  <Row>
-                    <Col md={6}>
-                      <h6 className="text-center text-muted mb-3">
-                        <span>
-                          {" "}
-                          <i
-                            className="feather icon-calendar"
-                            style={{ paddingRight: "5px" }}
-                          />{" "}
-                          Durata iscrizione: {currentObject.duration} giorni
-                        </span>
-                      </h6>
-                    </Col>
-                    <Col md={6}>
-                      <h6 className="text-center text-muted mb-3">
-                        <span>
-                          {" "}
-                          <i
-                            className="feather icon-users"
-                            style={{ paddingRight: "5px" }}
-                          />{" "}
-                          Massimo iscrizioni: {currentObject.maxSubscribers}
-                        </span>
-                      </h6>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <h4 className="mb-3 text-muted text-center">
-                        {currentObject.description}
-                      </h4>
+                          <br />
+                          <span>
+                            {" "}
+                            <i
+                              className="feather icon-calendar"
+                              style={{ paddingRight: "5px" }}
+                            />{" "}
+                            Durata iscrizione: {currentObject.duration} giorni
+                          </span>
+                        </p>
+                        <p className="mb-1">{currentObject.description}</p>
+                      </div>
                     </Col>
                   </Row>
                 </Card.Body>
@@ -127,32 +137,36 @@ const CardDetails = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentObject._embedded.pools.map((item) => (
-                    <tr>
-                      <td className="align-middle">
-                        <img
-                          alt="contact-img"
-                          title="contact-img"
-                          className="rounded mr-3"
-                          height="48"
-                        />
-                        <p className="m-0 d-inline-block align-middle font-16">
-                          <a href="/" className="text-body">
-                            title
-                          </a>
-                        </p>
-                      </td>
-                      <td className="align-middle">{item.description}</td>
-                      <td className="align-middle">{item.bookmaker}</td>
-                      <td className="align-middle">{item.quote.toFixed(2)}</td>
-                      <td className="align-middle">{item.stake / 100} %</td>
-                      <td className="align-middle">
-                        {item.profit.toFixed(2)} %
-                      </td>
+                  {currentObject._embedded &&
+                    currentObject._embedded.pools &&
+                    currentObject._embedded.pools.map((item) => (
+                      <tr>
+                        <td className="align-middle">
+                          <img
+                            alt="contact-img"
+                            title="contact-img"
+                            className="rounded mr-3"
+                            height="48"
+                          />
+                          <p className="m-0 d-inline-block align-middle font-16">
+                            <a href="/" className="text-body">
+                              title
+                            </a>
+                          </p>
+                        </td>
+                        <td className="align-middle">{item.description}</td>
+                        <td className="align-middle">{item.bookmaker}</td>
+                        <td className="align-middle">
+                          {item.quote.toFixed(2)}
+                        </td>
+                        <td className="align-middle">{item.stake / 100} %</td>
+                        <td className="align-middle">
+                          {item.profit.toFixed(2)} %
+                        </td>
 
-                      <td className="table-action">{item.events.length}</td>
-                    </tr>
-                  ))}
+                        <td className="table-action">{item.events.length}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </Table>
             </Col>

@@ -10,9 +10,16 @@ import { bindActionCreators } from "redux";
 import BASE_CONFIG from "../../store/config";
 import Aux from "../../hoc/_Aux";
 
+import { auth, storage } from "firebase";
+import PNotify from "pnotify/dist/es/PNotify";
+import "pnotify/dist/es/PNotifyButtons";
+import "pnotify/dist/es/PNotifyConfirm";
+import "pnotify/dist/es/PNotifyCallbacks";
+
 const CreateNewCard = (props) => {
   // const [image, setImage] = useState();
   const [validFields, setValidFields] = useState(false);
+  const [imageAsFile, setImageAsFile] = useState("");
 
   const [newObject, setNewObject] = useState({
     author: "",
@@ -36,7 +43,7 @@ const CreateNewCard = (props) => {
   useEffect(() => {
     validate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newObject]);
+  }, [newObject, imageAsFile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,6 +51,11 @@ const CreateNewCard = (props) => {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const eventHandlers = {
+    addedfile: (file) => setImageAsFile(file),
+    removedfile: () => setImageAsFile(""),
   };
 
   const handleCreateCard = () => {
@@ -72,13 +84,12 @@ const CreateNewCard = (props) => {
               title: "Oops...",
               text: "Something went wrong!",
             });
-
-            console.log(e);
           } else {
             Swal.fire({
               type: "success",
               title: "Servizio creato!",
             });
+            uploadServiceCover(e.headers.get("Location"));
           }
         });
       });
@@ -90,7 +101,9 @@ const CreateNewCard = (props) => {
       newObject.description &&
       newObject.price &&
       newObject.duration &&
-      newObject.maxSubscribers
+      newObject.maxSubscribers &&
+      imageAsFile &&
+      imageAsFile.name
     ) {
       setValidFields(true);
     } else {
@@ -98,9 +111,119 @@ const CreateNewCard = (props) => {
     }
   };
 
+  function dynamicProgressButtonPNotify() {
+    const notice = PNotify.info({
+      text: "Caricamento in corso",
+      icon: "fa fa-spinner fa-pulse",
+      hide: false,
+      shadow: false,
+      width: "200px",
+      modules: {
+        Buttons: {
+          closer: false,
+          sticker: false,
+        },
+      },
+    });
+
+    return notice;
+  }
+
+  const uploadServiceCover = (serviceLocation) => {
+    if (!imageAsFile || !imageAsFile.name) {
+      return;
+    }
+
+    const token = auth().currentUser.uid;
+    const timestamp = new Date().getTime();
+
+    const uploadTask = storage()
+      .ref(`/services/${token}/${timestamp}/${imageAsFile.name}`)
+      .put(imageAsFile);
+
+    var notice = dynamicProgressButtonPNotify();
+    const interval = setInterval(function () {
+      let percent =
+        (100.0 * uploadTask.snapshot.bytesTransferred) /
+        uploadTask.snapshot.totalBytes;
+      const options = {
+        text:
+          percent.toLocaleString("it-IT", { maximumFractionDigits: 2 }) +
+          "% complete.",
+      };
+      if (percent === 80) {
+        options.title = "Quasi fatto.";
+      }
+      if (percent >= 100) {
+        window.clearInterval(interval);
+        options.title = "Completato!";
+        options.type = "success";
+        options.hide = true;
+        options.icon = "fa fa-check";
+        options.shadow = true;
+        options.width = PNotify.defaults.width;
+        options.modules = {
+          Buttons: {
+            closer: true,
+            sticker: true,
+          },
+        };
+      }
+      notice.update(options);
+    }, 120);
+
+    uploadTask.on(
+      "state_changed",
+      (snapShot) => {
+        console.log(snapShot);
+      },
+      (err) => {
+        console.log(err);
+      },
+      () => {
+        storage()
+          .ref(`/services/${token}/${timestamp}/`)
+          .child(imageAsFile.name)
+          .getDownloadURL()
+          .then((imageUrl) => {
+            TokenManager.getInstance()
+              .getToken()
+              .then((jwt) => {
+                fetch(BASE_CONFIG.API_URL + "/serviceMedias", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-Auth": jwt,
+                  },
+                  body: JSON.stringify({
+                    url: imageUrl,
+                    service: serviceLocation,
+                    mediaType: "cover",
+                  }),
+                })
+                  .then((_) => {
+                    props.callback();
+                  })
+                  .catch((error) => {
+                    console.warn(error);
+                  });
+              });
+          })
+          .catch((error) => {
+            console.warn(error);
+          });
+      }
+    );
+  };
+
   return (
     <Aux>
       <Form>
+        <DropzoneComponent
+          config={config}
+          djsConfig={djsConfig}
+          eventHandlers={eventHandlers}
+        />
         <Row>
           <Col md={12} sm={12} lg={12} xl={12}>
             <Card className={"p-15"}>
@@ -126,6 +249,7 @@ const CreateNewCard = (props) => {
                     <Form.Control
                       type="number"
                       name="price"
+                      min="0"
                       onChange={handleChange}
                       placeholder="Prezzo"
                     />
@@ -178,9 +302,7 @@ const CreateNewCard = (props) => {
                 </Col>
               </Row>
               <Row>
-                <Col>
-                  <DropzoneComponent config={config} djsConfig={djsConfig} />
-                </Col>
+                <Col></Col>
               </Row>
             </Card>
 
