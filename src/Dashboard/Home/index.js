@@ -6,7 +6,6 @@ import moment from 'moment';
 import Chart from "react-apexcharts";
 
 import Aux from "../../hoc/_Aux";
-import LineInterpolationChart from '../Charts/LineInterpolationChart';
 
 import * as actions from '../../store/actions';
 import config from '../../store/config';
@@ -49,6 +48,7 @@ class Default extends React.Component {
         : [];
         return pools.filter(pool => !(myPools.includes(pool.id) && pool.outcome));
     }
+    
     load(url, args = {}) {
         return TokenManager
             .getInstance()
@@ -64,7 +64,6 @@ class Default extends React.Component {
     }
 
     getUserStats() {
-        const activeTipsCount = this.props.user._embedded.playedPools.length
         Promise.all([
             this.getMyPools(),
             this.getUserSubscriptions(),

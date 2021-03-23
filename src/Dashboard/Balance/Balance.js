@@ -3,7 +3,6 @@ import { Row, Col, Card } from "react-bootstrap";
 
 import Aux from "../../hoc/_Aux";
 import { withRouter } from "react-router-dom";
-import Chart from "react-apexcharts";
 
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
@@ -11,7 +10,6 @@ import { connect } from "react-redux";
 import DatePicker from "react-datepicker";
 import moment from 'moment';
 
-import barChart from './chart/bar-chart';
 import LineInterpolationChart from '../Charts/LineInterpolationChart';
 
 import config from '../../store/config';
@@ -24,76 +22,38 @@ class SamplePage extends Component {
         playedEvents: [],
         startDate: moment().add(-1, "month").toDate(),
         endDate: moment().add(-1, "day").toDate(),
+        formattedStartDate: moment(moment().add(-1, "month").toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS"),
+        formattedEndDate: moment(moment().add(-1, "day").toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS"),
         statusData: [],
+        totalProfit: 0
+    }
+    
+    load(url, args = {}) {
+        return TokenManager
+            .getInstance()
+            .getToken()
+            .then(jwt => fetch(url, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Auth": jwt,
+                },
+                ...args
+            }))
+            .then((e) => e.json());
     }
 
     loadData() {
-        let {startDate, endDate} = this.state;
-        startDate = moment(startDate).format("YYYY-MM-DDTHH:mm:ss.SSS");
-        endDate = moment(endDate).format("YYYY-MM-DDTHH:mm:ss.SSS");
-
-        if (this.props.user.roleName === 'Subscriber') {
-            this.loadSubscriberDashboard(startDate, endDate);
-        } else {
-            this.loadTipsterDashboard(startDate, endDate);
-        }
-    }
-
-    loadSubscriberDashboard(startDate, endDate) {
-        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/subscriberStats?start=${startDate}&end=${endDate}&subscriber=${this.props.user._links.self.href}`)
+        this.getUserPools()
         .then(pools => {
-            TokenManager.getInstance().getToken()
-            .then(token => {
-                return fetch(this.props.user._links.playedEvents.href.replace("{?projection}", "").replace("http://", "https://"), {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-AUTH": token
-                    }
-                })
-            })
-            .then(body => body.json())
-            .then(events => {
-                var chartData = [];
-                pools.forEach(pool => {
-                    chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
-                });
-                const statusData = pools.map(p => p.profit);
-
-                this.setState({playedEvents: events._embedded.events, pools, statusData});
+            this.setState({
+                pools,
+                statusData: pools.map(p => p.profit)
             })
         })
     }
 
-    loadTipsterDashboard(startDate, endDate) {
-        this.loadDashboardWithUrl(`${config.API_URL}/pools/search/stats?start=${startDate}&end=${endDate}&author=${this.props.user._links.self.href}`)
-        .then(pools => {
-            var chartData = [];
-            pools.forEach(pool => {
-                chartData.push([`${pool.description} <br /> Bookmaker: <em>${pool.bookmaker}</em>`, pool.profit])
-            });
-
-            const statusData = pools.map(p => p.profit);
-
-            this.setState({pools, statusData})
-        });
-    }
-
-    async loadDashboardWithUrl(url) {
-        let token = await TokenManager.getInstance().getToken()
-        let body = await fetch(url, {
-            method: "GET",
-            headers: { "Content-Type": "application/json", "X-Auth": token },
-        });
-
-        let response = await body.json();
-        return response._embedded.pools;
-    }
-
-    calculateProfit() {
-        return this.state.pools.reduce((accumulator, pool) => {
-            return accumulator + pool.profit
-        }, 0)
-    }
+    getUserPools = () => this.load(`${config.API_URL}/pools/search/subscriberStats?start=${this.state.formattedStartDate}&end=${this.state.formattedEndDate}&subscriber=${this.props.user._links.self.href}`)
+        .then(pools => pools?._embedded?.pools);
 
     componentDidMount() {
         this.loadData()
@@ -101,7 +61,8 @@ class SamplePage extends Component {
 
     handleStartDateChange(e) {
         this.setState({
-            startDate: e
+            startDate: e,
+            formattedStartDate: moment(e).format("YYYY-MM-DDTHH:mm:ss.SSS")
         });
 
         this.loadData();
@@ -109,7 +70,8 @@ class SamplePage extends Component {
 
     handleEndDateChange(e) {
         this.setState({
-            endDate: e
+            endDate: e,
+            formattedEndDate: moment(e).format("YYYY-MM-DDTHH:mm:ss.SSS")
         });
 
         this.loadData();
@@ -123,12 +85,27 @@ class SamplePage extends Component {
                         <Card>
                             <Card.Header>
                                 <Row>
-                                    <Col md={6}>
-                                        <Card.Title as="h5">
+                                    <Col md={10}>
+                                        <Card.Title as="h3">
                                             Bilancio
                                         </Card.Title>
                                     </Col>
-                                    <Col md={6}>
+                                    <Col sm={2}>
+                                        <h6 className="text-muted m-b-0">Profitto Totale</h6>
+                                        <h4 className="text-c-yellow">{this.props.user.totalProfit}%</h4>
+                                    </Col>
+                                </Row>
+                            </Card.Header>
+                        </Card>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={12}>
+                        <Card>
+                            <Card.Header>
+                                <Row>
+                                    <Col md={7}/>
+                                    <Col md={5}>
                                         <Card.Title as="h5">
                                             Dal: <DatePicker
                                                     selected={this.state.startDate}
@@ -153,22 +130,7 @@ class SamplePage extends Component {
                                 </Row>
                             </Card.Header>
                             <Card.Body>
-                                <Row>
-                                    <Col md={6}>
-                                        <Card>
-                                            <Card.Body>
-                                                <Chart {...barChart} />
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                    <Col md={6}>
-                                        <Card>
-                                            <Card.Body>
-                                                <LineInterpolationChart data={this.state.statusData} />
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                </Row>
+                                <LineInterpolationChart data={this.state.statusData} />
                             </Card.Body>
                         </Card>
                     </Col>
