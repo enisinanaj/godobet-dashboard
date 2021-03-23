@@ -1,41 +1,74 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
+import Chart from "react-apexcharts";
 
 class LineInterpolationChart extends React.Component {
   render() {
-    const data = (canvas) => {
-      let bar = canvas.getContext("2d");
-      let theme_g2 = bar.createLinearGradient(0, 0, 500, 0);
-      theme_g2.addColorStop(0, "#828282");
-      theme_g2.addColorStop(1, "#828282");
-
+    // console.log(Math.max(this.props.data));
+    const data = () => {
       return {
-        labels: this.props.data.map((a, i) => (i + 1)),
-        datasets: [
-          {
-            label: "Profitto",
-            data: this.props.data,
-            fill: true,
-            borderWidth: 4,
-            borderColor: theme_g2,
-            backgroundColor: theme_g2,
-            hoverborderColor: theme_g2,
-            hoverBackgroundColor: theme_g2,
+          type: 'area',
+          height: "100%",
+          options: {
+              chart: {
+                  sparkline: {
+                      enabled: false
+                  }
+              },
+              dataLabels: {
+                  enabled: false
+              },
+              colors: ['#9ccc65'],
+              stroke: {
+                  curve: 'smooth',
+                  width: 2,
+              },
+              tooltip: {
+                  fixed: {
+                      enabled: false
+                  },
+                  x: {
+                      show: false
+                  },
+                  y: {
+                      title: {
+                          formatter: (seriesName) => 'Profitto'
+                      }
+                  },
+                  marker: {
+                      show: false
+                  }
+              },
+              yaxis: {
+                show: true,
+                axisTicks: {
+                    show: true,
+                    borderType: 'solid',
+                    color: '#78909C',
+                    width: 6,
+                    offsetX: 0,
+                    offsetY: 0
+                },
+                showAlways: true,
+                showForNullSeries: true,
+                tickAmount: this.props.data.length - 1,
+                min: Math.min(...this.props.data),
+                max: Math.max(...this.props.data),
+                title: {
+                    text: 'Profitto %',
+                    rotate: -90,
+                    offsetX: 0,
+                    offsetY: 0,
+                },
+              }
           },
-        ],
-      };
+          series: [{
+              data: this.props.data
+          }]
+      }
     };
 
     return (
-      <Line
-        data={data}
-        responsive={true}
-        height={300}
-        options={{
-          barValueSpacing: 20,
-          maintainAspectRatio: false,
-        }}
-      />
+      <Chart {...data()} />
     );
   }
 }
