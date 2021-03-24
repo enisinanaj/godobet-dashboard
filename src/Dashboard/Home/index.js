@@ -6,6 +6,7 @@ import moment from "moment";
 import Chart from "react-apexcharts";
 
 import Aux from "../../hoc/_Aux";
+import LineInterpolationChart from "../Charts/LineInterpolationChart";
 
 import * as actions from "../../store/actions";
 import config from "../../store/config";
@@ -52,33 +53,33 @@ class Default extends React.Component {
   getTipsterOpenPools = () =>
     this.load(`${config.API_URL}/users/${this.props.user.userCode}/pools`).then(
       (openPools) => openPools?._embedded?.pools
-  );
+    );
 
   getTipsterTotalSubscribers = () =>
     this.load(`${config.API_URL}/users/${this.props.user.userCode}`).then(
       (totalSubscribers) => totalSubscribers?.totalSubscribers
-  );
+    );
 
   filterMyPools = (pools) => {
     const myPools =
-    this.props.user._embedded && this.props.user._embedded.playedPools
-      ? this.props.user._embedded.playedPools.map((pool) => pool.id)
-      : [];
-      return pools.filter(pool => !(myPools.includes(pool.id) && pool.outcome));
-  }
-    
+      this.props.user._embedded && this.props.user._embedded.playedPools
+        ? this.props.user._embedded.playedPools.map((pool) => pool.id)
+        : [];
+    return pools.filter((pool) => !(myPools.includes(pool.id) && pool.outcome));
+  };
   load(url, args = {}) {
-    return TokenManager
-        .getInstance()
-        .getToken()
-        .then(jwt => fetch(url, {
-            headers: {
-                "Content-Type": "application/json",
-                "X-Auth": jwt,
-            },
-            ...args
-        }))
-        .then((e) => e.json());
+    return TokenManager.getInstance()
+      .getToken()
+      .then((jwt) =>
+        fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+          ...args,
+        })
+      )
+      .then((e) => e.json());
   }
 
   getUserStats() {
