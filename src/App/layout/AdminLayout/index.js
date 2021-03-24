@@ -19,6 +19,7 @@ import AdminRoutes from "../../../routes.admin";
 import DemoRoutes from "../../../routes.original";
 import Aux from "../../../hoc/_Aux";
 import * as actionTypes from "../../../store/actions";
+import AbsoluteButton from "../../components/AbsoluteButton";
 
 class AdminLayout extends Component {
   fullScreenExitHandler = () => {
@@ -111,6 +112,7 @@ class AdminLayout extends Component {
         <Fullscreen enabled={this.props.isFullScreen}>
           <Navigation />
           <NavBar />
+          <AbsoluteButton />
           <div
             className="pcoded-main-container"
             onClick={() => this.mobileOutClickHandler}

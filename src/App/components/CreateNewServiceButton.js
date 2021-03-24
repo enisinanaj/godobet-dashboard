@@ -4,7 +4,7 @@ import { withRouter } from "react-router";
 
 const CreateNewServiceButton = () => {
   return (
-    <a href={"/dashboard/tipster/create-new"}>
+    <a href={"/dashboard/tipster/createService"}>
       <Button variant={"default"} className={"bg-light"} title={"Crea tip"}>
         Crea servizio
       </Button>

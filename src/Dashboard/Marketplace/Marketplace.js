@@ -14,6 +14,7 @@ import BASE_CONFIG from "../../store/config";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import TokenManager from "../../App/auth/TokenManager";
 import "./Marketplace.css";
+import AbsoluteButton from "../../App/components/AbsoluteButton";
 
 const Marketplace = (props) => {
   const [isProcessing, setIsProcessing] = useState(false);
