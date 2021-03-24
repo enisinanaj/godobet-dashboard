@@ -14,12 +14,11 @@ import BASE_CONFIG from "../../store/config";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import TokenManager from "../../App/auth/TokenManager";
 import "./Marketplace.css";
-import AbsoluteButton from "../../App/components/AbsoluteButton";
 
 const Marketplace = (props) => {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [show, setShow] = useState(false);
   const [marketData, setMarketData] = useState([]);
+  const [show, setShow] = useState(false);
   const [purchaseObject, setPurchaseObject] = useState({
     price: "",
     name: "",
@@ -58,6 +57,8 @@ const Marketplace = (props) => {
       });
   };
 
+  
+
   const handleClose = () => setShow(false);
 
   const cardElementOptions = {
@@ -71,7 +72,6 @@ const Marketplace = (props) => {
   };
 
   const handlePurchase = (item) => {
-    console.log(item);
     setShow(true);
     setPurchaseObject({
       price: item.price,
@@ -125,8 +125,6 @@ const Marketplace = (props) => {
         payment_method: paymentMethodReq.paymentMethod.id,
       }
     );
-
-    console.log(confirmedCardPayment);
 
     if (
       confirmedCardPayment.paymentIntent &&

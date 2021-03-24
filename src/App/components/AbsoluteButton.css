@@ -1,8 +1,6 @@
 .absolute-div {
   position: fixed;
   display: flex;
-
-  flex-direction: column;
   align-items: center;
   z-index: 99;
   bottom: 3%;
@@ -10,13 +8,12 @@
 }
 
 .absolute-btn {
-  margin-top: 5px;
-  width: 2em;
-  height: 2em;
+  width: 1.5em;
+  height: 1.5em;
   border-radius: 50%;
   outline: none;
   border: none;
-  background-color: #4680ff;
+  background-color: #000;
   color: white;
   font-size: 30px;
   opacity: 0.7;
@@ -27,50 +24,17 @@
   opacity: 1;
 }
 
-.create-service-btn {
-  background-color: rgba(46, 46, 46, 0.679);
-  color: white;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  width: 2em;
-  height: 2em;
-  border-radius: 50%;
-  border: none;
-  font-size: 20px;
-  transform: scale(0);
-  transition: transform 400ms ease 100ms;
+.crea-tip-text{
+  margin: 0;
+  margin-right: 10px;
+  transform: translateX(72px);
+  opacity: 0;
+  transition: 0.4s ease;
+
 }
 
-.create-tip-btn {
-  background-color: rgb(46, 46, 46);
-  opacity: 0.7;
-  color: white;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  width: 2em;
-  height: 2em;
-  border-radius: 50%;
-  border: none;
-  font-size: 20px;
-  transform: scale(0);
-  transition: transform 400ms ease 0ms;
-  transition: 0.3s ease;
-}
-
-.create-tip-btn.active {
-  transform: scale(1);
-  transition: transform 400ms ease 0ms;
-}
-
-.create-service-btn.active {
-  transform: scale(1);
-  transition: transform 400ms ease 100ms;
-}
-
-.create-service-btn:hover {
-  transform: scale(0.96);
-}
-
-.create-tip-btn:hover {
-  transform: scale(0.96);
+.crea-tip-text.hover {
+  opacity: 1;
+  transform: translateX(0);
+  transition: 0.4s ease;
 }

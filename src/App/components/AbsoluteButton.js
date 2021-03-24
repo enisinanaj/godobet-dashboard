@@ -5,37 +5,25 @@ import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import "./AbsoluteButton.css";
-import { FaFutbol, FaTools } from "react-icons/fa";
 
 const AbsoluteButton = (props) => {
   const [active, setActive] = useState(false);
+  const [hover, setHover] = useState(false)
 
-  return props.applicationState.user.roleValue === 7 ? (
+  return props.applicationState.user.roleValue >= 5 ? (
     <div className="absolute-div">
-      <button
-        className={active ? "create-service-btn active" : "create-service-btn"}
-      >
-        <a href="/dashboard/tipster/createService" style={{ color: "white" }}>
-          <FaTools />
-        </a>
-      </button>
-      <button
-        className={active ? "create-tip-btn active" : "create-tip-btn"}
-        title="Crea Tip"
-      >
-        <a href="/dashboard/tipster/createTip" style={{ color: "white" }}>
-          <FaFutbol />
-        </a>
-      </button>
-
-      <button
-        onClick={() => setActive(!active)}
-        className={"absolute-btn"}
-        id="absolute-btn-id"
-        title={"Crea tip"}
-      >
-        +
-      </button>
+      <h5 className={hover ? 'crea-tip-text hover' : 'crea-tip-text'}>Crea tip</h5>
+      <a href="/dashboard/tipster/createTip">
+        <button
+          onClick={() => setActive(!active)}
+          onMouseOver={() => setHover(true)}
+          onMouseOut={() => setHover(false)}
+          className={"absolute-btn"}
+          id="absolute-btn-id"
+        >
+          +
+        </button>
+      </a>
     </div>
   ) : null;
 };

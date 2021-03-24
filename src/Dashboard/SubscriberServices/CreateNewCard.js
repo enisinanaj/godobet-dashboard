@@ -73,6 +73,7 @@ const CreateNewCard = (props) => {
             price: newObject.price,
             duration: newObject.duration,
             description: newObject.description,
+            excerpt: newObject.excerpt,
             serviceName: newObject.serviceName,
             maxSubscribers: newObject.maxSubscribers,
             version: "1",
@@ -101,6 +102,7 @@ const CreateNewCard = (props) => {
       newObject.description &&
       newObject.price &&
       newObject.duration &&
+      newObject.excerpt &&
       newObject.maxSubscribers &&
       imageAsFile &&
       imageAsFile.name
@@ -285,6 +287,22 @@ const CreateNewCard = (props) => {
                   </Form.Group>
                 </Col>
               </Row>
+              <Row>
+                  <Col>
+                    <Form.Group controlId="infirizzo">
+                      <Form.Label>
+                        Descrizione corta <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        style={{ minHeight: "100px", maxHeight: 100 }}
+                        as="textarea"
+                        placeholder="Descrizione corta"
+                        name="excerpt"
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
               <Row>
                 <Col>
                   <Form.Group controlId="infirizzo">

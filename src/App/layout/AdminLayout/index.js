@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { connect } from "react-redux";
 import Fullscreen from "react-full-screen";
-// import windowSize from "react-window-size";
+// import windowSize from "react-window-size";c
 
 import Navigation from "./Navigation";
 import NavBar from "./NavBar";
