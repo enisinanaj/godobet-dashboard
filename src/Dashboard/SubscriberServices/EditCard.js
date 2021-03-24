@@ -227,11 +227,14 @@ const EditCard = (props) => {
     addRemoveLinks: true,
     acceptedFiles: "image/jpeg,image/png,application/pdf",
   };
+  
+
 
   return (
     <Aux>
       {currentObject ? (
         <Form>
+          {/* <img src={currentObject._embedded.serviceMedia[0].url} width='100%' height='200px' style={{objectFit: 'cover'}}/> */}
           <DropzoneComponent
             config={config}
             djsConfig={djsConfig}
