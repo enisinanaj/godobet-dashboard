@@ -4,6 +4,7 @@ import CreateNewCard from "./Dashboard/SubscriberServices/CreateNewCard";
 import EditCard from "./Dashboard/SubscriberServices/EditCard";
 import CardDetails from "./Dashboard/Details/CardDetails";
 import CreateTip from "./Dashboard/SubscriberPools/CreateTip";
+import TipsterProfile from "./Dashboard/TipsterProfile/TipsterProfile";
 
 window.jQuery = $;
 window.$ = $;
@@ -130,6 +131,13 @@ const routes = [
     exact: true,
     name: "Profile",
     component: Profile,
+    role: 3,
+  },
+  {
+    path: "/tipsters",
+    exact: false,
+    name: "Tipster Profile",
+    component: TipsterProfile,
     role: 3,
   },
 ];

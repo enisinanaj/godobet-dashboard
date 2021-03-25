@@ -7,6 +7,7 @@ import Loader from "../../App/layout/Loader";
 import { Link, withRouter } from "react-router-dom";
 import Chart from "react-apexcharts";
 import '../Marketplace/Marketplace.css'
+import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -19,11 +20,18 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+<<<<<<< HEAD
 import cover from "../../assets/images/user/cover.jpg";
 import md5 from "md5";
 
 const CardDetails = (props) => {
   const [purchasable, setPurchasable] = useState(true);
+=======
+
+const CardDetails = (props) => {
+  const [pools, setPools] = useState([])
+  const [purchasable, setPurchasable] = useState(false);
+>>>>>>> 10e9053 (length description form validation, searchbar prototype, tipsters profile prototype, card details updates)
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentObject, setCurrentObject] = useState();
   const [author, setAuthor] = useState({
@@ -49,7 +57,7 @@ const CardDetails = (props) => {
       media.length === 0 ||
       !media._embedded.serviceMedia
     ) {
-      return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
+      return CoverImage;
     }
 
     return media._embedded.serviceMedia.sort((a, b) => b.id - a.id)[0].url;
@@ -71,43 +79,90 @@ const CardDetails = (props) => {
             setCurrentObject(object);
           });
       });
-
-      TokenManager.getInstance().getToken().then(jwt => {
-        fetch(BASE_CONFIG.API_URL + '/services/' + id + '/author', {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth": jwt,
-          },
-        }).then(e => e.json()).then(author => {
-          console.warn(author);
-          if (author.userCode === props.applicationState.user.userCode) {
-            setPurchasable(false);
-          }
-          setAuthor(author)
-        })
-      })
-
-      if (props.applicationState.user.userRole == 4) {
-        TokenManager.getInstance().getToken().then(jwt => {
-          fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/subscriptions', {
-            headers: {
-              "Content-Type": 'application/json',
-              "X-Auth": jwt,
-            },
-          }).then(e => e.json()).then(subscriptions => {
-            const subscription = subscriptions._embedded?.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
-  
-            if (!subscription || subscription.expired || subscription.captured !== 1) {
-              console.warn("can't purchase")
-              setPurchasable(true);
-            }
-          });
-        });
-      }
+      
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const authorAvatar = author._embedded && author._embedded.media ? author._embedded.media.sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime()) : "http://www.gravatar.com/avatar/" + md5(author.email.toLowerCase().trim()) + "?s=32";
+  useEffect(() => {
+    TokenManager.getInstance().getToken().then(jwt => {
+      fetch(BASE_CONFIG.API_URL + '/services/' + id + '/author', {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth": jwt,
+        },
+      }).then(e => e.json()).then(author => {
+        setAuthor(author)
+      })
+    })
+
+    if (props.applicationState.user.roleValue >= 4) {
+      TokenManager.getInstance().getToken().then(jwt => {
+        fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/subscriptions', {
+          headers: {
+            "Content-Type": 'application/json',
+            "X-Auth": jwt,
+          },
+        }).then(e => e.json()).then(subscriptions => {
+          if(currentObject && currentObject._links) {
+            console.log(subscriptions)
+            console.log(currentObject._links.self.href)
+            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
+
+          if (!subscription) {
+            setPurchasable(true);
+          } else {
+            TokenManager.getInstance().getToken().then(jwt => {
+              fetch(BASE_CONFIG.API_URL + '/services/' + id + '/pools', {
+                headers: {
+                  'Content-Type': "application/json",
+                "X-Auth": jwt,
+                },
+              }).then(e => e.json().then(pools => {
+                setPools(pools._embedded.pools)
+              }))
+            })
+          }
+          
+          }
+        });
+      });
+    }
+  }, [currentObject])
+
+  const authorAvatar = author._embedded.media.sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime());
+
+  const handlePurchase = (item) => {
+    setShow(true);
+    setPurchaseObject({
+      price: item.price,
+      id: item.id,
+      name: item.serviceName,
+      duration: item.duration,
+    });
+  }
+
+  const spanStyle = {
+    fontSize: "15px",
+    fontWeight: "bold",
+  };
+
+  const checkoutDiv = {
+    padding: "10px",
+    textAlign: "center",
+  };
+
+  const handleClose = () => setShow(false);
+
+  const cardElementOptions = {
+    style: {
+      base: {
+        background: "red",
+        fontSize: "16px",
+      },
+    },
+    hidePostalCode: true,
+  };
+
   const stripe = useStripe();
 
   const handlePurchase = (selfLink) => {
@@ -128,6 +183,12 @@ const CardDetails = (props) => {
         .catch(_ => setIsProcessing(false))
     })
   };
+<<<<<<< HEAD
+=======
+
+  console.log(author)
+
+>>>>>>> 10e9053 (length description form validation, searchbar prototype, tipsters profile prototype, card details updates)
 
   return (
     <Aux>
@@ -159,6 +220,7 @@ const CardDetails = (props) => {
                         {purchasable && <div
                           style={{ display: "flex", justifyContent: "center" }}
                         >
+<<<<<<< HEAD
                           <Button onClick={() => handlePurchase(currentObject._links.self.href)} disabled={isProcessing} >
                             {isProcessing ? (
                               <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
@@ -166,6 +228,10 @@ const CardDetails = (props) => {
                             Iscriviti
                           </Button>
                         </div>}
+=======
+                          {purchasable ? <Button onClick={() => handlePurchase(currentObject)}>Abbonati</Button> : null}
+                        </div>
+>>>>>>> 10e9053 (length description form validation, searchbar prototype, tipsters profile prototype, card details updates)
                       </Col>
                     </Row>
                     <Row>
@@ -234,7 +300,9 @@ const CardDetails = (props) => {
                       <img height="150px" width='150px' src={authorAvatar[0].url} />
                     </Col>
                     <Col md={2}>
+                      <a href={`/tipsters/${author.userCode}`}>
                       <h4 style={{fontSize: '20px'}}>{author.name + author.lastName}</h4>
+                      </a>
                     </Col>
                     <Col md={2}>
                       <h4 style={{fontSize: '20px'}}>{author._embedded.services.length} services</h4>
