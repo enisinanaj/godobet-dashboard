@@ -8,25 +8,45 @@ import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Table } from "react-bootstrap";
+import moment from 'moment';
 
 class events extends Component {
     
     getRows() {
-        return this.props.data.map((d, index) => {
-            console.log(d);
-            return <tr key={index}>
-                <td>{d.quote}</td>
-                <td>{d.description}</td>
-                <td>{d.outcome}</td>
-            </tr>
+        const rows = [];
+        
+        this.props.data.forEach((d, index) => {
+            d.events.forEach(e => {
+                if (!e.outcome || !d.outcome) {
+                    return false;
+                }
+                rows.push(
+                    (<tr key={index + d.id + e.event}>
+                        <td>{moment(e.eventDate).format("DD/MM/YYY HH:mm")}</td>
+                        <td>{e.sport}</td>
+                        <td>{e.genderValue}</td>
+                        <td>{e.competition}</td>
+                        <td>{e.event}</td>
+                        <td>{e.proposal}</td>
+                        <td className={e.outcome === "win" ? "bg-c-green text-white" : ""}>{e.outcome}</td>
+                        <td>{d.quote}</td>
+                        <td>{d.stake}</td>
+                        <td>{d.profit}</td>
+                        <td className={d.outcome === "win" ? "bg-c-green text-white" : ""}>{d.outcome}</td>
+                        <td>{d.bookmaker}</td>
+                    </tr>)
+                )
+            })
+
         })
+        return rows;
     }
     
     render() {
         return (
             <Aux>
                 {
-                    this.props.data.length && 
+                    this.props.data.length ? 
                     <Card>
                         <Card.Header>
                             <Card.Title as='h5'>Eventi giocati nel periodo</Card.Title>
@@ -35,9 +55,18 @@ class events extends Component {
                             <Table responsive className='mb-0'>
                                 <thead>
                                     <tr>
+                                        <th>Data evento</th>
+                                        <th>Sport</th>
+                                        <th>Sesso</th>
+                                        <th>Competizione</th>
+                                        <th>Evento</th>
                                         <th>Tip</th>
-                                        <th>Servizio</th>
-                                        <th>Esito</th>
+                                        <th>Esito Evento</th>
+                                        <th>Quota</th>
+                                        <th>Stake</th>
+                                        <th>Profitto</th>
+                                        <th>Esito Schedina</th>
+                                        <th>Bookmaker</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -45,7 +74,8 @@ class events extends Component {
                                 </tbody>
                             </Table>
                         </Card.Body>
-                    </Card>
+                    </Card> :
+                    <></>
                 }
             </Aux>
         );
@@ -61,6 +91,4 @@ const mapDispatchToProps = (dispatch) => ({
     actions: bindActionCreators(actions, dispatch),
 });
 
-export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(events)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(events);
