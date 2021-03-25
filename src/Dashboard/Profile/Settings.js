@@ -458,6 +458,18 @@ const Settings = (props) => {
                     />
                   </Form.Group>
                   <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Data di nascita</Form.Label>
+                    <Form.Control
+                      type="date"
+                      placeholder="Data di nascita"
+                      value={user.dob}
+                      onChange={({ target }) => {
+                        setUser({ ...user, dob: target.value });
+                        setNameChanged(true);
+                      }}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formBasicEmail">
                     <Form.Label>Telefono</Form.Label>
                     <Form.Control
                       type="text"
