@@ -105,7 +105,7 @@ const CardDetails = (props) => {
           },
         }).then(e => e.json()).then(subscriptions => {
           if(currentObject && currentObject._links) {
-            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
+            const subscription = subscriptions._embedded.subscriptions.find(sub => sub.serviceId === currentObject._links.self.href);
 
             if (!subscription) {
               setPurchasable(true);
@@ -114,7 +114,7 @@ const CardDetails = (props) => {
                 fetch(BASE_CONFIG.API_URL + '/services/' + id + '/pools', {
                   headers: {
                     'Content-Type': "application/json",
-                  "X-Auth": jwt,
+                    "X-Auth": jwt,
                   },
                 }).then(e => e.json().then(pools => {
                   setPools(pools._embedded.pools)

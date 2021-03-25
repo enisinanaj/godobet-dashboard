@@ -98,7 +98,7 @@ const CreateNewCard = (props) => {
             Swal.fire({
               type: "error",
               title: "Oops...",
-              text: "Something went wrong!",
+              text: "C'è stato un problema!",
             });
           } else {
             Swal.fire({
