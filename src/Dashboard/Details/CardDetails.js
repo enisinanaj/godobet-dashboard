@@ -7,6 +7,7 @@ import Loader from "../../App/layout/Loader";
 import { Link, withRouter } from "react-router-dom";
 import Chart from "react-apexcharts";
 import '../Marketplace/Marketplace.css'
+import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -19,9 +20,9 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import cover from "../../assets/images/user/cover.jpg";
 
 const CardDetails = (props) => {
+  const [pools, setPools] = useState([])
   const [purchasable, setPurchasable] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentObject, setCurrentObject] = useState();
@@ -54,7 +55,7 @@ const CardDetails = (props) => {
       media.length === 0 ||
       !media._embedded.serviceMedia
     ) {
-      return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
+      return CoverImage;
     }
 
     return media._embedded.serviceMedia.sort((a, b) => b.id - a.id)[0].url;
@@ -76,40 +77,55 @@ const CardDetails = (props) => {
             setCurrentObject(object);
           });
       });
-
-      TokenManager.getInstance().getToken().then(jwt => {
-        fetch(BASE_CONFIG.API_URL + '/services/' + id + '/author', {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth": jwt,
-          },
-        }).then(e => e.json()).then(author => {
-          setAuthor(author)
-        })
-      })
-
-      if (props.applicationState.user.userRole === 4) {
-        TokenManager.getInstance().getToken().then(jwt => {
-          fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/subscriptions', {
-            headers: {
-              "Content-Type": 'application/json',
-              "X-Auth": jwt,
-            },
-          }).then(e => e.json()).then(subscriptions => {
-            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
-  
-            if (!subscription) {
-              setPurchasable(true);
-            }
-          });
-        });
-      }
+      
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    TokenManager.getInstance().getToken().then(jwt => {
+      fetch(BASE_CONFIG.API_URL + '/services/' + id + '/author', {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth": jwt,
+        },
+      }).then(e => e.json()).then(author => {
+        setAuthor(author)
+      })
+    })
 
+    if (props.applicationState.user.roleValue >= 4) {
+      TokenManager.getInstance().getToken().then(jwt => {
+        fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/subscriptions', {
+          headers: {
+            "Content-Type": 'application/json',
+            "X-Auth": jwt,
+          },
+        }).then(e => e.json()).then(subscriptions => {
+          if(currentObject && currentObject._links) {
+            console.log(subscriptions)
+            console.log(currentObject._links.self.href)
+            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
 
-  
+          if (!subscription) {
+            setPurchasable(true);
+          } else {
+            TokenManager.getInstance().getToken().then(jwt => {
+              fetch(BASE_CONFIG.API_URL + '/services/' + id + '/pools', {
+                headers: {
+                  'Content-Type': "application/json",
+                "X-Auth": jwt,
+                },
+              }).then(e => e.json().then(pools => {
+                setPools(pools._embedded.pools)
+              }))
+            })
+          }
+          
+          }
+        });
+      });
+    }
+  }, [currentObject])
 
   const authorAvatar = author._embedded.media.sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime());
 
@@ -206,8 +222,9 @@ const CardDetails = (props) => {
       );
     }
   };
-  
- console.log(currentObject)
+
+  console.log(author)
+
 
   return (
     <Aux>
@@ -322,7 +339,7 @@ const CardDetails = (props) => {
                         <div
                           style={{ display: "flex", justifyContent: "center" }}
                         >
-                          <Button onClick={() => handlePurchase(currentObject)}>Abbonati</Button>
+                          {purchasable ? <Button onClick={() => handlePurchase(currentObject)}>Abbonati</Button> : null}
                         </div>
                       </Col>
                     </Row>
@@ -392,7 +409,9 @@ const CardDetails = (props) => {
                       <img height="150px" width='150px' src={authorAvatar[0].url} />
                     </Col>
                     <Col md={2}>
+                      <a href={`/tipsters/${author.userCode}`}>
                       <h4 style={{fontSize: '20px'}}>{author.name + author.lastName}</h4>
+                      </a>
                     </Col>
                     <Col md={2}>
                       <h4 style={{fontSize: '20px'}}>{author._embedded.services.length} services</h4>

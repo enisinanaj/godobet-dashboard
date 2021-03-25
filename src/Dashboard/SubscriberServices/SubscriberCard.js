@@ -5,7 +5,7 @@ import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
 import Esaurito from '../../App/components/Esaurito'
-import CoverImage from '../../assets/images/service-cover.svg'
+import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 
 const SubscriberCard = (props) => {
   const getLatestImage = (media) => {

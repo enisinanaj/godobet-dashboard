@@ -234,6 +234,12 @@ const Marketplace = (props) => {
           </div>
         </Form>
       </Modal>
+      <Row className='p-5'>
+        <Col>
+        <h4>Search</h4>
+        <Form.Control type='text' style={{backgroundColor:"white"}}/>
+        </Col>
+      </Row>
       <Row md={12}>
         <MarketCard marketData={marketData} handlePurchase={handlePurchase} />
       </Row>
