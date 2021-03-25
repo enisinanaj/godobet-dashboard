@@ -1,17 +1,17 @@
-import React from "react";
-import { Row, Col, Card } from "react-bootstrap";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import moment from "moment";
-import Chart from "react-apexcharts";
+import React from 'react';
+import { Row, Col, Card } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import moment from 'moment';
+import Chart from 'react-apexcharts';
 
-import Aux from "../../hoc/_Aux";
-import LineInterpolationChart from "../Charts/LineInterpolationChart";
+import Aux from '../../hoc/_Aux';
+import LineInterpolationChart from '../Charts/LineInterpolationChart';
 
-import * as actions from "../../store/actions";
-import config from "../../store/config";
-import TokenManager from "../../App/auth/TokenManager";
-import satisfactionChart from "./charts/pie";
+import * as actions from '../../store/actions';
+import config from '../../store/config';
+import TokenManager from '../../App/auth/TokenManager';
+import satisfactionChart from './charts/pie';
 
 class Default extends React.Component {
   state = {
@@ -22,8 +22,8 @@ class Default extends React.Component {
     totalProfit: 0,
     monthProfit: 0,
     subscribedPools: [],
-    startDate: moment().add(-1, "month").toDate(),
-    endDate: moment().add(-1, "day").toDate(),
+    startDate: moment().add(-1, 'month').toDate(),
+    endDate: moment().add(-1, 'day').toDate(),
     flotData: [],
   };
 
@@ -38,9 +38,9 @@ class Default extends React.Component {
     this.load(
       `${config.API_URL}/pools/search/subscriberStats?start=${moment(
         this.state.startDate
-      ).format("YYYY-MM-DDTHH:mm:ss.SSS")}&end=${moment(
+      ).format('YYYY-MM-DDTHH:mm:ss.SSS')}&end=${moment(
         this.state.endDate
-      ).format("YYYY-MM-DDTHH:mm:ss.SSS")}&subscriber=${
+      ).format('YYYY-MM-DDTHH:mm:ss.SSS')}&subscriber=${
         this.props.user._links.self.href
       }`
     ).then((stats) => stats?._embedded?.pools);
@@ -73,8 +73,8 @@ class Default extends React.Component {
       .then((jwt) =>
         fetch(url, {
           headers: {
-            "Content-Type": "application/json",
-            "X-Auth": jwt,
+            'Content-Type': 'application/json',
+            'X-Auth': jwt,
           },
           ...args,
         })
@@ -108,7 +108,6 @@ class Default extends React.Component {
 
   componentDidMount() {
     this.getUserStats();
-    this.getCreampieData();
   }
 
   //creampie is for last
@@ -119,12 +118,14 @@ class Default extends React.Component {
         options: {
           labels: [],
         },
-        data: [],
+        ...data,
+        series: [0, 0, 100],
       };
     }
 
     const map = this.props.user._embedded.playedPools.reduce((pie, pool) => {
       const h = { ...pie };
+
       h[pool.outcome] =
         parseInt(pie[pool.outcome]) >= 0 ? parseInt(pie[pool.outcome]) : 1;
       return h;
@@ -136,7 +137,8 @@ class Default extends React.Component {
   };
 
   render() {
-    console.log(this.props.user._embedded);
+    const creamPieData = this.getCreampieData();
+
     return (
       <Aux>
         <Col xl={12} md={12}>
@@ -257,7 +259,7 @@ class Default extends React.Component {
                   <Card.Title as="h5">Vincita/Perdita</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                  <Chart {...this.getCreampieData()} />
+                  <Chart {...creamPieData} />
                 </Card.Body>
               </Card>
             </Col>
