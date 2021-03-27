@@ -22,7 +22,7 @@ class Default extends React.Component {
     totalProfit: 0,
     monthProfit: 0,
     subscribedPools: [],
-    startDate: moment().add(-1, 'month').toDate(),
+    startDate: moment().add(-3, 'month').toDate(),
     endDate: moment().add(-1, 'day').toDate(),
     flotData: [],
   };
@@ -43,17 +43,16 @@ class Default extends React.Component {
       ).format('YYYY-MM-DDTHH:mm:ss.SSS')}&subscriber=${
         this.props.user._links.self.href
       }`
-    ).then((stats) => stats?._embedded?.pools);
+    ).then((stats) => {console.warn(stats?._embedded?.pools); return stats?._embedded?.pools});
 
   getUserSubscriptions = () =>
     this.load(
       `${config.API_URL}/users/${this.props.user.userCode}/subscriptions`
     ).then((subs) => subs?._embedded?.subscriptions);
 
-  getTipsterOpenPools = () =>
-    this.load(`${config.API_URL}/users/${this.props.user.userCode}/pools`).then(
-      (openPools) => openPools?._embedded?.pools
-    );
+  getTipsterOpenPools = () => 
+    this.load(`${config.API_URL}/users/${this.props.user.userCode}/pools`)
+    .then((openPools) => openPools?._embedded?.pools);
 
   getTipsterTotalSubscribers = () =>
     this.load(`${config.API_URL}/users/${this.props.user.userCode}`).then(
@@ -100,7 +99,7 @@ class Default extends React.Component {
         subscribedPools: [...activeTipsCount, ...p[0]],
         activeTipsCount: p[1]?.filter((s) => !s.expired)?.length,
         monthProfit: p[2]?.reduce((a, b) => a + b.profit, 0),
-        openPools: p[3].length,
+        openPools: p[3].filter(p => !p.outcome).length,
         totalSubscribers: p[4],
       });
     });
@@ -123,11 +122,17 @@ class Default extends React.Component {
       };
     }
 
+    console.warn(this.props.user._embedded.playedPools)
+
     const map = this.props.user._embedded.playedPools.reduce((pie, pool) => {
       const h = { ...pie };
 
+      if (!pool.outcome) {
+        return h;
+      }
+
       h[pool.outcome] =
-        parseInt(pie[pool.outcome]) >= 0 ? parseInt(pie[pool.outcome]) : 1;
+        parseInt(pie[pool.outcome]) >= 0 ? 1 + parseInt(pie[pool.outcome]) : 1;
       return h;
     }, {});
 
@@ -240,7 +245,7 @@ class Default extends React.Component {
                       <Col sm={8}>
                         <h6 className="text-muted m-b-0">Numero abbonati</h6>
                         <h4 className="text-c-yellow">
-                          {this.state.totalSubscribers}
+                          {this.state.totalSubscribers === -1 ? 0 : this.state.totalSubscribers }
                         </h4>
                       </Col>
                       <Col sm={4} className="text-right">

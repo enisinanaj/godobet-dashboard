@@ -20,6 +20,7 @@ import "pnotify/dist/es/PNotifyCallbacks";
 const Settings = (props) => {
   const [user, setUser] = useState(props.applicationState.user);
   const [nameChanged, setNameChanged] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
 
   const SHOW_FULL_PROFILE = user.roleValue > 4;
 
@@ -76,6 +77,25 @@ const Settings = (props) => {
             );
             setBank(sortedBanks.length > 0 ? sortedBanks[0] : {});
           });
+
+        fetch(props.applicationState.user._links.self.href, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+        })
+          .then((e) => e.json())
+          .then(user => {
+            setUser(user);
+
+            return fetch(BASE_CONFIG.API_URL + "/pps/accounts/status/" + props.applicationState.user.userCode, {
+              headers: {
+                "Content-Type": "application/json",
+                "X-Auth": jwt,
+              },
+            })
+          })
+          .then(accountStatus => console.warn(accountStatus));
       });
   }, []);
 
@@ -409,7 +429,7 @@ const Settings = (props) => {
             "X-Auth": jwt,
           },
         })
-          .then((result) => result.json)
+          .then((result) => result.json())
           .then((result) => console.warn(result))
           .catch((error) => {
             console.warn(error);
@@ -669,8 +689,8 @@ const Settings = (props) => {
                 <Col md={12} sm={12}>
                   <Form>
                     <Form.Group controlId="accountState">
-                      {!props.applicationState.user.stripeAccountStatus && (
-                        <Form.Label>Conto non ancora inviato</Form.Label>
+                      {!currentUser.stripeAccountStatus && (
+                        <Form.Label>Conto non ancora attivato</Form.Label>
                       )}
                       {props.applicationState.user.stripeAccountStatus && (
                         <Form.Label>

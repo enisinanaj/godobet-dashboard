@@ -3,73 +3,58 @@
 const Sports = [
     {
         "icon": "⚽",
-        "label": "⚽ Soccer Ball",
+        "label": "⚽  Calcio",
         "value": "soccer ball"
     },
     {
         "icon": "⚾",
-        "label": "⚾ Baseball",
+        "label": "⚾  Baseball",
         "value": "baseball"
     },
     {
         "icon": "🥎",
-        "label": "🥎 Softball",
+        "label": "🥎  Softball",
         "value": "softball"
     },
     {
         "icon": "🏀",
-        "label": "🏀 Basketball",
+        "label": "🏀  Basketball",
         "value": "basketball"
     },
     {
+        "icon": "🏎",
+        "label": "🏎  Formula 1",
+        "value": "formulaone"
+    },
+    {
         "icon": "🏐",
-        "label": "🏐 Volleyball",
+        "label": "🏐  Pallavolo",
         "value": "volleyball"
     },
     {
         "icon": "🏈",
-        "label": "🏈 American Football",
+        "label": "🏈  Football Americano",
         "value": "american football"
     },
     {
         "icon": "🏉",
-        "label": "🏉 Rugby Football",
+        "label": "🏉  Rugby",
         "value": "rugby football"
     },
     {
         "icon": "🎾",
-        "label": "🎾 Tennis",
+        "label": "🎾  Tennis",
         "value": "tennis"
     },
     {
-        "icon": "🥏",
-        "label": "🥏 Flying Disc",
-        "value": "flying disc"
-    },
-    {
         "icon": "🎳",
-        "label": "🎳 Bowling",
+        "label": "🎳  Bowling",
         "value": "bowling"
     },
     {
-        "icon": "🏏",
-        "label": "🏏 Cricket Game",
-        "value": "cricket game"
-    },
-    {
-        "icon": "🏑",
-        "label": "🏑 Field Hockey",
-        "value": "field hockey"
-    },
-    {
         "icon": "🏒",
-        "label": "🏒 Ice Hockey",
+        "label": "🏒  Ice Hockey",
         "value": "ice hockey"
-    },
-    {
-        "icon": "🥍",
-        "label": "🥍 Lacrosse",
-        "value": "lacrosse"
     },
     {
         "icon": "🏓",
@@ -77,68 +62,23 @@ const Sports = [
         "value": "ping pong"
     },
     {
-        "icon": "🏸",
-        "label": "🏸 Badminton",
-        "value": "badminton"
-    },
-    {
         "icon": "🥊",
-        "label": "🥊 Boxing Glove",
+        "label": "🥊  Boxing",
         "value": "boxing glove"
     },
     {
-        "icon": "🥋",
-        "label": "🥋 Martial Arts Uniform",
-        "value": "martial arts uniform"
-    },
-    {
-        "icon": "🥅",
-        "label": "🥅 Goal Net",
-        "value": "goal net"
-    },
-    {
         "icon": "⛳",
-        "label": "⛳ Flag in Hole",
-        "value": "flag in hole"
+        "label": "⛳  Golf",
+        "value": "golf"
     },
     {
         "icon": "⛸️",
-        "label": "⛸️ Ice Skate",
+        "label": "⛸️  Patinaggio sul ghiaccio",
         "value": "ice skate"
     },
     {
-        "icon": "🎣",
-        "label": "🎣 Fishing Pole",
-        "value": "fishing pole"
-    },
-    {
-        "icon": "🎽",
-        "label": "🎽 Running Shirt",
-        "value": "running shirt"
-    },
-    {
-        "icon": "🎿",
-        "label": "🎿 Skis",
-        "value": "skis"
-    },
-    {
-        "icon": "🛷",
-        "label": "🛷 Sled",
-        "value": "sled"
-    },
-    {
-        "icon": "🥌",
-        "label": "🥌 Curling Stone",
-        "value": "curling stone"
-    },
-    {
-        "icon": "🎯",
-        "label": "🎯 Direct Hit",
-        "value": "direct hit"
-    },
-    {
         "icon": "🎱",
-        "label": "🎱 Pool 8 Ball",
+        "label": "🎱  Bigliardo",
         "value": "pool 8 ball"
     }
 ];
