@@ -52,7 +52,8 @@ const Settings = (props) => {
     user.idDocumentNumber || ""
   );
   const [documentsChanged, setDocumentsChanged] = useState(false);
-
+  const [activating, setActivating] = useState(false);
+  
   useEffect(() => {
     TokenManager.getInstance()
       .getToken()
@@ -413,6 +414,7 @@ const Settings = (props) => {
   };
 
   const activatePayments = () => {
+    setActivating(true);
     TokenManager.getInstance()
       .getToken()
       .then((jwt) => {
@@ -424,9 +426,13 @@ const Settings = (props) => {
           },
         })
           .then((result) => result.json())
-          .then((result) => console.warn(result))
+          .then((result) => {
+            setActivating(false);
+            reloadUser();
+          })
           .catch((error) => {
-            console.warn(error);
+            setActivating(false);
+            reloadUser();
           });
       });
   };
@@ -695,6 +701,9 @@ const Settings = (props) => {
 
                     {user.stripeAccountStatus !== 'verified' && (
                       <Button variant="primary" onClick={activatePayments}>
+                        {activating ? (
+                          <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+                        ) : null }{" "}
                         Chiedi l'attivazione del conto
                       </Button>
                     )}

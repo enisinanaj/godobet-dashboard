@@ -159,10 +159,12 @@ const CardDetails = (props) => {
                         {purchasable && <div
                           style={{ display: "flex", justifyContent: "center" }}
                         >
-                          {isProcessing ? (
-                            <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
-                          ) : null }
-                          <Button onClick={() => handlePurchase(currentObject._links.self.href)} disabled={isProcessing} >Abbonati</Button>
+                          <Button onClick={() => handlePurchase(currentObject._links.self.href)} disabled={isProcessing} >
+                            {isProcessing ? (
+                              <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+                            ) : null }{" "}
+                            Iscriviti
+                          </Button>
                         </div>}
                       </Col>
                     </Row>
@@ -299,119 +301,3 @@ const mapDispatchToProps = (dispatch) => ({
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(CardDetails)
 );
-
-{
-  /* <div>
-          <Row>
-            <Col></Col>
-            <Col sm={12}>
-              <Card
-                className="user-card user-card-1"
-                style={{ minHeight: "700px" }}
-              >
-                <div className="profile-card" style={{ maxHeight: "250px" }}>
-                  <Card.Img
-                    variant="top"
-                    src={getLatestImage(currentObject)}
-                    alt="CardImage"
-                  />
-                  <Card.Body className="text-left">
-                    <Card.Title as="h2" style={{ color: "white" }}>
-                      {currentObject.price.toLocaleString("it-IT", {
-                        maximumFractionDigits: 2,
-                      })}
-                      {""} €
-                    </Card.Title>
-                  </Card.Body>
-                </div>
-                <Card.Body className="pt-0">
-                  <Row>
-                    <Col md={12}>
-                      <div className="">
-                        <h6 className="mb-1 mt-3">
-                          {currentObject.serviceName}
-                        </h6>
-                        <br />
-                        <p className="mb-3 text-muted">
-                          <span>
-                            {" "}
-                            <i
-                              className="feather icon-users"
-                              style={{ paddingRight: "5px" }}
-                            />{" "}
-                            Numero massimo iscrizioni:{" "}
-                            {currentObject.maxSubscribers}
-                          </span>
-                          <br />
-                          <span>
-                            {" "}
-                            <i
-                              className="feather icon-calendar"
-                              style={{ paddingRight: "5px" }}
-                            />{" "}
-                            Durata iscrizione: {currentObject.duration} giorni
-                          </span>
-                        </p>
-                        <p className="mb-1">{currentObject.description}</p>
-                      </div>
-                    </Col>
-                  </Row>
-                </Card.Body>
-                <Button className="pull-right">Abbonati</Button>
-              </Card>
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col sm={8}>
-              <Table striped hover responsive id="data-table-zero">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Titolo</th>
-                    <th>Descrizione</th>
-                    <th>Bookmaker</th>
-                    <th>Quota</th>
-                    <th>Stake</th>
-                    <th>Profitto</th>
-                    <th>Eventi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentObject._embedded &&
-                    currentObject._embedded.pools &&
-                    currentObject._embedded.pools.map((item) => (
-                      <tr>
-                        <td className="align-middle">
-                          <img
-                            alt="contact-img"
-                            title="contact-img"
-                            className="rounded mr-3"
-                            height="48"
-                          />
-                          <p className="m-0 d-inline-block align-middle font-16">
-                            <a href="/" className="text-body">
-                              title
-                            </a>
-                          </p>
-                        </td>
-                        <td className="align-middle">{item.description}</td>
-                        <td className="align-middle">{item.bookmaker}</td>
-                        <td className="align-middle">
-                          {item.quote.toFixed(2)}
-                        </td>
-                        <td className="align-middle">{item.stake / 100} %</td>
-                        <td className="align-middle">
-                          {item.profit.toFixed(2)} %
-                        </td>
-
-                        <td className="table-action">{item.events.length}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
-            </Col>
-            <Col></Col>
-          </Row>
-        </div> */
-}

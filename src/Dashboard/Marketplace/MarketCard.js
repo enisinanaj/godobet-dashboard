@@ -57,7 +57,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
               {inPurchasing === item.id ? (
                 <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
               ) : null }
-              Attiva subito a soli {(item.price/100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})} &euro;
+              Iscriviti subito a soli {(item.price/100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})} &euro;
             </Button>}
             </div>
           </Card.Body>

@@ -116,7 +116,7 @@ const CardDetails = () => {
                     </Col>
                   </Row>
                 </Card.Body>
-                <Button className="pull-right">Abbonati</Button>
+                <Button className="pull-right">Iscriviti</Button>
               </Card>
             </Col>
             <Col></Col>

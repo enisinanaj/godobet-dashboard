@@ -146,89 +146,20 @@ class Default extends React.Component {
 
     return (
       <Aux>
-        <Col xl={12} md={12}>
-          <Row md={12}>
-            <Col md={6}>
-              <Card md={12}>
-                <Card.Body>
-                  <Row className="align-items-center">
-                    <Col sm={8}>
-                      <h6 className="text-muted m-b-0">Pending tips</h6>
-                      <h4 className="text-c-yellow">
-                        {this.state.pendingTipsCount}
-                      </h4>
-                    </Col>
-                    <Col sm={4} className="text-right">
-                      <i className="feather icon-bar-chart-2 f-28" />
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6}>
-              <Card md={12}>
-                <Card.Body>
-                  <Row className="align-items-center">
-                    <Col sm={8}>
-                      <h6 className="text-muted m-b-0">Iscrizioni attive</h6>
-                      <h4 className="text-c-yellow">
-                        {this.state.activeTipsCount}
-                      </h4>
-                    </Col>
-                    <Col sm={4} className="text-right">
-                      <i className="feather icon-bar-chart-2 f-28" />
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-          <Row md={12}>
-            <Col md={6}>
-              <Card md={12}>
-                <Card.Body>
-                  <Row className="align-items-center">
-                    <Col sm={8}>
-                      <h6 className="text-muted m-b-0">Profitto Totale</h6>
-                      <h4 className="text-c-yellow">
-                        {this.state.totalProfit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%
-                      </h4>
-                    </Col>
-                    <Col sm={4} className="text-right">
-                      <i className="feather icon-bar-chart-2 f-28" />
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6}>
-              <Card md={12}>
-                <Card.Body>
-                  <Row className="align-items-center">
-                    <Col sm={8}>
-                      <h6 className="text-muted m-b-0">Profitto mensile</h6>
-                      <h4 className="text-c-yellow">
-                        {this.state.monthProfit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%
-                      </h4>
-                    </Col>
-                    <Col sm={4} className="text-right">
-                      <i className="feather icon-bar-chart-2 f-28" />
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-          {this.props.user.roleValue >= 5 && (
+        <Row style={{background: "#ecf0f5", padding: "20px", borderRadius: "5px"}}>
+          <Col xl={12} md={12}>
             <Row md={12}>
+              <Col md={12} lg={12} >
+                <h4>Iscrizioni <small style={{fontSize: "12px"}}>(Statistiche sui servizi a cui sei iscritto)</small></h4>
+              </Col>
               <Col md={6}>
                 <Card md={12}>
                   <Card.Body>
                     <Row className="align-items-center">
                       <Col sm={8}>
-                        <h6 className="text-muted m-b-0">Tips da refertare</h6>
+                        <h6 className="text-muted m-b-0">Pending tips</h6>
                         <h4 className="text-c-yellow">
-                          {this.state.openPools}
+                          {this.state.pendingTipsCount}
                         </h4>
                       </Col>
                       <Col sm={4} className="text-right">
@@ -243,9 +174,9 @@ class Default extends React.Component {
                   <Card.Body>
                     <Row className="align-items-center">
                       <Col sm={8}>
-                        <h6 className="text-muted m-b-0">Numero abbonati</h6>
+                        <h6 className="text-muted m-b-0">Servizi</h6>
                         <h4 className="text-c-yellow">
-                          {this.state.totalSubscribers === -1 ? 0 : this.state.totalSubscribers }
+                          {this.state.activeTipsCount}
                         </h4>
                       </Col>
                       <Col sm={4} className="text-right">
@@ -256,20 +187,100 @@ class Default extends React.Component {
                 </Card>
               </Col>
             </Row>
-          )}
-          <Row>
-            <Col>
-              <Card md={12}>
-                <Card.Header>
-                  <Card.Title as="h5">Vincita/Perdita</Card.Title>
-                </Card.Header>
-                <Card.Body>
-                  <Chart {...creamPieData} />
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Col>
+            <Row md={12}>
+              <Col md={6}>
+                <Card md={12}>
+                  <Card.Body>
+                    <Row className="align-items-center">
+                      <Col sm={8}>
+                        <h6 className="text-muted m-b-0">Profitto Totale</h6>
+                        <h4 className="text-c-yellow">
+                          {this.state.totalProfit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%
+                        </h4>
+                      </Col>
+                      <Col sm={4} className="text-right">
+                        <i className="feather icon-bar-chart-2 f-28" />
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col md={6}>
+                <Card md={12}>
+                  <Card.Body>
+                    <Row className="align-items-center">
+                      <Col sm={8}>
+                        <h6 className="text-muted m-b-0">Profitto mensile</h6>
+                        <h4 className="text-c-yellow">
+                          {this.state.monthProfit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%
+                        </h4>
+                      </Col>
+                      <Col sm={4} className="text-right">
+                        <i className="feather icon-bar-chart-2 f-28" />
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+            {this.props.user.roleValue >= 5 && (
+              <Row md={12}>
+                <Col md={12} lg={12} >
+                  <h4>Gestione <small style={{fontSize: "12px"}}>(Panoramica dei servizi che hai creato e gestisci)</small></h4>
+                </Col>
+                <Col md={6}>
+                  <Card md={12}>
+                    <Card.Body>
+                      <Row className="align-items-center">
+                        <Col sm={8}>
+                          <h6 className="text-muted m-b-0">Tips da refertare</h6>
+                          <h4 className="text-c-yellow">
+                            {this.state.openPools}
+                          </h4>
+                        </Col>
+                        <Col sm={4} className="text-right">
+                          <i className="feather icon-bar-chart-2 f-28" />
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6}>
+                  <Card md={12}>
+                    <Card.Body>
+                      <Row className="align-items-center">
+                        <Col sm={8}>
+                          <h6 className="text-muted m-b-0">Iscrizioni</h6>
+                          <h4 className="text-c-yellow">
+                            {this.state.totalSubscribers === -1 ? 0 : this.state.totalSubscribers }
+                          </h4>
+                        </Col>
+                        <Col sm={4} className="text-right">
+                          <i className="feather icon-bar-chart-2 f-28" />
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            )}
+            <Row>
+              <Col md={12} lg={12} >
+                <h4>Tip seguite <small style={{fontSize: "12px"}}>(Distribuzione dell'esito delle tip che hai seguito)</small></h4>
+              </Col>
+              <Col>
+                <Card md={12}>
+                  <Card.Header>
+                    <Card.Title as="h5">Vincita/Perdita</Card.Title>
+                  </Card.Header>
+                  <Card.Body>
+                    <Chart {...creamPieData} />
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
       </Aux>
     );
   }
