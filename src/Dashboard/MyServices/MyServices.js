@@ -39,7 +39,7 @@ class MyServices extends Component {
         this.setState({
           services:
             r._embedded && r._embedded.subscriptions
-              ? r._embedded.subscriptions
+              ? r._embedded.subscriptions.filter(sub => !sub.expired && sub.captured === 1)
               : [],
         });
       })

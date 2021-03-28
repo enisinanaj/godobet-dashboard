@@ -20,9 +20,10 @@ import { connect } from "react-redux";
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import cover from "../../assets/images/user/cover.jpg";
+import md5 from "md5";
 
 const CardDetails = (props) => {
-  const [purchasable, setPurchasable] = useState(false);
+  const [purchasable, setPurchasable] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentObject, setCurrentObject] = useState();
   const [author, setAuthor] = useState({
@@ -36,12 +37,6 @@ const CardDetails = (props) => {
       ],
       services: [],
     },
-  })
-  const [show, setShow] = useState(false);
-  const [purchaseObject, setPurchaseObject] = useState({
-    price: "",
-    name: "",
-    author: "",
   });
 
   let id = window.location.href.substring(
@@ -84,11 +79,15 @@ const CardDetails = (props) => {
             "X-Auth": jwt,
           },
         }).then(e => e.json()).then(author => {
+          console.warn(author);
+          if (author.userCode === props.applicationState.user.userCode) {
+            setPurchasable(false);
+          }
           setAuthor(author)
         })
       })
 
-      if (props.applicationState.user.userRole === 4) {
+      if (props.applicationState.user.userRole == 4) {
         TokenManager.getInstance().getToken().then(jwt => {
           fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/subscriptions', {
             headers: {
@@ -96,9 +95,10 @@ const CardDetails = (props) => {
               "X-Auth": jwt,
             },
           }).then(e => e.json()).then(subscriptions => {
-            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
+            const subscription = subscriptions._embedded?.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
   
-            if (!subscription) {
+            if (!subscription || subscription.expired || subscription.captured !== 1) {
+              console.warn("can't purchase")
               setPurchasable(true);
             }
           });
@@ -107,193 +107,30 @@ const CardDetails = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
-
-  
-
-  const authorAvatar = author._embedded.media.sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime());
-
-  const handlePurchase = (item) => {
-    setShow(true);
-    setPurchaseObject({
-      price: item.price,
-      id: item.id,
-      name: item.serviceName,
-      duration: item.duration,
-    });
-  }
-
-  const spanStyle = {
-    fontSize: "15px",
-    fontWeight: "bold",
-  };
-
-  const checkoutDiv = {
-    padding: "10px",
-    textAlign: "center",
-  };
-
-  const handleClose = () => setShow(false);
-
-  const cardElementOptions = {
-    style: {
-      base: {
-        background: "red",
-        fontSize: "16px",
-      },
-    },
-    hidePostalCode: true,
-  };
-
+  const authorAvatar = author._embedded && author._embedded.media ? author._embedded.media.sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime()) : "http://www.gravatar.com/avatar/" + md5(author.email.toLowerCase().trim()) + "?s=32";
   const stripe = useStripe();
-  const elements = useElements();
 
-  const formattedAmount = new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-  }).format(purchaseObject.price);
-
-
-  const handlePayment = async (e) => {
-    e.preventDefault();
-    const cardElement = elements.getElement(CardElement);
-
-    if (!cardElement._complete) {
-      alert("Please check your card details.");
-      return;
-    }
+  const handlePurchase = (selfLink) => {
     setIsProcessing(true);
 
-    const response = await axios.post("http://localhost:9000/payment", {
-      amount: purchaseObject.price,
-      metadata: {
-        customer: props.applicationState.user.userCode,
-        service: purchaseObject.id,
-      },
-      description: purchaseObject.name,
-    });
-
-    const paymentMethodReq = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-    });
-
-    const confirmedCardPayment = await stripe.confirmCardPayment(
-      response.data.client_secret,
-      {
-        payment_method: paymentMethodReq.paymentMethod.id,
-      }
-    );
-
-    if (
-      confirmedCardPayment.paymentIntent &&
-      confirmedCardPayment.paymentIntent.status === "succeeded"
-    ) {
-      setIsProcessing(false);
-      setShow(false);
-      Swal.fire(
-        "Confermato!",
-        "Ti sei abbonato al servizio con successo!",
-        "success"
-      );
-    } else {
-      setShow(false);
-      setIsProcessing(false);
-      Swal.fire(
-        "Errore!",
-        "Si è verificato un errore durante l'elaborazione. Per favore riprova.",
-        "error"
-      );
-    }
+    TokenManager.getInstance().getToken()
+    .then(jwt => {
+        fetch(`${BASE_CONFIG.API_URL}/pps/payments/${selfLink.substring(selfLink.lastIndexOf('/') + 1)}/${props.applicationState.user.userCode}`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          }
+        }).then(response => response.headers.get('X-Stripe-Session-Id'))
+        .then(stripeSessionId => {
+          stripe.redirectToCheckout({ sessionId: stripeSessionId })
+        })
+        .catch(_ => setIsProcessing(false))
+    })
   };
-  
- console.log(currentObject)
 
   return (
     <Aux>
-      <Modal show={show} onHide={handleClose}>
-        <Form id="purchaseForm" onSubmit={handlePayment}>
-          <div>
-            <ul className="list-group">
-              <li className="list-group-item">
-                <Row>
-                  <h1>{purchaseObject.serviceName}</h1>
-                  <Col>
-                    <Form.Label>Nome</Form.Label>
-                    <Form.Control type="text" placeholder="Nome" required />
-                  </Col>
-                  <Col>
-                    <Form.Label>Cognome</Form.Label>
-                    <Form.Control type="text" placeholder="Cognome" required />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Label>E-mail</Form.Label>
-                    <Form.Control type="email" placeholder="E-mail" required />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Label>Dati della carta di credito </Form.Label>
-                    <CardElement options={cardElementOptions} required />
-                  </Col>
-                </Row>
-              </li>
-            </ul>
-            <div
-              style={{
-                height: "300px",
-                margin: "40px",
-                display: "flex",
-                justifyContent: "space-around",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ margin: "30px" }}>
-                <div style={checkoutDiv}>
-                  <span>Service:</span>{" "}
-                  <span style={spanStyle}>{purchaseObject.name}</span>
-                </div>
-                <div style={checkoutDiv}>
-                  <span>Author:</span>{" "}
-                  <span style={spanStyle}>
-                    {author.name + author.lastName}
-                  </span>
-                </div>
-                <div style={checkoutDiv}>
-                  <span>Durata iscrizione:</span>{" "}
-                  <span style={spanStyle}>
-                    {purchaseObject.duration} giorni
-                  </span>
-                </div>
-              </div>
-              <div style={{ textAlign: "center" }}>
-                <button
-                  type="submit"
-                  disabled={isProcessing}
-                  className="btn btn-primary shadow-2 mb-4"
-                >
-                  {isProcessing ? "Processing..." : `Pagar ${formattedAmount}`}
-                </button>
-              </div>
-              <div className="d-inline-block">
-                <label className="check-task custom-control custom-checkbox d-flex justify-content-center">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    required
-                  />
-                  <span className="custom-control-label">
-                    Ho letto e accetto i <a href="/">Termini di servizio</a>
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </Form>
-      </Modal>
       {currentObject ? (
         <div>
           <Row className="mb-n4">
@@ -319,11 +156,14 @@ const CardDetails = (props) => {
                         <h4 className="mb-1 p-1">{currentObject.serviceName}</h4>
                       </Col>
                       <Col md={2}>
-                        <div
+                        {purchasable && <div
                           style={{ display: "flex", justifyContent: "center" }}
                         >
-                          <Button onClick={() => handlePurchase(currentObject)}>Abbonati</Button>
-                        </div>
+                          {isProcessing ? (
+                            <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+                          ) : null }
+                          <Button onClick={() => handlePurchase(currentObject._links.self.href)} disabled={isProcessing} >Abbonati</Button>
+                        </div>}
                       </Col>
                     </Row>
                     <Row>
@@ -334,7 +174,7 @@ const CardDetails = (props) => {
                           <i
                             className="feather icon-dollar-sign"
                             style={{ paddingRight: "5px" }}
-                          />{" "}Prezzo: {currentObject.price} €</h4>
+                          />{" "}Prezzo: {(currentObject.price/100).toLocaleString("it-IT", {maximumFractionDigits: 2})} €</h4>
                         </span>
                       </Col>
                       <Col>

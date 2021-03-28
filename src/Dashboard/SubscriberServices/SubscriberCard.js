@@ -71,7 +71,7 @@ const SubscriberCard = (props) => {
 
           <Card.Body>
             <Link to={`details/${item.id}`}>
-              <Card.Title as="h5">{item.price.toFixed(2)} &euro;</Card.Title>
+              <Card.Title as="h5">{(item.price/100).toFixed(2)} &euro;</Card.Title>
             </Link>
             <Card.Text>
               <span>

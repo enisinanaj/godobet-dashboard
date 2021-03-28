@@ -97,7 +97,7 @@ class Default extends React.Component {
         totalProfit: this.props.user.totalProfit,
         pendingTipsCount: p[0].length,
         subscribedPools: [...activeTipsCount, ...p[0]],
-        activeTipsCount: p[1]?.filter((s) => !s.expired)?.length,
+        activeTipsCount: p[1]?.filter((s) => !s.expired && s.captured === 1)?.length,
         monthProfit: p[2]?.reduce((a, b) => a + b.profit, 0),
         openPools: p[3].filter(p => !p.outcome).length,
         totalSubscribers: p[4],
@@ -191,7 +191,7 @@ class Default extends React.Component {
                     <Col sm={8}>
                       <h6 className="text-muted m-b-0">Profitto Totale</h6>
                       <h4 className="text-c-yellow">
-                        {this.state.totalProfit}%
+                        {this.state.totalProfit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%
                       </h4>
                     </Col>
                     <Col sm={4} className="text-right">
@@ -208,7 +208,7 @@ class Default extends React.Component {
                     <Col sm={8}>
                       <h6 className="text-muted m-b-0">Profitto mensile</h6>
                       <h4 className="text-c-yellow">
-                        {this.state.monthProfit}%
+                        {this.state.monthProfit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%
                       </h4>
                     </Col>
                     <Col sm={4} className="text-right">

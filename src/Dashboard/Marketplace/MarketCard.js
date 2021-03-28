@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Esaurito from '../../App/components/Esaurito'
 
-const MarketCard = ({ marketData, handlePurchase }) => {
+const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
   const getLatestImage = (media) => {
     if (!media || media.length === 0) {
       return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
@@ -34,7 +34,7 @@ const MarketCard = ({ marketData, handlePurchase }) => {
             </Card.Title>
           </div>
 
-          <Card.Body>
+          <Card.Body style={{minHeight: "210px"}}>
             <Card.Text>
               <span>
                 {" "}<i className="feather icon-users" style={{ paddingRight: "5px" }} />{" "}
@@ -53,9 +53,12 @@ const MarketCard = ({ marketData, handlePurchase }) => {
             </Card.Text>
 
             <div>
-            <Button className="pull-right" onClick={() => handlePurchase(item)}>
-              Attiva subito a soli {item.price.toFixed(2)} &euro;
-            </Button>
+            {item.author.userCode !== user.userCode && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} >
+              {inPurchasing === item.id ? (
+                <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+              ) : null }
+              Attiva subito a soli {(item.price/100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})} &euro;
+            </Button>}
             </div>
           </Card.Body>
           <Card.Footer>

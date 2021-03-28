@@ -59,7 +59,7 @@ const EditCard = (props) => {
         })
           .then((e) => e.json())
           .then((object) => {
-            setCurrentObject(object);
+            setCurrentObject({...object, price: object.price / 100});
           });
       });
   };
@@ -88,7 +88,7 @@ const EditCard = (props) => {
             maxSubscribers: currentObject.maxSubscribers,
             duration: currentObject.duration,
             excerpt: currentObject.excerpt,
-            price: currentObject.price,
+            price: currentObject.price * 100,
           }),
         }).then((e) => {
           if (e.status !== 200) {

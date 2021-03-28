@@ -20,7 +20,6 @@ import "pnotify/dist/es/PNotifyCallbacks";
 const Settings = (props) => {
   const [user, setUser] = useState(props.applicationState.user);
   const [nameChanged, setNameChanged] = useState(false);
-  const [currentUser, setCurrentUser] = useState({});
 
   const SHOW_FULL_PROFILE = user.roleValue > 4;
 
@@ -85,17 +84,7 @@ const Settings = (props) => {
           },
         })
           .then((e) => e.json())
-          .then(user => {
-            setUser(user);
-
-            return fetch(BASE_CONFIG.API_URL + "/pps/accounts/status/" + props.applicationState.user.userCode, {
-              headers: {
-                "Content-Type": "application/json",
-                "X-Auth": jwt,
-              },
-            })
-          })
-          .then(accountStatus => console.warn(accountStatus));
+          .then(localUser => setUser({...user, ...localUser}))
       });
   }, []);
 
@@ -115,6 +104,11 @@ const Settings = (props) => {
               ...user,
               ...localUser,
             });
+
+            setUser({
+              ...user,
+              ...localUser,
+            })
           });
       });
   };
@@ -684,26 +678,28 @@ const Settings = (props) => {
               </Row>
             </Card>
 
-            <Card title="Pagamenti" isOption={true}>
+            <Card title="Integrazione con Stripe (Pagamenti)" isOption={true}>
               <Row>
                 <Col md={12} sm={12}>
                   <Form>
                     <Form.Group controlId="accountState">
-                      {!currentUser.stripeAccountStatus && (
+                      {!user.stripeAccountStatus && (
                         <Form.Label>Conto non ancora attivato</Form.Label>
                       )}
-                      {props.applicationState.user.stripeAccountStatus && (
-                        <Form.Label>
-                          {props.applicationState.user.stripeAccountStatus}
+                      {user.stripeAccountStatus && (
+                        <Form.Label style={{textTransform: "uppercase"}} className={user.stripeAccountStatus !== 'verified' ? 'text-danger' : '' } >
+                          {user.stripeAccountStatus}
                         </Form.Label>
                       )}
                     </Form.Group>
 
-                    {!props.applicationState.user.stripeAccountStatus && (
+                    {user.stripeAccountStatus !== 'verified' && (
                       <Button variant="primary" onClick={activatePayments}>
                         Chiedi l'attivazione del conto
                       </Button>
                     )}
+                    {user.stripeAccountStatus !== 'verified' && <br />}
+                    {user.stripeAccountStatus !== 'verified' && <span class="text-muted">Registrando l'account per i pagamenti implicitamente accetti le condizioni di servizio di <a href="https://stripe.com/connect-account/legal/full" target="_blank">Stripe Connected Account</a>.</span>}
                   </Form>
                 </Col>
               </Row>
