@@ -18,7 +18,11 @@ import "pnotify/dist/es/PNotifyButtons";
 import "pnotify/dist/es/PNotifyConfirm";
 import "pnotify/dist/es/PNotifyCallbacks";
 
+import CoverImage from '../../assets/images/godobet-placeholder.jpg'
+
 const EditCard = (props) => {
+  const [descriptionLengthCheck, setDescriptionLengthCheck] = useState(false)
+  const [excerptLengthCheck, setExcerptLengthCheck] = useState(false)
   const [currentObject, setCurrentObject] = useState();
   const [imageAsFile, setImageAsFile] = useState("");
 
@@ -72,7 +76,20 @@ const EditCard = (props) => {
     }));
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (e) => {
+    e.preventDefault()
+    if(currentObject.description.length <= 100 && currentObject.excerpt.length <= 50) {
+      setDescriptionLengthCheck(true)
+      setExcerptLengthCheck(true)
+    } else if(currentObject.excerpt.length <= 50) {
+      setExcerptLengthCheck(true)
+      setDescriptionLengthCheck(false)
+    } else if (currentObject.description.length <= 100) {
+      setDescriptionLengthCheck(true)
+      setExcerptLengthCheck(false)
+    } else {
+      setExcerptLengthCheck(false)
+      setDescriptionLengthCheck(false)
     TokenManager.getInstance()
       .getToken()
       .then((jwt) => {
@@ -106,6 +123,7 @@ const EditCard = (props) => {
           }
         });
       });
+    }
   };
 
   function dynamicProgressButtonPNotify() {
@@ -229,12 +247,23 @@ const EditCard = (props) => {
   };
   
 
+  const getLatestImage = (media) => {
+    if (
+      !media._embedded ||
+      media.length === 0 ||
+      !media._embedded.serviceMedia
+    ) {
+      return CoverImage;
+    }
+
+    return media._embedded.serviceMedia.sort((a, b) => b.id - a.id)[0].url;
+  };
+
 
   return (
     <Aux>
       {currentObject ? (
-        <Form>
-          {/* <img src={currentObject._embedded.serviceMedia[0].url} width='100%' height='200px' style={{objectFit: 'cover'}}/> */}
+        <Form onSubmit={handleUpdate}>
           <DropzoneComponent
             config={config}
             djsConfig={djsConfig}
@@ -243,8 +272,11 @@ const EditCard = (props) => {
           <Row>
             <Col md={12} sm={12} lg={12} xl={12}>
               <Card className={"p-15"}>
-                <Row>
-                  <Col md={12} sm={12} lg={3} xl={3}>
+                <Row style={{alignItems: 'center'}}>
+                  <Col style={{textAlign: 'center'}} md={2}>
+                  <img src={getLatestImage(currentObject)} width='100%' height='150px' width='150px' style={{objectFit: 'cover', border:'1px solid lightgray'}}/>
+                  </Col>
+                  <Col >
                     <Form.Group controlId="infirizzo">
                       <Form.Label>
                         Titolo <span className="text-danger">*</span>
@@ -255,10 +287,11 @@ const EditCard = (props) => {
                         value={currentObject.serviceName}
                         onChange={handleChange}
                         name="serviceName"
+                        required
                       />
                     </Form.Group>
                   </Col>
-                  <Col md={12} sm={12} lg={3} xl={3}>
+                  <Col >
                     <Form.Group controlId="citta">
                       <Form.Label>
                         Prezzo (€) <span className="text-danger">*</span>
@@ -269,10 +302,11 @@ const EditCard = (props) => {
                         value={currentObject.price}
                         onChange={handleChange}
                         placeholder="Prezzo"
+                        required
                       />
                     </Form.Group>
                   </Col>
-                  <Col md={12} sm={12} lg={3} xl={3}>
+                  <Col >
                     <Form.Group>
                       <Form.Label>
                         Durata iscrizione <span className="text-danger">*</span>
@@ -284,10 +318,11 @@ const EditCard = (props) => {
                         onChange={handleChange}
                         value={currentObject.duration}
                         name="duration"
+                        required
                       />
                     </Form.Group>
                   </Col>
-                  <Col md={12} sm={12} lg={3} xl={3}>
+                  <Col >
                     <Form.Group>
                       <Form.Label>
                         Massimo iscrizioni{" "}
@@ -300,47 +335,52 @@ const EditCard = (props) => {
                         value={currentObject.maxSubscribers}
                         onChange={handleChange}
                         name="maxSubscribers"
+                        required
                       />
                     </Form.Group>
                   </Col>
                 </Row>
-                <Row>
+                <Row className='pt-5'>
                   <Col>
                     <Form.Group controlId="infirizzo">
                       <Form.Label>
                         Descrizione corta <span className="text-danger">*</span>
                       </Form.Label>
                       <Form.Control
-                        style={{ minHeight: "100px", maxHeight: 100 }}
+                        style={excerptLengthCheck ? {borderColor: 'red', minHeight: "100px", maxHeight: 100} : {borderColor: 'black', minHeight: "100px", maxHeight: 100}}
                         as="textarea"
                         placeholder="Descrizione corta"
                         value={currentObject.excerpt}
                         name="excerpt"
                         onChange={handleChange}
+                        required
                       />
                     </Form.Group>
+                    {excerptLengthCheck ? <p className='text-danger'>Required 50 characters</p> : null}
                   </Col>
                 </Row>
-                <Row>
+                <Row className='pt-5'>
                   <Col>
                     <Form.Group controlId="infirizzo">
                       <Form.Label>
                         Descrizione <span className="text-danger">*</span>
                       </Form.Label>
                       <Form.Control
-                        style={{ minHeight: "200px" }}
+                        style={descriptionLengthCheck ? {borderColor: 'red', minHeight: "200px"} : {borderColor: 'black', minHeight: "200px"}}
                         as="textarea"
                         placeholder="Descrizione"
                         value={currentObject.description}
                         name="description"
                         onChange={handleChange}
+                        required
                       />
                     </Form.Group>
+                    {descriptionLengthCheck ? <p className='text-danger'>Required 100 characters</p> : null}
                   </Col>
                 </Row>
               </Card>
 
-              <Button onClick={handleUpdate} className="float-right">
+              <Button type='submit' className="float-right">
                 Salva
               </Button>
             </Col>

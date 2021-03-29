@@ -7,6 +7,7 @@ import Loader from "../../App/layout/Loader";
 import { Link, withRouter } from "react-router-dom";
 import Chart from "react-apexcharts";
 import '../Marketplace/Marketplace.css'
+import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -18,12 +19,13 @@ import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { useStripe } from "@stripe/react-stripe-js";
 import cover from "../../assets/images/user/cover.jpg";
 import md5 from "md5";
 
 const CardDetails = (props) => {
-  const [purchasable, setPurchasable] = useState(true);
+  const [pools, setPools] = useState([])
+  const [purchasable, setPurchasable] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentObject, setCurrentObject] = useState();
   const [author, setAuthor] = useState({
@@ -49,7 +51,7 @@ const CardDetails = (props) => {
       media.length === 0 ||
       !media._embedded.serviceMedia
     ) {
-      return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
+      return CoverImage;
     }
 
     return media._embedded.serviceMedia.sort((a, b) => b.id - a.id)[0].url;
@@ -71,43 +73,65 @@ const CardDetails = (props) => {
             setCurrentObject(object);
           });
       });
-
-      TokenManager.getInstance().getToken().then(jwt => {
-        fetch(BASE_CONFIG.API_URL + '/services/' + id + '/author', {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth": jwt,
-          },
-        }).then(e => e.json()).then(author => {
-          console.warn(author);
-          if (author.userCode === props.applicationState.user.userCode) {
-            setPurchasable(false);
-          }
-          setAuthor(author)
-        })
-      })
-
-      if (props.applicationState.user.userRole == 4) {
-        TokenManager.getInstance().getToken().then(jwt => {
-          fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/subscriptions', {
-            headers: {
-              "Content-Type": 'application/json',
-              "X-Auth": jwt,
-            },
-          }).then(e => e.json()).then(subscriptions => {
-            const subscription = subscriptions._embedded?.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
-  
-            if (!subscription || subscription.expired || subscription.captured !== 1) {
-              console.warn("can't purchase")
-              setPurchasable(true);
-            }
-          });
-        });
-      }
+      
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const authorAvatar = author._embedded && author._embedded.media ? author._embedded.media.sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime()) : "http://www.gravatar.com/avatar/" + md5(author.email.toLowerCase().trim()) + "?s=32";
+  useEffect(() => {
+    TokenManager.getInstance().getToken().then(jwt => {
+      fetch(BASE_CONFIG.API_URL + '/services/' + id + '/author', {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth": jwt,
+        },
+      }).then(e => e.json()).then(author => {
+        setAuthor(author)
+        if (author.userCode === props.applicationState.user.userCode) {
+          setPurchasable(false);
+        }
+      })
+    })
+
+    if (props.applicationState.user.roleValue >= 4) {
+      TokenManager.getInstance().getToken().then(jwt => {
+        fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/subscriptions', {
+          headers: {
+            "Content-Type": 'application/json',
+            "X-Auth": jwt,
+          },
+        }).then(e => e.json()).then(subscriptions => {
+          if(currentObject && currentObject._links) {
+            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
+
+            if (!subscription) {
+              setPurchasable(true);
+            } else {
+              TokenManager.getInstance().getToken().then(jwt => {
+                fetch(BASE_CONFIG.API_URL + '/services/' + id + '/pools', {
+                  headers: {
+                    'Content-Type': "application/json",
+                  "X-Auth": jwt,
+                  },
+                }).then(e => e.json().then(pools => {
+                  setPools(pools._embedded.pools)
+                }))
+              })
+            }
+          }
+        });
+      });
+    }
+  }, [currentObject])
+
+
+  const getAvatar = () => {
+    if (!author._embedded || !author._embedded.media || author._embedded.media.filter(m => m.mediaType === 'avatar').length < 1) {
+      return "http://www.gravatar.com/avatar/" + md5(author.email.toLowerCase().trim()) + "?s=32"
+    }
+
+    author._embedded.media.filter(m => m.mediaType === 'avatar').sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime())[0].url;
+  };
+  
   const stripe = useStripe();
 
   const handlePurchase = (selfLink) => {
@@ -156,9 +180,7 @@ const CardDetails = (props) => {
                         <h4 className="mb-1 p-1">{currentObject.serviceName}</h4>
                       </Col>
                       <Col md={2}>
-                        {purchasable && <div
-                          style={{ display: "flex", justifyContent: "center" }}
-                        >
+                        {purchasable && <div style={{ display: "flex", justifyContent: "center" }} >
                           <Button onClick={() => handlePurchase(currentObject._links.self.href)} disabled={isProcessing} >
                             {isProcessing ? (
                               <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
@@ -231,10 +253,12 @@ const CardDetails = (props) => {
                 <Card.Body>
                   <Row className="align-items-center">
                     <Col md={2}>
-                      <img height="150px" width='150px' src={authorAvatar[0].url} />
+                      <img height="150px" width='150px' src={getAvatar()} />
                     </Col>
                     <Col md={2}>
+                      <a href={`/tipsters/${author.userCode}`}>
                       <h4 style={{fontSize: '20px'}}>{author.name + author.lastName}</h4>
+                      </a>
                     </Col>
                     <Col md={2}>
                       <h4 style={{fontSize: '20px'}}>{author._embedded.services.length} services</h4>
@@ -298,6 +322,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(CardDetails)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CardDetails));

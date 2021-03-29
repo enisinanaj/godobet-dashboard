@@ -64,6 +64,12 @@ const Marketplace = (props) => {
 
   return (
     <Aux>
+      <Row className='p-5'>
+        <Col>
+          <h4>Search</h4>
+          <Form.Control type='text' style={{backgroundColor:"white"}}/>
+        </Col>
+      </Row>
       <Row md={12}>
         <MarketCard marketData={marketData} inPurchasing={inPurchasing} handlePurchase={handlePurchase} user={props.applicationState.user} />
       </Row>

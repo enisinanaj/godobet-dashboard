@@ -18,6 +18,8 @@ import "pnotify/dist/es/PNotifyCallbacks";
 
 const CreateNewCard = (props) => {
   // const [image, setImage] = useState();
+  const [descriptionLengthCheck, setDescriptionLengthCheck] = useState(false)
+  const [excerptLengthCheck, setExcerptLengthCheck] = useState(false)
   const [validFields, setValidFields] = useState(false);
   const [imageAsFile, setImageAsFile] = useState("");
 
@@ -59,7 +61,20 @@ const CreateNewCard = (props) => {
   };
 
   const handleCreateCard = () => {
-    TokenManager.getInstance()
+    if(newObject.description.length <= 100 && newObject.excerpt.length <= 50) {
+      setDescriptionLengthCheck(true)
+      setExcerptLengthCheck(true)
+    } else if(newObject.excerpt.length <= 50) {
+      setExcerptLengthCheck(true)
+      setDescriptionLengthCheck(false)
+    } else if (newObject.description.length <= 100) {
+      setDescriptionLengthCheck(true)
+      setExcerptLengthCheck(false)
+    }
+    else {
+      setExcerptLengthCheck(false)
+      setDescriptionLengthCheck(false)
+      TokenManager.getInstance()
       .getToken()
       .then((jwt) => {
         fetch(BASE_CONFIG.API_URL + "/services", {
@@ -93,7 +108,8 @@ const CreateNewCard = (props) => {
             uploadServiceCover(e.headers.get("Location"));
           }
         });
-      });
+    });
+    }
   };
 
   const validate = () => {
@@ -112,6 +128,7 @@ const CreateNewCard = (props) => {
       setValidFields(false);
     }
   };
+  
 
   function dynamicProgressButtonPNotify() {
     const notice = PNotify.info({
@@ -218,6 +235,8 @@ const CreateNewCard = (props) => {
     );
   };
 
+
+
   return (
     <Aux>
       <Form>
@@ -294,13 +313,14 @@ const CreateNewCard = (props) => {
                         Descrizione corta <span className="text-danger">*</span>
                       </Form.Label>
                       <Form.Control
-                        style={{ minHeight: "100px", maxHeight: 100 }}
+                        style={excerptLengthCheck ? {borderColor: 'red', minHeight: "100px", maxHeight: 100} : {borderColor: 'black', minHeight: "100px", maxHeight: 100}}
                         as="textarea"
                         placeholder="Descrizione corta"
                         name="excerpt"
                         onChange={handleChange}
                       />
                     </Form.Group>
+                    {excerptLengthCheck ? <p className='text-danger'>Required 50 characters</p> : null}
                   </Col>
                 </Row>
               <Row>
@@ -310,12 +330,13 @@ const CreateNewCard = (props) => {
                       Descrizione <span className="text-danger">*</span>
                     </Form.Label>
                     <Form.Control
-                      style={{ minHeight: "200px" }}
+                      style={descriptionLengthCheck ? {borderColor: 'red', minHeight: "200px"} : {borderColor: 'black', minHeight: "200px"}}
                       as="textarea"
                       placeholder="Descrizione"
                       name="description"
                       onChange={handleChange}
                     />
+                    {descriptionLengthCheck ? <p className='text-danger'>Required 100 characters</p> : null}
                   </Form.Group>
                 </Col>
               </Row>
