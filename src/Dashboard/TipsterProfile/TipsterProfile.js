@@ -17,6 +17,10 @@ import MarketCard from '../Marketplace/MarketCard';
 import satisfactionChart from "../Home/charts/pie";
 import bookmakersChart from "../Home/charts/bookmakers";
 
+import monthlyProfilt1 from './monthlyprofit'
+import amountSpent from './averageStake'
+
+
 import Loader from "../../App/layout/Loader";
 
 
@@ -26,6 +30,7 @@ function TipsterProfile(props) {
     const [currentUser, setCurrentUser] = useState({})
     const [userServices, setUserServices] = useState([])
     const [winRatio, setWinRatio] = useState(0)
+    const [avgStake, setAvgStake] = useState(0)
 
     let userId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
 
@@ -41,9 +46,16 @@ function TipsterProfile(props) {
                 const winRatioVar = user._embedded.playedPools.filter(res => {
                     return res.outcome === 'win'
                 } )
-               
                 let percentage = ((winRatioVar.length / user._embedded.playedPools.length) * 100)
                 setWinRatio(percentage)
+
+                const stakesArray = user._embedded.playedPools.map(pool => {
+                    return pool.stake
+                })
+
+                let averageStake = (stakesArray.reduce((a,b) => a+b) / stakesArray.length) / 100;
+
+                setAvgStake(averageStake)
             })
         })
         getServices()
@@ -57,41 +69,46 @@ function TipsterProfile(props) {
 
     const getCreampieData = () => {
         const data = satisfactionChart;
-        if(!currentUser._embedded || !currentUser._embedded.playedPools) {
-            return {
-                options: {
-                    labels:[],
-                },
-                data: [],
-            }
+        if (!currentUser._embedded || !currentUser._embedded.playedPools) {
+          return {
+            options: {
+              labels: [],
+            },
+            ...data,
+            series: [0, 0, 100],
+          };
         }
 
+    
         const map = currentUser._embedded.playedPools.reduce((pie, pool) => {
-            const h = {...pie};
-
-            if(!pool.outcome) {
-                return h;
-            }
-
-            h[pool.outcome] = parseInt(pie[pool.outcome]) >= 0 ? parseInt(pie[pool.outcome]) : 1;
+          const h = { ...pie };
+    
+          if (!pool.outcome) {
             return h;
+          }
+    
+          h[pool.outcome] =
+            parseInt(pie[pool.outcome]) >= 0 ? 1 + parseInt(pie[pool.outcome]) : 1;
+          return h;
         }, {});
-
+    
         data.options.labels = Object.keys(map);
         data.series = Object.values(map);
         return data;
-    }
+      };
+    
 
     const bookmakersPie = () => {
         const data = bookmakersChart;
-        if(!currentUser._embedded || !currentUser._embedded.playedPools) {
+        if (!currentUser._embedded || !currentUser._embedded.playedPools) {
             return {
-                options: {
-                    labels: [],
-                },
-                data: [],
-            }
-        }
+              options: {
+                labels: [],
+              },
+              ...data,
+              series: [0, 0, 100],
+            };
+          }
 
         const map = currentUser._embedded.playedPools.reduce((pie, pool) => {
             const h = {...pie};
@@ -100,8 +117,7 @@ function TipsterProfile(props) {
                 return h;
             }
             
-            h[pool.bookmaker] = parseInt(pie[pool.bookmaker]) >= 0 ? parseInt(pie[pool.bookmaker]) : 1;
-            console.log(h)
+            h[pool.bookmaker] = parseInt(pie[pool.bookmaker]) >= 0 ? 1 + parseInt(pie[pool.bookmaker]) : 1;
             return h
         }, {});
 
@@ -190,6 +206,15 @@ function TipsterProfile(props) {
                             </Row>
                             <hr />
                             <Row style={{textAlign: 'center'}}>
+                            <Col>
+                                <h5>1.8 Avarage Odds</h5>
+                                </Col>
+                            <Col>
+                                <h5>{avgStake} Average Stake</h5>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row style={{textAlign: 'center'}}>
                                 <Col>
                                 <h5>Most used bookmaker:</h5>
                                 </Col>
@@ -218,9 +243,9 @@ function TipsterProfile(props) {
                   <Card.Title as="h5">Vincita/Perdita</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                      <Col>
+
                       <Chart {...getCreampieData()} />
-                      </Col>
+
                 </Card.Body>
               </Card>
             </Col>
@@ -230,12 +255,49 @@ function TipsterProfile(props) {
                   <Card.Title as="h5">Top bookmakers</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                <Col>
                       <Chart {...bookmakersPie()} />
-                      </Col>
                 </Card.Body>
               </Card>
             </Col>
+                                </Row>
+                                <Row>
+                                <Col>
+                        <Card>
+                            <Card.Body>
+                                <h2 className="text-center f-w-400 ">$45,567</h2>
+                                <p className="text-center text-muted ">Monthly Profit</p>
+                                <Chart {...monthlyProfilt1} />
+                                <div className="m-t-20">
+                                    <Row>
+                                        <Col className="text-center ">
+                                            <h6 className="f-20 f-w-400">$6,234</h6>
+                                            <p className="text-muted f-14 m-b-0">Today</p>
+                                        </Col>
+                                        <Col className="text-center ">
+                                            <h6 className="f-20 f-w-400">$4,387</h6>
+                                            <p className="text-muted f-14 m-b-0">Yesterday</p>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col>
+                        <Card className="overflow-hidden">
+                            <Card.Body>
+                                <Row className="mt-2">
+                                    <Col sm={6}>
+                                    <p className="text-muted f-w-600 f-16">ODDS/STAKE AVG</p>
+                                    <Chart {...amountSpent} />
+                                    </Col>
+                                    <Col sm={6}>
+                                    <p className="text-muted f-w-600 f-16">ODDS/STAKE AVG</p>
+                                    <Chart {...amountSpent} />
+                                    </Col>
+                                </Row>
+                            </Card.Body>
+                        </Card>
+                    </Col>
                                 </Row>
                             </Tab>
                         </Tabs>

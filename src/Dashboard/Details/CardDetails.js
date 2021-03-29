@@ -20,18 +20,10 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-<<<<<<< HEAD
-import cover from "../../assets/images/user/cover.jpg";
-import md5 from "md5";
-
-const CardDetails = (props) => {
-  const [purchasable, setPurchasable] = useState(true);
-=======
 
 const CardDetails = (props) => {
   const [pools, setPools] = useState([])
   const [purchasable, setPurchasable] = useState(false);
->>>>>>> 10e9053 (length description form validation, searchbar prototype, tipsters profile prototype, card details updates)
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentObject, setCurrentObject] = useState();
   const [author, setAuthor] = useState({
@@ -45,6 +37,12 @@ const CardDetails = (props) => {
       ],
       services: [],
     },
+  })
+  const [show, setShow] = useState(false);
+  const [purchaseObject, setPurchaseObject] = useState({
+    price: "",
+    name: "",
+    author: "",
   });
 
   let id = window.location.href.substring(
@@ -106,9 +104,9 @@ const CardDetails = (props) => {
           if(currentObject && currentObject._links) {
             console.log(subscriptions)
             console.log(currentObject._links.self.href)
-            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
+            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);  
 
-          if (!subscription) {
+          if (subscription) {
             setPurchasable(true);
           } else {
             TokenManager.getInstance().getToken().then(jwt => {
@@ -118,6 +116,7 @@ const CardDetails = (props) => {
                 "X-Auth": jwt,
                 },
               }).then(e => e.json().then(pools => {
+                console.log(pools)
                 setPools(pools._embedded.pools)
               }))
             })
@@ -129,6 +128,8 @@ const CardDetails = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentObject])
+
+  console.log(pools)
 
 
   const authorAvatar = author._embedded.media.sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime());
@@ -166,37 +167,72 @@ const CardDetails = (props) => {
   };
 
   const stripe = useStripe();
+  const elements = useElements();
 
-  const handlePurchase = (selfLink) => {
+  const formattedAmount = new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency: "EUR",
+  }).format(purchaseObject.price);
+
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
+    const cardElement = elements.getElement(CardElement);
+
+    if (!cardElement._complete) {
+      alert("Please check your card details.");
+      return;
+    }
     setIsProcessing(true);
 
-    TokenManager.getInstance().getToken()
-    .then(jwt => {
-        fetch(`${BASE_CONFIG.API_URL}/pps/payments/${selfLink.substring(selfLink.lastIndexOf('/') + 1)}/${props.applicationState.user.userCode}`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth": jwt,
-          }
-        }).then(response => response.headers.get('X-Stripe-Session-Id'))
-        .then(stripeSessionId => {
-          stripe.redirectToCheckout({ sessionId: stripeSessionId })
-        })
-        .catch(_ => setIsProcessing(false))
-    })
+    const response = await axios.post("http://localhost:9000/payment", {
+      amount: purchaseObject.price,
+      metadata: {
+        customer: props.applicationState.user.userCode,
+        service: purchaseObject.id,
+      },
+      description: purchaseObject.name,
+    });
+
+    const paymentMethodReq = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement,
+    });
+
+    const confirmedCardPayment = await stripe.confirmCardPayment(
+      response.data.client_secret,
+      {
+        payment_method: paymentMethodReq.paymentMethod.id,
+      }
+    );
+
+    if (
+      confirmedCardPayment.paymentIntent &&
+      confirmedCardPayment.paymentIntent.status === "succeeded"
+    ) {
+      setIsProcessing(false);
+      setShow(false);
+      Swal.fire(
+        "Confermato!",
+        "Ti sei abbonato al servizio con successo!",
+        "success"
+      );
+    } else {
+      setShow(false);
+      setIsProcessing(false);
+      Swal.fire(
+        "Errore!",
+        "Si è verificato un errore durante l'elaborazione. Per favore riprova.",
+        "error"
+      );
+    }
   };
-<<<<<<< HEAD
-=======
 
   console.log(author)
 
->>>>>>> 10e9053 (length description form validation, searchbar prototype, tipsters profile prototype, card details updates)
 
   return (
     <Aux>
-<<<<<<< HEAD
-      {currentObject ? (
-=======
       <Modal show={show} onHide={handleClose}>
         <Form id="purchaseForm" onSubmit={handlePayment}>
           <div>
@@ -281,7 +317,6 @@ const CardDetails = (props) => {
         </Form>
       </Modal>
       {currentObject && author.name ? (
->>>>>>> f839299 (tipster profile)
         <div>
           <Row className="mb-n4">
             <Col sm={12}>
@@ -306,21 +341,11 @@ const CardDetails = (props) => {
                         <h4 className="mb-1 p-1">{currentObject.serviceName}</h4>
                       </Col>
                       <Col md={2}>
-                        {purchasable && <div
+                        <div
                           style={{ display: "flex", justifyContent: "center" }}
                         >
-<<<<<<< HEAD
-                          <Button onClick={() => handlePurchase(currentObject._links.self.href)} disabled={isProcessing} >
-                            {isProcessing ? (
-                              <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
-                            ) : null }{" "}
-                            Iscriviti
-                          </Button>
-                        </div>}
-=======
                           {purchasable ? <Button onClick={() => handlePurchase(currentObject)}>Abbonati</Button> : null}
                         </div>
->>>>>>> 10e9053 (length description form validation, searchbar prototype, tipsters profile prototype, card details updates)
                       </Col>
                     </Row>
                     <Row>
@@ -331,7 +356,7 @@ const CardDetails = (props) => {
                           <i
                             className="feather icon-dollar-sign"
                             style={{ paddingRight: "5px" }}
-                          />{" "}Prezzo: {(currentObject.price/100).toLocaleString("it-IT", {maximumFractionDigits: 2})} €</h4>
+                          />{" "}Prezzo: {currentObject.price} €</h4>
                         </span>
                       </Col>
                       <Col>
@@ -460,9 +485,6 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(CardDetails)
-<<<<<<< HEAD
-);
-=======
 );
 
 
@@ -580,4 +602,3 @@ export default withRouter(
           </Row>
         </div> */
 
->>>>>>> f839299 (tipster profile)

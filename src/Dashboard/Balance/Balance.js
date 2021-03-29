@@ -92,7 +92,7 @@ class SamplePage extends Component {
                                     </Col>
                                     <Col sm={2}>
                                         <h6 className="text-muted m-b-0">Profitto Totale</h6>
-                                        <h4 className="text-c-yellow">{this.props.user.totalProfit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%</h4>
+                                        <h4 className="text-c-yellow">{this.props.user.totalProfit}%</h4>
                                     </Col>
                                 </Row>
                             </Card.Header>
@@ -111,7 +111,7 @@ class SamplePage extends Component {
                                                     selected={this.state.startDate}
                                                     onChange={(e) => this.handleStartDateChange(e)}
                                                     className="form-control"
-                                                    //minDate={moment().add(-32, "day").toDate()}
+                                                    minDate={moment().add(-32, "day").toDate()}
                                                     maxDate={moment().add(-1, "day").toDate()}
                                                     placeholderText="Seleziona una data"
                                                 />

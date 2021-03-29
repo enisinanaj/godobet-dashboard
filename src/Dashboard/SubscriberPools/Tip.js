@@ -5,7 +5,6 @@ import TokenManager from "../../App/auth/TokenManager";
 import 'moment/locale/it';
 import config from "../../store/config";
 import Sports from '../../App/components/Sports'
-import { getClassNameForOutcome } from '../PendingTips/TipCard'
 
 moment.locale("it")
 
@@ -99,7 +98,12 @@ const Tip = props => {
                                 </Col>
                             </Row>
                             <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
-                                <Col  lg={12} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
+                                <Col  lg={6} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
+                                    {pool.outcome && <div style={{display: 'inline'}}>
+                                        Esito: {pool.outcome}
+                                    </div>}
+                                </Col>
+                                <Col  lg={6} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
                                     <em className="feather icon-clock"></em> {moment(event.eventDate).format("DD/MM/yyyy HH:mm")}
                                 </Col>
                             </Row>
@@ -107,9 +111,6 @@ const Tip = props => {
                     </Carousel.Item>
                 ))}
                 </Carousel>
-                {pool.outcome && <div style={{display: 'inline-block', marginTop: "15px"}}>
-                    <span className={getClassNameForOutcome(pool.outcome)} >{pool.outcome}</span>
-                </div>}
             </Card.Body>
         </Card>
     </Col>);

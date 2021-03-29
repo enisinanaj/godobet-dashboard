@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Row } from "react-bootstrap";
+import { Modal, Row, Form, Col } from "react-bootstrap";
 import Aux from "../../hoc/_Aux";
 import { withRouter } from "react-router-dom";
+import axios from "axios";
 import Swal from "sweetalert2";
 
 import * as actions from "../../store/actions";
@@ -10,20 +11,32 @@ import { connect } from "react-redux";
 
 import MarketCard from "./MarketCard";
 import BASE_CONFIG from "../../store/config";
-import { useStripe } from "@stripe/react-stripe-js";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import TokenManager from "../../App/auth/TokenManager";
 import "./Marketplace.css";
 import { Button } from "bootstrap";
 
 const Marketplace = (props) => {
+  const [isProcessing, setIsProcessing] = useState(false);
   const [marketData, setMarketData] = useState([]);
-  const [inPurchasing, setInPurchasing] = useState(false);
+  const [show, setShow] = useState(false);
+  const [purchaseObject, setPurchaseObject] = useState({
+    price: "",
+    name: "",
+    author: "",
+  });
 
   useEffect(() => {
     getServices();
   }, []);
 
   const stripe = useStripe();
+  const elements = useElements();
+
+  const formattedAmount = new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency: "EUR",
+  }).format(purchaseObject.price);
 
   const getServices = () => {
     TokenManager.getInstance()
@@ -45,22 +58,95 @@ const Marketplace = (props) => {
       });
   };
 
-  const handlePurchase = (item) => {
-    setInPurchasing(item.id);
+  
 
-    TokenManager.getInstance().getToken()
-    .then(jwt => {
-        fetch(`${BASE_CONFIG.API_URL}/pps/payments/${item.id}/${props.applicationState.user.userCode}`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth": jwt,
-          }
-        }).then(response => response.headers.get('X-Stripe-Session-Id'))
-        .then(stripeSessionId => {
-          stripe.redirectToCheckout({ sessionId: stripeSessionId })
-        })
-    })
+  const handleClose = () => setShow(false);
+
+  const cardElementOptions = {
+    style: {
+      base: {
+        background: "red",
+        fontSize: "16px",
+      },
+    },
+    hidePostalCode: true,
+  };
+
+  const handlePurchase = (item) => {
+    setShow(true);
+    setPurchaseObject({
+      price: item.price,
+      id: item.id,
+      name: item.serviceName,
+      duration: item.duration,
+      author: {
+        author_name: item.author.name,
+        author_surname: item.author.lastName,
+      },
+    });
+  };
+
+  const spanStyle = {
+    fontSize: "15px",
+    fontWeight: "bold",
+  };
+
+  const checkoutDiv = {
+    padding: "10px",
+    textAlign: "center",
+  };
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
+    const cardElement = elements.getElement(CardElement);
+
+    if (!cardElement._complete) {
+      alert("Please check your card details.");
+      return;
+    }
+    setIsProcessing(true);
+
+    const response = await axios.post("http://localhost:9000/payment", {
+      amount: purchaseObject.price,
+      metadata: {
+        customer: props.applicationState.user.userCode,
+        service: purchaseObject.id,
+      },
+      description: purchaseObject.name,
+    });
+
+    const paymentMethodReq = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement,
+    });
+
+    const confirmedCardPayment = await stripe.confirmCardPayment(
+      response.data.client_secret,
+      {
+        payment_method: paymentMethodReq.paymentMethod.id,
+      }
+    );
+
+    if (
+      confirmedCardPayment.paymentIntent &&
+      confirmedCardPayment.paymentIntent.status === "succeeded"
+    ) {
+      setIsProcessing(false);
+      setShow(false);
+      Swal.fire(
+        "Confermato!",
+        "Ti sei abbonato al servizio con successo!",
+        "success"
+      );
+    } else {
+      setShow(false);
+      setIsProcessing(false);
+      Swal.fire(
+        "Errore!",
+        "Si è verificato un errore durante l'elaborazione. Per favore riprova.",
+        "error"
+      );
+    }
   };
 
   return (
@@ -156,7 +242,7 @@ const Marketplace = (props) => {
         </Col>
       </Row>
       <Row md={12}>
-        <MarketCard marketData={marketData} inPurchasing={inPurchasing} handlePurchase={handlePurchase} user={props.applicationState.user} />
+        <MarketCard marketData={marketData} handlePurchase={handlePurchase} />
       </Row>
     </Aux>
   );

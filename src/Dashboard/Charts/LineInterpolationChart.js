@@ -7,7 +7,7 @@ class LineInterpolationChart extends React.Component {
     const data = () => {
       return {
           type: 'area',
-          height: "600px",
+          height: "100%",
           options: {
               chart: {
                   sparkline: {
@@ -15,7 +15,7 @@ class LineInterpolationChart extends React.Component {
                   }
               },
               dataLabels: {
-                  enabled: true
+                  enabled: false
               },
               colors: ['#9ccc65'],
               stroke: {
@@ -58,7 +58,7 @@ class LineInterpolationChart extends React.Component {
                     rotate: -90,
                     offsetX: 0,
                     offsetY: 0,
-                }
+                },
               }
           },
           series: [{
