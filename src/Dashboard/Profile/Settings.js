@@ -693,7 +693,7 @@ const Settings = (props) => {
                         <Form.Label>Conto non ancora attivato</Form.Label>
                       )}
                       {user.stripeAccountStatus && (
-                        <Form.Label style={{textTransform: "uppercase"}} className={user.stripeAccountStatus !== 'verified' ? 'text-danger' : '' } >
+                        <Form.Label style={{textTransform: "uppercase"}} className={user.stripeAccountStatus !== 'verified' ? 'badge badge-light-danger' : 'badge badge-light-success' } >
                           {user.stripeAccountStatus}
                         </Form.Label>
                       )}
