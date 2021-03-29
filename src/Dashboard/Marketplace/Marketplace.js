@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Form } from "react-bootstrap";
 import Aux from "../../hoc/_Aux";
 import { withRouter } from "react-router-dom";
-import Swal from "sweetalert2";
 
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";

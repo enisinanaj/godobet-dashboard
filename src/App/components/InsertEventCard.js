@@ -24,6 +24,7 @@ const InsertEventCard = (props) => {
             sport,
             notes
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventDate, competition, event, proposal, quote, notes, props])
 
     return (<Card className={"p-15"}>

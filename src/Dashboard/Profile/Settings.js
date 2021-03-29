@@ -87,6 +87,7 @@ const Settings = (props) => {
           .then((e) => e.json())
           .then(localUser => setUser({...user, ...localUser}))
       });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const reloadUser = () => {
@@ -436,6 +437,8 @@ const Settings = (props) => {
           });
       });
   };
+
+  console.log(props.applicationState.user.userCode)
 
   return (
     <Aux>

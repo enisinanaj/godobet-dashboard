@@ -21,6 +21,7 @@ const SubscriberCard = (props) => {
       <Col md={4} key={index}>
         <Card>
           <div className="">
+          <Link to={`details/${item.id}`}>
             <Card.Img
               variant="top"
               src={getLatestImage(item.media)}
@@ -32,6 +33,7 @@ const SubscriberCard = (props) => {
                 margin: '20px',
                 display: 'inline',
               }}
+<<<<<<< HEAD
             />
 
             <Card.Title
@@ -39,6 +41,12 @@ const SubscriberCard = (props) => {
               className={'mb-1 mt-4 mr-3 ml-3'}
               style={{ display: 'inline' }}
             >
+=======
+              />
+              </Link>
+            
+            <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline"}}>
+>>>>>>> f839299 (tipster profile)
               <Link to={`details/${item.id}`}>{item.serviceName}</Link>
             </Card.Title>
 
@@ -71,9 +79,13 @@ const SubscriberCard = (props) => {
           </div>
 
           <Card.Body>
+<<<<<<< HEAD
             <Link to={`details/${item.id}`}>
               <Card.Title as="h5">{(item.price/100).toFixed(2)} &euro;</Card.Title>
             </Link>
+=======
+              <Card.Title as="h5">{item.price.toFixed(2)} &euro;</Card.Title>
+>>>>>>> f839299 (tipster profile)
             <Card.Text>
               {item.maxSubscribers - item.subscribersCount === 0 ? (
                 <Esaurito />

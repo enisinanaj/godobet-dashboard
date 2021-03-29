@@ -4,13 +4,10 @@ import TokenManager from "../../App/auth/TokenManager";
 import Aux from "../../hoc/_Aux";
 import BASE_CONFIG from "../../store/config";
 import Loader from "../../App/layout/Loader";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Chart from "react-apexcharts";
 import '../Marketplace/Marketplace.css'
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
-
-import axios from "axios";
-import Swal from "sweetalert2";
 
 import secEcommerceChartBar from "../../Demo/Widget/chart/sec-ecommerce-chart-bar";
 import secEcommerceChartLine from "../../Demo/Widget/chart/sec-ecommerce-chart-line";
@@ -20,7 +17,6 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import { useStripe } from "@stripe/react-stripe-js";
-import cover from "../../assets/images/user/cover.jpg";
 import md5 from "md5";
 
 const CardDetails = (props) => {
@@ -125,8 +121,8 @@ const CardDetails = (props) => {
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentObject])
-
 
   const getAvatar = () => {
     if (!author._embedded || !author._embedded.media || author._embedded.media.filter(m => m.mediaType === 'avatar').length < 1) {
@@ -253,6 +249,7 @@ const CardDetails = (props) => {
           </Row>
           <Row>
             <Col sm={12}>
+                      <a href={`/tipsters/${author.userCode}`}>
               <Card>
                 <Card.Body>
                   <Row className="align-items-center">
@@ -260,16 +257,18 @@ const CardDetails = (props) => {
                       <img height="150px" width='150px' src={getAvatar()} />
                     </Col>
                     <Col md={2}>
-                      <a href={`/tipsters/${author.userCode}`}>
                       <h4 style={{fontSize: '20px'}}>{author.name + author.lastName}</h4>
-                      </a>
                     </Col>
                     <Col md={2}>
                       <h4 style={{fontSize: '20px'}}>{author._embedded.services.length} services</h4>
                     </Col>
+                    <Col md={2}>
+                      <h3 style={{fontSize: '20px'}}>{author.totalSubscribers} followers</h3>
+                    </Col>
                   </Row>
                 </Card.Body>
               </Card>
+                      </a>
             </Col>
           </Row>
           <Row>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import Esaurito from '../../App/components/Esaurito'
 import '../../assets/scss/tip.css';
 
@@ -20,6 +19,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
     return (
       <Col md={4} key={index}>
         <Card>
+        <a href={`/dashboard/details/${item.id}`}>
           <div className="">
             <Card.Img
               variant="top"
@@ -35,9 +35,10 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
             />
             
             <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline"}}>
-              <Link to={`details/${item.id}`}>{item.serviceName}</Link>
+             {item.serviceName}
             </Card.Title>
           </div>
+          </a>
 
           <Card.Body style={{minHeight: "210px"}}>
             <Card.Text>
