@@ -4,7 +4,7 @@ import TokenManager from "../../App/auth/TokenManager";
 import Aux from "../../hoc/_Aux";
 import BASE_CONFIG from "../../store/config";
 import Loader from "../../App/layout/Loader";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Chart from "react-apexcharts";
 import '../Marketplace/Marketplace.css'
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
@@ -127,7 +127,9 @@ const CardDetails = (props) => {
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentObject])
+
 
   const authorAvatar = author._embedded.media.sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime());
 
@@ -192,7 +194,94 @@ const CardDetails = (props) => {
 
   return (
     <Aux>
+<<<<<<< HEAD
       {currentObject ? (
+=======
+      <Modal show={show} onHide={handleClose}>
+        <Form id="purchaseForm" onSubmit={handlePayment}>
+          <div>
+            <ul className="list-group">
+              <li className="list-group-item">
+                <Row>
+                  <h1>{purchaseObject.serviceName}</h1>
+                  <Col>
+                    <Form.Label>Nome</Form.Label>
+                    <Form.Control type="text" placeholder="Nome" required />
+                  </Col>
+                  <Col>
+                    <Form.Label>Cognome</Form.Label>
+                    <Form.Control type="text" placeholder="Cognome" required />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Label>E-mail</Form.Label>
+                    <Form.Control type="email" placeholder="E-mail" required />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Label>Dati della carta di credito </Form.Label>
+                    <CardElement options={cardElementOptions} required />
+                  </Col>
+                </Row>
+              </li>
+            </ul>
+            <div
+              style={{
+                height: "300px",
+                margin: "40px",
+                display: "flex",
+                justifyContent: "space-around",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ margin: "30px" }}>
+                <div style={checkoutDiv}>
+                  <span>Service:</span>{" "}
+                  <span style={spanStyle}>{purchaseObject.name}</span>
+                </div>
+                <div style={checkoutDiv}>
+                  <span>Author:</span>{" "}
+                  <span style={spanStyle}>
+                    {author.name + author.lastName}
+                  </span>
+                </div>
+                <div style={checkoutDiv}>
+                  <span>Durata iscrizione:</span>{" "}
+                  <span style={spanStyle}>
+                    {purchaseObject.duration} giorni
+                  </span>
+                </div>
+              </div>
+              <div style={{ textAlign: "center" }}>
+                <button
+                  type="submit"
+                  disabled={isProcessing}
+                  className="btn btn-primary shadow-2 mb-4"
+                >
+                  {isProcessing ? "Processing..." : `Pagar ${formattedAmount}`}
+                </button>
+              </div>
+              <div className="d-inline-block">
+                <label className="check-task custom-control custom-checkbox d-flex justify-content-center">
+                  <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    required
+                  />
+                  <span className="custom-control-label">
+                    Ho letto e accetto i <a href="/">Termini di servizio</a>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </Form>
+      </Modal>
+      {currentObject && author.name ? (
+>>>>>>> f839299 (tipster profile)
         <div>
           <Row className="mb-n4">
             <Col sm={12}>
@@ -293,23 +382,26 @@ const CardDetails = (props) => {
           </Row>
           <Row>
             <Col sm={12}>
+                      <a href={`/tipsters/${author.userCode}`}>
               <Card>
                 <Card.Body>
                   <Row className="align-items-center">
                     <Col md={2}>
-                      <img height="150px" width='150px' src={authorAvatar[0].url} />
+                      <img height="150px" width='150px' src={authorAvatar[0].url} alt='' style={{objectFit: 'cover', borderRadius: '50%'}} />
                     </Col>
                     <Col md={2}>
-                      <a href={`/tipsters/${author.userCode}`}>
                       <h4 style={{fontSize: '20px'}}>{author.name + author.lastName}</h4>
-                      </a>
                     </Col>
                     <Col md={2}>
                       <h4 style={{fontSize: '20px'}}>{author._embedded.services.length} services</h4>
                     </Col>
+                    <Col md={2}>
+                      <h3 style={{fontSize: '20px'}}>{author.totalSubscribers} followers</h3>
+                    </Col>
                   </Row>
                 </Card.Body>
               </Card>
+                      </a>
             </Col>
           </Row>
           <Row>
@@ -368,4 +460,124 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(CardDetails)
+<<<<<<< HEAD
 );
+=======
+);
+
+
+  /* <div>
+          <Row>
+            <Col></Col>
+            <Col sm={12}>
+              <Card
+                className="user-card user-card-1"
+                style={{ minHeight: "700px" }}
+              >
+                <div className="profile-card" style={{ maxHeight: "250px" }}>
+                  <Card.Img
+                    variant="top"
+                    src={getLatestImage(currentObject)}
+                    alt="CardImage"
+                  />
+                  <Card.Body className="text-left">
+                    <Card.Title as="h2" style={{ color: "white" }}>
+                      {currentObject.price.toLocaleString("it-IT", {
+                        maximumFractionDigits: 2,
+                      })}
+                      {""} €
+                    </Card.Title>
+                  </Card.Body>
+                </div>
+                <Card.Body className="pt-0">
+                  <Row>
+                    <Col md={12}>
+                      <div className="">
+                        <h6 className="mb-1 mt-3">
+                          {currentObject.serviceName}
+                        </h6>
+                        <br />
+                        <p className="mb-3 text-muted">
+                          <span>
+                            {" "}
+                            <i
+                              className="feather icon-users"
+                              style={{ paddingRight: "5px" }}
+                            />{" "}
+                            Numero massimo iscrizioni:{" "}
+                            {currentObject.maxSubscribers}
+                          </span>
+                          <br />
+                          <span>
+                            {" "}
+                            <i
+                              className="feather icon-calendar"
+                              style={{ paddingRight: "5px" }}
+                            />{" "}
+                            Durata iscrizione: {currentObject.duration} giorni
+                          </span>
+                        </p>
+                        <p className="mb-1">{currentObject.description}</p>
+                      </div>
+                    </Col>
+                  </Row>
+                </Card.Body>
+                <Button className="pull-right">Abbonati</Button>
+              </Card>
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col sm={8}>
+              <Table striped hover responsive id="data-table-zero">
+                <thead className="thead-light">
+                  <tr>
+                    <th>Titolo</th>
+                    <th>Descrizione</th>
+                    <th>Bookmaker</th>
+                    <th>Quota</th>
+                    <th>Stake</th>
+                    <th>Profitto</th>
+                    <th>Eventi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentObject._embedded &&
+                    currentObject._embedded.pools &&
+                    currentObject._embedded.pools.map((item) => (
+                      <tr>
+                        <td className="align-middle">
+                          <img
+                            alt="contact-img"
+                            title="contact-img"
+                            className="rounded mr-3"
+                            height="48"
+                          />
+                          <p className="m-0 d-inline-block align-middle font-16">
+                            <a href="/" className="text-body">
+                              title
+                            </a>
+                          </p>
+                        </td>
+                        <td className="align-middle">{item.description}</td>
+                        <td className="align-middle">{item.bookmaker}</td>
+                        <td className="align-middle">
+                          {item.quote.toFixed(2)}
+                        </td>
+                        <td className="align-middle">{item.stake / 100} %</td>
+                        <td className="align-middle">
+                          {item.profit.toFixed(2)} %
+                        </td>
+
+                        <td className="table-action">{item.events.length}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+            </Col>
+            <Col></Col>
+          </Row>
+        </div> */
+
+>>>>>>> f839299 (tipster profile)

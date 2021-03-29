@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react'
-import {Row, Col, Card } from 'react-bootstrap';
+import {Row, Col, Card, Tabs} from 'react-bootstrap';
+import { Tab } from 'bootstrap';
+import Chart from "react-apexcharts";
 
 import Aux from "../../hoc/_Aux";
 
@@ -11,11 +13,19 @@ import BASE_CONFIG from "../../store/config";
 import TokenManager from '../../App/auth/TokenManager';
 
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
+import MarketCard from '../Marketplace/MarketCard';
+import satisfactionChart from "../Home/charts/pie";
+import bookmakersChart from "../Home/charts/bookmakers";
+
+import Loader from "../../App/layout/Loader";
 
 
 
 function TipsterProfile(props) {
+    const [favoriteBook, setFavoriteBook] = useState(null)
     const [currentUser, setCurrentUser] = useState({})
+    const [userServices, setUserServices] = useState([])
+    const [winRatio, setWinRatio] = useState(0)
 
     let userId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
 
@@ -26,9 +36,90 @@ function TipsterProfile(props) {
                     'Content-Type': "application/json",
                     "X-Auth": jwt,
                 },
-            }).then((e) => e.json()).then(user => setCurrentUser(user))
+            }).then((e) => e.json()).then(user => {
+                setCurrentUser(user)
+                const winRatioVar = user._embedded.playedPools.filter(res => {
+                    return res.outcome === 'win'
+                } )
+               
+                let percentage = ((winRatioVar.length / user._embedded.playedPools.length) * 100)
+                setWinRatio(percentage)
+            })
         })
+        getServices()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useEffect(() => {
+        findBookmaker()
+    }, [currentUser])
+
+
+    const getCreampieData = () => {
+        const data = satisfactionChart;
+        if(!currentUser._embedded || !currentUser._embedded.playedPools) {
+            return {
+                options: {
+                    labels:[],
+                },
+                data: [],
+            }
+        }
+
+        const map = currentUser._embedded.playedPools.reduce((pie, pool) => {
+            const h = {...pie};
+
+            if(!pool.outcome) {
+                return h;
+            }
+
+            h[pool.outcome] = parseInt(pie[pool.outcome]) >= 0 ? parseInt(pie[pool.outcome]) : 1;
+            return h;
+        }, {});
+
+        data.options.labels = Object.keys(map);
+        data.series = Object.values(map);
+        return data;
+    }
+
+    const bookmakersPie = () => {
+        const data = bookmakersChart;
+        if(!currentUser._embedded || !currentUser._embedded.playedPools) {
+            return {
+                options: {
+                    labels: [],
+                },
+                data: [],
+            }
+        }
+
+        const map = currentUser._embedded.playedPools.reduce((pie, pool) => {
+            const h = {...pie};
+
+            if(!pool.bookmaker) {
+                return h;
+            }
+            
+            h[pool.bookmaker] = parseInt(pie[pool.bookmaker]) >= 0 ? parseInt(pie[pool.bookmaker]) : 1;
+            console.log(h)
+            return h
+        }, {});
+
+        data.options.labels = Object.keys(map);
+        data.series = Object.values(map);
+        return data
+    }
+
+    const getServices = () => {
+        TokenManager.getInstance().getToken().then(jwt => {
+            fetch(BASE_CONFIG.API_URL + '/users/' + userId + '/services', {
+                headers: {
+                    "Content-Type": 'application/json',
+                    "X-Auth": jwt,
+                },
+            }).then(e => e.json()).then(res => setUserServices(res._embedded.services))
+        })
+    }
 
     const getLatestImage = (media) => {
         if (
@@ -42,24 +133,114 @@ function TipsterProfile(props) {
         return media._embedded.media.sort((a, b) => b.id - a.id)[0].url;
       };
 
-      console.log(currentUser)
+      const findBookmaker = () => {
+          if(!currentUser._embedded) {
+              return
+          }
+          let bookmakers = []
+          currentUser._embedded.playedPools.map(pool => {
+            bookmakers.push(pool.bookmaker)
+          })
 
+          const mostUsed = bookmakers.sort((a,b) => bookmakers.filter(v => v===a).length - bookmakers.filter(v => v===b).length).pop()
+
+          setFavoriteBook(mostUsed)
+      }
+      
+
+
+      console.log(currentUser)
 
     return (
         <Aux>
-                <Row md={12}>
+                {currentUser.name ? (<Row md={12}>
                     <Col md={4}>
                     <Card style={{minHeight: '800px'}}>
-                        <Row className='p-5'>
+                        <Row className='pt-5'>
                             <Col style={{textAlign: 'center'}}>
-                            <img src={getLatestImage(currentUser)} height='200px' width='200px' />
-                            <h3>{currentUser.name + currentUser.lastName}</h3>
+                            <img src={getLatestImage(currentUser)} height='200px' alt='' width='200px' style={{objectFit: 'cover', borderRadius: '50%'}} />
+                            <div className='p-4'>
+                            <h3>{currentUser.name} {currentUser.lastName}</h3>
+                            </div>
                             </Col>
                         </Row>
                             <hr />
+                            <Row style={{textAlign: 'center'}}>
+                                <Col>
+                                <h4>{currentUser.totalSubscribers} Followers</h4>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row style={{textAlign: 'center'}}>
+                            <Col>
+                                <h5 className={"mb-1" + ((currentUser.totalProfit >= 0) ? " text-success" : " text-danger")}>{currentUser.totalProfit} % Profit </h5>
+                                </Col>
+                            <Col>
+                                <h5>{winRatio} % Win Ratio </h5>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row style={{textAlign: 'center'}}>
+                            <Col>
+                                <h5>{currentUser._embedded.services ? currentUser._embedded.services.length : 0} services</h5>
+                                </Col>
+                            <Col>
+                                <h5>{currentUser._embedded.pools ? currentUser._embedded.pools.length : 0} pools</h5>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row style={{textAlign: 'center'}}>
+                                <Col>
+                                <h5>Most used bookmaker:</h5>
+                                </Col>
+                            </Row>
+                            <Row style={{textAlign: 'center'}}>
+                                <Col>
+                                <h5>{favoriteBook}</h5>
+                                </Col>
+                            </Row>
                     </Card>
                     </Col>
-                </Row>
+                    <Col md={8} className='tab-user-card' style={{ maxHeight: '800px', overflowY: 'auto'}}>
+                        <Tabs variant='pills' defaultActiveKey='services' id='tipster-profile-tabs'>
+                            <Tab eventKey='services' title='Servizi'>
+                                <Row>
+                                    {userServices.length > 0 ? (
+                                        <MarketCard marketData={userServices}/>
+                                    ) : <Col> <h4>This user has no services</h4></Col>}
+                                </Row>
+                            </Tab>
+                            <Tab eventKey='stats' title='Stats'>
+                                <Row>
+                                <Col md={6}>
+              <Card>
+                <Card.Header>
+                  <Card.Title as="h5">Vincita/Perdita</Card.Title>
+                </Card.Header>
+                <Card.Body>
+                      <Col>
+                      <Chart {...getCreampieData()} />
+                      </Col>
+                </Card.Body>
+              </Card>
+            </Col>
+                                <Col md={6}>
+              <Card>
+                <Card.Header>
+                  <Card.Title as="h5">Top bookmakers</Card.Title>
+                </Card.Header>
+                <Card.Body>
+                <Col>
+                      <Chart {...bookmakersPie()} />
+                      </Col>
+                </Card.Body>
+              </Card>
+            </Col>
+                                </Row>
+                            </Tab>
+                        </Tabs>
+                    </Col>
+                </Row>) : <Loader />}
             </Aux>
     )
 }

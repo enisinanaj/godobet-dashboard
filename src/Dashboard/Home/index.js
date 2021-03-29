@@ -5,8 +5,13 @@ import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Chart from 'react-apexcharts';
 
+<<<<<<< HEAD
 import Aux from '../../hoc/_Aux';
 import LineInterpolationChart from '../Charts/LineInterpolationChart';
+=======
+import Aux from "../../hoc/_Aux";
+// import LineInterpolationChart from "../Charts/LineInterpolationChart";
+>>>>>>> f839299 (tipster profile)
 
 import * as actions from '../../store/actions';
 import config from '../../store/config';

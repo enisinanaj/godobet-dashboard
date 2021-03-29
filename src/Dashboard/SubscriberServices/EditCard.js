@@ -274,7 +274,7 @@ const EditCard = (props) => {
               <Card className={"p-15"}>
                 <Row style={{alignItems: 'center'}}>
                   <Col style={{textAlign: 'center'}} md={2}>
-                  <img src={getLatestImage(currentObject)} width='100%' height='150px' width='150px' style={{objectFit: 'cover', border:'1px solid lightgray'}}/>
+                  <img src={getLatestImage(currentObject)} height='150px' alt='' width='150px' style={{objectFit: 'cover', border:'1px solid lightgray'}}/>
                   </Col>
                   <Col >
                     <Form.Group controlId="infirizzo">
@@ -356,7 +356,7 @@ const EditCard = (props) => {
                         required
                       />
                     </Form.Group>
-                    {excerptLengthCheck ? <p className='text-danger'>Required 50 characters</p> : null}
+                    {excerptLengthCheck ? <p className='text-danger'>Questo campo richiede almeno 50 caratteri</p> : null}
                   </Col>
                 </Row>
                 <Row className='pt-5'>
@@ -375,7 +375,7 @@ const EditCard = (props) => {
                         required
                       />
                     </Form.Group>
-                    {descriptionLengthCheck ? <p className='text-danger'>Required 100 characters</p> : null}
+                    {descriptionLengthCheck ? <p className='text-danger'>Questo campo richiede almeno 100 caratteri</p> : null}
                   </Col>
                 </Row>
               </Card>
