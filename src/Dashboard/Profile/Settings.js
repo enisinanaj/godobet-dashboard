@@ -52,7 +52,8 @@ const Settings = (props) => {
     user.idDocumentNumber || ""
   );
   const [documentsChanged, setDocumentsChanged] = useState(false);
-
+  const [activating, setActivating] = useState(false);
+  
   useEffect(() => {
     TokenManager.getInstance()
       .getToken()
@@ -76,6 +77,15 @@ const Settings = (props) => {
             );
             setBank(sortedBanks.length > 0 ? sortedBanks[0] : {});
           });
+
+        fetch(props.applicationState.user._links.self.href, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+        })
+          .then((e) => e.json())
+          .then(localUser => setUser({...user, ...localUser}))
       });
   }, []);
 
@@ -95,6 +105,11 @@ const Settings = (props) => {
               ...user,
               ...localUser,
             });
+
+            setUser({
+              ...user,
+              ...localUser,
+            })
           });
       });
   };
@@ -399,6 +414,7 @@ const Settings = (props) => {
   };
 
   const activatePayments = () => {
+    setActivating(true);
     TokenManager.getInstance()
       .getToken()
       .then((jwt) => {
@@ -409,10 +425,14 @@ const Settings = (props) => {
             "X-Auth": jwt,
           },
         })
-          .then((result) => result.json)
-          .then((result) => console.warn(result))
+          .then((result) => result.json())
+          .then((result) => {
+            setActivating(false);
+            reloadUser();
+          })
           .catch((error) => {
-            console.warn(error);
+            setActivating(false);
+            reloadUser();
           });
       });
   };
@@ -664,26 +684,31 @@ const Settings = (props) => {
               </Row>
             </Card>
 
-            <Card title="Pagamenti" isOption={true}>
+            <Card title="Integrazione con Stripe (Pagamenti)" isOption={true}>
               <Row>
                 <Col md={12} sm={12}>
                   <Form>
                     <Form.Group controlId="accountState">
-                      {!props.applicationState.user.stripeAccountStatus && (
-                        <Form.Label>Conto non ancora inviato</Form.Label>
+                      {!user.stripeAccountStatus && (
+                        <Form.Label>Conto non ancora attivato</Form.Label>
                       )}
-                      {props.applicationState.user.stripeAccountStatus && (
-                        <Form.Label>
-                          {props.applicationState.user.stripeAccountStatus}
+                      {user.stripeAccountStatus && (
+                        <Form.Label style={{textTransform: "uppercase"}} className={user.stripeAccountStatus !== 'verified' ? 'text-danger' : '' } >
+                          {user.stripeAccountStatus}
                         </Form.Label>
                       )}
                     </Form.Group>
 
-                    {!props.applicationState.user.stripeAccountStatus && (
+                    {user.stripeAccountStatus !== 'verified' && (
                       <Button variant="primary" onClick={activatePayments}>
+                        {activating ? (
+                          <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+                        ) : null }{" "}
                         Chiedi l'attivazione del conto
                       </Button>
                     )}
+                    {user.stripeAccountStatus !== 'verified' && <br />}
+                    {user.stripeAccountStatus !== 'verified' && <span class="text-muted">Registrando l'account per i pagamenti implicitamente accetti le condizioni di servizio di <a href="https://stripe.com/connect-account/legal/full" target="_blank">Stripe Connected Account</a>.</span>}
                   </Form>
                 </Col>
               </Row>

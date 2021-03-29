@@ -76,7 +76,7 @@ const CardDetails = () => {
                   />
                   <Card.Body className="text-left">
                     <Card.Title as="h2" style={{ color: "white" }}>
-                      {currentObject.price.toLocaleString("it-IT", {
+                      {(currentObject.price/100).toLocaleString("it-IT", {
                         maximumFractionDigits: 2,
                       })}
                       {""} €
@@ -116,7 +116,7 @@ const CardDetails = () => {
                     </Col>
                   </Row>
                 </Card.Body>
-                <Button className="pull-right">Abbonati</Button>
+                <Button className="pull-right">Iscriviti</Button>
               </Card>
             </Col>
             <Col></Col>

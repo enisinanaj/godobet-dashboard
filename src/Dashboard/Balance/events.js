@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Card } from "react-bootstrap";
 
 import Aux from "../../hoc/_Aux";
-import { withRouter } from "react-router-dom";
 
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
@@ -10,32 +9,40 @@ import { connect } from "react-redux";
 import { Table } from "react-bootstrap";
 import moment from 'moment';
 
+import Sports from '../../App/components/Sports'
+
 class events extends Component {
     
     getRows() {
         const rows = [];
         
         this.props.data.forEach((d, index) => {
+
+            const eventCount = d.events.length;
+            let tipHandled = false;
+
             d.events.forEach(e => {
                 if (!e.outcome || !d.outcome) {
                     return false;
                 }
+
                 rows.push(
                     (<tr key={index + d.id + e.event}>
                         <td>{moment(e.eventDate).format("DD/MM/YYY HH:mm")}</td>
-                        <td>{e.sport}</td>
-                        <td>{e.genderValue}</td>
+                        <td>{ Sports.find(s => s.value === e.sport) ? Sports.find(s => s.value === e.sport).label : e.sport }</td>
                         <td>{e.competition}</td>
                         <td>{e.event}</td>
                         <td>{e.proposal}</td>
-                        <td className={e.outcome === "win" ? "bg-c-green text-white" : ""}>{e.outcome}</td>
-                        <td>{d.quote}</td>
-                        <td>{d.stake}</td>
-                        <td>{d.profit}</td>
-                        <td className={d.outcome === "win" ? "bg-c-green text-white" : ""}>{d.outcome}</td>
-                        <td>{d.bookmaker}</td>
+                        
+                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} className={e.outcome === "win" ? "bg-c-green text-white" : ""}>{e.outcome}</td>}
+                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.quote.toLocaleString("it-IT", { maximumFractionDigits: 2 })}</td>}
+                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{(d.stake/100).toLocaleString("it-IT", { maximumFractionDigits: 2 })}%</td>}
+                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.profit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%</td>}
+                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}}  className={d.outcome === "win" ? "bg-c-green text-white" : ""}>{d.outcome}</td>}
+                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.bookmaker}</td>}
                     </tr>)
                 )
+                tipHandled = true;
             })
 
         })
@@ -57,7 +64,6 @@ class events extends Component {
                                     <tr>
                                         <th>Data evento</th>
                                         <th>Sport</th>
-                                        <th>Sesso</th>
                                         <th>Competizione</th>
                                         <th>Evento</th>
                                         <th>Tip</th>
