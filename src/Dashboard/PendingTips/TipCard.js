@@ -6,6 +6,7 @@ import { Dropdown, Card, Carousel } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import TokenManager from '../../App/auth/TokenManager';
+import Sports from '../../App/components/Sports';
 import * as actions from '../../store/actions';
 import config from '../../store/config';
 
@@ -22,17 +23,14 @@ const getDropdown = (clickHandler) => {
 
 const getTipText = (pool) => {
   return (
-    <Carousel
-      interval={null}
-      controls={false}
-      indicators={true}
-    >
+    <Carousel controls={false} interval={null}>
       {pool.events.map(event => (
           <Carousel.Item key={event.eventCode}>
-              <div style={{height: 170, marginBottom: 15, padding: "20px 20px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+              <div style={{height: 170, marginBottom: 15, padding: "0 20px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
                   <Row className={"hei-110"}>
                       <Col lg={12} sm={12} xs={12} xl={12}>
-                          <em className={"feather icon-aperture"}></em> {event.competition} / {event.event}
+                          {Sports.find(s => s.value === event.sport) ? Sports.find(s => s.value === event.sport).icon : <em className={"feather icon-aperture"}></em>}{" "}
+                          {event.competition} / {event.event}
                       </Col>
                       <Col lg={6} sm={12} xs={12} xl={6}>
                           <i className="feather icon-play" /> {event.proposal}
@@ -111,21 +109,15 @@ const TipCard = ({ pool, user, dropdownHidden, actions }) => {
   };
 
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title
-          as={'h3'}
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: '0',
-          }}
-        >
-          {pool.description}
-          {DropdownHiddenState || getDropdown(followTip)}
-        </Card.Title>
-        {getTipText(pool)}
-      </Card.Body>
+    <Card className={"light"} text={''}>
+        <Card.Body>
+            {/* className={'text-white'} */}
+            <Card.Title as="h5">
+              {pool.description}
+              {DropdownHiddenState || getDropdown(followTip)}
+            </Card.Title>
+            {getTipText(pool)}
+        </Card.Body>
     </Card>
   );
 };

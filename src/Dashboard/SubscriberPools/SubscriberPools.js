@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Row } from "react-bootstrap";
+import { Row, Tabs, Col } from "react-bootstrap";
+import { Tab } from 'bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import { bindActionCreators } from "redux";
@@ -35,11 +36,32 @@ const TipsterPools = (props) =>  {
   return (
     <Aux>
       <Row>
-        {
-          pools.map(pool => (
-            <Tip key={pool.id} pool={pool} callback={loadPools} user={props.applicationState.user} author={true} />
-          ))
-        }
+        <Col sm={12} className="tab-user-card">
+          <Tabs
+            variant="pills"
+            defaultActiveKey="pending"
+            id="uncontrolled-tab-example"
+          >
+            <Tab eventKey="pending" title="Tip in corso">
+              <Row>
+                {
+                  pools.filter(p => !p.outcome).map(pool => (
+                    <Tip key={pool.id} pool={pool} callback={loadPools} user={props.applicationState.user} author={true} />
+                  ))
+                }
+              </Row>
+            </Tab>
+            <Tab eventKey="expired" title="Tip concluse">
+              <Row>
+                {
+                  pools.filter(p => !!p.outcome).map(pool => (
+                    <Tip key={pool.id} pool={pool} callback={loadPools} user={props.applicationState.user} author={true} />
+                  ))
+                }
+              </Row>
+            </Tab>
+          </Tabs>
+        </Col>
       </Row>
     </Aux>
   );
