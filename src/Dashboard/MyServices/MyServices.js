@@ -36,10 +36,11 @@ class MyServices extends Component {
       config.API_URL + `/users/${this.props.user.userCode}/subscriptions`
     )
       .then((r) => {
+        console.warn(r._embedded.subscriptions)
         this.setState({
           services:
             r._embedded && r._embedded.subscriptions
-              ? r._embedded.subscriptions
+              ? r._embedded.subscriptions.filter(s => s.valid)
               : [],
         });
       })
@@ -47,9 +48,9 @@ class MyServices extends Component {
   };
 
   getServicesDom() {
-    const services = this.state.services.map((service) => service.service);
+    const services = this.state.services.map((service) => ({...service.service, remainingDays: service.remainingDays}));
     return (
-      <SubscriberCard disableEdit={true} services={services}></SubscriberCard>
+      <SubscriberCard disableEdit={true} services={services} showRemainingDays={true} ></SubscriberCard>
     );
   }
 

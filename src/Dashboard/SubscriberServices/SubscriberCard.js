@@ -71,31 +71,12 @@ const SubscriberCard = (props) => {
 
           <Card.Body>
             <Link to={`details/${item.id}`}>
-              <Card.Title as="h5">{item.price.toFixed(2)} &euro;</Card.Title>
+              <Card.Title as="h5">{(item.price/100).toFixed(2)} &euro;</Card.Title>
             </Link>
             <Card.Text>
-              <span>
-                {' '}
-                <i
-                  className="feather icon-users"
-                  style={{ paddingRight: '5px' }}
-                />{' '}
-                Numero massimo iscrizioni: {item.maxSubscribers}
-              </span>
-              <br />
-              <span>
-                {' '}
-                <i
-                  className="feather icon-users"
-                  style={{ paddingRight: '5px' }}
-                />{' '}
-                Posizioni aperte:{' '}
-                {item.maxSubscribers - item.subscribersCount === 0 ? (
-                  <Esaurito />
-                ) : (
-                  item.maxSubscribers - item.subscribersCount
-                )}
-              </span>
+              {item.maxSubscribers - item.subscribersCount === 0 ? (
+                <Esaurito />
+              ) : null}
             </Card.Text>
             <Card.Text style={{ overflowY: 'auto', maxHeight: '160px' }}>
               {item.excerpt}
@@ -110,11 +91,21 @@ const SubscriberCard = (props) => {
                     className="feather icon-users"
                     style={{ paddingRight: '5px' }}
                   />{' '}
-                  {item.subscribersCount}
+                  {item.subscribersCount} su {item.maxSubscribers}
                 </h6>
-                <p className="mb-0">Iscrizioni</p>
+                <p className="mb-0">Iscritti</p>
               </Col>
-              <Col>
+              {props.showRemainingDays && <Col>
+                <h6 className="mb-1">
+                  <i
+                    className="feather icon-calendar"
+                    style={{ paddingRight: '5px' }}
+                  />{' '}
+                  {item.remainingDays}
+                </h6>
+                <p className="mb-0">Giorni rimanenti</p>
+              </Col>}
+              {!props.showRemainingDays && <Col>
                 <h6 className="mb-1">
                   <i
                     className="feather icon-calendar"
@@ -123,7 +114,7 @@ const SubscriberCard = (props) => {
                   {item.duration} giorni
                 </h6>
                 <p className="mb-0">Durata</p>
-              </Col>
+              </Col>}
               <Col>
                 <h6
                   className={
