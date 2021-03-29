@@ -139,65 +139,27 @@ const CardDetails = (props) => {
   };
   
   const stripe = useStripe();
-  const elements = useElements();
 
-  const formattedAmount = new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-  }).format(purchaseObject.price);
+  const handlePurchase = (link) => {
+    setInPurchasing(true);
 
-
-  const handlePayment = async (e) => {
-    e.preventDefault();
-    const cardElement = elements.getElement(CardElement);
-
-    if (!cardElement._complete) {
-      alert("Please check your card details.");
-      return;
-    }
-    setIsProcessing(true);
-
-    const response = await axios.post("http://localhost:9000/payment", {
-      amount: purchaseObject.price,
-      metadata: {
-        customer: props.applicationState.user.userCode,
-        service: purchaseObject.id,
-      },
-      description: purchaseObject.name,
-    });
-
-    const paymentMethodReq = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-    });
-
-    const confirmedCardPayment = await stripe.confirmCardPayment(
-      response.data.client_secret,
-      {
-        payment_method: paymentMethodReq.paymentMethod.id,
-      }
-    );
-
-    if (
-      confirmedCardPayment.paymentIntent &&
-      confirmedCardPayment.paymentIntent.status === "succeeded"
-    ) {
-      setIsProcessing(false);
-      setShow(false);
-      Swal.fire(
-        "Confermato!",
-        "Ti sei abbonato al servizio con successo!",
-        "success"
-      );
-    } else {
-      setShow(false);
-      setIsProcessing(false);
-      Swal.fire(
-        "Errore!",
-        "Si è verificato un errore durante l'elaborazione. Per favore riprova.",
-        "error"
-      );
-    }
+    TokenManager.getInstance().getToken()
+    .then(jwt => {
+        fetch(`${BASE_CONFIG.API_URL}/pps/payments/${link.substring(link.lastIndexOf("/") + 1)}/${props.applicationState.user.userCode}`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          }
+        }).then(response => response.headers.get('X-Stripe-Session-Id'))
+        .then(stripeSessionId => {
+          stripe.redirectToCheckout({ sessionId: stripeSessionId })
+        })
+        .catch(e => {
+          setInPurchasing(false);
+          // TODO: show error to the user
+        })
+    })
   };
 
   return (

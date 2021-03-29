@@ -17,10 +17,6 @@ import MarketCard from '../Marketplace/MarketCard';
 import satisfactionChart from "../Home/charts/pie";
 import bookmakersChart from "../Home/charts/bookmakers";
 
-import monthlyProfilt1 from './monthlyprofit'
-import amountSpent from './averageStake'
-
-
 import Loader from "../../App/layout/Loader";
 
 
@@ -54,7 +50,6 @@ function TipsterProfile(props) {
                 })
 
                 let averageStake = (stakesArray.reduce((a,b) => a+b) / stakesArray.length) / 100;
-
                 setAvgStake(averageStake)
             })
         })
@@ -79,7 +74,6 @@ function TipsterProfile(props) {
           };
         }
 
-    
         const map = currentUser._embedded.playedPools.reduce((pie, pool) => {
           const h = { ...pie };
     
@@ -95,8 +89,7 @@ function TipsterProfile(props) {
         data.options.labels = Object.keys(map);
         data.series = Object.values(map);
         return data;
-      };
-    
+    };
 
     const bookmakersPie = () => {
         const data = bookmakersChart;
@@ -108,7 +101,7 @@ function TipsterProfile(props) {
               ...data,
               series: [0, 0, 100],
             };
-          }
+        }
 
         const map = currentUser._embedded.playedPools.reduce((pie, pool) => {
             const h = {...pie};
@@ -157,9 +150,8 @@ function TipsterProfile(props) {
           currentUser._embedded.playedPools.map(pool => {
             bookmakers.push(pool.bookmaker)
           })
-
+          
           const mostUsed = bookmakers.sort((a,b) => bookmakers.filter(v => v===a).length - bookmakers.filter(v => v===b).length).pop()
-
           setFavoriteBook(mostUsed)
       }
       
@@ -171,60 +163,57 @@ function TipsterProfile(props) {
         <Aux>
                 {currentUser.name ? (<Row md={12}>
                     <Col md={4}>
-                    <Card style={{minHeight: '800px'}}>
-                        <Row className='pt-5'>
-                            <Col style={{textAlign: 'center'}}>
-                            <img src={getLatestImage(currentUser)} height='200px' alt='' width='200px' style={{objectFit: 'cover', borderRadius: '50%'}} />
-                            <div className='p-4'>
-                            <h3>{currentUser.name} {currentUser.lastName}</h3>
-                            </div>
-                            </Col>
-                        </Row>
-                            <hr />
-                            <Row style={{textAlign: 'center'}}>
+                        <Card style={{minHeight: '800px'}}>
+                            <Row className='pt-5'>
+                                <Col style={{textAlign: 'center'}}>
+                                    <img src={getLatestImage(currentUser)} height='200px' alt='' width='200px' style={{objectFit: 'cover', borderRadius: '50%'}} />
+                                    <div className='p-4'>
+                                        <h3>{currentUser.name} {currentUser.lastName}</h3>
+                                    </div>
+                                </Col>
+                            </Row>
+                                <hr />
+                                <Row style={{textAlign: 'center'}}>
+                                    <Col>
+                                    <h4>{currentUser.totalSubscribers} Followers</h4>
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row style={{textAlign: 'center'}}>
                                 <Col>
-                                <h4>{currentUser.totalSubscribers} Followers</h4>
-                                </Col>
-                            </Row>
-                            <hr />
-                            <Row style={{textAlign: 'center'}}>
-                            <Col>
-                                <h5 className={"mb-1" + ((currentUser.totalProfit >= 0) ? " text-success" : " text-danger")}>{currentUser.totalProfit} % Profit </h5>
-                                </Col>
-                            <Col>
-                                <h5>{winRatio} % Win Ratio </h5>
-                                </Col>
-                            </Row>
-                            <hr />
-                            <Row style={{textAlign: 'center'}}>
-                            <Col>
-                                <h5>{currentUser._embedded.services ? currentUser._embedded.services.length : 0} services</h5>
-                                </Col>
-                            <Col>
-                                <h5>{currentUser._embedded.pools ? currentUser._embedded.pools.length : 0} pools</h5>
-                                </Col>
-                            </Row>
-                            <hr />
-                            <Row style={{textAlign: 'center'}}>
-                            <Col>
-                                <h5>1.8 Avarage Odds</h5>
-                                </Col>
-                            <Col>
-                                <h5>{avgStake} Average Stake</h5>
-                                </Col>
-                            </Row>
-                            <hr />
-                            <Row style={{textAlign: 'center'}}>
+                                    <h5 className={"mb-1" + ((currentUser.totalProfit >= 0) ? " text-success" : " text-danger")}>Profitto: {currentUser.totalProfit.toFixed(2)}% </h5>
+                                    </Col>
                                 <Col>
-                                <h5>Most used bookmaker:</h5>
-                                </Col>
-                            </Row>
-                            <Row style={{textAlign: 'center'}}>
+                                    <h5>Tasso di vincita: {winRatio}%</h5>
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row style={{textAlign: 'center'}}>
                                 <Col>
-                                <h5>{favoriteBook}</h5>
-                                </Col>
-                            </Row>
-                    </Card>
+                                    <h5>{currentUser._embedded.services ? currentUser._embedded.services.length : 0} servizi</h5>
+                                    </Col>
+                                <Col>
+                                    <h5>{currentUser._embedded.pools ? currentUser._embedded.pools.length : 0} tip</h5>
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row style={{textAlign: 'center'}}>
+                                <Col>
+                                    <h5>{avgStake} Stake medio</h5>
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row style={{textAlign: 'center'}}>
+                                    <Col>
+                                        <h5>Bookmaker principale:</h5>
+                                    </Col>
+                                </Row>
+                                <Row style={{textAlign: 'center'}}>
+                                    <Col>
+                                        <h5>{favoriteBook}</h5>
+                                    </Col>
+                                </Row>
+                        </Card>
                     </Col>
                     <Col md={8} className='tab-user-card' style={{ maxHeight: '800px', overflowY: 'auto'}}>
                         <Tabs variant='pills' defaultActiveKey='services' id='tipster-profile-tabs'>
@@ -237,67 +226,26 @@ function TipsterProfile(props) {
                             </Tab>
                             <Tab eventKey='stats' title='Stats'>
                                 <Row>
-                                <Col md={6}>
-              <Card>
-                <Card.Header>
-                  <Card.Title as="h5">Vincita/Perdita</Card.Title>
-                </Card.Header>
-                <Card.Body>
-
-                      <Chart {...getCreampieData()} />
-
-                </Card.Body>
-              </Card>
-            </Col>
-                                <Col md={6}>
-              <Card>
-                <Card.Header>
-                  <Card.Title as="h5">Top bookmakers</Card.Title>
-                </Card.Header>
-                <Card.Body>
-                      <Chart {...bookmakersPie()} />
-                </Card.Body>
-              </Card>
-            </Col>
-                                </Row>
-                                <Row>
-                                <Col>
-                        <Card>
-                            <Card.Body>
-                                <h2 className="text-center f-w-400 ">$45,567</h2>
-                                <p className="text-center text-muted ">Monthly Profit</p>
-                                <Chart {...monthlyProfilt1} />
-                                <div className="m-t-20">
-                                    <Row>
-                                        <Col className="text-center ">
-                                            <h6 className="f-20 f-w-400">$6,234</h6>
-                                            <p className="text-muted f-14 m-b-0">Today</p>
-                                        </Col>
-                                        <Col className="text-center ">
-                                            <h6 className="f-20 f-w-400">$4,387</h6>
-                                            <p className="text-muted f-14 m-b-0">Yesterday</p>
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col>
-                        <Card className="overflow-hidden">
-                            <Card.Body>
-                                <Row className="mt-2">
-                                    <Col sm={6}>
-                                    <p className="text-muted f-w-600 f-16">ODDS/STAKE AVG</p>
-                                    <Chart {...amountSpent} />
+                                    <Col md={6}>
+                                        <Card>
+                                            <Card.Header>
+                                            <Card.Title as="h5">Vincita/Perdita</Card.Title>
+                                            </Card.Header>
+                                            <Card.Body>
+                                                <Chart {...getCreampieData()} />
+                                            </Card.Body>
+                                        </Card>
                                     </Col>
-                                    <Col sm={6}>
-                                    <p className="text-muted f-w-600 f-16">ODDS/STAKE AVG</p>
-                                    <Chart {...amountSpent} />
+                                    <Col md={6}>
+                                        <Card>
+                                            <Card.Header>
+                                            <Card.Title as="h5">Top bookmakers</Card.Title>
+                                            </Card.Header>
+                                            <Card.Body>
+                                                <Chart {...bookmakersPie()} />
+                                            </Card.Body>
+                                        </Card>
                                     </Col>
-                                </Row>
-                            </Card.Body>
-                        </Card>
-                    </Col>
                                 </Row>
                             </Tab>
                         </Tabs>
