@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row } from "react-bootstrap";
+import { Row, Col, Form } from "react-bootstrap";
 import Aux from "../../hoc/_Aux";
 import { withRouter } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -66,7 +66,7 @@ const Marketplace = (props) => {
     <Aux>
       <Row className='p-5'>
         <Col>
-          <h4>Search</h4>
+          <h4>Cerca</h4>
           <Form.Control type='text' style={{backgroundColor:"white"}}/>
         </Col>
       </Row>

@@ -39,7 +39,7 @@ class events extends Component {
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{(d.stake/100).toLocaleString("it-IT", { maximumFractionDigits: 2 })}%</td>}
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.profit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%</td>}
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >
-                            <span className={getClassNameForOutcome(pool.outcome)}>{pool.outcome}</span>    
+                            <span className={getClassNameForOutcome(d.outcome)}>{d.outcome}</span>    
                         </td>}
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.bookmaker}</td>}
                     </tr>)

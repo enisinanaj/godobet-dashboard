@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Esaurito from '../../App/components/Esaurito'
+import '../../assets/scss/tip.css';
 
 const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
   const getLatestImage = (media) => {
