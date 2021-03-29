@@ -8,6 +8,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Table } from "react-bootstrap";
 import moment from 'moment';
+import {getClassNameForOutcome} from '../../Dashboard/PendingTips/TipCard';
 
 import Sports from '../../App/components/Sports'
 
@@ -34,11 +35,12 @@ class events extends Component {
                         <td>{e.event}</td>
                         <td>{e.proposal}</td>
                         
-                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} className={e.outcome === "win" ? "bg-c-green text-white" : ""}>{e.outcome}</td>}
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.quote.toLocaleString("it-IT", { maximumFractionDigits: 2 })}</td>}
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{(d.stake/100).toLocaleString("it-IT", { maximumFractionDigits: 2 })}%</td>}
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.profit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%</td>}
-                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}}  className={d.outcome === "win" ? "bg-c-green text-white" : ""}>{d.outcome}</td>}
+                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >
+                            <span className={getClassNameForOutcome(pool.outcome)}>{pool.outcome}</span>    
+                        </td>}
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.bookmaker}</td>}
                     </tr>)
                 )
@@ -67,11 +69,10 @@ class events extends Component {
                                         <th>Competizione</th>
                                         <th>Evento</th>
                                         <th>Tip</th>
-                                        <th>Esito Evento</th>
                                         <th>Quota</th>
                                         <th>Stake</th>
                                         <th>Profitto</th>
-                                        <th>Esito Schedina</th>
+                                        <th>Esito Tip</th>
                                         <th>Bookmaker</th>
                                     </tr>
                                 </thead>
