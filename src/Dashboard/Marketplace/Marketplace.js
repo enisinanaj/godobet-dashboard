@@ -14,6 +14,7 @@ import BASE_CONFIG from "../../store/config";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import TokenManager from "../../App/auth/TokenManager";
 import "./Marketplace.css";
+import { Button } from "bootstrap";
 
 const Marketplace = (props) => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -234,10 +235,10 @@ const Marketplace = (props) => {
           </div>
         </Form>
       </Modal>
-      <Row className='p-5'>
-        <Col>
-        <h4>Search</h4>
-        <Form.Control type='text' style={{backgroundColor:"white"}}/>
+      <Row className='pt-5 pb-5' style={{justifyContent: 'center'}}>
+        <Col md={4} style={{textAlign: 'center'}}>
+        <Form.Control type='text' style={{backgroundColor:"white"}} placeholder='Search..'/>
+        <button className='btn-primary m-3'>Search</button>
         </Col>
       </Row>
       <Row md={12}>

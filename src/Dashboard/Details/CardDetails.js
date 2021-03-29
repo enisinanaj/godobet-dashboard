@@ -4,7 +4,7 @@ import TokenManager from "../../App/auth/TokenManager";
 import Aux from "../../hoc/_Aux";
 import BASE_CONFIG from "../../store/config";
 import Loader from "../../App/layout/Loader";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Chart from "react-apexcharts";
 import '../Marketplace/Marketplace.css'
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
@@ -125,7 +125,9 @@ const CardDetails = (props) => {
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentObject])
+
 
   const authorAvatar = author._embedded.media.sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime());
 
@@ -311,7 +313,7 @@ const CardDetails = (props) => {
           </div>
         </Form>
       </Modal>
-      {currentObject ? (
+      {currentObject && author.name ? (
         <div>
           <Row className="mb-n4">
             <Col sm={12}>
@@ -402,23 +404,26 @@ const CardDetails = (props) => {
           </Row>
           <Row>
             <Col sm={12}>
+                      <a href={`/tipsters/${author.userCode}`}>
               <Card>
                 <Card.Body>
                   <Row className="align-items-center">
                     <Col md={2}>
-                      <img height="150px" width='150px' src={authorAvatar[0].url} />
+                      <img height="150px" width='150px' src={authorAvatar[0].url} alt='' style={{objectFit: 'cover', borderRadius: '50%'}} />
                     </Col>
                     <Col md={2}>
-                      <a href={`/tipsters/${author.userCode}`}>
                       <h4 style={{fontSize: '20px'}}>{author.name + author.lastName}</h4>
-                      </a>
                     </Col>
                     <Col md={2}>
                       <h4 style={{fontSize: '20px'}}>{author._embedded.services.length} services</h4>
                     </Col>
+                    <Col md={2}>
+                      <h3 style={{fontSize: '20px'}}>{author.totalSubscribers} followers</h3>
+                    </Col>
                   </Row>
                 </Card.Body>
               </Card>
+                      </a>
             </Col>
           </Row>
           <Row>
@@ -479,7 +484,7 @@ export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(CardDetails)
 );
 
-{
+
   /* <div>
           <Row>
             <Col></Col>
@@ -593,4 +598,4 @@ export default withRouter(
             <Col></Col>
           </Row>
         </div> */
-}
+

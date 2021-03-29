@@ -20,6 +20,7 @@ const SubscriberCard = (props) => {
       <Col md={4} key={index}>
         <Card>
           <div className="">
+          <Link to={`details/${item.id}`}>
             <Card.Img
               variant="top"
               src={getLatestImage(item.media)}
@@ -31,7 +32,8 @@ const SubscriberCard = (props) => {
                 margin: "20px",
                 display: "inline",
               }}
-            />
+              />
+              </Link>
             
             <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline"}}>
               <Link to={`details/${item.id}`}>{item.serviceName}</Link>
@@ -57,9 +59,7 @@ const SubscriberCard = (props) => {
           </div>
           
           <Card.Body>
-            <Link to={`details/${item.id}`}>
               <Card.Title as="h5">{item.price.toFixed(2)} &euro;</Card.Title>
-            </Link>
             <Card.Text>
               <span>
                 {" "}<i className="feather icon-users" style={{ paddingRight: "5px" }} />{" "}

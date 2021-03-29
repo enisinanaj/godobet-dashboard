@@ -77,6 +77,7 @@ const Settings = (props) => {
             setBank(sortedBanks.length > 0 ? sortedBanks[0] : {});
           });
       });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const reloadUser = () => {
@@ -416,6 +417,8 @@ const Settings = (props) => {
           });
       });
   };
+
+  console.log(props.applicationState.user.userCode)
 
   return (
     <Aux>

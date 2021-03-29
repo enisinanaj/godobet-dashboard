@@ -6,7 +6,7 @@ import moment from "moment";
 import Chart from "react-apexcharts";
 
 import Aux from "../../hoc/_Aux";
-import LineInterpolationChart from "../Charts/LineInterpolationChart";
+// import LineInterpolationChart from "../Charts/LineInterpolationChart";
 
 import * as actions from "../../store/actions";
 import config from "../../store/config";

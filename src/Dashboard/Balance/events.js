@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Card } from "react-bootstrap";
 
 import Aux from "../../hoc/_Aux";
-import { withRouter } from "react-router-dom";
 
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
