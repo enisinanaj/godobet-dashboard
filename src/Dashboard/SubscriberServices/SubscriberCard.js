@@ -27,119 +27,71 @@ const SubscriberCard = (props) => {
               src={getLatestImage(item.media)}
               alt="CardImageCap"
               style={{
-                width: '80px',
-                height: '80px',
-                objectFit: 'cover',
-                margin: '20px',
-                display: 'inline',
+                width: "80px",
+                height: "80px",
+                objectFit: "cover",
+                margin: "20px",
+                display: "inline",
               }}
-<<<<<<< HEAD
-            />
-
-            <Card.Title
-              as="h4"
-              className={'mb-1 mt-4 mr-3 ml-3'}
-              style={{ display: 'inline' }}
-            >
-=======
               />
               </Link>
             
             <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline"}}>
->>>>>>> f839299 (tipster profile)
               <Link to={`details/${item.id}`}>{item.serviceName}</Link>
             </Card.Title>
 
-            <Card.ImgOverlay
-              style={{
-                height: '20px',
-                padding: 0,
-                marginRight: '20px',
-                marginTop: '20px',
-              }}
-            >
-              {!props.disableEdit && (
-                <Card.Title className="text-right">
-                  <Link to={`edit-card/${item.id}`}>
-                    <i
-                      title="Modifica"
-                      className="feather icon-edit-2"
-                      style={{
-                        cursor: 'pointer',
-                        background: 'white',
-                        color: 'gray',
-                        borderRadius: '50%',
-                        padding: '5px',
-                      }}
-                    />
-                  </Link>
-                </Card.Title>
-              )}
+            <Card.ImgOverlay style={{height: "20px", padding: 0, marginRight: "20px", marginTop: "20px"}}>
+              <Card.Title className="text-right">
+                <Link to={`edit-card/${item.id}`}>
+                  <i
+                    title="Modifica"
+                    className="feather icon-edit-2"
+                    style={{
+                      cursor: "pointer",
+                      background: "white",
+                      color: "gray",
+                      borderRadius: "50%",
+                      padding: "5px",
+                    }}
+                  />
+                </Link>
+              </Card.Title>
             </Card.ImgOverlay>
           </div>
-
+          
           <Card.Body>
-<<<<<<< HEAD
-            <Link to={`details/${item.id}`}>
-              <Card.Title as="h5">{(item.price/100).toFixed(2)} &euro;</Card.Title>
-            </Link>
-=======
               <Card.Title as="h5">{item.price.toFixed(2)} &euro;</Card.Title>
->>>>>>> f839299 (tipster profile)
             <Card.Text>
-              {item.maxSubscribers - item.subscribersCount === 0 ? (
-                <Esaurito />
-              ) : null}
+              <span>
+                {" "}<i className="feather icon-users" style={{ paddingRight: "5px" }} />{" "}
+                Numero massimo iscrizioni: {item.maxSubscribers}
+              </span>
+              <br />
+              <span>
+                {" "}<i className="feather icon-users" style={{ paddingRight: "5px" }}/>{" "}
+                Posizioni aperte: {item.maxSubscribers - item.subscribersCount === 0 ? <Esaurito /> : item.maxSubscribers - item.subscribersCount}
+              </span>
             </Card.Text>
-            <Card.Text style={{ overflowY: 'auto', maxHeight: '160px' }}>
+            <Card.Text style={{ overflowY: "auto", maxHeight: "160px" }}>
               {item.excerpt}
             </Card.Text>
           </Card.Body>
 
           <Card.Footer>
-            <Row className="text-center">
-              <Col>
-                <h6 className="mb-1">
-                  <i
-                    className="feather icon-users"
-                    style={{ paddingRight: '5px' }}
-                  />{' '}
-                  {item.subscribersCount} su {item.maxSubscribers}
-                </h6>
-                <p className="mb-0">Iscritti</p>
-              </Col>
-              {props.showRemainingDays && <Col>
-                <h6 className="mb-1">
-                  <i
-                    className="feather icon-calendar"
-                    style={{ paddingRight: '5px' }}
-                  />{' '}
-                  {item.remainingDays}
-                </h6>
-                <p className="mb-0">Giorni rimanenti</p>
-              </Col>}
-              {!props.showRemainingDays && <Col>
-                <h6 className="mb-1">
-                  <i
-                    className="feather icon-calendar"
-                    style={{ paddingRight: '5px' }}
-                  />{' '}
-                  {item.duration} giorni
-                </h6>
-                <p className="mb-0">Durata</p>
-              </Col>}
-              <Col>
-                <h6
-                  className={
-                    'mb-1' +
-                    (item.totalProfit >= 0 ? ' text-success' : ' text-danger')
-                  }
-                >
-                  {item.totalProfit.toFixed(2)}%
-                </h6>
-                <p className="mb-0">Profitto</p>
-              </Col>
-            </Row>
+              <Row className="text-center">
+                  <Col>
+                      <h6 className="mb-1"><i className="feather icon-users" style={{ paddingRight: "5px" }} /> {item.subscribersCount}</h6>
+                      <p className="mb-0">Iscrizioni</p>
+                  </Col>
+                  <Col>
+                      <h6 className="mb-1"><i className="feather icon-calendar" style={{ paddingRight: "5px" }} /> {item.duration} giorni</h6>
+                      <p className="mb-0">Durata</p>
+                  </Col>
+                  <Col>
+                      <h6 className={"mb-1" + ((item.totalProfit >= 0) ? " text-success" : " text-danger")}>{item.totalProfit.toFixed(2)}%</h6>
+                      <p className="mb-0">Profitto</p>
+                  </Col>
+              </Row>
           </Card.Footer>
         </Card>
       </Col>

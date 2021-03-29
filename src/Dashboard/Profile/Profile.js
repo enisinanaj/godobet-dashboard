@@ -1,105 +1,291 @@
-import React, {Component} from 'react';
-import {Row, Col, Card } from 'react-bootstrap';
+import React, {useState, useEffect} from 'react'
+import {Row, Col, Card, Tabs} from 'react-bootstrap';
+import { Tab } from 'bootstrap';
+import Chart from "react-apexcharts";
 
 import Aux from "../../hoc/_Aux";
-import DEMO from "../../store/constant";
+
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
-import md5 from 'md5';
 
-class Profile extends Component {
-    state = {
-        activeProfileTab: 'home',
-        isPersonalEdit: false,
-        isContactEdit: false,
-        isOtherEdit: false,
-        address: {}
-    };
+import BASE_CONFIG from "../../store/config";
+import TokenManager from '../../App/auth/TokenManager';
 
-    avatar = (email) => {
-        if (
-            this.props.user._embedded &&
-            this.props.user._embedded.media &&
-            this.props.user._embedded.media.filter((m) => m.mediaType === "avatar").length > 0) {
-            return this.props.user._embedded.media
-                .filter((m) => m.mediaType === "avatar")
-                .sort((a, b) => b.id - a.id)[0].url;
+import CoverImage from '../../assets/images/godobet-placeholder.jpg'
+import MarketCard from '../Marketplace/MarketCard';
+import satisfactionChart from "../Home/charts/pie";
+import bookmakersChart from "../Home/charts/bookmakers";
+
+import monthlyProfilt1 from '../TipsterProfile/monthlyprofit'
+
+
+import Loader from "../../App/layout/Loader";
+
+
+
+function TipsterProfile(props) {
+    const [favoriteBook, setFavoriteBook] = useState(null)
+    const [currentUser, setCurrentUser] = useState({})
+    const [userServices, setUserServices] = useState([])
+    const [winRatio, setWinRatio] = useState(0)
+
+    let userId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+
+    useEffect(() => {
+        TokenManager.getInstance().getToken().then(jwt => {
+            fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode, {
+                headers: {
+                    'Content-Type': "application/json",
+                    "X-Auth": jwt,
+                },
+            }).then((e) => e.json()).then(user => {
+                setCurrentUser(user)
+                const winRatioVar = user._embedded.playedPools.filter(res => {
+                    return res.outcome === 'win'
+                } )
+                let percentage = ((winRatioVar.length / user._embedded.playedPools.length) * 100)
+                setWinRatio(percentage)
+            })
+        })
+        getServices()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    useEffect(() => {
+        findBookmaker()
+    }, [currentUser])
+
+
+    const getCreampieData = () => {
+        const data = satisfactionChart;
+        if (!currentUser._embedded || !currentUser._embedded.playedPools) {
+          return {
+            options: {
+              labels: [],
+            },
+            ...data,
+            series: [0, 0, 100],
+          };
         }
 
-        return ("http://www.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?s=32");
+    
+        const map = currentUser._embedded.playedPools.reduce((pie, pool) => {
+          const h = { ...pie };
+    
+          if (!pool.outcome) {
+            return h;
+          }
+    
+          h[pool.outcome] =
+            parseInt(pie[pool.outcome]) >= 0 ? 1 + parseInt(pie[pool.outcome]) : 1;
+          return h;
+        }, {});
+    
+        data.options.labels = Object.keys(map);
+        data.series = Object.values(map);
+        return data;
+      };
+    
+
+    const bookmakersPie = () => {
+        const data = bookmakersChart;
+        if (!currentUser._embedded || !currentUser._embedded.playedPools) {
+            return {
+              options: {
+                labels: [],
+              },
+              ...data,
+              series: [0, 0, 100],
+            };
+          }
+
+        const map = currentUser._embedded.playedPools.reduce((pie, pool) => {
+            const h = {...pie};
+
+            if(!pool.bookmaker) {
+                return h;
+            }
+            
+            h[pool.bookmaker] = parseInt(pie[pool.bookmaker]) >= 0 ? 1 + parseInt(pie[pool.bookmaker]) : 1;
+            return h
+        }, {});
+
+        data.options.labels = Object.keys(map);
+        data.series = Object.values(map);
+        return data
     }
 
-    componentDidMount() {
-        this.address();
+    const getServices = () => {
+        TokenManager.getInstance().getToken().then(jwt => {
+            fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/services', {
+                headers: {
+                    "Content-Type": 'application/json',
+                    "X-Auth": jwt,
+                },
+            }).then(e => e.json()).then(res => setUserServices(res._embedded.services))
+        })
     }
 
-    address = () => {
-        var sortedAddresses = this.props.user._embedded && this.props.user._embedded.addresses
-            ? this.props.user._embedded.addresses.sort((a, b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime())
-            : [];
-        
-        this.setState({address: sortedAddresses.length > 0 ? sortedAddresses[0] : {}});
-    }
+    const getLatestImage = (media) => {
+        if (
+          !media._embedded ||
+          media.length === 0 ||
+          !media._embedded.media
+        ) {
+          return CoverImage;
+        }
+    
+        return media._embedded.media.sort((a, b) => b.id - a.id)[0].url;
+      };
 
-    render() {
-        return (
-            <Aux>
-                <div className='user-profile user-card mb-4'>
-                    <Card.Header className='border-0 p-0 pb-0 pt-10'>
-                    </Card.Header>
-                    <Card.Body className='py-0'>
-                        <div className="user-about-block m-0">
-                            <Row>
-                                <Col md={4} className='text-center' style={{marginTop: -35}}>
-                                    <div className="change-profile text-center">
-                                        <div className='w-auto d-inline-block'>
-                                            <div as='a' variant="link" id="dropdown-basic">
-                                                <div className="profile-dp">
-                                                    <div className="position-relative d-inline-block">
-                                                        <img className="img-radius" src={this.avatar(this.props.user.email)} style={{objectFit: 'cover', width: 80, height: 80}} alt="User"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <h5 className="mb-1">{this.props.user.name} {this.props.user.lastName}</h5>
-                                    <p className="mb-2 text-muted"></p>
-                                </Col>
-                                <Col md={8} className='mt-md-4'>
-                                    <Row>
-                                        <Col>
-                                            <a href={DEMO.BLANK_LINK} className="mb-1 text-muted d-flex align-items-end text-h-primary"><i className="feather icon-mail mr-2 f-18"/>{this.props.user.email}</a>
-                                            <div className="clearfix"/>
-                                            <a href={DEMO.BLANK_LINK} className="mb-1 text-muted d-flex align-items-end text-h-primary"><i className="feather icon-phone mr-2 f-18"/>{this.props.user.phoneNumber}</a>
-                                        </Col>
-                                        <Col>
-                                            <div className="media">
-                                                <i className="feather icon-map-pin mr-2 mt-1 f-18"/>
-                                                <div className="media-body">
-                                                    <p className="mb-0 text-muted">{this.state.address.street}</p>
-                                                    <p className="mb-0 text-muted">{this.state.address.city},</p>
-                                                    <p className="mb-0 text-muted">{this.state.address.zipCode} {this.state.address.state}</p>
-                                                </div>
-                                            </div>
-                                        </Col>
-                                    </Row>
+      const findBookmaker = () => {
+          if(!currentUser._embedded) {
+              return
+          }
+          let bookmakers = []
+          currentUser._embedded.playedPools.map(pool => {
+            bookmakers.push(pool.bookmaker)
+          })
+
+          const mostUsed = bookmakers.sort((a,b) => bookmakers.filter(v => v===a).length - bookmakers.filter(v => v===b).length).pop()
+
+          setFavoriteBook(mostUsed)
+      }
+      
+
+
+      console.log(currentUser)
+
+    return (
+        <Aux>
+                {currentUser.name ? (<Row md={12}>
+                    <Col md={4}>
+                    <Card style={{minHeight: '800px'}}>
+                        <Row className='pt-5'>
+                            <Col style={{textAlign: 'center'}}>
+                            <img src={getLatestImage(currentUser)} height='200px' alt='' width='200px' style={{objectFit: 'cover', borderRadius: '50%'}} />
+                            <div className='p-4'>
+                            <h3>{currentUser.name} {currentUser.lastName}</h3>
+                            </div>
+                            </Col>
+                        </Row>
+                            <hr />
+                            <Row style={{textAlign: 'center'}}>
+                                <Col>
+                                <h4>{currentUser.totalSubscribers} Followers</h4>
                                 </Col>
                             </Row>
-                        </div>
-                    </Card.Body>
-                </div>
-                <Row>
-                    <Col md={4} className='order-md-1'>
+                            <hr />
+                            <Row style={{textAlign: 'center'}}>
+                            <Col>
+                                <h5 className={"mb-1" + ((currentUser.totalProfit >= 0) ? " text-success" : " text-danger")}>{currentUser.totalProfit} % Profit </h5>
+                                </Col>
+                            <Col>
+                                <h5>{winRatio} % Win Ratio </h5>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row style={{textAlign: 'center'}}>
+                            <Col>
+                                <h5>{currentUser._embedded.services ? currentUser._embedded.services.length : 0} services</h5>
+                                </Col>
+                            <Col>
+                                <h5>{currentUser._embedded.pools ? currentUser._embedded.pools.length : 0} pools</h5>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row style={{textAlign: 'center'}}>
+                            <Col>
+                                <h5>1.8 Avarage Odds</h5>
+                                </Col>
+                            <Col>
+                                <h5>7.5 Average Stake</h5>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row style={{textAlign: 'center'}}>
+                                <Col>
+                                <h5>Most used bookmaker:</h5>
+                                </Col>
+                            </Row>
+                            <Row style={{textAlign: 'center'}}>
+                                <Col>
+                                <h5>{favoriteBook}</h5>
+                                </Col>
+                            </Row>
+                    </Card>
                     </Col>
-                </Row>
+                    <Col md={8} className='tab-user-card' style={{ maxHeight: '800px', overflowY: 'auto'}}>
+                        <Tabs variant='pills' defaultActiveKey='services' id='tipster-profile-tabs'>
+                            <Tab eventKey='services' title='Servizi'>
+                                <Row>
+                                    {userServices.length > 0 ? (
+                                        <MarketCard marketData={userServices}/>
+                                    ) : <Col className='pl-5'> <h4>You don't have any services yet.</h4></Col>}
+                                </Row>
+                            </Tab>
+                            <Tab eventKey='stats' title='Stats'>
+                                <Row>
+                                <Col md={6}>
+              <Card>
+                <Card.Header>
+                  <Card.Title as="h5">Vincita/Perdita</Card.Title>
+                </Card.Header>
+                <Card.Body>
+
+                      <Chart {...getCreampieData()} />
+
+                </Card.Body>
+              </Card>
+            </Col>
+                                <Col md={6}>
+              <Card>
+                <Card.Header>
+                  <Card.Title as="h5">Top bookmakers</Card.Title>
+                </Card.Header>
+                <Card.Body>
+                      <Chart {...bookmakersPie()} />
+                </Card.Body>
+              </Card>
+            </Col>
+                                </Row>
+                                <Row>
+                                <Col>
+                        <Card>
+                            <Card.Body>
+                                <h2 className="text-center f-w-400 ">$45,567</h2>
+                                <p className="text-center text-muted ">Monthly Profit</p>
+                                <Chart {...monthlyProfilt1} />
+                                <div className="m-t-20">
+                                    <Row>
+                                        <Col className="text-center ">
+                                            <h6 className="f-20 f-w-400">$6,234</h6>
+                                            <p className="text-muted f-14 m-b-0">Today</p>
+                                        </Col>
+                                        <Col className="text-center ">
+                                            <h6 className="f-20 f-w-400">$4,387</h6>
+                                            <p className="text-muted f-14 m-b-0">Yesterday</p>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                                </Row>
+                            </Tab>
+                        </Tabs>
+                    </Col>
+                </Row>) : <Loader />}
             </Aux>
-        );
-    }
+    )
 }
 
-const mapStateToProps = (state) => state;
+const mapStateToProps = (state) => ({ applicationState: state });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+
+export default 
+    connect(mapStateToProps, mapDispatchToProps)(TipsterProfile)
+  ;

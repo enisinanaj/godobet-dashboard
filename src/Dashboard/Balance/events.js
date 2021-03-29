@@ -10,27 +10,21 @@ import { Table } from "react-bootstrap";
 import moment from 'moment';
 import {getClassNameForOutcome} from '../../Dashboard/PendingTips/TipCard';
 
-import Sports from '../../App/components/Sports'
-
 class events extends Component {
     
     getRows() {
         const rows = [];
         
         this.props.data.forEach((d, index) => {
-
-            const eventCount = d.events.length;
-            let tipHandled = false;
-
             d.events.forEach(e => {
                 if (!e.outcome || !d.outcome) {
                     return false;
                 }
-
                 rows.push(
                     (<tr key={index + d.id + e.event}>
                         <td>{moment(e.eventDate).format("DD/MM/YYY HH:mm")}</td>
-                        <td>{ Sports.find(s => s.value === e.sport) ? Sports.find(s => s.value === e.sport).label : e.sport }</td>
+                        <td>{e.sport}</td>
+                        <td>{e.genderValue}</td>
                         <td>{e.competition}</td>
                         <td>{e.event}</td>
                         <td>{e.proposal}</td>
@@ -44,7 +38,6 @@ class events extends Component {
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.bookmaker}</td>}
                     </tr>)
                 )
-                tipHandled = true;
             })
 
         })
@@ -66,6 +59,7 @@ class events extends Component {
                                     <tr>
                                         <th>Data evento</th>
                                         <th>Sport</th>
+                                        <th>Sesso</th>
                                         <th>Competizione</th>
                                         <th>Evento</th>
                                         <th>Tip</th>

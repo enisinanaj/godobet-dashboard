@@ -365,3 +365,88 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateNewCard);
+
+/* <Row>
+        <Col>
+          <Card title="Crea nuovo servizio">
+            <Card.Body>
+              <Card.Text>
+                <ul className="list-group">
+                  <li className="list-group-item">
+                    Price:{" "}
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      name="price"
+                      placeholder="Prezzo"
+                      onChange={handleChange}
+                    />
+                  </li>
+                  <li className="list-group-item">
+                    Title:{" "}
+                    <Form.Control
+                      type="text"
+                      name="serviceName"
+                      placeholder="Titolo"
+                      onChange={handleChange}
+                    />
+                  </li>
+                  <li className="list-group-item">
+                    Numero massimo iscrizioni:{" "}
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      placeholder="Numero massimo iscrizioni"
+                      name="maxSubscribers"
+                      onChange={handleChange}
+                    />
+                  </li>
+                  <li className="list-group-item">
+                    Durata iscrizione:{" "}
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      name="duration"
+                      placeholder="Durata iscrizione"
+                      onChange={handleChange}
+                    />
+                  </li>
+                  <li className="list-group-item">
+                    Descrizione:
+                    <Form.Control
+                      type="text"
+                      placeholder="Descrizione"
+                      name="description"
+                      onChange={handleChange}
+                    />
+                  </li>
+                  <li className="list-group-item">
+                    Immagine:{" "}
+                    <DropzoneComponent
+                      config={config}
+                      djsConfig={djsConfig}
+                      eventHandlers={{
+                        addedfile: (file) => {
+                          setImage(file);
+                        },
+                      }}
+                    />
+                  </li>
+                </ul>
+              </Card.Text>
+            </Card.Body>
+            <div style={{ textAlign: "center" }}>
+              <button
+                className="btn btn-primary shadow-2 mb-4"
+                disabled={loading}
+                onClick={() => {
+                  handleCreateCard();
+                  setLoading(true);
+                }}
+              >
+                {loading ? "Creating.." : "Creare"}
+              </button>
+            </div>
+          </Card>
+        </Col>
+      </Row> */

@@ -140,6 +140,15 @@ export default {
           hidden: true,
         },
         {
+          id: "details",
+          title: "Details",
+          type: "item",
+          icon: "feather icon-user",
+          url: "/dashboard/details",
+          role: 0,
+          hidden: true,
+        },
+        {
           id: "account",
           title: "Impostazioni profilo",
           type: "item",

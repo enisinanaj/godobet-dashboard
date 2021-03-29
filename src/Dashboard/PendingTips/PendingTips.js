@@ -14,7 +14,7 @@ import { Tabs } from 'react-bootstrap';
 const getTipCards = (dropdownHidden) => (pools) => {
   return pools.map((pool, i) => {
     return (
-      <Col md={4} key={`tip-card-column-${i + (new Date())}`}>
+      <Col md={6} key={`tip-card-column-${i + (new Date())}`}>
         <TipCard key={`tip-card-${i + (new Date())}`} pool={pool} dropdownHidden={dropdownHidden || pool.followed} />
       </Col>
     );
@@ -104,7 +104,7 @@ class PendingTips extends Component {
               <Tab eventKey="pending" title="Tip in corso">
                 <Row>{this.state.ongoingPools}</Row>
               </Tab>
-              <Tab eventKey="expired" title="Tip concluse">
+              <Tab eventKey="expired" title="Tip conclusi">
                 <Row>{this.state.expiredPools}</Row>
               </Tab>
             </Tabs>

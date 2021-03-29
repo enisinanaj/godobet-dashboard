@@ -35,6 +35,12 @@ const CardDetails = (props) => {
       ],
       services: [],
     },
+  })
+  const [show, setShow] = useState(false);
+  const [purchaseObject, setPurchaseObject] = useState({
+    price: "",
+    name: "",
+    author: "",
   });
 
   let id = window.location.href.substring(
@@ -133,24 +139,65 @@ const CardDetails = (props) => {
   };
   
   const stripe = useStripe();
+  const elements = useElements();
 
-  const handlePurchase = (selfLink) => {
+  const formattedAmount = new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency: "EUR",
+  }).format(purchaseObject.price);
+
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
+    const cardElement = elements.getElement(CardElement);
+
+    if (!cardElement._complete) {
+      alert("Please check your card details.");
+      return;
+    }
     setIsProcessing(true);
 
-    TokenManager.getInstance().getToken()
-    .then(jwt => {
-        fetch(`${BASE_CONFIG.API_URL}/pps/payments/${selfLink.substring(selfLink.lastIndexOf('/') + 1)}/${props.applicationState.user.userCode}`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth": jwt,
-          }
-        }).then(response => response.headers.get('X-Stripe-Session-Id'))
-        .then(stripeSessionId => {
-          stripe.redirectToCheckout({ sessionId: stripeSessionId })
-        })
-        .catch(_ => setIsProcessing(false))
-    })
+    const response = await axios.post("http://localhost:9000/payment", {
+      amount: purchaseObject.price,
+      metadata: {
+        customer: props.applicationState.user.userCode,
+        service: purchaseObject.id,
+      },
+      description: purchaseObject.name,
+    });
+
+    const paymentMethodReq = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement,
+    });
+
+    const confirmedCardPayment = await stripe.confirmCardPayment(
+      response.data.client_secret,
+      {
+        payment_method: paymentMethodReq.paymentMethod.id,
+      }
+    );
+
+    if (
+      confirmedCardPayment.paymentIntent &&
+      confirmedCardPayment.paymentIntent.status === "succeeded"
+    ) {
+      setIsProcessing(false);
+      setShow(false);
+      Swal.fire(
+        "Confermato!",
+        "Ti sei abbonato al servizio con successo!",
+        "success"
+      );
+    } else {
+      setShow(false);
+      setIsProcessing(false);
+      Swal.fire(
+        "Errore!",
+        "Si è verificato un errore durante l'elaborazione. Per favore riprova.",
+        "error"
+      );
+    }
   };
 
   return (
@@ -198,7 +245,7 @@ const CardDetails = (props) => {
                           <i
                             className="feather icon-dollar-sign"
                             style={{ paddingRight: "5px" }}
-                          />{" "}Prezzo: {(currentObject.price/100).toLocaleString("it-IT", {maximumFractionDigits: 2})} €</h4>
+                          />{" "}Prezzo: {currentObject.price} €</h4>
                         </span>
                       </Col>
                       <Col>

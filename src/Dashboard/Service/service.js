@@ -38,7 +38,7 @@ class ServiceCard extends Component {
                     </Card.ImgOverlay>
                     <Card.Body className="text-left"> 
                         <Card.Title as="h2" style={{color: "white"}}>
-                            {(this.props.data.service.price/100).toLocaleString("it-IT", { maximumFractionDigits: 2 })} €
+                            {this.props.data.service.price} €
                         </Card.Title>
                     </Card.Body>
                 </div>

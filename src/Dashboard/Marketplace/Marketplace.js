@@ -84,6 +84,9 @@ const Marketplace = (props) => {
         .then(stripeSessionId => {
           stripe.redirectToCheckout({ sessionId: stripeSessionId })
         })
+        .catch(e => {
+          // TODO: show error to the user
+        })
     })
   };
 

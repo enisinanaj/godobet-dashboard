@@ -12,7 +12,6 @@
     background: transparentize($value, 0.8);
     border-color: theme-color-level($color, $alert-border-level);
     color: $value;
-    text-transform: uppercase;
   }
 
   a.badge-light-#{$color} {

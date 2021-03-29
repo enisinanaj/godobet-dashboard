@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import Esaurito from '../../App/components/Esaurito'
 import '../../assets/scss/tip.css';
 
-const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
+const MarketCard = ({ marketData, handlePurchase }) => {
   const getLatestImage = (media) => {
     if (!media || media.length === 0) {
       return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
@@ -40,7 +40,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
           </div>
           </a>
 
-          <Card.Body style={{minHeight: "210px"}}>
+          <Card.Body>
             <Card.Text>
               <span>
                 {" "}<i className="feather icon-users" style={{ paddingRight: "5px" }} />{" "}

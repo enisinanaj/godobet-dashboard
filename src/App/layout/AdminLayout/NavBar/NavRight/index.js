@@ -39,7 +39,7 @@ class NavRight extends Component {
           <li>
             <a
               href="/dashboard/marketplace"
-              data-toggle="tab"
+              // data-toggle="tab"
               aria-expanded="false"
               className="nav-link has-ripple"
             >

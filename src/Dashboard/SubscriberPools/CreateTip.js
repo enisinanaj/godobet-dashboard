@@ -139,7 +139,7 @@ const CreateTip = (props) => {
   return (
     <Aux>
       <Form>
-        <Row>
+        <Row style={{marginBottom: '100px'}}>
           <Col md={12} sm={12} lg={12} xl={12}>
             <Card title="Dati tip" className={"p-15"}>
               <Row>
