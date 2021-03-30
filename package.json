@@ -2,7 +2,7 @@
   "name": "able-pro-v16.12.0",
   "version": "8.0.2",
   "private": true,
-  "homepage": "http://ableproadmin.com/react/default/",
+  "homepage": "/",
   "dependencies": {
     "@ckeditor/ckeditor5-build-balloon": "^12.3.0",
     "@ckeditor/ckeditor5-build-classic": "^12.3.0",
@@ -100,6 +100,7 @@
     "recharts": "^1.6.2",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
+    "serve": "^11.3.2",
     "slick-carousel": "^1.8.1",
     "styled-components": "^4.3.2",
     "sweetalert2": "^8.13.0",
