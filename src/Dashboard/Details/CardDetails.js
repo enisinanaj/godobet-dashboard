@@ -104,9 +104,9 @@ const CardDetails = (props) => {
           if(currentObject && currentObject._links) {
             console.log(subscriptions)
             console.log(currentObject._links.self.href)
-            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);  
+            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
 
-          if (subscription) {
+          if (!subscription) {
             setPurchasable(true);
           } else {
             TokenManager.getInstance().getToken().then(jwt => {
@@ -116,7 +116,6 @@ const CardDetails = (props) => {
                 "X-Auth": jwt,
                 },
               }).then(e => e.json().then(pools => {
-                console.log(pools)
                 setPools(pools._embedded.pools)
               }))
             })
@@ -128,8 +127,6 @@ const CardDetails = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentObject])
-
-  console.log(pools)
 
 
   const authorAvatar = author._embedded.media.sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime());

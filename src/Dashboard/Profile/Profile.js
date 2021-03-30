@@ -30,8 +30,6 @@ function TipsterProfile(props) {
     const [userServices, setUserServices] = useState([])
     const [winRatio, setWinRatio] = useState(0)
 
-    let userId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-
     useEffect(() => {
         TokenManager.getInstance().getToken().then(jwt => {
             fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode, {
