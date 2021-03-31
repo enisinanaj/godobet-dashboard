@@ -5,8 +5,8 @@ services:
     image: "registry.e2n.me/godobet-dashboard:latest"
     restart: unless-stopped
     environment:
-      - VIRTUAL_HOST=d.godobet.it
-      - LETSENCRYPT_HOST=d.godobet.it
+      - VIRTUAL_HOST=dashboard.godobet.it
+      - LETSENCRYPT_HOST=dashboard.godobet.it
       - LETSENCRYPT_EMAIL=enisinanaj@outlook.com
       - LETSENCRYPT_ENABLED=1
     networks:
