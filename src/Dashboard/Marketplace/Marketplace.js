@@ -17,10 +17,36 @@ import "./Marketplace.css";
 const Marketplace = (props) => {
   const [marketData, setMarketData] = useState([]);
   const [inPurchasing, setInPurchasing] = useState(false);
+  const [search, setSearch] = useState(false);
 
   useEffect(() => {
     getServices();
   }, []);
+
+  useEffect(() => {
+    if (search < 3) {
+      getServices()
+      return;
+    }
+
+    TokenManager.getInstance()
+      .getToken()
+      .then((jwt) => {
+        fetch(BASE_CONFIG.API_URL + "/services/search/findByServiceName?name=" + search, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          }
+        })
+        .then((e) => e.json())
+        .then((res) => {
+          if (!res._embedded.services) {
+            return;
+          }
+          setMarketData(res._embedded.services);
+        });
+      });
+  }, [search]);
 
   const stripe = useStripe();
 
@@ -67,7 +93,7 @@ const Marketplace = (props) => {
       <Row className='p-5'>
         <Col>
           <h4>Cerca</h4>
-          <Form.Control type='text' style={{backgroundColor:"white"}}/>
+          <Form.Control type='text' onChange={({target}) => setSearch(target.value)} style={{backgroundColor:"white"}}/>
         </Col>
       </Row>
       <Row md={12}>

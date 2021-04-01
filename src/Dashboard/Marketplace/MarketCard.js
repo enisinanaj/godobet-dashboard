@@ -12,6 +12,10 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
     return media.sort((a, b) => b.mediaIteration - a.mediaIteration)[0].url;
   };
 
+  const canPurchase = (item) => {
+    return item.author.userCode !== user.userCode && (item.maxSubscribers - item.subscribersCount) > 0
+  }
+
   return marketData.map((item, index) => {
     return (
       <Col md={4} key={index}>
@@ -54,7 +58,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
             </Card.Text>
 
             <div>
-            {item.author.userCode !== user.userCode && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} >
+            {canPurchase(item) && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} >
               {inPurchasing === item.id ? (
                 <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
               ) : null }

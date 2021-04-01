@@ -43,7 +43,11 @@ const CardDetails = (props) => {
 
   let id = window.location.href.substring(
     window.location.href.lastIndexOf("/") + 1
-  );
+  ).replace('#', '');
+
+  if (!id.match(/^\d$/g)) {
+    window.location = "/maintenance/error";
+  }
 
   const getLatestImage = (media) => {
     if (
@@ -227,7 +231,7 @@ const CardDetails = (props) => {
                             className={currentObject.totalProfit >= 0 ? "feather icon-chevrons-up" : "feather icon-chevrons-down"}
                             style={{ paddingRight: "5px" }}
                           />{" "}
-                          Profit: {currentObject.totalProfit.toFixed(2)} %</h4>
+                          Profit: {currentObject.totalProfit?.toFixed(2)} %</h4>
                       </Col>
                     </Row>
                     <hr />

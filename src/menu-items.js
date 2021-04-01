@@ -38,9 +38,17 @@ export default {
           id: "active-services",
           title: "Servizi attivi",
           type: "item",
-          icon: "feather icon-printer",
+          icon: "feather icon-box",
           url: "/dashboard/my-services",
           role: 4,
+        },
+        {
+          id: "marketplace",
+          title: "Marketplace",
+          type: "item",
+          icon: "feather icon-shopping-cart",
+          url: "/dashboard/marketplace",
+          role: 3
         },
         {
           id: "manage",
@@ -77,6 +85,31 @@ export default {
               role: 5,
             },
           ],
+        },
+        {
+          id: "settings",
+          title: "Impostazioni",
+          type: "collapse",
+          icon: "feather icon-user",
+          role: 3,
+          children: [
+            {
+              id: "account",
+              title: "Account",
+              type: "item",
+              icon: "feather icon-at-sign",
+              url: "/settings",
+              role: 3,
+            },
+            {
+              id: "wallet",
+              title: "Wallet",
+              type: "item",
+              icon: "feather icon-briefcase",
+              url: "#",
+              role: 5,
+            }
+          ]
         },
         {
           id: "admin",

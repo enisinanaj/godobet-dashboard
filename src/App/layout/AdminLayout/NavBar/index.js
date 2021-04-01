@@ -9,6 +9,7 @@ import DEMO from "../../../../store/constant";
 import * as actionTypes from "../../../../store/actions";
 
 import logo from "../../../../assets/images/godobet_logo_small.png";
+import logoNegative from "../../../../assets/images/godobet_negative.png";
 import { withRouter } from "react-router-dom";
 
 class NavBar extends Component {
@@ -55,7 +56,7 @@ class NavBar extends Component {
       toggleClass = [...toggleClass, "on"];
     }
 
-    let mainLogo = logo;
+    let mainLogo = logoNegative;
 
     let navHtml;
     if (!this.state.rightToggle && this.props.windowWidth < 992) {
