@@ -17,6 +17,8 @@ import "./Marketplace.css";
 import { Button } from "bootstrap";
 
 const Marketplace = (props) => {
+  const [searching, setSearching] = useState(false)
+  const [searchTerm, setSearchTerm] = useState()
   const [isProcessing, setIsProcessing] = useState(false);
   const [marketData, setMarketData] = useState([]);
   const [show, setShow] = useState(false);
@@ -149,6 +151,22 @@ const Marketplace = (props) => {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault()
+    setSearching(true)
+    TokenManager.getInstance().getToken().then(jwt => {
+      fetch(`${BASE_CONFIG.API_URL}/services/search/findByServiceName?name=${searchTerm}`, {
+        headers: {
+          "Content-Type": 'application/json',
+          "X-Auth": jwt,
+        }
+      }).then(e => e.json().then(res => {
+        setMarketData(res._embedded.services)
+        setSearching(false)
+      }))
+    })
+  }
+
   return (
     <Aux>
       <Modal show={show} onHide={handleClose}>
@@ -237,12 +255,17 @@ const Marketplace = (props) => {
       </Modal>
       <Row className='pt-5 pb-5' style={{justifyContent: 'center'}}>
         <Col md={4} style={{textAlign: 'center'}}>
-        <Form.Control type='text' style={{backgroundColor:"white"}} placeholder='Search..'/>
-        <button className='btn-primary m-3'>Search</button>
+        <Form onSubmit={handleSearch}>
+        <Form.Control type='text' style={{backgroundColor:"white"}} placeholder='Cerca..' onChange={(e) => setSearchTerm(e.target.value)}/>
+        <button style ={{width: '80px'}}className='btn-primary m-3' type='submit'>{searching ? (<span className="spinner-border spinner-border-sm mr-1"></span>) : "Cerca"}</button>
+        </Form>
         </Col>
       </Row>
       <Row md={12}>
-        <MarketCard marketData={marketData} handlePurchase={handlePurchase} />
+        {marketData.length > 0 ? (
+        <MarketCard marketData={marketData} handlePurchase={handlePurchase} /> ) : (
+          <Col><h3>Nessun servizio trovato</h3></Col>
+        ) }
       </Row>
     </Aux>
   );

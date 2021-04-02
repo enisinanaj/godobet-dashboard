@@ -18,7 +18,8 @@ import satisfactionChart from "../Home/charts/pie";
 import bookmakersChart from "../Home/charts/bookmakers";
 
 import monthlyProfilt1 from './monthlyprofit'
-import amountSpent from './averageStake'
+import averageStake from './averageStake'
+import averageOdds from './averageOdds'
 
 
 import Loader from "../../App/layout/Loader";
@@ -183,7 +184,7 @@ function TipsterProfile(props) {
                             <hr />
                             <Row style={{textAlign: 'center'}}>
                                 <Col>
-                                <h4>{currentUser.totalSubscribers} Followers</h4>
+                                <h4>{currentUser.totalSubscribers} Iscritti</h4>
                                 </Col>
                             </Row>
                             <hr />
@@ -198,7 +199,7 @@ function TipsterProfile(props) {
                             <hr />
                             <Row style={{textAlign: 'center'}}>
                             <Col>
-                                <h5>{currentUser._embedded.services ? currentUser._embedded.services.length : 0} services</h5>
+                                <h5>{currentUser._embedded.services ? currentUser._embedded.services.length : 0} Servizi</h5>
                                 </Col>
                             <Col>
                                 <h5>{currentUser._embedded.pools ? currentUser._embedded.pools.length : 0} pools</h5>
@@ -216,7 +217,7 @@ function TipsterProfile(props) {
                             <hr />
                             <Row style={{textAlign: 'center'}}>
                                 <Col>
-                                <h5>Most used bookmaker:</h5>
+                                <h5>Bookmaker più utilizzato:</h5>
                                 </Col>
                             </Row>
                             <Row style={{textAlign: 'center'}}>
@@ -287,12 +288,12 @@ function TipsterProfile(props) {
                             <Card.Body>
                                 <Row className="mt-2">
                                     <Col sm={6}>
-                                    <p className="text-muted f-w-600 f-16">ODDS/STAKE AVG</p>
-                                    <Chart {...amountSpent} />
+                                    <p className="text-muted f-w-600 f-16">Average odds</p>
+                                    <Chart {...averageOdds} />
                                     </Col>
                                     <Col sm={6}>
-                                    <p className="text-muted f-w-600 f-16">ODDS/STAKE AVG</p>
-                                    <Chart {...amountSpent} />
+                                    <p className="text-muted f-w-600 f-16">Average stake</p>
+                                    <Chart {...averageStake} />
                                     </Col>
                                 </Row>
                             </Card.Body>

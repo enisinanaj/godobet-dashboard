@@ -39,6 +39,6 @@ export default {
         }
     },
     series: [{
-        data: [3.5]
+        data: [3.5, 0]
     }]
 }
