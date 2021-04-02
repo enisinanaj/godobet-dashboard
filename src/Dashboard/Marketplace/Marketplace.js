@@ -16,6 +16,7 @@ import "./Marketplace.css";
 const Marketplace = (props) => {
   const [marketData, setMarketData] = useState([]);
   const [inPurchasing, setInPurchasing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [search, setSearch] = useState(false);
 
   useEffect(() => {
@@ -90,6 +91,22 @@ const Marketplace = (props) => {
     })
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault()
+    setSearching(true)
+    TokenManager.getInstance().getToken().then(jwt => {
+      fetch(`${BASE_CONFIG.API_URL}/services/search/findByServiceName?name=${searchTerm}`, {
+        headers: {
+          "Content-Type": 'application/json',
+          "X-Auth": jwt,
+        }
+      }).then(e => e.json().then(res => {
+        setMarketData(res._embedded.services)
+        setSearching(false)
+      }))
+    })
+  }
+
   return (
     <Aux>
       <Row className='p-5'>
@@ -99,7 +116,10 @@ const Marketplace = (props) => {
         </Col>
       </Row>
       <Row md={12}>
-        <MarketCard marketData={marketData} inPurchasing={inPurchasing} handlePurchase={handlePurchase} user={props.applicationState.user} />
+        {marketData.length > 0 ? (
+          <MarketCard marketData={marketData} handlePurchase={handlePurchase} /> ) : (
+            <Col><h3>Nessun servizio trovato</h3></Col>
+        )}
       </Row>
     </Aux>
   );

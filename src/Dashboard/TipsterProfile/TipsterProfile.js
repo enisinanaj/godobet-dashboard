@@ -17,9 +17,11 @@ import MarketCard from '../Marketplace/MarketCard';
 import satisfactionChart from "../Home/charts/pie";
 import bookmakersChart from "../Home/charts/bookmakers";
 
+import monthlyProfilt1 from './monthlyprofit'
+import averageStake from './averageStake'
+import averageOdds from './averageOdds'
+
 import Loader from "../../App/layout/Loader";
-
-
 
 function TipsterProfile(props) {
     const [favoriteBook, setFavoriteBook] = useState(null)
@@ -172,13 +174,7 @@ function TipsterProfile(props) {
                                     </div>
                                 </Col>
                             </Row>
-                                <hr />
-                                <Row style={{textAlign: 'center'}}>
-                                    <Col>
-                                    <h4>{currentUser.totalSubscribers} Followers</h4>
-                                    </Col>
-                                </Row>
-                                <hr />
+                                
                                 <Row style={{textAlign: 'center'}}>
                                 <Col>
                                     <h5 className={"mb-1" + ((currentUser.totalProfit >= 0) ? " text-success" : " text-danger")}>Profitto: {currentUser.totalProfit.toFixed(2)}% </h5>

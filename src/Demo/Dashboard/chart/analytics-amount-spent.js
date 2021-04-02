@@ -1,6 +1,6 @@
 export default {
     type: 'bar',
-    height: 50,
+    height: 160,
     options: {
         chart: {
             sparkline: {
@@ -10,7 +10,7 @@ export default {
         dataLabels: {
             enabled: false
         },
-        colors: ['#9ccc65'],
+        colors: ['#56be7f'],
         plotOptions: {
             bar: {
                 columnWidth: '60%'
@@ -39,6 +39,6 @@ export default {
         }
     },
     series: [{
-        data: [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54, 25, 66, 41, 89, 63, 54, 25, 66, 41, 89, 63, 25, 44, 12]
+        data: [3.5, 0]
     }]
 }
