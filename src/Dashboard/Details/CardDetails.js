@@ -9,9 +9,6 @@ import Chart from "react-apexcharts";
 import '../Marketplace/Marketplace.css'
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 
-import secEcommerceChartBar from "../../Demo/Widget/chart/sec-ecommerce-chart-bar";
-import secEcommerceChartLine from "../../Demo/Widget/chart/sec-ecommerce-chart-line";
-
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -240,7 +237,7 @@ const CardDetails = (props) => {
 
   return (
     <Aux>
-      {currentObject ? (
+      {currentObject && author.name ? (
         <div>
           <Row className="mb-n4">
             <Col sm={12}>
@@ -349,16 +346,6 @@ const CardDetails = (props) => {
                     <Col>
                       <p className="text-muted m-b-5">Followers</p>
                       <h5>{author.totalSubscribers}</h5>
-                    </Col>
-                  </Row>
-                  <Row>
-                  <Col>
-                    <p className="text-muted m-b-5">Services</p>
-                      <h6>{author._embedded.services.length}</h6>
-                    </Col>
-                    <Col>
-                    <p className="text-muted m-b-5">Pools</p>
-                      <h6>{author._embedded.pools ? author._embedded.pools.length : 0}</h6>
                     </Col>
                   </Row>
                   <Row>
