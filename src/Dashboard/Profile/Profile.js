@@ -43,6 +43,7 @@ function TipsterProfile(props) {
 
     useEffect(() => {
         findBookmaker()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentUser])
 
 

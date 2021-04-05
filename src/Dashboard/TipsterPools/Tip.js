@@ -1,5 +1,5 @@
-import React from "react";
-import { Col, Card, Carousel, Dropdown, Row } from "react-bootstrap";
+import React, { useState } from "react";
+import { Col, Card, Carousel, Dropdown, Row, Modal, Button } from "react-bootstrap";
 import moment from 'moment'
 import TokenManager from "../../App/auth/TokenManager";
 import 'moment/locale/it';
@@ -12,6 +12,8 @@ moment.locale("it")
 
 const Tip = props => {
     let {pool} = props;
+
+    const [showMotivation, setShowMotivation] = useState(false);
 
     const updateEvent = async (event, outcome) => {
         var token = await TokenManager.getInstance().getToken();
@@ -62,20 +64,23 @@ const Tip = props => {
             <Card.Body>
                 {/* className={'text-white'} */}
                 <Card.Title as="h5">
-                {pool.description}
-                {!pool.outcome && <Dropdown className="drp-tipster-pool">
-                    <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
-                    {props.author && <Dropdown.Menu alignRight className="profile-notification">
-                        <Dropdown.Item onClick={() => {updateTip("win")}}>Win</Dropdown.Item>
-                        <Dropdown.Item onClick={() => {updateTip("1/2 win")}}>1/2 Win</Dropdown.Item>
-                        <Dropdown.Item onClick={() => {updateTip("lose")}}>Lose</Dropdown.Item>
-                        <Dropdown.Item onClick={() => {updateTip("1/2 lose")}}>1/2 Lose</Dropdown.Item>
-                        <Dropdown.Item onClick={() => {updateTip("void")}}>Void</Dropdown.Item>
-                    </Dropdown.Menu>}
-                    {!props.author && <Dropdown.Menu alignRight className="profile-notification">
-                        <Dropdown.Item onClick={() => {playTip(pool)}}>Tip seguita</Dropdown.Item>
-                    </Dropdown.Menu>}
-                </Dropdown>}
+                    {pool.description}
+                    {!pool.outcome && <Dropdown className="drp-tipster-pool">
+                        <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
+                        {props.author && <Dropdown.Menu alignRight className="profile-notification">
+                            <Dropdown.Item onClick={() => {updateTip("win")}}>Win</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {updateTip("1/2 win")}}>1/2 Win</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {updateTip("lose")}}>Lose</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {updateTip("1/2 lose")}}>1/2 Lose</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {updateTip("void")}}>Void</Dropdown.Item>
+                        </Dropdown.Menu>}
+                        {!props.author && <Dropdown.Menu alignRight className="profile-notification">
+                            <Dropdown.Item onClick={() => {playTip(pool)}}>Tip seguita</Dropdown.Item>
+                        </Dropdown.Menu>}
+                    </Dropdown>}
+                    {pool.motivation && <span onClick={() => setShowMotivation(true)} className={"badge badge-light-info float-right mr-2"} style={{ cursor: 'pointer' }} >
+                        MOTIVAZIONE    
+                    </span>}
                 </Card.Title>
                 <Carousel controls={false} interval={null}>
                 {pool.events.map(event => (
@@ -109,8 +114,19 @@ const Tip = props => {
                 ))}
                 </Carousel>
                 {pool.outcome && <div style={{display: 'inline-block', marginTop: "15px"}}>
-                    <span className={getClassNameForOutcome(pool.outcome)} >{pool.outcome}</span>
+                    <span className={getClassNameForOutcome(pool.outcome)} >{pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} /></span>
                 </div>}
+                {pool.motivation && <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title as="h5">Motivazione Tip - <strong>{pool.description}</strong></Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body style={{wordBreak: 'break-word'}}>
+                        {pool.motivation}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowMotivation(false)}>Close</Button>
+                    </Modal.Footer>
+                </Modal>}
             </Card.Body>
         </Card>
     </Col>);

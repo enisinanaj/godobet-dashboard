@@ -18,6 +18,8 @@ const CreateTip = (props) => {
   const [validEvents, setValidEvents] = useState(false);
   const [service, setService] = useState("");
   const [services, setServices] = useState();
+  const [motivation, setMotivation] = useState("");
+  const [motivationCount, setMotivationCount] = useState(1000);
 
   const updateEvents = (event) => {
     let newEvents = events;
@@ -30,6 +32,10 @@ const CreateTip = (props) => {
     validateEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stake, description, bookmaker, service]);
+
+  useEffect(() => {
+    setMotivationCount(1000 - motivation.length);
+  }, [motivation])
 
   useEffect(() => {
     TokenManager.getInstance()
@@ -63,9 +69,10 @@ const CreateTip = (props) => {
       if (
         event.eventDate === "" ||
         event.competition === "" ||
-        event.evemt === "" ||
+        event.event === "" ||
         event.proposal === "" ||
-        event.quota === "" ||
+        event.quote.replace(".", "").replace("_", "") === "" ||
+        event.quote === "__.__" ||
         event.sport === "" ||
         description === "" ||
         stake === "" ||
@@ -101,6 +108,7 @@ const CreateTip = (props) => {
         service: service.value,
         description,
         bookmaker,
+        motivation,
         events: [],
         author: props.applicationState.user._links.self.href,
         stake: Number(stake.replace("%", "")) * 100,
@@ -209,6 +217,22 @@ const CreateTip = (props) => {
                   </Form.Group>
                 </Col>
               </Row>
+              <Row>
+                <Col md={12} sm={12} lg={12} xl={12}>
+                  <Form.Group controlId="notes">
+                    <Form.Label>Motivazione <em>(Opzionale)</em></Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={4}
+                        name="motivation"
+                        placeholder="Motivazione"
+                        value={motivation}
+                        onChange={({ target }) => {setMotivation(target.value)}}
+                    />
+                    <span className={"text-muted small float-right " + (motivationCount < 0 ? "text-danger" : "")}>Caratteri rimanenti {motivationCount}</span>
+                  </Form.Group>
+                </Col>
+              </Row>
             </Card>
 
             {events.map((e, index) => {
@@ -227,7 +251,7 @@ const CreateTip = (props) => {
             </Button>
             <Button
               className={"float-right"}
-              disabled={!validEvents}
+              disabled={!validEvents || motivationCount < 0}
               onClick={() => saveTip()}
             >
               Salva

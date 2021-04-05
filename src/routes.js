@@ -3,7 +3,7 @@ import $ from "jquery";
 import CreateNewService from "./Dashboard/TipsterServices/CreateNewService";
 import EditService from "./Dashboard/TipsterServices/EditService";
 import ServiceDetail from "./Dashboard/Details/ServiceDetail";
-import CreateTip from "./Dashboard/SubscriberPools/CreateTip";
+import CreateTip from "./Dashboard/TipsterPools/CreateTip";
 import TipsterProfile from "./Dashboard/TipsterProfile/TipsterProfile";
 
 window.jQuery = $;
@@ -25,8 +25,8 @@ const MyServices = React.lazy(() =>
 const TipsterServices = React.lazy(() =>
   import("./Dashboard/TipsterServices/TipsterServices")
 );
-const SubscriberPools = React.lazy(() =>
-  import("./Dashboard/SubscriberPools/SubscriberPools")
+const TipsterPools = React.lazy(() =>
+  import("./Dashboard/TipsterPools/TipsterPools")
 );
 
 const Settings = React.lazy(() => import("./Dashboard/Profile/Settings"));
@@ -101,7 +101,7 @@ const routes = [
     path: "/dashboard/tipster/pools",
     exact: true,
     name: "My Tips",
-    component: SubscriberPools,
+    component: TipsterPools,
     role: 4,
   },
   {

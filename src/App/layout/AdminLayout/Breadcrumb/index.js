@@ -89,7 +89,7 @@ class Breadcrumb extends Component {
       document.title = title + " | GODOBET";
     }
 
-    if (this.state.item.length == 0 && this.state.main.length == 0) {
+    if (this.state.item.length === 0 && this.state.main.length === 0) {
       return <Aux>
         <div className="page-header">
           <div className="page-block">

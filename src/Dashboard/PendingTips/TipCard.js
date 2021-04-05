@@ -1,8 +1,6 @@
 import moment from 'moment';
 import React, { useState } from 'react';
-import { Col } from 'react-bootstrap';
-import { Row } from 'react-bootstrap';
-import { Dropdown, Card, Carousel } from 'react-bootstrap';
+import { Dropdown, Card, Carousel, Modal, Button, Col, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import TokenManager from '../../App/auth/TokenManager';
@@ -16,7 +14,8 @@ const getDropdown = (clickHandler) => {
     <Dropdown className="drp-tipster-pool">
         <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
         <Dropdown.Menu alignRight className="profile-notification">
-            <Dropdown.Item onClick={clickHandler}>Tip seguita</Dropdown.Item>
+            <Dropdown.Item onClick={() => clickHandler(1)}>Tip seguita</Dropdown.Item>
+            <Dropdown.Item onClick={() => clickHandler(-1)}>Tip non seguita</Dropdown.Item>
         </Dropdown.Menu>
     </Dropdown>
   );
@@ -74,9 +73,16 @@ const getTipText = (pool) => {
 
 const TipCard = ({ pool, user, dropdownHidden, actions }) => {
   const [DropdownHiddenState, setDropdownHiddenState] = useState(dropdownHidden);
+  const [showMotivation, setShowMotivation] = useState(false);
 
-  const followTip = () => {
-    const followLink = config.API_URL + `/played-pools/${user.userCode}/${pool.id}`;
+  const followTip = (direction) => {
+    let followLink;
+    if (direction === 1) {
+      followLink = config.API_URL + `/played-pools/${user.userCode}/${pool.id}`;
+    } else  if (direction === -1) {
+      followLink = config.API_URL + `/unplayed-pools/${user.userCode}/${pool.id}`;
+    }
+
     postFollow(followLink)
     .then(_ => setDropdownHiddenState(true))
     .then(reloadUser)
@@ -125,11 +131,25 @@ const TipCard = ({ pool, user, dropdownHidden, actions }) => {
             <Card.Title as="h5">
               {pool.description}
               {DropdownHiddenState || getDropdown(followTip)}
+              {pool.motivation && <span onClick={() => setShowMotivation(true)} className={"badge badge-light-info float-right mr-2"} style={{ cursor: 'pointer'}} >
+                  MOTIVAZIONE    
+              </span>}
             </Card.Title>
             {getTipText(pool)}
             {pool.outcome && <div style={{display: 'inline-block', marginTop: "15px"}}>
-                <span className={getClassNameForOutcome(pool.outcome)}>{pool.outcome}</span>
+                <span className={getClassNameForOutcome(pool.outcome)}>{pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} /></span>
             </div>}
+            {pool.motivation && <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title as="h5">Motivazione Tip - <strong>{pool.description}</strong></Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{wordBreak: 'break-word'}}>
+                    {pool.motivation}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowMotivation(false)}>Close</Button>
+                </Modal.Footer>
+            </Modal>}
         </Card.Body>
     </Card>
   );

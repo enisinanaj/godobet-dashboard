@@ -11,7 +11,6 @@ const InsertEventCard = (props) => {
     const [proposal, setProposal] = useState("");
     const [quote, setQuote] = useState("");
     const [sport, setSport] = useState("");
-    const [notes, setNotes] = useState("");
 
     useEffect(() => {
         props.onValueChange({
@@ -21,10 +20,10 @@ const InsertEventCard = (props) => {
             event,
             proposal,
             quote,
-            sport,
-            notes
+            sport
         });
-    }, [eventDate, competition, event, proposal, quote, notes, props])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [eventDate, competition, event, proposal, quote, props])
 
     return (<Card className={"p-15"}>
         <Card.Body>
@@ -108,18 +107,6 @@ const InsertEventCard = (props) => {
                             name="quota"
                             placeholder="1.98"
                             value={quote} />
-                    </Form.Group>
-                </Col>
-                <Col md={12} sm={12} lg={12} xl={12}>
-                    <Form.Group controlId="notes">
-                    <Form.Label>Notes <em>(Opzione)</em></Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="notes"
-                        placeholder="Note"
-                        value={notes}
-                        onChange={({ target }) => {setNotes(target.value)}}
-                    />
                     </Form.Group>
                 </Col>
             </Row>

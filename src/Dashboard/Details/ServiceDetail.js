@@ -15,7 +15,7 @@ import { connect } from "react-redux";
 import PriceLabel from '../../App/components/PriceLabel';
 import { useStripe } from "@stripe/react-stripe-js";
 import md5 from "md5";
-import Tip from "../SubscriberPools/Tip";
+import Tip from "../TipsterPools/Tip";
 import LocaleNumber from "../../App/components/LocaleNumber";
 
 const ServiceDetail = (props) => {

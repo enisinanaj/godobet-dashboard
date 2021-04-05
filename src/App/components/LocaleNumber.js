@@ -1,7 +1,7 @@
 import React from 'react';
 
 const LocaleNumber = ({amount, symbol, style}) => {
-    if (!amount) {
+    if (!amount && amount !== 0) {
         return <span>-{symbol}</span>
     }
 
