@@ -6,8 +6,10 @@ import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
 import Esaurito from '../../App/components/Esaurito'
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
+import PriceLabel from "../../App/components/PriceLabel";
+import LocaleNumber from "../../App/components/LocaleNumber";
 
-const SubscriberCard = (props) => {
+const ServiceCard = (props) => {
   const getLatestImage = (media) => {
     if (!media || media.length === 0) {
       return CoverImage; //"https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
@@ -39,7 +41,7 @@ const SubscriberCard = (props) => {
               className={'mb-1 mt-4 mr-3 ml-3'}
               style={{ display: 'inline' }}
             >
-              <Link to={`details/${item.id}`}>{item.serviceName}</Link>
+              <Link to={`/dashboard/service/${item.id}`}>{item.serviceName}</Link>
             </Card.Title>
 
             <Card.ImgOverlay
@@ -71,8 +73,8 @@ const SubscriberCard = (props) => {
           </div>
 
           <Card.Body>
-            <Link to={`details/${item.id}`}>
-              <Card.Title as="h5">{(item.price/100).toFixed(2)} &euro;</Card.Title>
+            <Link to={`/dashboard/service/${item.id}`}>
+              <Card.Title as="h5"> <PriceLabel amount={item.price/100}></PriceLabel> </Card.Title>
             </Link>
             <Card.Text>
               {item.maxSubscribers - item.subscribersCount === 0 ? (
@@ -117,13 +119,8 @@ const SubscriberCard = (props) => {
                 <p className="mb-0">Durata</p>
               </Col>}
               <Col>
-                <h6
-                  className={
-                    'mb-1' +
-                    (item.totalProfit >= 0 ? ' text-success' : ' text-danger')
-                  }
-                >
-                  {item.totalProfit.toFixed(2)}%
+                <h6 className={'mb-1' + (item.totalProfit >= 0 ? ' text-success' : ' text-danger')} >
+                  <LocaleNumber amount={item.totalProfit} symbol={"%"}></LocaleNumber>
                 </h6>
                 <p className="mb-0">Profitto</p>
               </Col>
@@ -140,4 +137,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubscriberCard);
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceCard);

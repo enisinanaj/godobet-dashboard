@@ -4,14 +4,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Chart from 'react-apexcharts';
-
 import Aux from '../../hoc/_Aux';
-import LineInterpolationChart from '../Charts/LineInterpolationChart';
-
 import * as actions from '../../store/actions';
 import config from '../../store/config';
 import TokenManager from '../../App/auth/TokenManager';
 import satisfactionChart from './charts/pie';
+import LocaleNumber from '../../App/components/LocaleNumber';
 
 class Default extends React.Component {
   state = {
@@ -122,8 +120,6 @@ class Default extends React.Component {
       };
     }
 
-    console.warn(this.props.user._embedded.playedPools)
-
     const map = this.props.user._embedded.playedPools.reduce((pie, pool) => {
       const h = { ...pie };
 
@@ -195,7 +191,7 @@ class Default extends React.Component {
                       <Col sm={8}>
                         <h6 className="text-muted m-b-0">Profitto Totale</h6>
                         <h4 className="text-c-yellow">
-                          {this.state.totalProfit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%
+                          <LocaleNumber amount={this.state.totalProfit} symbol={"%"} />
                         </h4>
                       </Col>
                       <Col sm={4} className="text-right">
@@ -212,7 +208,7 @@ class Default extends React.Component {
                       <Col sm={8}>
                         <h6 className="text-muted m-b-0">Profitto mensile</h6>
                         <h4 className="text-c-yellow">
-                          {this.state.monthProfit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%
+                          <LocaleNumber amount={this.state.monthProfit} symbol={"%"} />
                         </h4>
                       </Col>
                       <Col sm={4} className="text-right">

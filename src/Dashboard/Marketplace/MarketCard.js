@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Esaurito from '../../App/components/Esaurito'
+import Esaurito from '../../App/components/Esaurito';
+import LocaleNumber from '../../App/components/LocaleNumber';
+import PriceLabel from "../../App/components/PriceLabel";
 import '../../assets/scss/tip.css';
 
 const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
@@ -35,7 +37,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
             />
             
             <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline"}}>
-              <Link to={`details/${item.id}`}>{item.serviceName}</Link>
+              <Link to={`/dashboard/service/${item.id}`}>{item.serviceName}</Link>
             </Card.Title>
           </div>
 
@@ -62,7 +64,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
               {inPurchasing === item.id ? (
                 <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
               ) : null }
-              Iscriviti subito a soli {(item.price/100).toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})} &euro;
+              Iscriviti subito a soli <PriceLabel amount={(item.price/100)}></PriceLabel>
             </Button>}
             </div>
           </Card.Body>
@@ -77,7 +79,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
                       <p className="mb-0">Durata</p>
                   </Col>
                   <Col>
-                      <h6 className={"mb-1" + ((item.totalProfit >= 0) ? " text-success" : " text-danger")}>{item.totalProfit.toFixed(2)}%</h6>
+                      <h6 className={"mb-1" + ((item.totalProfit >= 0) ? " text-success" : " text-danger")}><LocaleNumber amount={item.totalProfit} symbol={"%"}></LocaleNumber></h6>
                       <p className="mb-0">Profitto</p>
                   </Col>
               </Row>

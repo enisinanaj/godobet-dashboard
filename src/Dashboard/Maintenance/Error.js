@@ -1,5 +1,4 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 
 import Aux from "../../hoc/_Aux";
 import "../../assets/scss/style.scss";

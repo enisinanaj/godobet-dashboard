@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Card } from 'react-bootstrap';
+import PriceLabel from "../../App/components/PriceLabel";
 class ServiceCard extends Component {
 
     image = this.props.data.media && this.props.data.media.url ? this.props.data.media.url : "https://images.unsplash.com/photo-1473075109809-7a17d327bdf6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80";
@@ -38,7 +39,7 @@ class ServiceCard extends Component {
                     </Card.ImgOverlay>
                     <Card.Body className="text-left"> 
                         <Card.Title as="h2" style={{color: "white"}}>
-                            {(this.props.data.service.price/100).toLocaleString("it-IT", { maximumFractionDigits: 2 })} €
+                            <PriceLabel amount={(this.props.data.service.price/100)} />
                         </Card.Title>
                     </Card.Body>
                 </div>

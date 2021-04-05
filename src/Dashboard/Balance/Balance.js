@@ -15,8 +15,9 @@ import LineInterpolationChart from '../Charts/LineInterpolationChart';
 import config from '../../store/config';
 import TokenManager from '../../App/auth/TokenManager';
 import Events from './events';
+import LocaleNumber from "../../App/components/LocaleNumber";
 
-class SamplePage extends Component {
+class Balance extends Component {
     state = {
         pools: [],
         playedEvents: [],
@@ -92,7 +93,7 @@ class SamplePage extends Component {
                                     </Col>
                                     <Col sm={2}>
                                         <h6 className="text-muted m-b-0">Profitto Totale</h6>
-                                        <h4 className="text-c-yellow">{this.props.user.totalProfit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%</h4>
+                                        <h4 className="text-c-yellow"> <LocaleNumber amount={this.props.user.totalProfit} symbol={"%"}></LocaleNumber></h4>
                                     </Col>
                                 </Row>
                             </Card.Header>
@@ -155,5 +156,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(SamplePage)
+    connect(mapStateToProps, mapDispatchToProps)(Balance)
 );

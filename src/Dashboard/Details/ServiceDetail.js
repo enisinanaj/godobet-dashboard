@@ -1,29 +1,79 @@
 import React, { useState, useEffect } from "react";
-import { Card, Col, Row, Button, Modal, Form} from "react-bootstrap";
+import { Card, Col, Row, Button } from "react-bootstrap";
 import TokenManager from "../../App/auth/TokenManager";
 import Aux from "../../hoc/_Aux";
 import BASE_CONFIG from "../../store/config";
 import Loader from "../../App/layout/Loader";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Chart from "react-apexcharts";
 import '../Marketplace/Marketplace.css'
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 
-import axios from "axios";
-import Swal from "sweetalert2";
-
-import secEcommerceChartBar from "../../Demo/Widget/chart/sec-ecommerce-chart-bar";
-import secEcommerceChartLine from "../../Demo/Widget/chart/sec-ecommerce-chart-line";
-
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-
+import PriceLabel from '../../App/components/PriceLabel';
 import { useStripe } from "@stripe/react-stripe-js";
-import cover from "../../assets/images/user/cover.jpg";
 import md5 from "md5";
+import Tip from "../SubscriberPools/Tip";
+import LocaleNumber from "../../App/components/LocaleNumber";
 
-const CardDetails = (props) => {
+const ServiceDetail = (props) => {
+  const [monthlyProfit, setMonthlyProfit] = useState(0)
+  const [winRatio, setWinRatio] = useState(0)
+  const [series, setSeries] = useState([
+    {
+      data: [1, 2, 3]
+    }
+  ])
+
+  const [options, setOptions] = useState({
+    chart: {
+        zoom: {
+            enabled: false
+        },
+    },
+    dataLabels: {
+        enabled: true
+    },
+    colors: ['#4680ff'],
+    plotOptions: {
+        bar: {
+            colors: {
+                ranges: [{
+                    from: -99999,
+                    to: 0,
+                    color: '#b70505'
+                }, {
+                    from: 0,
+                    to: 9999999,
+                    color: '#37ad1d'
+                }]
+            },
+            columnWidth: '50%',
+        }
+    },
+    xaxis: {
+        categories: [],
+    },
+    tooltip: {
+        fixed: {
+            enabled: false
+        },
+        x: {
+            show: false
+        },
+        y: {
+            title: {
+                formatter: (seriesName) => 'Profit: '
+            }
+        },
+        marker: {
+            show: false
+        }
+    }
+  })
+
   const [pools, setPools] = useState([])
   const [purchasable, setPurchasable] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -45,9 +95,9 @@ const CardDetails = (props) => {
     window.location.href.lastIndexOf("/") + 1
   ).replace('#', '');
 
-  if (!id.match(/^\d$/g)) {
-    window.location = "/maintenance/error";
-  }
+  // if (!id.match(/^\d$/g)) {
+  //   window.location = "/maintenance/error";
+  // }
 
   const getLatestImage = (media) => {
     if (
@@ -60,7 +110,6 @@ const CardDetails = (props) => {
 
     return media._embedded.serviceMedia.sort((a, b) => b.id - a.id)[0].url;
   };
-
 
   useEffect(() => {
     TokenManager.getInstance()
@@ -93,6 +142,11 @@ const CardDetails = (props) => {
         if (author.userCode === props.applicationState.user.userCode) {
           setPurchasable(false);
         }
+        const winRatioVar = author._embedded.playedPools?.filter(res => {
+          return res.outcome === 'win'
+        })
+        let percentage = ((winRatioVar?.length / author._embedded.playedPools?.length) * 100)
+        setWinRatio(percentage)
       })
     })
 
@@ -105,7 +159,7 @@ const CardDetails = (props) => {
           },
         }).then(e => e.json()).then(subscriptions => {
           if(currentObject && currentObject._links) {
-            const subscription = subscriptions._embedded.subscriptions.find(sub => sub._links.self.href === currentObject._links.self.href);
+            const subscription = subscriptions._embedded.subscriptions.find(sub => sub.serviceId === id);
 
             if (!subscription) {
               setPurchasable(true);
@@ -114,10 +168,21 @@ const CardDetails = (props) => {
                 fetch(BASE_CONFIG.API_URL + '/services/' + id + '/pools', {
                   headers: {
                     'Content-Type': "application/json",
-                  "X-Auth": jwt,
+                    "X-Auth": jwt,
                   },
                 }).then(e => e.json().then(pools => {
                   setPools(pools._embedded.pools)
+                  const profit = pools._embedded.pools.map(pool => pool.profit.toFixed(2))
+                  setSeries([{
+                    data: profit,
+                  }])
+                  setMonthlyProfit(pools._embedded.pools.map(pool => pool.profit).reduce((a,b) => a + b, 0).toFixed(2))
+                  setOptions((prevState) => ({
+                    ...prevState,
+                    xaxis: {
+                      categories: pools._embedded.pools.map(pool => new Date(pool.createdOn).toISOString().split('T')[0])
+                    }
+                  }))
                 }))
               })
             }
@@ -125,8 +190,8 @@ const CardDetails = (props) => {
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentObject])
-
 
   const getAvatar = () => {
     if (!author._embedded || !author._embedded.media || author._embedded.media.filter(m => m.mediaType === 'avatar').length < 1) {
@@ -138,12 +203,12 @@ const CardDetails = (props) => {
   
   const stripe = useStripe();
 
-  const handlePurchase = (selfLink) => {
+  const handlePurchase = (link) => {
     setIsProcessing(true);
 
     TokenManager.getInstance().getToken()
     .then(jwt => {
-        fetch(`${BASE_CONFIG.API_URL}/pps/payments/${selfLink.substring(selfLink.lastIndexOf('/') + 1)}/${props.applicationState.user.userCode}`, {
+        fetch(`${BASE_CONFIG.API_URL}/pps/payments/${link.substring(link.lastIndexOf("/") + 1)}/${props.applicationState.user.userCode}`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
@@ -153,13 +218,16 @@ const CardDetails = (props) => {
         .then(stripeSessionId => {
           stripe.redirectToCheckout({ sessionId: stripeSessionId })
         })
-        .catch(_ => setIsProcessing(false))
+        .catch(e => {
+          setIsProcessing(false);
+          // TODO: show error to the user
+        })
     })
   };
 
   return (
     <Aux>
-      {currentObject ? (
+      {currentObject && author.name ? (
         <div>
           <Row className="mb-n4">
             <Col sm={12}>
@@ -202,7 +270,7 @@ const CardDetails = (props) => {
                           <i
                             className="feather icon-dollar-sign"
                             style={{ paddingRight: "5px" }}
-                          />{" "}Prezzo: {(currentObject.price/100).toLocaleString("it-IT", {maximumFractionDigits: 2})} €</h4>
+                          />{" "}Prezzo: <PriceLabel amount={currentObject.price/100}></PriceLabel></h4>
                         </span>
                       </Col>
                       <Col>
@@ -231,7 +299,7 @@ const CardDetails = (props) => {
                             className={currentObject.totalProfit >= 0 ? "feather icon-chevrons-up" : "feather icon-chevrons-down"}
                             style={{ paddingRight: "5px" }}
                           />{" "}
-                          Profit: {currentObject.totalProfit?.toFixed(2)} %</h4>
+                          Profit: <LocaleNumber amount={currentObject.totalProfit} symbol={"%"}></LocaleNumber> </h4>
                       </Col>
                     </Row>
                     <hr />
@@ -252,66 +320,63 @@ const CardDetails = (props) => {
             </Col>
           </Row>
           <Row>
-            <Col sm={12}>
-              <Card>
-                <Card.Body>
-                  <Row className="align-items-center">
-                    <Col md={2}>
-                      <img height="150px" width='150px' src={getAvatar()} />
-                    </Col>
-                    <Col md={2}>
+            <Col md={4}>
                       <a href={`/tipsters/${author.userCode}`}>
-                      <h4 style={{fontSize: '20px'}}>{author.name + author.lastName}</h4>
-                      </a>
+              <Card >
+                <Card.Body>
+                  <Row style={{textAlign: 'center'}}>
+                    <Col>
+                      <img height="150px" width='150px' src={getAvatar()} alt={"User avatar"} />
+                      <h4 className='pt-4'>{author.name} {author.lastName}</h4>
                     </Col>
-                    <Col md={2}>
-                      <h4 style={{fontSize: '20px'}}>{author._embedded.services.length} services</h4>
+                  </Row>
+                </Card.Body>
+                <Card.Footer style={{textAlign: 'center'}}>
+                  <Row>
+                    <Col>
+                      <p className="text-muted m-b-5">Followers</p>
+                      <h5>{author.totalSubscribers}</h5>
+                    </Col>
+                  </Row>
+                  <Row>
+                  <Col>
+                    <p className="text-muted m-b-5">Profit</p>
+                      <h6 className={"mb-1" + ((author.totalProfit >= 0) ? " text-success" : " text-danger")}>{author.totalProfit} %</h6>
+                    </Col>
+                    <Col>
+                    <p className="text-muted m-b-5">Win Ratio</p>
+                      <h6>{winRatio} %</h6>
+                    </Col>
+                  </Row>
+                </Card.Footer>
+              </Card>
+                      </a>
+            </Col>
+            <Col md={8}>
+              <Card className="overflow-hidden">
+                <Card.Body className="bg-c-green pb-0">
+                  <Row className="text-white">
+                    <Col sm="auto">
+                      <h4 className="m-b-5 text-white">30 days profit</h4>
+                      <h6 className="text-white">{monthlyProfit} &euro;</h6>
+                    </Col>
+                  </Row>
+                  <Row className="justify-content-center">
+                    <Col sm={8}>
+                      <Chart series={series} options={options} type='bar'
+                       width="100%" height='380px' />
                     </Col>
                   </Row>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
+          <Row>          
+          </Row>
           <Row>
-            <Col md={12}>
-              <Card className="overflow-hidden">
-                <Card.Body className="bg-c-green pb-0">
-                  <Row className="text-white">
-                    <Col sm="auto">
-                      <h4 className="m-b-5 text-white">$654</h4>
-                      <h6 className="text-white">+1.65(2.56%)</h6>
-                    </Col>
-                    <Col className="text-right">
-                      <h6 className="text-white">Friday</h6>
-                    </Col>
-                  </Row>
-                  <Chart {...secEcommerceChartLine} />
-                  <Row className="justify-content-center">
-                    <Col sm={8}>
-                      <Chart {...secEcommerceChartBar} />
-                    </Col>
-                  </Row>
-                </Card.Body>
-                <Card.Footer>
-                  <h4>$2654.00</h4>
-                  <p className="text-muted">Sales in Nov.</p>
-                  <Row>
-                    <Col>
-                      <p className="text-muted m-b-5">From Market</p>
-                      <h6>$1860.00</h6>
-                    </Col>
-                    <Col>
-                      <p className="text-muted m-b-5">Referral</p>
-                      <h6>$500.00</h6>
-                    </Col>
-                    <Col>
-                      <p className="text-muted m-b-5">Affiliate</p>
-                      <h6>$294.00</h6>
-                    </Col>
-                  </Row>
-                </Card.Footer>
-              </Card>
-            </Col>
+            {pools.map(pool => (
+              <Tip key={pool.id} pool={pool} author={true} />
+            ))}
           </Row>
         </div>
       ) : (
@@ -326,4 +391,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CardDetails));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ServiceDetail));

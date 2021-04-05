@@ -16,7 +16,7 @@ import "pnotify/dist/es/PNotifyButtons";
 import "pnotify/dist/es/PNotifyConfirm";
 import "pnotify/dist/es/PNotifyCallbacks";
 
-const CreateNewCard = (props) => {
+const CreateNewService = (props) => {
   // const [image, setImage] = useState();
   const [descriptionLengthCheck, setDescriptionLengthCheck] = useState(false)
   const [excerptLengthCheck, setExcerptLengthCheck] = useState(false)
@@ -98,7 +98,7 @@ const CreateNewCard = (props) => {
             Swal.fire({
               type: "error",
               title: "Oops...",
-              text: "Something went wrong!",
+              text: "C'è stato un problema!",
             });
           } else {
             Swal.fire({
@@ -364,4 +364,5 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateNewCard);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateNewService
+);

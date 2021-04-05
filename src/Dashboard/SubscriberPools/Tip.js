@@ -6,6 +6,7 @@ import 'moment/locale/it';
 import config from "../../store/config";
 import Sports from '../../App/components/Sports'
 import { getClassNameForOutcome } from '../PendingTips/TipCard'
+import LocaleNumber from "../../App/components/LocaleNumber";
 
 moment.locale("it")
 
@@ -89,13 +90,13 @@ const Tip = props => {
                                     <i className="feather icon-play" /> {event.proposal}
                                 </Col>
                                 <Col lg={6} sm={12} xs={12} xl={6}>
-                                    <i className="feather icon-at-sign" /> {(event.quote / 100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                    <i className="feather icon-at-sign" /> <LocaleNumber amount={(event.quote / 100)} symbol={""} />
                                 </Col>
                                 <Col lg={6} sm={12} xs={12} xl={6}>
                                     <i className="feather icon-book" /> {pool.bookmaker}
                                 </Col>
                                 <Col lg={6} sm={12} xs={12} xl={6}>
-                                    <i className="feather icon-pie-chart" /> {(pool.stake/100).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%'}
+                                    <i className="feather icon-pie-chart" /> <LocaleNumber amount={(pool.stake/100)} symnbol={"%"} />
                                 </Col>
                             </Row>
                             <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>

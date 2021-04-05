@@ -87,6 +87,15 @@ export default {
           ],
         },
         {
+          id: "details",
+          title: "Detaglio Servizio",
+          type: "item",
+          icon: "feather icon-user",
+          url: "/dashboard/details",
+          role: 0,
+          hidden: true
+        },
+        {
           id: "settings",
           title: "Impostazioni",
           type: "collapse",

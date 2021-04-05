@@ -11,6 +11,7 @@ import moment from 'moment';
 import {getClassNameForOutcome} from '../../Dashboard/PendingTips/TipCard';
 
 import Sports from '../../App/components/Sports'
+import LocaleNumber from "../../App/components/LocaleNumber";
 
 class events extends Component {
     
@@ -35,9 +36,9 @@ class events extends Component {
                         <td>{e.event}</td>
                         <td>{e.proposal}</td>
                         
-                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.quote.toLocaleString("it-IT", { maximumFractionDigits: 2 })}</td>}
-                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{(d.stake/100).toLocaleString("it-IT", { maximumFractionDigits: 2 })}%</td>}
-                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.profit.toLocaleString("it-IT", { maximumFractionDigits: 2 })}%</td>}
+                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} ><LocaleNumber amount={d.quote} symbol={""}/> </td>}
+                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} ><LocaleNumber amount={(d.stake/100)} symbol={"%"} /></td>}
+                        {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} ><LocaleNumber amount={d.profit} symbol={"%"} /></td>}
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >
                             <span className={getClassNameForOutcome(d.outcome)}>{d.outcome}</span>    
                         </td>}

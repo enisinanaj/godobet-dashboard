@@ -166,7 +166,6 @@ const Settings = (props) => {
                 })
                   .then((userBody) => userBody.json())
                   .then((updatedLocalUser) => {
-                    console.warn(updatedLocalUser);
                     props.actions.userLogin({
                       ...user,
                       ...updatedLocalUser,
@@ -708,7 +707,7 @@ const Settings = (props) => {
                       </Button>
                     )}
                     {user.stripeAccountStatus !== 'verified' && <br />}
-                    {user.stripeAccountStatus !== 'verified' && <span class="text-muted">Registrando l'account per i pagamenti implicitamente accetti le condizioni di servizio di <a href="https://stripe.com/connect-account/legal/full" target="_blank">Stripe Connected Account</a>.</span>}
+                    {user.stripeAccountStatus !== 'verified' && <span class="text-muted">Registrando l'account per i pagamenti implicitamente accetti le condizioni di servizio di <a href="https://stripe.com/connect-account/legal/full" target="_blank" rel="noopener noreferrer">Stripe Connected Account</a>.</span>}
                   </Form>
                 </Col>
               </Row>

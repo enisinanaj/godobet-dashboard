@@ -1,8 +1,8 @@
 import React from "react";
 import $ from "jquery";
-import CreateNewCard from "./Dashboard/SubscriberServices/CreateNewCard";
-import EditCard from "./Dashboard/SubscriberServices/EditCard";
-import CardDetails from "./Dashboard/Details/CardDetails";
+import CreateNewService from "./Dashboard/TipsterServices/CreateNewService";
+import EditService from "./Dashboard/TipsterServices/EditService";
+import ServiceDetail from "./Dashboard/Details/ServiceDetail";
 import CreateTip from "./Dashboard/SubscriberPools/CreateTip";
 import TipsterProfile from "./Dashboard/TipsterProfile/TipsterProfile";
 
@@ -22,8 +22,8 @@ const Balance = React.lazy(() => import("./Dashboard/Balance/Balance"));
 const MyServices = React.lazy(() =>
   import("./Dashboard/MyServices/MyServices")
 );
-const SubscriberServices = React.lazy(() =>
-  import("./Dashboard/SubscriberServices/SubscriberServices")
+const TipsterServices = React.lazy(() =>
+  import("./Dashboard/TipsterServices/TipsterServices")
 );
 const SubscriberPools = React.lazy(() =>
   import("./Dashboard/SubscriberPools/SubscriberPools")
@@ -73,35 +73,28 @@ const routes = [
     path: "/dashboard/tipster/services",
     exact: true,
     name: "My Services",
-    component: SubscriberServices,
+    component: TipsterServices,
     role: 4,
   },
   {
     path: "/dashboard/tipster/createService",
     exact: true,
     name: "Create new",
-    component: CreateNewCard,
+    component: CreateNewService,
     role: 4,
   },
   {
     path: "/dashboard/tipster/edit-card/",
     exact: false,
-    name: "Edit Card",
-    component: EditCard,
+    name: "Edit Service",
+    component: EditService,
     role: 4,
   },
   {
-    path: "/dashboard/details/",
+    path: "/dashboard/service/",
     exact: false,
-    name: "Card details",
-    component: CardDetails,
-    role: 4,
-  },
-  {
-    path: "/dashboard/tipster/details/",
-    exact: false,
-    name: "Card details",
-    component: CardDetails,
+    name: "Detaglio servizio",
+    component: ServiceDetail,
     role: 4,
   },
   {

@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Row } from "react-bootstrap";
-
 import Aux from "../../hoc/_Aux";
-import SubscriberCard from "./SubscriberCard";
-
+import ServiceCard from "./ServiceCard";
 import TokenManager from "../../App/auth/TokenManager";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import BASE_CONFIG from "../../store/config";
 
-const SubscriberServices = (props) => {
+const TipsterServices = (props) => {
   const [services, setServices] = useState([]);
 
   useEffect(() => {
@@ -52,7 +50,7 @@ const SubscriberServices = (props) => {
   return (
     <Aux>
       <Row md={12}>
-        <SubscriberCard services={services} setServices={setServices} />
+        <ServiceCard services={services} setServices={setServices} />
       </Row>
     </Aux>
   );
@@ -63,4 +61,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubscriberServices);
+export default connect(mapStateToProps, mapDispatchToProps)(TipsterServices);

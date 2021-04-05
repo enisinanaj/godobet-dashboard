@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Aux from '../../hoc/_Aux';
 import config from '../../store/config';
 import * as actions from '../../store/actions';
-import SubscriberCard from '../SubscriberServices/SubscriberCard';
+import ServiceCard from '../TipsterServices/ServiceCard';
 import TokenManager from '../../App/auth/TokenManager';
 
 const loadAllSubscriptions = (url) => {
@@ -36,7 +36,6 @@ class MyServices extends Component {
       config.API_URL + `/users/${this.props.user.userCode}/subscriptions`
     )
       .then((r) => {
-        console.warn(r._embedded.subscriptions)
         this.setState({
           services:
             r._embedded && r._embedded.subscriptions
@@ -50,7 +49,7 @@ class MyServices extends Component {
   getServicesDom() {
     const services = this.state.services.map((service) => ({...service.service, remainingDays: service.remainingDays, id: service.serviceId}));
     return (
-      <SubscriberCard disableEdit={true} services={services} showRemainingDays={true} ></SubscriberCard>
+      <ServiceCard disableEdit={true} services={services} showRemainingDays={true} ></ServiceCard>
     );
   }
 

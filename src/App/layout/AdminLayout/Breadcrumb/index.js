@@ -89,6 +89,26 @@ class Breadcrumb extends Component {
       document.title = title + " | GODOBET";
     }
 
+    if (this.state.item.length == 0 && this.state.main.length == 0) {
+      return <Aux>
+        <div className="page-header">
+          <div className="page-block">
+            <div className="row align-items-center">
+              <div className="col-md-12">
+                <div className="page-header-title">
+                  <h5 className="m-b-10">{title}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Aux>;
+    }
+
+    if (this.state.item.hidden) {
+      return null;
+    }
+
     return (<Aux>{breadcrumb(
       <Aux>
         <ul className="breadcrumb">
