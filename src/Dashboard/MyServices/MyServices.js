@@ -47,9 +47,9 @@ class MyServices extends Component {
   };
 
   getServicesDom() {
-    const services = this.state.services.map((service) => ({...service.service, remainingDays: service.remainingDays, id: service.serviceId}));
+    const services = this.state.services.map((service) => ({...service.service, remainingDays: service.remainingDays, id: service.serviceId, media: [{...service.media, mediaIteration: 1}]}));
     return (
-      <ServiceCard disableEdit={true} services={services} showRemainingDays={true} ></ServiceCard>
+      <ServiceCard disableEdit={true} services={services.sort((a, b) => b.id - a.id)} showRemainingDays={true} ></ServiceCard>
     );
   }
 

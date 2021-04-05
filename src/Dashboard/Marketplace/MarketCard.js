@@ -4,12 +4,13 @@ import { Link } from "react-router-dom";
 import Esaurito from '../../App/components/Esaurito';
 import LocaleNumber from '../../App/components/LocaleNumber';
 import PriceLabel from "../../App/components/PriceLabel";
+import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import '../../assets/scss/tip.css';
 
 const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
   const getLatestImage = (media) => {
     if (!media || media.length === 0) {
-      return "https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
+      return CoverImage;
     }
     return media.sort((a, b) => b.mediaIteration - a.mediaIteration)[0].url;
   };
@@ -36,43 +37,35 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
               }}
             />
             
-            <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline"}}>
+            <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline-block", fontSize: "1.2em"}}>
               <Link to={`/dashboard/service/${item.id}`}>{item.serviceName}</Link>
             </Card.Title>
           </div>
 
           <Card.Body style={{minHeight: "210px"}}>
-            <Card.Text>
-              <span>
-                {" "}<i className="feather icon-users" style={{ paddingRight: "5px" }} />{" "}
-                Numero massimo iscrizioni: {item.maxSubscribers}
-              </span>
-              <br />
-              <span>
-                {" "}<i className="feather icon-users" style={{ paddingRight: "5px" }}/>{" "}
-                Posizioni aperte: {item.maxSubscribers - item.subscribersCount === 0 ? <Esaurito /> : item.maxSubscribers - item.subscribersCount}
-              </span>
-              <br />
-            </Card.Text>
-
             <Card.Text style={{ overflowY: "auto", maxHeight: "160px" }}>
               {item.excerpt}
             </Card.Text>
-
             <div>
-            {canPurchase(item) && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} >
-              {inPurchasing === item.id ? (
-                <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
-              ) : null }
-              Iscriviti subito a soli <PriceLabel amount={(item.price/100)}></PriceLabel>
-            </Button>}
+              {canPurchase(item) && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} >
+                {inPurchasing === item.id ? (
+                  <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+                ) : null }
+                Iscriviti subito a soli <PriceLabel amount={(item.price/100)}></PriceLabel>
+              </Button>}
             </div>
           </Card.Body>
           <Card.Footer>
               <Row className="text-center">
                   <Col>
-                      <h6 className="mb-1"><i className="feather icon-users" style={{ paddingRight: "5px" }} /> {item.subscribersCount}</h6>
-                      <p className="mb-0">Iscrizioni</p>
+                    <h6 className="mb-1">
+                      <i
+                        className="feather icon-users"
+                        style={{ paddingRight: '5px' }}
+                      />{' '}
+                      {item.subscribersCount} su {item.maxSubscribers}
+                    </h6>
+                    <p className="mb-0">Iscritti</p>
                   </Col>
                   <Col>
                       <h6 className="mb-1"><i className="feather icon-calendar" style={{ paddingRight: "5px" }} /> {item.duration} giorni</h6>

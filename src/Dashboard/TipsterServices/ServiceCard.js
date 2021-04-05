@@ -11,8 +11,8 @@ import LocaleNumber from "../../App/components/LocaleNumber";
 
 const ServiceCard = (props) => {
   const getLatestImage = (media) => {
-    if (!media || media.length === 0) {
-      return CoverImage; //"https://images.unsplash.com/photo-1517649763962-0c623066013b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
+    if (!media || media.length === 0 || (media.length == 1 && !media[0].url)) {
+      return CoverImage;
     }
     return media.sort((a, b) => b.mediaIteration - a.mediaIteration)[0].url;
   };
@@ -39,7 +39,7 @@ const ServiceCard = (props) => {
             <Card.Title
               as="h4"
               className={'mb-1 mt-4 mr-3 ml-3'}
-              style={{ display: 'inline' }}
+              style={{ display: 'inline-block', fontSize: '1.2em' }}
             >
               <Link to={`/dashboard/service/${item.id}`}>{item.serviceName}</Link>
             </Card.Title>

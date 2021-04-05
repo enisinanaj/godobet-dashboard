@@ -63,7 +63,7 @@ const Marketplace = (props) => {
             if (!res._embedded.services) {
               return;
             }
-            setMarketData(res._embedded.services);
+            setMarketData(res._embedded.services.sort((a, b) => b.id - a.id));
           });
       });
   };

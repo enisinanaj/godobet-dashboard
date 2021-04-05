@@ -18,7 +18,7 @@ class events extends Component {
     getRows() {
         const rows = [];
         
-        this.props.data.forEach((d, index) => {
+        this.props.data.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn)).forEach((d, index) => {
 
             const eventCount = d.events.length;
             let tipHandled = false;
@@ -43,6 +43,9 @@ class events extends Component {
                             <span className={getClassNameForOutcome(d.outcome)}>{d.outcome}</span>    
                         </td>}
                         {!tipHandled && <td rowSpan={eventCount} style={{verticalAlign: "middle"}} >{d.bookmaker}</td>}
+                        {!tipHandled && <td rowSpan={eventCount}> <a className={"btn btn-light-default"} href={"/dashboard/service/" + d.serviceId } target={"_blank"} rel="noopener noreferrer" >
+                            <span style={{textDecoration: 'underline'}}>{d.service.serviceName}</span> <em className={"feather icon-external-link"}>
+                        </em></a></td>}
                     </tr>)
                 )
                 tipHandled = true;
@@ -75,6 +78,7 @@ class events extends Component {
                                         <th>Profitto</th>
                                         <th>Esito Tip</th>
                                         <th>Bookmaker</th>
+                                        <th>Servizio</th>
                                     </tr>
                                 </thead>
                                 <tbody>
