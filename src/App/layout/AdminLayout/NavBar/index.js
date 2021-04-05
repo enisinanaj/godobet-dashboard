@@ -89,17 +89,6 @@ class NavBar extends Component {
               style={{ width: 140 }}
             />
           </a>
-          <a
-            className="mob-toggler"
-            href={DEMO.BLANK_LINK}
-            onClick={() =>
-              this.setState((prevState) => {
-                return { rightToggle: !prevState.rightToggle };
-              })
-            }
-          >
-            <i className="feather icon-more-vertical" />
-          </a>
         </div>
         {navHtml}
       </Aux>
