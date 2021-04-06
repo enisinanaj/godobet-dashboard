@@ -10,6 +10,7 @@ import * as actionTypes from "../../../../store/actions";
 
 import logoNegative from "../../../../assets/images/godobet_negative.png";
 import { withRouter } from "react-router-dom";
+import { bindActionCreators } from "redux";
 
 class NavBar extends Component {
   state = {
@@ -89,6 +90,15 @@ class NavBar extends Component {
               style={{ width: 140 }}
             />
           </a>
+          <a
+            onClick={() => this.props.actions.userLogout(null)}
+            href="#logout"
+            style={{left: "auto", right: "10px", position: "absolute"}}
+            className="dud-logout"
+            title="Logout"
+          >
+            <i className="feather icon-log-out" />
+          </a>
         </div>
         {navHtml}
       </Aux>
@@ -123,6 +133,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onToggleNavigation: () => dispatch({ type: actionTypes.COLLAPSE_MENU }),
+    actions: bindActionCreators(actionTypes, dispatch),
   };
 };
 
