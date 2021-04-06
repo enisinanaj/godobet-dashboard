@@ -12,14 +12,66 @@ import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import MarketCard from '../Marketplace/MarketCard';
 import satisfactionChart from "../Home/charts/pie";
 import bookmakersChart from "../Home/charts/bookmakers";
-import monthlyProfilt1 from '../TipsterProfile/monthlyProfit'
 import Loader from "../../App/layout/Loader";
+import LocaleNumber from '../../App/components/LocaleNumber';
+import moment from 'moment';
 
 function TipsterProfile(props) {
-    const [favoriteBook, setFavoriteBook] = useState(null)
     const [currentUser, setCurrentUser] = useState({})
     const [userServices, setUserServices] = useState([])
     const [winRatio, setWinRatio] = useState(0)
+    const [series, setSeries] = useState([
+        {
+          data: []
+        }
+      ])
+    
+      const options = {
+        chart: {
+            zoom: {
+                enabled: false
+            },
+        },
+        dataLabels: {
+            enabled: true
+        },
+        colors: ['#4680ff'],
+        plotOptions: {
+            bar: {
+                colors: {
+                    ranges: [{
+                        from: -99999,
+                        to: 0,
+                        color: '#b70505'
+                    }, {
+                        from: 0,
+                        to: 9999999,
+                        color: '#37ad1d'
+                    }]
+                },
+                columnWidth: '50%',
+            }
+        },
+        xaxis: {
+            categories: [],
+        },
+        tooltip: {
+            fixed: {
+                enabled: false
+            },
+            x: {
+                show: false
+            },
+            y: {
+                title: {
+                    formatter: (_) => 'Profit: '
+                }
+            },
+            marker: {
+                show: false
+            }
+        }
+    }
 
     useEffect(() => {
         TokenManager.getInstance().getToken().then(jwt => {
@@ -38,14 +90,13 @@ function TipsterProfile(props) {
             })
         })
         getServices()
+        getPools()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
-        findBookmaker()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentUser])
-
+        console.warn(currentUser)
+    }, [currentUser]);
 
     const getCreampieData = () => {
         const data = satisfactionChart;
@@ -107,14 +158,31 @@ function TipsterProfile(props) {
 
     const getServices = () => {
         TokenManager.getInstance().getToken().then(jwt => {
-            fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/services', {
+            fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/services?page=0&size=1000', {
                 headers: {
                     "Content-Type": 'application/json',
                     "X-Auth": jwt,
                 },
             }).then(e => e.json()).then(res => setUserServices(res._embedded.services))
         })
-    }
+    };
+
+    const getPools = () => {
+        TokenManager.getInstance().getToken().then(jwt => {
+            return fetch(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/pools?page=0&size=1000', {
+                headers: {
+                    "Content-Type": 'application/json',
+                    "X-Auth": jwt,
+                },
+            })
+        })
+        .then(e => e.json())
+        .then(res => {
+            let last30dTips = res._embedded.pools.filter(p => (new Date() - new Date(p.updatedOn)) <= (30 * 24 * 60 * 60 * 1000))
+            const profit = last30dTips.map(pool => ({y: pool.profit.toFixed(2), x: moment(pool.updatedOn).format("DD MMM YYYY")}))
+            setSeries([{data: profit}])
+        })
+    };
 
     const getLatestImage = (media) => {
         if (
@@ -128,78 +196,47 @@ function TipsterProfile(props) {
         return media._embedded.media.sort((a, b) => b.id - a.id)[0].url;
     };
 
-    const findBookmaker = () => {
-        if(!currentUser._embedded) {
-            return
-        }
-        let bookmakers = currentUser._embedded.playedPools.map(pool => {
-            return pool.bookmaker
-        })
-
-        const mostUsed = bookmakers.sort((a,b) => bookmakers.filter(v => v===a).length - bookmakers.filter(v => v===b).length).pop()
-        setFavoriteBook(mostUsed)
-    }
-
     return (
         <Aux>
-        {currentUser.name ? (<Row md={12}>
-            <Col md={4}>
-                <Card style={{minHeight: '800px'}}>
-                    <Row className='pt-5'>
-                        <Col style={{textAlign: 'center'}}>
-                            <img src={getLatestImage(currentUser)} height='200px' alt='' width='200px' style={{objectFit: 'cover', borderRadius: '50%'}} />
-                            <div className='p-4'>
-                                <h3>{currentUser.name} {currentUser.lastName}</h3>
-                            </div>
-                        </Col>
-                    </Row>
-                        <hr />
-                        <Row style={{textAlign: 'center'}}>
-                            <Col>
-                            <h4>{currentUser.totalSubscribers} Followers</h4>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row style={{textAlign: 'center'}}>
-                        <Col>
-                            <h5 className={"mb-1" + ((currentUser.totalProfit >= 0) ? " text-success" : " text-danger")}>{currentUser.totalProfit} % Profit </h5>
-                            </Col>
-                        <Col>
-                            <h5>{winRatio} % Win Ratio </h5>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row style={{textAlign: 'center'}}>
-                        <Col>
-                            <h5>{currentUser._embedded.services ? currentUser._embedded.services.length : 0} services</h5>
-                            </Col>
-                        <Col>
-                            <h5>{currentUser._embedded.pools ? currentUser._embedded.pools.length : 0} pools</h5>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row style={{textAlign: 'center'}}>
-                        <Col>
-                            <h5>1.8 Avarage Odds</h5>
-                            </Col>
-                        <Col>
-                            <h5>7.5 Average Stake</h5>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row style={{textAlign: 'center'}}>
-                            <Col>
-                            <h5>Most used bookmaker:</h5>
-                            </Col>
-                        </Row>
-                        <Row style={{textAlign: 'center'}}>
-                            <Col>
-                            <h5>{favoriteBook}</h5>
-                            </Col>
-                        </Row>
+        {currentUser.name ? (<Row md={12} className={"mb-n4"} style={{marginTop: "-6.25rem"}}>
+            <Col md={12} className={"mt-4"}>
+                <Card className={"user-card"}>
+                    <Card.Body className='pt-0'>
+                        <div className="user-about-block">
+                            <Row className='pt-0 align-items-center mb-4'>
+                                <Col style={{textAlign: 'center'}} md={4}>
+                                    <img src={getLatestImage(currentUser)} height='150px' alt='' width='150px' style={{objectFit: 'cover', borderRadius: '50%', border: "solid #e5e5e5aa 6px"}} />
+                                    <div className='p-4'>
+                                        <h5>{currentUser.name} {currentUser.lastName}</h5>
+                                    </div>
+                                </Col>
+                            
+                                <Col md={8}>
+                                    <Row>
+                                        <Col md={3}><span><strong>{currentUser.totalSubscribers}</strong> Iscritti</span></Col>
+                                        <Col md={4}>
+                                            <span className={"mb-1" + ((currentUser.totalProfit >= 0) ? " text-success" : " text-danger")}>Profitto <strong><LocaleNumber amount={currentUser.totalProfit} symbol={"%"}/></strong></span>
+                                        </Col>
+                                        <Col md={5}>
+                                            <span>Percentuale di vincita <strong><LocaleNumber amount={winRatio} symbol={"%"}/></strong></span>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={3}>
+                                            <span><strong>{currentUser._embedded.services ? currentUser._embedded.services.length : 0}</strong> servizi creati</span>
+                                        </Col>
+                                        <Col md={4}>
+                                            <span><strong>{currentUser._embedded.pools ? currentUser._embedded.pools.length : 0}</strong> tip create</span>
+                                        </Col>
+                                        <Col md={5}></Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Card.Body>
                 </Card>
             </Col>
-            <Col md={8} className='tab-user-card' style={{ maxHeight: '800px', overflowY: 'auto'}}>
+            <Col md={12} className='tab-user-card'>
                 <Tabs variant='pills' defaultActiveKey='services' id='tipster-profile-tabs'>
                     <Tab eventKey='services' title='Servizi'>
                         <Row>
@@ -225,7 +262,7 @@ function TipsterProfile(props) {
                             <Col md={6}>
                                 <Card>
                                     <Card.Header>
-                                    <Card.Title as="h5">Top bookmakers</Card.Title>
+                                        <Card.Title as="h5">Top bookmakers</Card.Title>
                                     </Card.Header>
                                     <Card.Body>
                                         <Chart {...bookmakersPie()} />
@@ -236,22 +273,11 @@ function TipsterProfile(props) {
                         <Row>
                             <Col>
                                 <Card>
+                                    <Card.Header>
+                                        <Card.Title as="h5">Andamento tip</Card.Title>
+                                    </Card.Header>
                                     <Card.Body>
-                                        <h2 className="text-center f-w-400 ">$45,567</h2>
-                                        <p className="text-center text-muted ">Monthly Profit</p>
-                                        <Chart {...monthlyProfilt1} />
-                                        <div className="m-t-20">
-                                            <Row>
-                                                <Col className="text-center ">
-                                                    <h6 className="f-20 f-w-400">$6,234</h6>
-                                                    <p className="text-muted f-14 m-b-0">Today</p>
-                                                </Col>
-                                                <Col className="text-center ">
-                                                    <h6 className="f-20 f-w-400">$4,387</h6>
-                                                    <p className="text-muted f-14 m-b-0">Yesterday</p>
-                                                </Col>
-                                            </Row>
-                                        </div>
+                                        <Chart series={series} options={options} type='area' width="100%" height='296px' />
                                     </Card.Body>
                                 </Card>
                             </Col>

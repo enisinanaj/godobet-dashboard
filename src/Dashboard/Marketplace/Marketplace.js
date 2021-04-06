@@ -14,6 +14,7 @@ import "./Marketplace.css";
 
 const Marketplace = (props) => {
   const [marketData, setMarketData] = useState([]);
+  const [myServices, setMyServices] = useState([]);
   const [inPurchasing, setInPurchasing] = useState(false);
   const [search, setSearch] = useState(false);
 
@@ -63,7 +64,13 @@ const Marketplace = (props) => {
             if (!res._embedded.services) {
               return;
             }
-            setMarketData(res._embedded.services.sort((a, b) => b.id - a.id));
+            
+            if (props.applicationState.user.roleValue >= 5) {
+              setMarketData(res._embedded.services.filter(s => s.author.userCode !== props.applicationState.user.userCode).sort((a, b) => b.id - a.id));
+              setMyServices(res._embedded.services.filter(s => s.author.userCode === props.applicationState.user.userCode).sort((a, b) => b.id - a.id));
+            } else {
+              setMarketData(res._embedded.services.sort((a, b) => b.id - a.id));
+            }
           });
       });
   };
@@ -88,14 +95,19 @@ const Marketplace = (props) => {
 
   return (
     <Aux>
-      <Row className='p-5'>
+      <Row className='mb-5' style={{marginTop: "-0.85rem"}}>
         <Col>
-          <h4>Cerca</h4>
-          <Form.Control type='text' onChange={({target}) => setSearch(target.value)} style={{backgroundColor:"white"}}/>
+          <Form.Control type='text' onChange={({target}) => setSearch(target.value)} style={{backgroundColor:"white", borderRadius: 4}} placeholder={"Ricerca veloce..."} className={"border-0"} />
         </Col>
       </Row>
       <Row md={12}>
         <MarketCard marketData={marketData} inPurchasing={inPurchasing} handlePurchase={handlePurchase} user={props.applicationState.user} />
+      </Row>
+      <Row md={12}>
+        <Col md={12} lg={12} >
+          <h4>I miei servizi</h4>
+        </Col>
+        <MarketCard marketData={myServices} inPurchasing={inPurchasing} handlePurchase={handlePurchase} user={props.applicationState.user} />
       </Row>
     </Aux>
   );

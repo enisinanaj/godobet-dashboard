@@ -94,7 +94,7 @@ class NavBar extends Component {
             onClick={() => this.props.actions.userLogout(null)}
             href="#logout"
             style={{left: "auto", right: "10px", position: "absolute"}}
-            className="dud-logout"
+            className="dud-logout mob-toggler"
             title="Logout"
           >
             <i className="feather icon-log-out" />

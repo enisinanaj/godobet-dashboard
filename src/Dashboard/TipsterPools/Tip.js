@@ -85,8 +85,8 @@ const Tip = props => {
                 <Carousel controls={false} interval={null}>
                 {pool.events.map(event => (
                     <Carousel.Item key={event.eventCode}>
-                        <div style={{height: 170, marginBottom: 15, padding: "0 20px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
-                            <Row className={"hei-110"}>
+                        <div style={{minHeight: "160px", marginBottom: 15, padding: "0 20px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                            <Row>
                                 <Col lg={12} sm={12} xs={12} xl={12}>
                                     {Sports.find(s => s.value === event.sport) ? Sports.find(s => s.value === event.sport).icon : <em className={"feather icon-aperture"}></em>}{" "}
                                     {event.competition} / {event.event}
@@ -113,9 +113,9 @@ const Tip = props => {
                     </Carousel.Item>
                 ))}
                 </Carousel>
-                {pool.outcome && <div style={{display: 'inline-block', marginTop: "15px"}}>
-                    <span className={getClassNameForOutcome(pool.outcome)} >{pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} /></span>
-                </div>}
+                <div style={{display: 'inline-block', marginTop: "15px", minHeight: "16px"}}>
+                    {pool.outcome && <span className={getClassNameForOutcome(pool.outcome)} >{pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} /></span>}
+                </div>
                 {pool.motivation && <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title as="h5">Motivazione Tip - <strong>{pool.description}</strong></Modal.Title>

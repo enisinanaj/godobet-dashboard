@@ -32,6 +32,7 @@ const ServiceCard = (props) => {
                 height: '80px',
                 objectFit: 'cover',
                 margin: '20px',
+                marginBottom: '0',
                 display: 'inline',
               }}
             />

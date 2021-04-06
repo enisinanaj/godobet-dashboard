@@ -33,6 +33,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
                 height: "80px",
                 objectFit: "cover",
                 margin: "20px",
+                marginBottom: 0,
                 display: "inline",
               }}
             />
