@@ -60,7 +60,7 @@ const getTipText = (pool) => {
                       </Col>
                   </Row>
                   <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
-                      <Col  lg={12} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
+                      <Col  lg={12} sm={12} xs={12} xl={12} style={{display: 'inline-block'}}>
                           <em className="feather icon-clock"></em> {moment(event.eventDate).format("DD/MM/yyyy HH:mm")}
                       </Col>
                   </Row>
@@ -71,7 +71,7 @@ const getTipText = (pool) => {
   );
 };
 
-const TipCard = ({ pool, user, dropdownHidden, actions }) => {
+const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
   const [DropdownHiddenState, setDropdownHiddenState] = useState(dropdownHidden);
   const [showMotivation, setShowMotivation] = useState(false);
 
@@ -130,6 +130,7 @@ const TipCard = ({ pool, user, dropdownHidden, actions }) => {
             {/* className={'text-white'} */}
             <Card.Title as="h5">
               {pool.description}
+              {debug ? <span className={"badge badge-light-danger"}>{pool.id}</span> : null}
               {DropdownHiddenState || getDropdown(followTip)}
               {pool.motivation && <span onClick={() => setShowMotivation(true)} className={"badge badge-light-info float-right mr-2"} style={{ cursor: 'pointer'}} >
                   MOTIVAZIONE    

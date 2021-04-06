@@ -105,7 +105,7 @@ const Tip = props => {
                                 </Col>
                             </Row>
                             <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
-                                <Col  lg={12} sm={12} xs={12} xl={6} style={{display: 'inline'}}>
+                                <Col  lg={12} sm={12} xs={12} xl={12} style={{display: 'inline'}}>
                                     <em className="feather icon-clock"></em> {moment(event.eventDate).format("DD/MM/yyyy HH:mm")}
                                 </Col>
                             </Row>

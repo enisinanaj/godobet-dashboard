@@ -53,6 +53,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
                 ) : null }
                 Iscriviti subito a soli <PriceLabel amount={(item.price/100)}></PriceLabel>
               </Button>}
+              {(item.maxSubscribers - item.subscribersCount) <= 0 ? <Esaurito /> : null}
             </div>
           </Card.Body>
           <Card.Footer>

@@ -41,7 +41,7 @@ const Marketplace = (props) => {
           if (!res._embedded.services) {
             return;
           }
-          setMarketData(res._embedded.services);
+          setMarketData(res._embedded.services.sort((a, b) => b.id - a.id));
         });
       });
   }, [search]);
@@ -52,7 +52,7 @@ const Marketplace = (props) => {
     TokenManager.getInstance()
       .getToken()
       .then((jwt) => {
-        fetch(BASE_CONFIG.API_URL + "/services", {
+        fetch(BASE_CONFIG.API_URL + "/services?page=0&size=1000", {
           headers: {
             "Content-Type": "application/json",
             "X-Auth": jwt,

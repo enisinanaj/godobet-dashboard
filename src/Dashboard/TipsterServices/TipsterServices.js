@@ -24,7 +24,7 @@ const TipsterServices = (props) => {
           BASE_CONFIG.API_URL +
             "/users/" +
             props.applicationState.user.userCode +
-            "/services",
+            "/services?page=0&size=1000",
           {
             headers: {
               "Content-Type": "application/json",

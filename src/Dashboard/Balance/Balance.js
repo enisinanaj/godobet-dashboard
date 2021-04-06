@@ -48,12 +48,12 @@ class Balance extends Component {
         .then(pools => {
             this.setState({
                 pools,
-                statusData: pools.map(p => p.profit)
+                statusData: pools.map(p => ({y: p.profit.toFixed(2), x: moment(p.updatedOn).format("DD MMM YYYY")}))
             })
         })
     }
 
-    getUserPools = () => this.load(`${config.API_URL}/pools/search/subscriberStats?start=${this.state.formattedStartDate}&end=${this.state.formattedEndDate}&subscriber=${this.props.user._links.self.href}`)
+    getUserPools = () => this.load(`${config.API_URL}/pools/search/subscriberStats?start=${this.state.formattedStartDate}&end=${this.state.formattedEndDate}&subscriber=${this.props.user._links.self.href}&page=0&size=1000`)
         .then(pools => pools?._embedded?.pools);
 
     componentDidMount() {

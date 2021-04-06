@@ -27,10 +27,8 @@ class Default extends React.Component {
 
   getMyPools = () =>
     this.load(
-      `${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.user._links.self.href}`
-    )
-      .then((p) => p._embedded.pools)
-      .then(this.filterMyPools);
+      `${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.user._links.self.href}&page=0&size=1000`
+    ).then((p) => p._embedded.pools)
 
   getStatsForMonth = () =>
     this.load(
@@ -45,11 +43,11 @@ class Default extends React.Component {
 
   getUserSubscriptions = () =>
     this.load(
-      `${config.API_URL}/users/${this.props.user.userCode}/subscriptions`
+      `${config.API_URL}/users/${this.props.user.userCode}/subscriptions?page=0&size=1000`
     ).then((subs) => subs?._embedded?.subscriptions);
 
   getTipsterOpenPools = () => 
-    this.load(`${config.API_URL}/users/${this.props.user.userCode}/pools`)
+    this.load(`${config.API_URL}/users/${this.props.user.userCode}/pools?page=0&size=1000`)
     .then((openPools) => openPools?._embedded?.pools);
 
   getTipsterTotalSubscribers = () =>
@@ -57,13 +55,6 @@ class Default extends React.Component {
       (totalSubscribers) => totalSubscribers?.totalSubscribers
     );
 
-  filterMyPools = (pools) => {
-    const myPools =
-      this.props.user._embedded && this.props.user._embedded.playedPools
-        ? this.props.user._embedded.playedPools.map((pool) => pool.id)
-        : [];
-    return pools.filter((pool) => !(myPools.includes(pool.id) && pool.outcome));
-  };
   load(url, args = {}) {
     return TokenManager.getInstance()
       .getToken()
@@ -80,6 +71,7 @@ class Default extends React.Component {
   }
 
   getUserStats() {
+    const FOLLOWED = 1;
     let activeTipsCount = [];
     if (this.props.user._embedded && this.props.user._embedded.playedPools) {
       activeTipsCount = this.props.user._embedded.playedPools;
@@ -93,14 +85,22 @@ class Default extends React.Component {
     ]).then((p) => {
       this.setState({
         totalProfit: this.props.user.totalProfit,
-        pendingTipsCount: p[0].length,
+        pendingTipsCount: p[0].filter(p => !p.outcome).length,
         subscribedPools: [...activeTipsCount, ...p[0]],
         activeTipsCount: p[1]?.filter((s) => !s.expired && s.captured === 1)?.length,
         monthProfit: p[2]?.reduce((a, b) => a + b.profit, 0),
         openPools: p[3].filter(p => !p.outcome).length,
         totalSubscribers: p[4],
       });
-    });
+
+      return p[0];
+    })
+    .then(pendingTips => {
+      return this.load(`${this.props.user._links.self.href}/playedPoolsRel?page=0&size=1000`)
+      .then(playedPools => [pendingTips.filter(p => !p.outcome), playedPools._embedded.playedPools])
+    })
+    .then(poolsSets => poolsSets[0].filter(pool => !poolsSets[1].find(pp => pp.references.pool === pool.id && pp.direction !== FOLLOWED)))
+    .then(pendingTips => this.setState({pendingTipsCount: pendingTips.length}))
   }
 
   componentDidMount() {

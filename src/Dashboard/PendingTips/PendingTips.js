@@ -10,16 +10,28 @@ import TokenManager from '../../App/auth/TokenManager';
 import config from '../../store/config';
 import { Tab } from 'bootstrap';
 import { Tabs } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
+
+const DEBUG = false;
 
 const getTipCards = (dropdownHidden) => (pools) => {
+
+  if (pools.length === 0) {
+    return <Col lg={12} md={12} sm={12}>
+      <Alert variant={"secondary"}>Nessuna tip in questo momento.</Alert>
+    </Col>
+  }
+
   return pools.map((pool, i) => {
     return (
       <Col md={4} key={`tip-card-column-${i + (new Date())}`}>
-        <TipCard key={`tip-card-${i + (new Date())}`} pool={pool} dropdownHidden={dropdownHidden || pool.followed} />
+        <TipCard key={`tip-card-${i + (new Date())}`} pool={pool} dropdownHidden={dropdownHidden || pool.followed} debug={DEBUG} />
       </Col>
     );
   });
 };
+
+const FOLLOWED = 1;
 
 const loadAllPools = (url, args = {}) => {
   return TokenManager
@@ -34,7 +46,7 @@ const loadAllPools = (url, args = {}) => {
           ...args
         })
         .then((e) => e.json())
-        .then(json => json._embedded ? json._embedded.pools : [])
+        .then(json => json._embedded && json._embedded.pools ? json._embedded.pools : json._embedded && json._embedded.playedPools ? json._embedded.playedPools : [])
       }
     );
 }
@@ -42,18 +54,17 @@ const loadAllPools = (url, args = {}) => {
 class PendingTips extends Component {
   state = {
     expiredPools: [],
-    ongoingPools: []
+    ongoingPools: [],
+    followedPools: []
   }
 
-  getMyPools = (condition) => {
-    return loadAllPools(`${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.user._links.self.href}`)
-      .then(pools => pools.filter(condition))
+  getMyPools = () => {
+    return loadAllPools(`${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.user._links.self.href}&page=0&size=1000`)
       .catch(console.error);
   }
 
-  filterPools = (condition) => {
-    return loadAllPools(config.API_URL + "/pools")
-      .then(pools => pools.filter(condition))
+  getPlayReference = () => {
+    return loadAllPools(`${this.props.applicationState.user._links.self.href}/playedPoolsRel?page=0&size=1000`)
       .catch(console.error);
   }
 
@@ -64,27 +75,36 @@ class PendingTips extends Component {
     return pools.map(pool => {return {...pool, followed: myPools.includes(pool.id)}});
   }
 
-  getPoolsCards = (filter) => {
-    return this.getMyPools(filter)
-      .then(this.filterMyPools)
-      .then(pool => getTipCards( !filter(pool) )(pool))
+  getPoolsCards = (pools, filter) => {
+    return pools.filter(filter).map(pool => getTipCards( !filter(pool) )(pool))
   }
 
-  getExpiredPoolsCards = (filter) => {
-    return this.getMyPools(filter)
-      .then(this.filterMyPools)
-      .then(p => p.filter(p1 => !p1.followed) )
+  getExpiredPoolsCards = (pools, filter) => {
+    return pools.then(pools => pools.filter(filter))
+      // .then(this.filterMyPools)
+      // .then(p => p.filter(p1 => !p1.followed) )
       .then(pool => getTipCards( !filter(pool) )(pool))
   }
 
   componentDidMount() {
-    this.getPoolsCards(p => !p.outcome)
-    .then(ongoingPools => this.setState({
-      ...this.state,
-      ongoingPools
-    }));
+    let pools = this.getMyPools();
+    let playedPools = this.getPlayReference();
 
-    this.getExpiredPoolsCards(p => !!p.outcome)
+    playedPools.then(playedPools => {
+      return pools.then(pools => [pools, playedPools])
+    })
+    .then(poolsSets => poolsSets[0].filter(pool => !poolsSets[1].find(pp => pp.references.pool === pool.id)))
+    .then(filteredPools => filteredPools.filter(p => !p.outcome))
+    .then(ongoingPools => this.setState({ongoingPools}));
+
+    playedPools.then(playedPools => {
+      return pools.then(pools => [pools, playedPools])
+    })
+    .then(poolsSets => poolsSets[0].filter(pool => poolsSets[1].find(pp => pp.references.pool === pool.id && pp.direction === FOLLOWED)))
+    .then(filteredPools => filteredPools.filter(p => !p.outcome))
+    .then(followedPools => this.setState({followedPools}));
+    
+    this.getExpiredPoolsCards(pools, p => !!p.outcome)
     .then(expiredPools => this.setState({
       ...this.state,
       expiredPools
@@ -102,7 +122,18 @@ class PendingTips extends Component {
               id="uncontrolled-tab-example"
             >
               <Tab eventKey="pending" title="Tip in corso">
-                <Row>{this.state.ongoingPools}</Row>
+                <Row>
+                  <Col md={12} lg={12} >
+                    <h4>Nuove tip</h4>
+                  </Col>
+                </Row>
+                <Row>{getTipCards(false)(this.state.ongoingPools)}</Row>
+                <Row>
+                  <Col md={12} lg={12} className={"mt-3"} >
+                    <h4>Tip in corso</h4>
+                  </Col>
+                </Row>
+                <Row>{getTipCards(true)(this.state.followedPools)}</Row>
               </Tab>
               <Tab eventKey="expired" title="Tip concluse">
                 <Row>{this.state.expiredPools}</Row>

@@ -21,7 +21,7 @@ const TipsterPools = (props) =>  {
     TokenManager.getInstance()
       .getToken()
       .then((jwt) => {
-        fetch(props.applicationState.user._links.pools.href.replace("{?projection}", ""), {
+        fetch(props.applicationState.user._links.pools.href.replace("{?projection}", "") + "?page=0&size=1000", {
           headers: {
             "Content-Type": "application/json",
             "X-Auth": jwt,

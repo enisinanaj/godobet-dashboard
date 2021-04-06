@@ -51,13 +51,23 @@ class LineInterpolationChart extends React.Component {
                 showAlways: true,
                 showForNullSeries: true,
                 tickAmount: this.props.data.length - 1,
-                min: Math.min(...this.props.data),
-                max: Math.max(...this.props.data),
+                min: Math.min(...(this.props.data.map(el => el.y))),
+                max: Math.max(...(this.props.data.map(el => el.y))),
                 title: {
                     text: 'Profitto %',
                     rotate: -90,
                     offsetX: 0,
                     offsetY: 0,
+                }
+              },
+              scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        displayFormats: {
+                            quarter: 'DD MMM YYYY'
+                        }
+                    }
                 }
               }
           },

@@ -11,7 +11,7 @@ import LocaleNumber from "../../App/components/LocaleNumber";
 
 const ServiceCard = (props) => {
   const getLatestImage = (media) => {
-    if (!media || media.length === 0 || (media.length == 1 && !media[0].url)) {
+    if (!media || media.length === 0 || (media.length === 1 && !media[0].url)) {
       return CoverImage;
     }
     return media.sort((a, b) => b.mediaIteration - a.mediaIteration)[0].url;

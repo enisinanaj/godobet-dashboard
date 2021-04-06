@@ -33,7 +33,7 @@ class MyServices extends Component {
 
   getSubscriptions = () => {
     return loadAllSubscriptions(
-      config.API_URL + `/users/${this.props.user.userCode}/subscriptions`
+      config.API_URL + `/users/${this.props.user.userCode}/subscriptions?page=0&size=1000`
     )
       .then((r) => {
         this.setState({
