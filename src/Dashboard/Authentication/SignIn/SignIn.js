@@ -67,7 +67,14 @@ class SignIn extends React.Component {
   };
 
   addUserStateChangeEvent = () => {
-    auth.onAuthStateChanged((user) => {
+    return auth.onAuthStateChanged((user) => {
+      if (!user.emailVerified) {
+        this.setState({
+          formError: "Per accedere bisognia verificare la propria email",
+        });  
+        return;
+      }
+      
       if (!user) {
         return;
       }
@@ -172,14 +179,9 @@ class SignIn extends React.Component {
                         onChange={this.validateOnChange}
                         autoComplete="off"
                       />
-                      {this.state.formError && (
-                        <div>
-                          <div className="is-invalid"></div>
-                          <div className="invalid-feedback">
-                            {this.state.formError}
-                          </div>
-                        </div>
-                      )}
+                      <blockquote className="md-2 text-danger">
+                        {this.state.formError}
+                      </blockquote>
                     </div>
 
                     <button className="btn btn-block btn-primary mb-4">
