@@ -289,6 +289,9 @@ const ServiceDetail = (props) => {
           </Row>
           <Row>
             <Col md={4}>
+              <Col md={12} lg={12} >
+                <h4>Tipster</h4>
+              </Col>
               <Card >
                 <Card.Body>
                   <Row style={{textAlign: 'center'}}>
@@ -312,6 +315,9 @@ const ServiceDetail = (props) => {
               </Card>
             </Col>
             <Col md={8}>
+              <Col md={12} lg={12} >
+                <h4>Statistiche</h4>
+              </Col>
               <Card className="overflow-hidden">
                 <Card.Body className="pb-0">
                   <Row>

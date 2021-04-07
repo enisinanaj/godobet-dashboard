@@ -40,6 +40,8 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
             
             <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline-block", fontSize: "1.2em"}}>
               <Link to={`/dashboard/service/${item.id}`}>{item.serviceName}</Link>
+              <br />
+              <PriceLabel amount={(item.price/100)}></PriceLabel>
             </Card.Title>
           </div>
 
@@ -47,15 +49,18 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
             <Card.Text style={{ overflowY: "auto", maxHeight: "160px" }}>
               {item.excerpt}
             </Card.Text>
-            <div>
+            <Row style={{ justifyContent: "space-around" }}>
+              <Button className="pull-right" variant="success" onClick={() => {window.location = `/dashboard/service/${item.id}`}}>
+                <em class="feather icon-arrow-right mr-2"></em> Vai al dettaglio
+              </Button>
               {canPurchase(item) && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} >
                 {inPurchasing === item.id ? (
                   <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
                 ) : null }
-                Iscriviti subito a soli <PriceLabel amount={(item.price/100)}></PriceLabel>
+                <em className={"feather icon-shopping-cart mr-2"}></em> Iscriviti
               </Button>}
-              {(item.maxSubscribers - item.subscribersCount) <= 0 ? <Esaurito /> : null}
-            </div>
+              {(item.maxSubscribers - item.subscribersCount) <= 0 ? <Esaurito /> : null }
+            </Row>
           </Card.Body>
           <Card.Footer>
               <Row className="text-center">
