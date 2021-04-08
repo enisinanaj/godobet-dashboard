@@ -45,7 +45,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
             </Card.Title>
           </div>
 
-          <Card.Body style={{minHeight: "210px"}}>
+          <Card.Body style={{minHeight: "210px", justifyContent: "space-between", display: "flex", flexDirection: "column"}}>
             <Card.Text style={{ overflowY: "auto", maxHeight: "160px" }}>
               {item.excerpt}
             </Card.Text>

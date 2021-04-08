@@ -78,11 +78,11 @@ const ServiceCard = (props) => {
               <Card.Title as="h5"> <PriceLabel amount={item.price/100}></PriceLabel> </Card.Title>
             </Link>
             <Card.Text>
-              {item.maxSubscribers - item.subscribersCount === 0 ? (
+              {false && item.maxSubscribers - item.subscribersCount === 0 ? (
                 <Esaurito />
               ) : null}
             </Card.Text>
-            <Card.Text style={{ overflowY: 'auto', maxHeight: '160px' }}>
+            <Card.Text style={{ overflowY: 'auto', maxHeight: '90px', minHeight: '90px'}}>
               {item.excerpt}
             </Card.Text>
           </Card.Body>

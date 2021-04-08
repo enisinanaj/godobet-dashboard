@@ -71,7 +71,7 @@ const CreateTip = (props) => {
         event.competition === "" ||
         event.event === "" ||
         event.proposal === "" ||
-        event.quote.replace(".", "").replace("_", "") === "" ||
+        (!event.quote || event.quote && event.quote.replace(".", "").replace("_", "") === "") ||
         event.quote === "__.__" ||
         event.sport === "" ||
         description === "" ||
