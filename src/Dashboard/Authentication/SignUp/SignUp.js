@@ -79,9 +79,17 @@ class SignUp extends React.Component {
           });
       })
       .then((_) => {
-        alert("Utente creato!");
+        this.setState({
+          ...this.state,
+          registered: true
+        })
       })
-      .catch((_) => {});
+      .catch((e) => {
+        this.setState({
+          ...this.state,
+          errorMessage: e.code === "auth/email-already-in-use" ? "L'indirizzo email è già in uso." : e.message
+        });
+      });
 
     e.preventDefault();
   };
@@ -98,7 +106,7 @@ class SignUp extends React.Component {
           <div className="auth-content">
             <div className="card">
               <div className="row align-items-center text-center">
-                <div className="col-md-12">
+                { !this.state.registered && <div className="col-md-12">
                   <div className="card-body">
                     <ValidationForm
                       onSubmit={this.handleSubmit}
@@ -155,6 +163,9 @@ class SignUp extends React.Component {
                           autoComplete="off"
                         />
                       </div>
+                      <blockquote className="mb-2 text-danger">
+                        {this.state.errorMessage}
+                      </blockquote>
                       <button className="btn btn-primary btn-block mb-4">
                         Registrati
                       </button>
@@ -166,7 +177,23 @@ class SignUp extends React.Component {
                       </p>
                     </ValidationForm>
                   </div>
-                </div>
+                </div>}
+                {
+                  this.state.registered &&
+                  <div className="col-md-12">
+                    <div className="card-body">
+                      <h3>Grazie per  esserti registrato!</h3>
+                      <br/>
+                      <blockquote>Riceverai un'email di conferma per attivare l'account.</blockquote>
+                      <p className="mb-2">
+                        Vai alla pagina di{" "}
+                        <NavLink to="/auth/signin-1" className="f-w-400">
+                          Login
+                        </NavLink>
+                      </p>
+                    </div>
+                  </div>
+                }
               </div>
             </div>
           </div>

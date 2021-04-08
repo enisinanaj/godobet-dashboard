@@ -9,13 +9,15 @@ const Signin = React.lazy(() =>
 const FrogotPassword = React.lazy(() =>
   import("./Dashboard/Authentication/FrogotPassword/FrogotPassword")
 );
-// const ChangePassword = React.lazy(() => import('./Dashboard/Authentication/ChangePassword'));
-// const ProfileSettings = React.lazy(() => import('./Dashboard/Authentication/ProfileSettings'));
-// const TabsAuth = React.lazy(() => import('./Dashboard/Authentication/TabsAuth'));
+
+const Verify = React.lazy(() =>
+  import("./Dashboard/Authentication/Verify/Verify")
+);
 
 const route = [
   { path: "/auth/signup", exact: true, name: "Signup", component: SignUp },
   { path: "/auth/signin", exact: true, name: "Signin", component: Signin },
+  { path: "/auth/verify", exact: true, name: "Verify", component: Verify },
   {
     path: "/auth/forgot-password",
     exact: true,
