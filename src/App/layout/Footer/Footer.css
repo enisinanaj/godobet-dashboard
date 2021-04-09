@@ -1,0 +1,33 @@
+.footer {
+  position: absolute;
+  bottom: 0;
+  padding: 10px;
+  width: 100%;
+  height: 80px;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.footer-item {
+  padding-left: 10px;
+  color: rgb(157, 157, 157);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.footer-item:hover {
+  color: black;
+}
+
+.footer-footer {
+  height: 30px;
+  text-align: center;
+}

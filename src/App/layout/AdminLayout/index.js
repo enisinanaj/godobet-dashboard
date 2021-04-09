@@ -20,6 +20,7 @@ import DemoRoutes from "../../../routes.original";
 import Aux from "../../../hoc/_Aux";
 import * as actionTypes from "../../../store/actions";
 import AbsoluteButton from "../../components/AbsoluteButton";
+import Footer from "../Footer/Footer";
 
 class AdminLayout extends Component {
   fullScreenExitHandler = () => {
@@ -107,6 +108,7 @@ class AdminLayout extends Component {
     ) {
       mainClass = [...mainClass, "container"];
     }
+
     return (
       <Aux>
         <Fullscreen enabled={this.props.isFullScreen}>
@@ -118,7 +120,10 @@ class AdminLayout extends Component {
             onClick={() => this.mobileOutClickHandler}
           >
             <div className={mainClass.join(" ")}>
-              <div className="pcoded-content">
+              <div
+                className="pcoded-content"
+                style={{ paddingBottom: "150px" }}
+              >
                 <div className="pcoded-inner-content">
                   <Breadcrumb />
                   <div className="main-body">
@@ -138,6 +143,7 @@ class AdminLayout extends Component {
                 </div>
               </div>
             </div>
+            <Footer />
           </div>
         </Fullscreen>
       </Aux>
