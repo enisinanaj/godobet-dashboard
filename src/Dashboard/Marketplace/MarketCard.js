@@ -19,9 +19,10 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
   const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(() => {
-    callUrl(BASE_CONFIG.API_URL + '/users/' + user.userCode + '/subscriptions')
-      .then(e => e.json()).then(subscriptions => {
-        setSubscriptions(subscriptions)
+    callUrl(BASE_CONFIG.API_URL + '/users/' + user.userCode + '/subscriptions?page=0&size=1000')
+      .then(e => e.json())
+      .then(subscriptions => {
+        setSubscriptions(subscriptions._embedded.subscriptions)
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -38,7 +39,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
   };
 
   const canPurchase = (item) => {
-    const subscription = subscriptions._embedded.subscriptions.find(sub => sub.serviceId === Number(item.id) && sub.valid);
+    const subscription = subscriptions.find(sub => sub.serviceId === Number(item.id) && sub.valid);
     return !subscription && item.author.userCode !== user.userCode && (item.maxSubscribers - item.subscribersCount) > 0
   }
 
