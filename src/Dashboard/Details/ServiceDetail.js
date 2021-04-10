@@ -18,6 +18,8 @@ import md5 from "md5";
 import Tip from "../TipsterPools/Tip";
 import LocaleNumber from "../../App/components/LocaleNumber";
 import moment from "moment";
+import { isProfileComplete } from "../../App/components/UserUtil";
+import Swal from "sweetalert2";
 
 const ServiceDetail = (props) => {
   const [winRatio, setWinRatio] = useState(0)
@@ -182,6 +184,14 @@ const ServiceDetail = (props) => {
 
   const handlePurchase = (link) => {
     setIsProcessing(true);
+
+    if (!isProfileComplete(props.applicationState.user)) {
+      Swal.fire({
+        type: "error",
+        title: "Oops...",
+        text: "È necessario completare il profilo prima di acquistare!",
+      });
+    }
 
     TokenManager.getInstance().getToken()
     .then(jwt => {

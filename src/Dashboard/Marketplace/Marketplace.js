@@ -5,12 +5,13 @@ import { withRouter } from "react-router-dom";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-
+import Swal from "sweetalert2";
 import MarketCard from "./MarketCard";
 import BASE_CONFIG from "../../store/config";
 import { useStripe } from "@stripe/react-stripe-js";
 import TokenManager from "../../App/auth/TokenManager";
 import "./Marketplace.css";
+import { isProfileComplete } from "../../App/components/UserUtil";
 
 const Marketplace = (props) => {
   const [marketData, setMarketData] = useState([]);
@@ -77,6 +78,14 @@ const Marketplace = (props) => {
 
   const handlePurchase = (item) => {
     setInPurchasing(item.id);
+
+    if (!isProfileComplete(props.applicationState.user)) {
+      Swal.fire({
+        type: "error",
+        title: "Oops...",
+        text: "È necessario completare il profilo prima di acquistare!",
+      });
+    }
 
     TokenManager.getInstance().getToken()
     .then(jwt => {
