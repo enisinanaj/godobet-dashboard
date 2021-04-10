@@ -5,6 +5,7 @@ import EditService from "./Dashboard/TipsterServices/EditService";
 import ServiceDetail from "./Dashboard/Details/ServiceDetail";
 import CreateTip from "./Dashboard/TipsterPools/CreateTip";
 import TipsterProfile from "./Dashboard/TipsterProfile/TipsterProfile";
+import Wallet from "./Dashboard/Wallet/Wallet";
 
 window.jQuery = $;
 window.$ = $;
@@ -125,6 +126,13 @@ const routes = [
     name: "Profile",
     component: Profile,
     role: 3,
+  },
+  {
+    path: "/wallet",
+    exact: true,
+    name: "Wallet",
+    component: Wallet,
+    role: 5,
   },
   {
     path: "/tipsters",

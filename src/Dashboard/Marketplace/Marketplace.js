@@ -19,6 +19,7 @@ const Marketplace = (props) => {
 
   useEffect(() => {
     getServices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -44,6 +45,7 @@ const Marketplace = (props) => {
           setMarketData(res._embedded.services.sort((a, b) => b.id - a.id));
         });
       });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const stripe = useStripe();

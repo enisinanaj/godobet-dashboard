@@ -115,7 +115,7 @@ export default {
               title: "Wallet",
               type: "item",
               icon: "feather icon-briefcase",
-              url: "#",
+              url: "/wallet",
               role: 5,
             }
           ]
