@@ -11,6 +11,10 @@ import * as actionTypes from "../../../../../../store/actions";
 
 class NavItem extends Component {
   render() {
+    if (this.props.user.roleValue < this.props.item.role) {
+      return null;
+    }
+    
     let itemTitle = this.props.item.title;
     if (this.props.item.icon) {
       itemTitle = <span className="pcoded-mtext">{this.props.item.title}</span>;
@@ -76,6 +80,7 @@ const mapStateToProps = (state) => {
   return {
     layout: state.layout,
     collapseMenu: state.collapseMenu,
+    user: state.user
   };
 };
 

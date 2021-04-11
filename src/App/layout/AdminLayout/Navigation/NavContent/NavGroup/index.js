@@ -12,26 +12,26 @@ const navGroup = (props) => {
   let navItems = "";
   if (props.group.children) {
     const groups = props.group.children;
-    navItems = Object.keys(groups).map((item) => {
-      item = groups[item];
-
-      if (props.user.roleValue < item.role) {
-        return false;
-      }
-
-      if (item.hidden) {
-        return false;
-      }
-
-      switch (item.type) {
-        case "collapse":
-          return <NavCollapse key={item.id} collapse={item} type="main" />;
-        case "item":
-          return <NavItem layout={props.layout} key={item.id} item={item} />;
-        default:
+    navItems = Object.keys(groups)
+      .map((item) => {
+        item = groups[item];
+        if (props.user.roleValue < item.role) {
           return false;
-      }
-    });
+        }
+
+        if (item.hidden) {
+          return false;
+        }
+
+        switch (item.type) {
+          case "collapse":
+            return <NavCollapse key={item.id} collapse={item} type="main" />;
+          case "item":
+            return <NavItem layout={props.layout} key={item.id} item={item} />;
+          default:
+            return false;
+        }
+      });
   }
 
   return (

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Row, Col, Form, Button } from "react-bootstrap";
+import { Row, Col, Form, Button, Card } from "react-bootstrap";
 
 import Aux from "../../hoc/_Aux";
-import Card from "../../App/components/MainCard";
+//import Card from "../../App/components/MainCard";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
@@ -16,6 +16,8 @@ import PNotify from "pnotify/dist/es/PNotify";
 import "pnotify/dist/es/PNotifyButtons";
 import "pnotify/dist/es/PNotifyConfirm";
 import "pnotify/dist/es/PNotifyCallbacks";
+import { Tab } from "react-bootstrap";
+import { Tabs } from "react-bootstrap";
 
 const Settings = (props) => {
   const [user, setUser] = useState(props.applicationState.user);
@@ -133,6 +135,7 @@ const Settings = (props) => {
               ...user,
               ...fields,
             });
+            dynamicNotifyWithAlert("I tuoi dati sono stati aggiornati con successo!")
           })
           .catch((error) => alert(error));
       });
@@ -171,6 +174,7 @@ const Settings = (props) => {
                       ...user,
                       ...updatedLocalUser,
                     });
+                    dynamicNotifyWithAlert("Il tuo indirizzo è stato aggiornato!")
                   });
               });
           })
@@ -197,6 +201,7 @@ const Settings = (props) => {
             setEmailPasswordError("");
           });
       })
+      .then(_ => dynamicNotifyWithAlert("Password aggiornata!"))
       .catch(() => {
         setEmailPasswordError("La password attuale inserita non è corretta.");
       });
@@ -213,6 +218,7 @@ const Settings = (props) => {
             setEmailPasswordError("");
           });
       })
+      .then(_ => dynamicNotifyWithAlert("I tuoi dati di accesso sono stati aggiornati."))
       .catch(() => {
         setEmailPasswordError("La password attuale inserita non è corretta.");
       });
@@ -249,22 +255,22 @@ const Settings = (props) => {
         })
           .then((e) => e.json())
           .then((_) => {
-            return TokenManager.getInstance()
-              .getToken()
-              .then((jwt) => {
-                return fetch(
-                  BASE_CONFIG.API_URL + "/pps/accounts/banks/" + user.userCode,
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      "X-Auth": jwt,
-                    },
-                  }
-                );
-              });
+            // return TokenManager.getInstance()
+            //   .getToken()
+            //   .then((jwt) => {
+            //     return fetch(
+            //       BASE_CONFIG.API_URL + "/pps/accounts/banks/" + user.userCode,
+            //       {
+            //         method: "POST",
+            //         headers: {
+            //           "Content-Type": "application/json",
+            //           "X-Auth": jwt,
+            //         },
+            //       }
+            //     );
+            //   });
+            dynamicNotifyWithAlert("Bank account updated!")
           })
-          .then((_) => console.log("Bank account saved."))
           .catch((error) => console.error(error));
       });
   };
@@ -292,6 +298,26 @@ const Settings = (props) => {
           sticker: false,
         },
       },
+    });
+
+    return notice;
+  }
+
+  function dynamicNotifyWithAlert(message) {
+    const notice = PNotify.info({
+      text: message,
+      icon: "fa fa-check",
+      hide: true,
+      shadow: true,
+      width: "200px",
+      modules: {
+        Buttons: {
+          closer: true,
+          sticker: false,
+        },
+      },
+      styling: 'brighttheme',
+      mode: 'light',
     });
 
     return notice;
@@ -440,425 +466,443 @@ const Settings = (props) => {
   return (
     <Aux>
       <Row>
-        <Col md={4} sm={12}>
-          <Card title="Immagine profilo" isOption={true}>
-            <Row>
-              <Col md={12} sm={12}>
-                <FileUpload type={"avatar"} user={user} callback={reloadUser} />
-              </Col>
-            </Row>
-          </Card>
-
-          <Card title="Dati personali" isOption={true}>
-            <Row>
-              <Col md={12} sm={12}>
-                <Form>
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Nome</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Nome"
-                      value={user.name}
-                      onChange={({ target }) => {
-                        setUser({ ...user, name: target.value });
-                        setNameChanged(true);
-                      }}
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Cognome</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Cognome"
-                      value={user.lastName}
-                      onChange={({ target }) => {
-                        setUser({ ...user, lastName: target.value });
-                        setNameChanged(true);
-                      }}
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Data di nascita</Form.Label>
-                    <Form.Control
-                      type="date"
-                      placeholder="Data di nascita"
-                      value={user.dob}
-                      onChange={({ target }) => {
-                        setUser({ ...user, dob: target.value });
-                        setNameChanged(true);
-                      }}
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Telefono</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="+39 339 481 0000"
-                      value={user.phoneNumber}
-                      onChange={({ target }) => {
-                        setUser({ ...user, phoneNumber: target.value });
-                        setNameChanged(true);
-                      }}
-                    />
-                  </Form.Group>
-
-                  <Button
-                    variant="primary"
-                    onClick={() =>
-                      saveProfile({
-                        name: user.name,
-                        lastName: user.lastName,
-                        phoneNumber: user.phoneNumber,
-                      })
-                    }
-                    disabled={!nameChanged}
-                  >
-                    Salva
-                  </Button>
-                </Form>
-              </Col>
-            </Row>
-          </Card>
-
-          {SHOW_FULL_PROFILE && (
-            <Card title="Indirizzo di faturazione" isOption={true}>
+        <Col sm={12} className="tab-user-card">
+          <Tabs
+            variant="pills"
+            defaultActiveKey="profile"
+            id="uncontrolled-tab-example"
+          >
+            <Tab eventKey="profile" title="Impostazioni principali">
               <Row>
-                <Col md={12} sm={12}>
-                  <Form>
-                    <Form.Group controlId="infirizzo">
-                      <Form.Label>Indirizzo</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="street"
-                        value={address.street}
-                        placeholder="Nome via e numero civico"
-                        onChange={({ target }) => {
-                          setAddress({
-                            ...address,
-                            street: target.value,
-                          });
-                          setAddressChanged(true);
-                        }}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="cap">
-                      <Form.Label>CAP</Form.Label>
-                      <Form.Control
-                        type="number"
-                        name="zipcode"
-                        placeholder="00000"
-                        value={address.zipCode}
-                        onChange={({ target }) => {
-                          setAddress({
-                            ...address,
-                            zipCode: target.value,
-                          });
-                          setAddressChanged(true);
-                        }}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="citta">
-                      <Form.Label>Città</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="city"
-                        placeholder="Città"
-                        value={address.city}
-                        onChange={({ target }) => {
-                          setAddress({
-                            ...address,
-                            city: target.value,
-                          });
-                          setAddressChanged(true);
-                        }}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="Cap">
-                      <Form.Label>Provincia</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Provincia"
-                        name="state"
-                        value={address.state}
-                        onChange={({ target }) => {
-                          setAddress({
-                            ...address,
-                            state: target.value,
-                          });
-                          setAddressChanged(true);
-                        }}
-                      />
-                    </Form.Group>
+                <Col>
+                  <Card isOption={true}>
+                    <Card.Title className={"m-2 ml-4 mt-4"} as={"h4"}>Immagine profilo</Card.Title>
+                    <Card.Body>
+                      <Row>
+                        <Col md={12} sm={12}>
+                          <FileUpload type={"avatar"} user={user} callback={reloadUser} />
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                    <Card.Title className={"m-2 ml-4"} as={"h4"}>Dati personali <span className={"text-danger"}>*</span></Card.Title>
+                    <Card.Body>
+                      <Row>
+                        <Col md={12} sm={12}>
+                          <Form>
+                            <Form.Group controlId="formBasicEmail">
+                              <Form.Label>Nome</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="Nome"
+                                value={user.name}
+                                onChange={({ target }) => {
+                                  setUser({ ...user, name: target.value });
+                                  setNameChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="formBasicEmail">
+                              <Form.Label>Cognome</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="Cognome"
+                                value={user.lastName}
+                                onChange={({ target }) => {
+                                  setUser({ ...user, lastName: target.value });
+                                  setNameChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="formBasicEmail">
+                              <Form.Label>Data di nascita</Form.Label>
+                              <Form.Control
+                                type="date"
+                                placeholder="Data di nascita"
+                                value={user.dob}
+                                onChange={({ target }) => {
+                                  setUser({ ...user, dob: target.value });
+                                  setNameChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="formBasicEmail">
+                              <Form.Label>Telefono</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="+39 339 481 0000"
+                                value={user.phoneNumber}
+                                onChange={({ target }) => {
+                                  setUser({ ...user, phoneNumber: target.value });
+                                  setNameChanged(true);
+                                }}
+                              />
+                            </Form.Group>
 
-                    <Button
-                      variant="primary"
-                      onClick={saveAddress}
-                      disabled={!addressChanged}
-                    >
-                      Salva
-                    </Button>
-                  </Form>
-                </Col>
-              </Row>
-            </Card>
-          )}
-        </Col>
+                            <Button
+                              variant="primary"
+                              onClick={() =>
+                                saveProfile({
+                                  name: user.name,
+                                  lastName: user.lastName,
+                                  phoneNumber: user.phoneNumber,
+                                })
+                              }
+                              className={"float-right"}
+                              disabled={!nameChanged}
+                            >
+                              Salva
+                            </Button>
+                          </Form>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                    <Card.Title className={"m-2 ml-4"} as={"h4"}>Indirizzo di fatturazione <span className={"text-danger"}>*</span></Card.Title>
+                    <Card.Body>
+                      <Row>
+                        <Col md={12} sm={12}>
+                          <Form>
+                            <Form.Group controlId="infirizzo">
+                              <Form.Label>Indirizzo</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="street"
+                                value={address.street}
+                                placeholder="Nome via e numero civico"
+                                onChange={({ target }) => {
+                                  setAddress({
+                                    ...address,
+                                    street: target.value,
+                                  });
+                                  setAddressChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="cap">
+                              <Form.Label>CAP</Form.Label>
+                              <Form.Control
+                                type="number"
+                                name="zipcode"
+                                placeholder="00000"
+                                value={address.zipCode}
+                                onChange={({ target }) => {
+                                  setAddress({
+                                    ...address,
+                                    zipCode: target.value,
+                                  });
+                                  setAddressChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="citta">
+                              <Form.Label>Città</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="city"
+                                placeholder="Città"
+                                value={address.city}
+                                onChange={({ target }) => {
+                                  setAddress({
+                                    ...address,
+                                    city: target.value,
+                                  });
+                                  setAddressChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="Cap">
+                              <Form.Label>Provincia</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="Provincia"
+                                name="state"
+                                value={address.state}
+                                onChange={({ target }) => {
+                                  setAddress({
+                                    ...address,
+                                    state: target.value,
+                                  });
+                                  setAddressChanged(true);
+                                }}
+                              />
+                            </Form.Group>
 
-        {SHOW_FULL_PROFILE && (
-          <Col md={4} sm={12}>
-            <Card title="Dati bancari" isOption={true}>
-              <Row>
-                <Col md={12} sm={12}>
-                  <Form>
-                    <Form.Group controlId="nomeBanca">
-                      <Form.Label>Nome banca</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Revolut"
-                        value={bank.bankName}
-                        onChange={(event) => {
-                          setBank({ ...bank, bankName: event.target.value });
-                          setBankDataChanged(true);
-                        }}
-                      />
-                    </Form.Group>
-
-                    <Form.Group controlId="indirizzoBanca">
-                      <Form.Label>Indirizzo della Banca</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Via, numero civico, CAP, Città, sigla Provincia"
-                        value={bank.bankAddress}
-                        onChange={(event) => {
-                          setBank({ ...bank, bankAddress: event.target.value });
-                          setBankDataChanged(true);
-                        }}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="IBAN">
-                      <Form.Label>IBAN</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="IBAN del conto"
-                        value={bank.iban}
-                        onChange={(event) => {
-                          setBank({ ...bank, iban: event.target.value });
-                          setBankDataChanged(true);
-                        }}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="abiCab">
-                      <Form.Label>ABI / CAB</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="011683"
-                        value={bank.abiCab}
-                        onChange={(event) => {
-                          setBank({ ...bank, abiCab: event.target.value });
-                          setBankDataChanged(true);
-                        }}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="swift">
-                      <Form.Label>SWIFT</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="GIBAATWWXXX"
-                        value={bank.swift}
-                        onChange={(event) => {
-                          setBank({ ...bank, swift: event.target.value });
-                          setBankDataChanged(true);
-                        }}
-                      />
-                    </Form.Group>
-
-                    <Button
-                      variant="primary"
-                      disabled={!bankDataChanged}
-                      onClick={saveBank}
-                    >
-                      Salva
-                    </Button>
-                  </Form>
-                </Col>
-              </Row>
-            </Card>
-
-            <Card title="Integrazione con Stripe (Pagamenti)" isOption={true}>
-              <Row>
-                <Col md={12} sm={12}>
-                  <Form>
-                    <Form.Group controlId="accountState">
-                      {!user.stripeAccountStatus && (
-                        <Form.Label>Conto non ancora attivato</Form.Label>
+                            <Button
+                              variant="primary"
+                              onClick={saveAddress}
+                              disabled={!addressChanged}
+                              className={"float-right"}
+                            >
+                              Salva
+                            </Button>
+                          </Form>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                    <Card.Title className={"m-2 ml-4"} as={"h4"}>
+                      Dati di accesso
+                    </Card.Title>
+                    <Card.Body>
+                      {emailPasswordError !== "" && (
+                        <div role="alert" class="fade alert alert-danger show">
+                          {emailPasswordError}
+                        </div>
                       )}
-                      {user.stripeAccountStatus && (
-                        <Form.Label style={{textTransform: "uppercase"}} className={user.stripeAccountStatus !== 'verified' ? 'badge badge-light-danger' : 'badge badge-light-success' } >
-                          {user.stripeAccountStatus}
-                        </Form.Label>
-                      )}
-                    </Form.Group>
+                      <Form.Group controlId="formBasicEmail">
+                        <Form.Label>Indirizzo Email</Form.Label>
+                        <Form.Control
+                          type="email"
+                          placeholder="emial@dominio.it"
+                          value={email}
+                          onChange={(event) => {
+                            setEmail(event.target.value);
+                            setCredentialsChanged(true);
+                          }}
+                        />
+                      </Form.Group>
 
-                    {user.stripeAccountStatus !== 'verified' && (
-                      <Button variant="primary" onClick={activatePayments}>
-                        {activating ? (
-                          <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
-                        ) : null }{" "}
-                        Chiedi l'attivazione del conto
+                      <Form.Group controlId="formBasicPassword">
+                        <Form.Label>Password attuale</Form.Label>
+                        <Form.Control
+                          type="password"
+                          placeholder="Password attuale"
+                          value={oldPassword}
+                          onChange={(event) => {
+                            setOldPassword(event.target.value);
+                            setCredentialsChanged(true);
+                          }}
+                        />
+                      </Form.Group>
+                      <Form.Group controlId="formBasicPassword">
+                        <Form.Label>Nuova password</Form.Label>
+                        <Form.Control
+                          type="password"
+                          placeholder="Password"
+                          value={newPassword}
+                          onChange={(event) => {
+                            setNewPassword(event.target.value);
+                            setCredentialsChanged(true);
+                          }}
+                        />
+                      </Form.Group>
+                      <Form.Group controlId="formBasicPassword">
+                        <Form.Label>Conferma nuova password</Form.Label>
+                        <Form.Control
+                          type="password"
+                          placeholder="Password"
+                          value={repeatPassword}
+                          onChange={(event) => {
+                            setRepeatPassword(event.target.value);
+                            setCredentialsChanged(true);
+                          }}
+                        />
+                      </Form.Group>
+
+                      <Button
+                        variant="primary"
+                        disabled={!credentialsChanged}
+                        onClick={updateEmailAndPassword}
+                        className="float-right"
+                      >
+                        Salva
                       </Button>
-                    )}
-                    {user.stripeAccountStatus !== 'verified' && <br />}
-                    {user.stripeAccountStatus !== 'verified' && <span class="text-muted">Registrando l'account per i pagamenti implicitamente accetti le condizioni di servizio di <a href="https://stripe.com/connect-account/legal/full" target="_blank" rel="noopener noreferrer">Stripe Connected Account</a>.</span>}
-                  </Form>
+                    </Card.Body>
+                  </Card>
                 </Col>
               </Row>
-            </Card>
-
-            <Card title="Documenti" isOption={true}>
+            </Tab>
+            {SHOW_FULL_PROFILE && <Tab eventKey="tipster" title="Diventa tipster">
               <Row>
-                <Col md={12} sm={12}>
-                  <Form>
-                    {documentErrors !== "" && (
-                      <div role="alert" class="fade alert alert-danger show">
-                        {documentErrors}
-                      </div>
-                    )}
-                    <Form.Group controlId="swift">
-                      <Form.Label>Numero documento d'identità</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="AX 074 JJ"
-                        value={documentNumber}
-                        onChange={(event) => {
-                          setDocumentNumber(event.target.value);
-                          setDocumentsChanged(true);
-                        }}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="formBasicEmail">
-                      <Form.Label>Documento d'identità (Fronte)</Form.Label>
-                      <DropzoneComponent
-                        config={config}
-                        eventHandlers={{
-                          addedfile: (file) => {
-                            setDocumentoIdentita(file);
-                            setDocumentsChanged(true);
-                          },
-                        }}
-                        djsConfig={djsConfig}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="formBasicEmail">
-                      <Form.Label>Documento d'identità (Retro)</Form.Label>
-                      <DropzoneComponent
-                        config={config}
-                        eventHandlers={{
-                          addedfile: (file) => {
-                            setDocumentoIdentitaRetro(file);
-                            setDocumentsChanged(true);
-                          },
-                        }}
-                        djsConfig={djsConfig}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="formBasicEmail">
-                      <Form.Label>Bolletta</Form.Label>
-                      <DropzoneComponent
-                        config={config}
-                        eventHandlers={{
-                          addedfile: (file) => {
-                            setBolletta(file);
-                            setDocumentsChanged(true);
-                          },
-                        }}
-                        djsConfig={djsConfig}
-                      />
-                    </Form.Group>
-                    <Button
-                      variant={"primary"}
-                      disabled={!documentsChanged}
-                      onClick={uploadDocuments}
-                    >
-                      Carica i documenti
-                    </Button>
-                  </Form>
+                <Col md={12} lg={12} sm={12}>
+                  <Card isOption={true}>
+                    <Card.Title className={"m-2 ml-4 mt-4"} as={"h4"}>Dati bancari <span className={"text-danger"}>*</span></Card.Title>
+                    <Card.Body>
+                      <Row>
+                        <Col md={12} sm={12}>
+                          <Form>
+                            <Form.Group controlId="nomeBanca">
+                              <Form.Label>Nome banca</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="Revolut"
+                                value={bank.bankName}
+                                onChange={(event) => {
+                                  setBank({ ...bank, bankName: event.target.value });
+                                  setBankDataChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+
+                            <Form.Group controlId="indirizzoBanca">
+                              <Form.Label>Indirizzo della Banca</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="Via, numero civico, CAP, Città, sigla Provincia"
+                                value={bank.bankAddress}
+                                onChange={(event) => {
+                                  setBank({ ...bank, bankAddress: event.target.value });
+                                  setBankDataChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="IBAN">
+                              <Form.Label>IBAN</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="IBAN del conto"
+                                value={bank.iban}
+                                onChange={(event) => {
+                                  setBank({ ...bank, iban: event.target.value });
+                                  setBankDataChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="abiCab">
+                              <Form.Label>ABI / CAB</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="011683"
+                                value={bank.abiCab}
+                                onChange={(event) => {
+                                  setBank({ ...bank, abiCab: event.target.value });
+                                  setBankDataChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="swift">
+                              <Form.Label>SWIFT</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="GIBAATWWXXX"
+                                value={bank.swift}
+                                onChange={(event) => {
+                                  setBank({ ...bank, swift: event.target.value });
+                                  setBankDataChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+
+                            <Button
+                              variant="primary"
+                              disabled={!bankDataChanged}
+                              onClick={saveBank}
+                              className={"float-right"}
+                            >
+                              Salva
+                            </Button>
+                          </Form>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                    <Card.Title className={"m-2 ml-4"} as={"h4"}>
+                      Documenti <span className={"text-danger"}>*</span>
+                    </Card.Title>
+                    <Card.Body>
+                      <Row>
+                        <Col md={12} sm={12}>
+                          <Form>
+                            {documentErrors !== "" && (
+                              <div role="alert" class="fade alert alert-danger show">
+                                {documentErrors}
+                              </div>
+                            )}
+                            <Form.Group controlId="swift">
+                              <Form.Label>Numero documento d'identità</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="AX 074 JJ"
+                                value={documentNumber}
+                                onChange={(event) => {
+                                  setDocumentNumber(event.target.value);
+                                  setDocumentsChanged(true);
+                                }}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="formBasicEmail">
+                              <Form.Label>Documento d'identità (Fronte)</Form.Label>
+                              <DropzoneComponent
+                                config={config}
+                                eventHandlers={{
+                                  addedfile: (file) => {
+                                    setDocumentoIdentita(file);
+                                    setDocumentsChanged(true);
+                                  },
+                                }}
+                                djsConfig={djsConfig}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="formBasicEmail">
+                              <Form.Label>Documento d'identità (Retro)</Form.Label>
+                              <DropzoneComponent
+                                config={config}
+                                eventHandlers={{
+                                  addedfile: (file) => {
+                                    setDocumentoIdentitaRetro(file);
+                                    setDocumentsChanged(true);
+                                  },
+                                }}
+                                djsConfig={djsConfig}
+                              />
+                            </Form.Group>
+                            <Form.Group controlId="formBasicEmail">
+                              <Form.Label>Bolletta</Form.Label>
+                              <DropzoneComponent
+                                config={config}
+                                eventHandlers={{
+                                  addedfile: (file) => {
+                                    setBolletta(file);
+                                    setDocumentsChanged(true);
+                                  },
+                                }}
+                                djsConfig={djsConfig}
+                              />
+                            </Form.Group>
+                            <Button
+                              variant={"primary"}
+                              disabled={!documentsChanged}
+                              onClick={uploadDocuments}
+                              className={"float-right"}
+                            >
+                              Carica i documenti
+                            </Button>
+                          </Form>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                    <Card.Title className={"m-2 ml-4"} as={"h4"}>Integrazione con Stripe (Pagamenti)</Card.Title>
+                    <Card.Body>
+                      <Row>
+                        <Col md={12} sm={12}>
+                          <Form>
+                            <Form.Group controlId="accountState">
+                              {!user.stripeAccountStatus && (
+                                <Form.Label>Conto non ancora attivato</Form.Label>
+                              )}
+                              {user.stripeAccountStatus && (
+                                <Form.Label style={{textTransform: "uppercase"}} className={user.stripeAccountStatus !== 'verified' ? 'badge badge-light-danger' : 'badge badge-light-success' } >
+                                  {user.stripeAccountStatus}
+                                </Form.Label>
+                              )}
+                            </Form.Group>
+
+                            {user.stripeAccountStatus !== 'verified' && (
+                              <Button variant="primary" onClick={activatePayments}>
+                                {activating ? (
+                                  <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+                                ) : null }{" "}
+                                Chiedi l'attivazione del conto
+                              </Button>
+                            )}
+                            {user.stripeAccountStatus !== 'verified' && <br />}
+                            {user.stripeAccountStatus !== 'verified' && <span class="text-muted">Registrando l'account per i pagamenti implicitamente accetti le condizioni di servizio di <a href="https://stripe.com/connect-account/legal/full" target="_blank" rel="noopener noreferrer">Stripe Connected Account</a>.</span>}
+                          </Form>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
                 </Col>
               </Row>
-            </Card>
-          </Col>
-        )}
-
-        <Col md={4} sm={12}>
-          <Card title="Dati di accesso" isOption={true}>
-            <Row>
-              <Col md={12} sm={12}>
-                <Form>
-                  {emailPasswordError !== "" && (
-                    <div role="alert" class="fade alert alert-danger show">
-                      {emailPasswordError}
-                    </div>
-                  )}
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Indirizzo Email</Form.Label>
-                    <Form.Control
-                      type="email"
-                      placeholder="emial@dominio.it"
-                      value={email}
-                      onChange={(event) => {
-                        setEmail(event.target.value);
-                        setCredentialsChanged(true);
-                      }}
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password attuale</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Password attuale"
-                      value={oldPassword}
-                      onChange={(event) => {
-                        setOldPassword(event.target.value);
-                        setCredentialsChanged(true);
-                      }}
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Nuova password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Password"
-                      value={newPassword}
-                      onChange={(event) => {
-                        setNewPassword(event.target.value);
-                        setCredentialsChanged(true);
-                      }}
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Conferma nuova password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Password"
-                      value={repeatPassword}
-                      onChange={(event) => {
-                        setRepeatPassword(event.target.value);
-                        setCredentialsChanged(true);
-                      }}
-                    />
-                  </Form.Group>
-
-                  <Button
-                    variant="primary"
-                    disabled={!credentialsChanged}
-                    onClick={updateEmailAndPassword}
-                  >
-                    Salva
-                  </Button>
-                </Form>
-              </Col>
-            </Row>
-          </Card>
+            </Tab>}
+          </Tabs>
         </Col>
       </Row>
     </Aux>
