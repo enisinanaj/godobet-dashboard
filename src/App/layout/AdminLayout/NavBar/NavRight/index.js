@@ -8,10 +8,12 @@ import Aux from "../../../../../hoc/_Aux";
 import * as actions from "../../../../../store/actions";
 import { withRouter } from "react-router-dom";
 import "./nav.css";
+import ConfirmBox from "../../../../../Dashboard/ConfirmBox/ConfirmBox";
 
 class NavRight extends Component {
   state = {
     listOpen: false,
+    showConfirmBox: false,
   };
 
   avatar = (email) => {
@@ -32,9 +34,20 @@ class NavRight extends Component {
     );
   };
 
+  handleLogout = () => {
+    this.props.actions.userLogout(null);
+  };
+
   render() {
     return (
       <Aux>
+        {this.state.showConfirmBox ? (
+          <ConfirmBox
+            title="Sei sicuro di voler fare il logout?"
+            confirm="Sì, sono sicuro"
+            callback={this.handleLogout}
+          />
+        ) : null}
         <ul className="navbar-nav ml-auto">
           <li>
             <a
@@ -67,7 +80,11 @@ class NavRight extends Component {
                       : this.props.user?.email}
                   </span>
                   <a
-                    onClick={() => this.props.actions.userLogout(null)}
+                    onClick={() => {
+                      this.setState({
+                        showConfirmBox: true,
+                      });
+                    }}
                     href="#logout"
                     className="dud-logout"
                     title="Logout"

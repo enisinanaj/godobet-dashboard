@@ -25,26 +25,31 @@ const Marketplace = (props) => {
 
   useEffect(() => {
     if (search < 3) {
-      getServices()
+      getServices();
       return;
     }
 
     TokenManager.getInstance()
       .getToken()
       .then((jwt) => {
-        fetch(BASE_CONFIG.API_URL + "/services/search/findByServiceName?name=" + search, {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth": jwt,
+        fetch(
+          BASE_CONFIG.API_URL +
+            "/services/search/findByServiceName?name=" +
+            search,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-Auth": jwt,
+            },
           }
-        })
-        .then((e) => e.json())
-        .then((res) => {
-          if (!res._embedded.services) {
-            return;
-          }
-          setMarketData(res._embedded.services.sort((a, b) => b.id - a.id));
-        });
+        )
+          .then((e) => e.json())
+          .then((res) => {
+            if (!res._embedded.services) {
+              return;
+            }
+            setMarketData(res._embedded.services.sort((a, b) => b.id - a.id));
+          });
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
@@ -66,7 +71,7 @@ const Marketplace = (props) => {
             if (!res._embedded.services) {
               return;
             }
-            
+
             if (props.applicationState.user.roleValue >= 5) {
               setMarketData(res._embedded.services.filter(s => s.author.userCode !== props.applicationState.user.userCode).sort((a, b) => b.id - a.id));
             } else {
@@ -98,22 +103,34 @@ const Marketplace = (props) => {
             "Content-Type": "application/json",
             "X-Auth": jwt,
           }
-        }).then(response => response.headers.get('X-Stripe-Session-Id'))
-        .then(stripeSessionId => {
-          stripe.redirectToCheckout({ sessionId: stripeSessionId })
         })
-    })
+          .then((response) => response.headers.get("X-Stripe-Session-Id"))
+          .then((stripeSessionId) => {
+            stripe.redirectToCheckout({ sessionId: stripeSessionId });
+          });
+      });
   };
 
   return (
     <Aux>
-      <Row className='mb-5' style={{marginTop: "-0.85rem"}}>
+      <Row className="mb-5" style={{ marginTop: "-0.85rem" }}>
         <Col>
-          <Form.Control type='text' onChange={({target}) => setSearch(target.value)} style={{backgroundColor:"white", borderRadius: 4}} placeholder={"Ricerca veloce..."} className={"border-0"} />
+          <Form.Control
+            type="text"
+            onChange={({ target }) => setSearch(target.value)}
+            style={{ backgroundColor: "white", borderRadius: 4 }}
+            placeholder={"Ricerca veloce..."}
+            className={"border-0"}
+          />
         </Col>
       </Row>
       <Row md={12}>
-        <MarketCard marketData={marketData} inPurchasing={inPurchasing} handlePurchase={handlePurchase} user={props.applicationState.user} />
+        <MarketCard
+          marketData={marketData}
+          inPurchasing={inPurchasing}
+          handlePurchase={handlePurchase}
+          user={props.applicationState.user}
+        />
       </Row>
     </Aux>
   );

@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
-import { Row } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { Component } from "react";
+import { Row } from "react-bootstrap";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
-import Aux from '../../hoc/_Aux';
-import config from '../../store/config';
-import * as actions from '../../store/actions';
-import ServiceCard from '../TipsterServices/ServiceCard';
-import TokenManager from '../../App/auth/TokenManager';
+import Aux from "../../hoc/_Aux";
+import config from "../../store/config";
+import * as actions from "../../store/actions";
+import ServiceCard from "../TipsterServices/ServiceCard";
+import TokenManager from "../../App/auth/TokenManager";
+import NoServicesAlert from "../Marketplace/NoServicesAlert";
 
 const loadAllSubscriptions = (url) => {
   return TokenManager.getInstance()
@@ -15,8 +16,8 @@ const loadAllSubscriptions = (url) => {
     .then((jwt) => {
       return fetch(url, {
         headers: {
-          'Content-Type': 'application/json',
-          'X-Auth': jwt,
+          "Content-Type": "application/json",
+          "X-Auth": jwt,
         },
       }).then((e) => e.json());
     });
@@ -33,13 +34,14 @@ class MyServices extends Component {
 
   getSubscriptions = () => {
     return loadAllSubscriptions(
-      config.API_URL + `/users/${this.props.user.userCode}/subscriptions?page=0&size=1000`
+      config.API_URL +
+        `/users/${this.props.user.userCode}/subscriptions?page=0&size=1000`
     )
       .then((r) => {
         this.setState({
           services:
             r._embedded && r._embedded.subscriptions
-              ? r._embedded.subscriptions.filter(s => s.valid)
+              ? r._embedded.subscriptions.filter((s) => s.valid)
               : [],
         });
       })
@@ -47,9 +49,21 @@ class MyServices extends Component {
   };
 
   getServicesDom() {
-    const services = this.state.services.map((service) => ({...service.service, remainingDays: service.remainingDays, id: service.serviceId, media: [{...service.media, mediaIteration: 1}]}));
+    const services = this.state.services.map((service) => ({
+      ...service.service,
+      remainingDays: service.remainingDays,
+      id: service.serviceId,
+      media: [{ ...service.media, mediaIteration: 1 }],
+    }));
+    if (this.state.services.length === 0) {
+      return <NoServicesAlert />;
+    }
     return (
-      <ServiceCard disableEdit={true} services={services.sort((a, b) => b.id - a.id)} showRemainingDays={true} ></ServiceCard>
+      <ServiceCard
+        disableEdit={true}
+        services={services.sort((a, b) => b.id - a.id)}
+        showRemainingDays={true}
+      ></ServiceCard>
     );
   }
 

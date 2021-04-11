@@ -18,11 +18,11 @@ import "pnotify/dist/es/PNotifyButtons";
 import "pnotify/dist/es/PNotifyConfirm";
 import "pnotify/dist/es/PNotifyCallbacks";
 
-import CoverImage from '../../assets/images/godobet-placeholder.jpg'
+import CoverImage from "../../assets/images/godobet-placeholder.jpg";
 
 const EditService = (props) => {
-  const [descriptionLengthCheck, setDescriptionLengthCheck] = useState(false)
-  const [excerptLengthCheck, setExcerptLengthCheck] = useState(false)
+  const [descriptionLengthCheck, setDescriptionLengthCheck] = useState(false);
+  const [excerptLengthCheck, setExcerptLengthCheck] = useState(false);
   const [currentObject, setCurrentObject] = useState();
   const [imageAsFile, setImageAsFile] = useState("");
 
@@ -63,7 +63,7 @@ const EditService = (props) => {
         })
           .then((e) => e.json())
           .then((object) => {
-            setCurrentObject({...object, price: object.price / 100});
+            setCurrentObject({ ...object, price: object.price / 100 });
           });
       });
   };
@@ -77,52 +77,63 @@ const EditService = (props) => {
   };
 
   const handleUpdate = (e) => {
-    e.preventDefault()
-    if(currentObject.description.length <= 100 && currentObject.excerpt.length <= 50) {
-      setDescriptionLengthCheck(true)
-      setExcerptLengthCheck(true)
-    } else if(currentObject.excerpt.length <= 50) {
-      setExcerptLengthCheck(true)
-      setDescriptionLengthCheck(false)
-    } else if (currentObject.description.length <= 100) {
-      setDescriptionLengthCheck(true)
-      setExcerptLengthCheck(false)
+    e.preventDefault();
+    if (
+      currentObject.description.length < 100 ||
+      currentObject.description.length > 2000
+    ) {
+      setDescriptionLengthCheck(true);
     } else {
-      setExcerptLengthCheck(false)
-      setDescriptionLengthCheck(false)
-    TokenManager.getInstance()
-      .getToken()
-      .then((jwt) => {
-        fetch(BASE_CONFIG.API_URL + "/services/" + id, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth": jwt,
-          },
-          body: JSON.stringify({
-            serviceName: currentObject.serviceName,
-            description: currentObject.description,
-            maxSubscribers: currentObject.maxSubscribers,
-            duration: currentObject.duration,
-            excerpt: currentObject.excerpt,
-            price: currentObject.price * 100,
-          }),
-        }).then((e) => {
-          if (e.status !== 200) {
-            Swal.fire({
-              type: "error",
-              title: "Oops...",
-              text: "Something went wrong!",
-            });
-          } else {
-            Swal.fire({
-              type: "success",
-              title: "Servizio aggiornato!",
-            });
-            uploadServiceCover(e.url);
-          }
+      setDescriptionLengthCheck(false);
+    }
+    if (
+      currentObject.excerpt.length < 50 ||
+      currentObject.excerpt.length > 300
+    ) {
+      setExcerptLengthCheck(true);
+    } else {
+      setExcerptLengthCheck(false);
+    }
+
+    if (
+      currentObject.description.length >= 100 &&
+      currentObject.description.length <= 2000 &&
+      currentObject.excerpt.length >= 50 &&
+      currentObject.excerpt.length <= 300
+    ) {
+      TokenManager.getInstance()
+        .getToken()
+        .then((jwt) => {
+          fetch(BASE_CONFIG.API_URL + "/services/" + id, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Auth": jwt,
+            },
+            body: JSON.stringify({
+              serviceName: currentObject.serviceName,
+              description: currentObject.description,
+              maxSubscribers: currentObject.maxSubscribers,
+              duration: currentObject.duration,
+              excerpt: currentObject.excerpt,
+              price: currentObject.price * 100,
+            }),
+          }).then((e) => {
+            if (e.status !== 200) {
+              Swal.fire({
+                type: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+              });
+            } else {
+              Swal.fire({
+                type: "success",
+                title: "Servizio aggiornato!",
+              });
+              uploadServiceCover(e.url);
+            }
+          });
         });
-      });
     }
   };
 
@@ -221,7 +232,7 @@ const EditService = (props) => {
                   })
                   .catch((error) => {
                     console.warn(error);
-                  }); 
+                  });
               });
           })
           .catch((error) => {
@@ -245,7 +256,6 @@ const EditService = (props) => {
     addRemoveLinks: true,
     acceptedFiles: "image/jpeg,image/png,application/pdf",
   };
-  
 
   const getLatestImage = (media) => {
     if (
@@ -259,24 +269,37 @@ const EditService = (props) => {
     return media._embedded.serviceMedia.sort((a, b) => b.id - a.id)[0].url;
   };
 
-
   return (
     <Aux>
       {currentObject ? (
         <Form onSubmit={handleUpdate}>
-          <DropzoneComponent
-            config={config}
-            djsConfig={djsConfig}
-            eventHandlers={eventHandlers}
-          />
           <Row>
             <Col md={12} sm={12} lg={12} xl={12}>
               <Card className={"p-15"}>
-                <Row style={{alignItems: 'center'}}>
-                  <Col style={{textAlign: 'center'}} md={2}>
-                  <img src={getLatestImage(currentObject)} alt={"Immagine servizio"} height='150px' width='150px' style={{objectFit: 'cover', border:'1px solid lightgray'}}/>
+                <Row>
+                  <Col md={12} style={{ marginBottom: "20px" }}>
+                    <Form.Label>Immagine servizio</Form.Label>
+                    <DropzoneComponent
+                      config={config}
+                      djsConfig={djsConfig}
+                      eventHandlers={eventHandlers}
+                    />
                   </Col>
-                  <Col >
+                </Row>
+                <Row style={{ alignItems: "center" }}>
+                  <Col style={{ textAlign: "center" }} md={2}>
+                    <img
+                      src={getLatestImage(currentObject)}
+                      alt={"Immagine servizio"}
+                      height="150px"
+                      width="150px"
+                      style={{
+                        objectFit: "cover",
+                        border: "1px solid lightgray",
+                      }}
+                    />
+                  </Col>
+                  <Col>
                     <Form.Group controlId="infirizzo">
                       <Form.Label>
                         Titolo <span className="text-danger">*</span>
@@ -291,7 +314,7 @@ const EditService = (props) => {
                       />
                     </Form.Group>
                   </Col>
-                  <Col >
+                  <Col>
                     <Form.Group controlId="citta">
                       <Form.Label>
                         Prezzo (€) <span className="text-danger">*</span>
@@ -306,7 +329,7 @@ const EditService = (props) => {
                       />
                     </Form.Group>
                   </Col>
-                  <Col >
+                  <Col>
                     <Form.Group>
                       <Form.Label>
                         Durata iscrizione <span className="text-danger">*</span>
@@ -322,7 +345,7 @@ const EditService = (props) => {
                       />
                     </Form.Group>
                   </Col>
-                  <Col >
+                  <Col>
                     <Form.Group>
                       <Form.Label>
                         Massimo iscrizioni{" "}
@@ -340,48 +363,94 @@ const EditService = (props) => {
                     </Form.Group>
                   </Col>
                 </Row>
-                <Row className='pt-5'>
+                <Row className="pt-5">
                   <Col>
                     <Form.Group controlId="infirizzo">
                       <Form.Label>
                         Descrizione corta <span className="text-danger">*</span>
                       </Form.Label>
                       <Form.Control
-                        style={excerptLengthCheck ? {borderColor: 'red', minHeight: "100px", maxHeight: 100} : {borderColor: 'black', minHeight: "100px", maxHeight: 100}}
+                        style={
+                          excerptLengthCheck
+                            ? {
+                                borderColor: "red",
+                                minHeight: "100px",
+                                maxHeight: 100,
+                              }
+                            : {
+                                borderColor: "black",
+                                minHeight: "100px",
+                                maxHeight: 100,
+                              }
+                        }
                         as="textarea"
                         placeholder="Descrizione corta"
                         value={currentObject.excerpt}
                         name="excerpt"
+                        maxLength="300"
                         onChange={handleChange}
                         required
                       />
                     </Form.Group>
-                    {excerptLengthCheck ? <p className='text-danger'>Minimo 50 caratteri</p> : null}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      {excerptLengthCheck ? (
+                        <p className="text-danger">Minimo 50 caratteri</p>
+                      ) : (
+                        <span></span>
+                      )}
+                      <span className="text-muted" style={{ fontSize: "11px" }}>
+                        {currentObject.excerpt.length} / 300
+                      </span>
+                    </div>
                   </Col>
                 </Row>
-                <Row className='pt-5'>
+                <Row className="pt-5">
                   <Col>
                     <Form.Group controlId="infirizzo">
                       <Form.Label>
                         Descrizione <span className="text-danger">*</span>
                       </Form.Label>
                       <Form.Control
-                        style={descriptionLengthCheck ? {borderColor: 'red', minHeight: "200px"} : {borderColor: 'black', minHeight: "200px"}}
+                        style={
+                          descriptionLengthCheck
+                            ? { borderColor: "red", minHeight: "200px" }
+                            : { borderColor: "black", minHeight: "200px" }
+                        }
                         as="textarea"
                         placeholder="Descrizione"
                         value={currentObject.description}
+                        maxLength="2000"
                         name="description"
                         onChange={handleChange}
                         required
                       />
                     </Form.Group>
-                    {descriptionLengthCheck ? <p className='text-danger'>Minimo 100 caratteri</p> : null}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      {descriptionLengthCheck ? (
+                        <p className="text-danger">Minimo 100 caratteri</p>
+                      ) : (
+                        <span></span>
+                      )}
+                      <span className="text-muted" style={{ fontSize: "11px" }}>
+                        {currentObject.description.length} / 2000
+                      </span>
+                    </div>
                   </Col>
                 </Row>
               </Card>
 
-              <Button type='submit' className="float-right">
-                Salva
+              <Button type="submit" className="float-right">
+                Salva servizio
               </Button>
             </Col>
           </Row>
