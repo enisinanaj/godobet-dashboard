@@ -120,10 +120,9 @@ class AdminLayout extends Component {
             onClick={() => this.mobileOutClickHandler}
           >
             <div className={mainClass.join(" ")}>
-              <div
-                className="pcoded-content"
-                style={{ paddingBottom: "150px" }}
-              >
+              <div className="pcoded-content" style={{ paddingBottom: "80px" }}>
+                {" "}
+                {/* padding bottom 80px for mobile */}
                 <div className="pcoded-inner-content">
                   <Breadcrumb />
                   <div className="main-body">

@@ -35,7 +35,7 @@ const CreateTip = (props) => {
 
   useEffect(() => {
     setMotivationCount(1000 - motivation.length);
-  }, [motivation])
+  }, [motivation]);
 
   useEffect(() => {
     TokenManager.getInstance()
@@ -220,16 +220,27 @@ const CreateTip = (props) => {
               <Row>
                 <Col md={12} sm={12} lg={12} xl={12}>
                   <Form.Group controlId="notes">
-                    <Form.Label>Motivazione <em>(Opzionale)</em></Form.Label>
+                    <Form.Label>
+                      Motivazione <em>(Opzionale)</em>
+                    </Form.Label>
                     <Form.Control
-                        as="textarea"
-                        rows={4}
-                        name="motivation"
-                        placeholder="Motivazione"
-                        value={motivation}
-                        onChange={({ target }) => {setMotivation(target.value)}}
+                      as="textarea"
+                      rows={4}
+                      name="motivation"
+                      placeholder="Motivazione"
+                      value={motivation}
+                      onChange={({ target }) => {
+                        setMotivation(target.value);
+                      }}
                     />
-                    <span className={"text-muted small float-right " + (motivationCount < 0 ? "text-danger" : "")}>Caratteri rimanenti {motivationCount}</span>
+                    <span
+                      className={
+                        "text-muted small float-right " +
+                        (motivationCount < 0 ? "text-danger" : "")
+                      }
+                    >
+                      Caratteri rimanenti {motivationCount}
+                    </span>
                   </Form.Group>
                 </Col>
               </Row>
