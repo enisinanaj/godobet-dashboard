@@ -343,14 +343,21 @@ const CreateNewService = (props) => {
                       onChange={handleChange}
                     />
                   </Form.Group>
-                  {excerptLengthCheck ? (
-                    <p className="text-danger">
-                      Minimo 50 e massimo 300 caratteri
-                    </p>
-                  ) : null}
-                  <span className="text-muted" style={{ fontSize: "11px" }}>
-                    {newObject.excerpt.length} / 300
-                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {excerptLengthCheck ? (
+                      <p className="text-danger">Minimo 50 caratteri</p>
+                    ) : (
+                      <span></span>
+                    )}
+                    <span className="text-muted" style={{ fontSize: "11px" }}>
+                      {newObject.excerpt.length} / 300
+                    </span>
+                  </div>
                 </Col>
               </Row>
               <Row>
@@ -371,14 +378,21 @@ const CreateNewService = (props) => {
                       maxLength="2000"
                       onChange={handleChange}
                     />
-                    {descriptionLengthCheck ? (
-                      <p className="text-danger">
-                        Minimo 100 e massimo 2000 caratteri
-                      </p>
-                    ) : null}
-                    <span className="text-muted" style={{ fontSize: "11px" }}>
-                      {newObject.description.length} / 2000
-                    </span>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      {descriptionLengthCheck ? (
+                        <p className="text-danger">Minimo 100 caratteri</p>
+                      ) : (
+                        <span></span>
+                      )}
+                      <span className="text-muted" style={{ fontSize: "11px" }}>
+                        {newObject.description.length} / 2000
+                      </span>
+                    </div>
                   </Form.Group>
                 </Col>
               </Row>
