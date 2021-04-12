@@ -8,14 +8,14 @@
 }
 
 .absolute-btn {
-  width: 1.5em;
-  height: 1.5em;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   outline: none;
   border: none;
   background-color: #000;
   color: white;
-  font-size: 30px;
+  font-size: 20px;
   opacity: 0.7;
   transition: 0.3s ease;
 }
@@ -37,4 +37,10 @@
   opacity: 1;
   transform: translateX(0);
   transition: 0.4s ease;
+}
+
+@media only screen and (max-width: 600px) {
+  .absolute-div {
+    right: 5%;
+  }
 }
