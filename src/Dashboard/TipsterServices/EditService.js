@@ -31,7 +31,7 @@ const EditService = (props) => {
   );
 
     window.onbeforeunload = function(e) {
-  return "Do you want to exit this page?";
+    return "Do you want to exit this page?";
 };
 
   useEffect(() => {

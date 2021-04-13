@@ -22,7 +22,6 @@ const InsertEventCard = (props) => {
             quote,
             sport
         });
-        console.log(quote)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventDate, competition, event, proposal, quote, props])
 

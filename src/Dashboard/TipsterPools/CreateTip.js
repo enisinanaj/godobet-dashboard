@@ -9,7 +9,6 @@ import NumberFormat from "react-number-format";
 import TokenManager from "../../App/auth/TokenManager";
 import Select from "react-select";
 import config from "../../store/config";
-import Swal from 'sweetalert2'
 
 const CreateTip = (props) => {
   const [description, setDescription] = useState("");
@@ -146,14 +145,6 @@ const CreateTip = (props) => {
              Promise.all(updateEvents).then((result) => {
       window.location = "/dashboard/tipster/pools";
     });
-          } else {
-             
-Swal.fire({
-  type: 'error',
-  title: 'Oops...',
-  text: 'Something went wrong!',
-  footer: '<a href>Why do I have this issue?</a>'
-})
           }
         })
       );
