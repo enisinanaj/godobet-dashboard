@@ -24,23 +24,16 @@
   opacity: 1;
 }
 
-.crea-tip-text{
+.crea-tip-text {
   margin: 0;
   margin-right: 10px;
   transform: translateX(72px);
   opacity: 0;
   transition: 0.4s ease;
-
 }
 
 .crea-tip-text.hover {
   opacity: 1;
   transform: translateX(0);
   transition: 0.4s ease;
-}
-
-@media only screen and (max-width: 600px) {
-  .absolute-div {
-    right: 5%;
-  }
 }

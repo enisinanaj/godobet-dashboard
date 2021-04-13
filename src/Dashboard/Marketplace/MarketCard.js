@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import TokenManager from "../../App/auth/TokenManager";
 import Esaurito from '../../App/components/Esaurito';
 import LocaleNumber from '../../App/components/LocaleNumber';
 import PriceLabel from "../../App/components/PriceLabel";
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import '../../assets/scss/tip.css';
+import BASE_CONFIG from "../../store/config";
 
 const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
   const getLatestImage = (media) => {
@@ -14,9 +16,31 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
     }
     return media.sort((a, b) => b.mediaIteration - a.mediaIteration)[0].url;
   };
+  const [subscriptions, setSubscriptions] = useState([]);
+
+  useEffect(() => {
+    callUrl(BASE_CONFIG.API_URL + '/users/' + user.userCode + '/subscriptions?page=0&size=1000')
+      .then(e => e.json())
+      .then(subscriptions => {
+        setSubscriptions(subscriptions._embedded.subscriptions)
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const callUrl = (url) => {
+    return TokenManager.getInstance().getToken().then(jwt => {
+      return fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth": jwt,
+        },
+      })
+    });
+  };
 
   const canPurchase = (item) => {
-    return item.author.userCode !== user.userCode && (item.maxSubscribers - item.subscribersCount) > 0
+    const subscription = subscriptions.find(sub => sub.serviceId === Number(item.id) && sub.valid);
+    return !subscription && item.author.userCode !== user.userCode && (item.maxSubscribers - item.subscribersCount) > 0
   }
 
   return marketData.map((item, index) => {

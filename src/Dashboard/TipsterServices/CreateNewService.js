@@ -18,8 +18,8 @@ import "pnotify/dist/es/PNotifyCallbacks";
 
 const CreateNewService = (props) => {
   // const [image, setImage] = useState();
-  const [descriptionLengthCheck, setDescriptionLengthCheck] = useState(false)
-  const [excerptLengthCheck, setExcerptLengthCheck] = useState(false)
+  const [descriptionLengthCheck, setDescriptionLengthCheck] = useState(false);
+  const [excerptLengthCheck, setExcerptLengthCheck] = useState(false);
   const [validFields, setValidFields] = useState(false);
   const [imageAsFile, setImageAsFile] = useState("");
 
@@ -27,6 +27,7 @@ const CreateNewService = (props) => {
     author: "",
     price: "",
     duration: "",
+    excerpt: "",
     description: "",
     serviceName: "",
     maxSubscribers: "",
@@ -61,54 +62,61 @@ const CreateNewService = (props) => {
   };
 
   const handleCreateCard = () => {
-    if(newObject.description.length <= 100 && newObject.excerpt.length <= 50) {
-      setDescriptionLengthCheck(true)
-      setExcerptLengthCheck(true)
-    } else if(newObject.excerpt.length <= 50) {
-      setExcerptLengthCheck(true)
-      setDescriptionLengthCheck(false)
-    } else if (newObject.description.length <= 100) {
-      setDescriptionLengthCheck(true)
-      setExcerptLengthCheck(false)
+    if (
+      newObject.description.length < 100 ||
+      newObject.description.length > 2000
+    ) {
+      setDescriptionLengthCheck(true);
+    } else {
+      setDescriptionLengthCheck(false);
     }
-    else {
-      setExcerptLengthCheck(false)
-      setDescriptionLengthCheck(false)
+    if (newObject.excerpt.length < 50 || newObject.excerpt.length > 300) {
+      setExcerptLengthCheck(true);
+    } else {
+      setExcerptLengthCheck(false);
+    }
+
+    if (
+      newObject.description.length >= 100 &&
+      newObject.description.length <= 2000 &&
+      newObject.excerpt.length >= 50 &&
+      newObject.excerpt.length <= 300
+    ) {
       TokenManager.getInstance()
-      .getToken()
-      .then((jwt) => {
-        fetch(BASE_CONFIG.API_URL + "/services", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth": jwt,
-          },
-          body: JSON.stringify({
-            author: props.applicationState.user._links.self.href,
-            price: newObject.price * 100,
-            duration: newObject.duration,
-            description: newObject.description,
-            excerpt: newObject.excerpt,
-            serviceName: newObject.serviceName,
-            maxSubscribers: newObject.maxSubscribers,
-            version: "1",
-          }),
-        }).then((e) => {
-          if (e.status !== 201) {
-            Swal.fire({
-              type: "error",
-              title: "Oops...",
-              text: "C'è stato un problema!",
-            });
-          } else {
-            Swal.fire({
-              type: "success",
-              title: "Servizio creato!",
-            });
-            uploadServiceCover(e.headers.get("Location"));
-          }
+        .getToken()
+        .then((jwt) => {
+          fetch(BASE_CONFIG.API_URL + "/services", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Auth": jwt,
+            },
+            body: JSON.stringify({
+              author: props.applicationState.user._links.self.href,
+              price: newObject.price * 100,
+              duration: newObject.duration,
+              description: newObject.description,
+              excerpt: newObject.excerpt,
+              serviceName: newObject.serviceName,
+              maxSubscribers: newObject.maxSubscribers,
+              version: "1",
+            }),
+          }).then((e) => {
+            if (e.status !== 201) {
+              Swal.fire({
+                type: "error",
+                title: "Oops...",
+                text: "C'è stato un problema!",
+              });
+            } else {
+              Swal.fire({
+                type: "success",
+                title: "Servizio creato!",
+              });
+              uploadServiceCover(e.headers.get("Location"));
+            }
+          });
         });
-    });
     }
   };
 
@@ -128,7 +136,6 @@ const CreateNewService = (props) => {
       setValidFields(false);
     }
   };
-  
 
   function dynamicProgressButtonPNotify() {
     const notice = PNotify.info({
@@ -235,19 +242,22 @@ const CreateNewService = (props) => {
     );
   };
 
-
-
   return (
     <Aux>
       <Form>
-        <DropzoneComponent
-          config={config}
-          djsConfig={djsConfig}
-          eventHandlers={eventHandlers}
-        />
         <Row>
           <Col md={12} sm={12} lg={12} xl={12}>
             <Card className={"p-15"}>
+              <Row>
+                <Col md={12} style={{ marginBottom: "20px" }}>
+                  <Form.Label>Immagine servizio</Form.Label>
+                  <DropzoneComponent
+                    config={config}
+                    djsConfig={djsConfig}
+                    eventHandlers={eventHandlers}
+                  />
+                </Col>
+              </Row>
               <Row>
                 <Col md={12} sm={12} lg={3} xl={3}>
                   <Form.Group controlId="infirizzo">
@@ -307,22 +317,49 @@ const CreateNewService = (props) => {
                 </Col>
               </Row>
               <Row>
-                  <Col>
-                    <Form.Group controlId="infirizzo">
-                      <Form.Label>
-                        Descrizione corta <span className="text-danger">*</span>
-                      </Form.Label>
-                      <Form.Control
-                        style={excerptLengthCheck ? {borderColor: 'red', minHeight: "100px", maxHeight: 100} : {borderColor: 'black', minHeight: "100px", maxHeight: 100}}
-                        as="textarea"
-                        placeholder="Descrizione corta"
-                        name="excerpt"
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    {excerptLengthCheck ? <p className='text-danger'>Required 50 characters</p> : null}
-                  </Col>
-                </Row>
+                <Col>
+                  <Form.Group controlId="infirizzo">
+                    <Form.Label>
+                      Descrizione corta <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      style={
+                        excerptLengthCheck
+                          ? {
+                              borderColor: "red",
+                              minHeight: "100px",
+                              maxHeight: 100,
+                            }
+                          : {
+                              borderColor: "black",
+                              minHeight: "100px",
+                              maxHeight: 100,
+                            }
+                      }
+                      as="textarea"
+                      placeholder="Descrizione corta"
+                      name="excerpt"
+                      maxLength="300"
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {excerptLengthCheck ? (
+                      <p className="text-danger">Minimo 50 caratteri</p>
+                    ) : (
+                      <span></span>
+                    )}
+                    <span className="text-muted" style={{ fontSize: "11px" }}>
+                      {newObject.excerpt.length} / 300
+                    </span>
+                  </div>
+                </Col>
+              </Row>
               <Row>
                 <Col>
                   <Form.Group controlId="infirizzo">
@@ -330,13 +367,32 @@ const CreateNewService = (props) => {
                       Descrizione <span className="text-danger">*</span>
                     </Form.Label>
                     <Form.Control
-                      style={descriptionLengthCheck ? {borderColor: 'red', minHeight: "200px"} : {borderColor: 'black', minHeight: "200px"}}
+                      style={
+                        descriptionLengthCheck
+                          ? { borderColor: "red", minHeight: "200px" }
+                          : { borderColor: "black", minHeight: "200px" }
+                      }
                       as="textarea"
                       placeholder="Descrizione"
                       name="description"
+                      maxLength="2000"
                       onChange={handleChange}
                     />
-                    {descriptionLengthCheck ? <p className='text-danger'>Required 100 characters</p> : null}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      {descriptionLengthCheck ? (
+                        <p className="text-danger">Minimo 100 caratteri</p>
+                      ) : (
+                        <span></span>
+                      )}
+                      <span className="text-muted" style={{ fontSize: "11px" }}>
+                        {newObject.description.length} / 2000
+                      </span>
+                    </div>
                   </Form.Group>
                 </Col>
               </Row>
@@ -350,7 +406,7 @@ const CreateNewService = (props) => {
               className="float-right"
               disabled={!validFields}
             >
-              Salva
+              Salva servizio
             </Button>
           </Col>
         </Row>
@@ -364,5 +420,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateNewService
-);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateNewService);

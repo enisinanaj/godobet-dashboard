@@ -82,9 +82,15 @@ function TipsterProfile(props) {
                 },
             }).then((e) => e.json()).then(user => {
                 setCurrentUser(user)
+
+                if (!user._embedded) {
+                    return;
+                }
+
                 const winRatioVar = user._embedded.playedPools.filter(res => {
                     return res.outcome === 'win'
-                } )
+                });
+
                 let percentage = ((winRatioVar.length / user._embedded.playedPools.length) * 100)
                 setWinRatio(percentage)
             })
@@ -213,7 +219,7 @@ function TipsterProfile(props) {
                             
                                 <Col md={8}>
                                     <Row>
-                                        <Col md={3}><span><strong>{currentUser.totalSubscribers}</strong> Iscritti</span></Col>
+                                        <Col md={3}><span><strong>{currentUser.totalSubscribers < 0 ? 0 : currentUser.totalSubscribers}</strong> Iscritti</span></Col>
                                         <Col md={4}>
                                             <span className={"mb-1" + ((currentUser.totalProfit >= 0) ? " text-success" : " text-danger")}>Profitto <strong><LocaleNumber amount={currentUser.totalProfit} symbol={"%"}/></strong></span>
                                         </Col>
@@ -223,10 +229,10 @@ function TipsterProfile(props) {
                                     </Row>
                                     <Row>
                                         <Col md={3}>
-                                            <span><strong>{currentUser._embedded.services ? currentUser._embedded.services.length : 0}</strong> servizi creati</span>
+                                            <span><strong>{currentUser._embedded && currentUser._embedded.services ? currentUser._embedded.services.length : 0}</strong> servizi creati</span>
                                         </Col>
                                         <Col md={4}>
-                                            <span><strong>{currentUser._embedded.pools ? currentUser._embedded.pools.length : 0}</strong> tip create</span>
+                                            <span><strong>{currentUser._embedded && currentUser._embedded.pools ? currentUser._embedded.pools.length : 0}</strong> tip create</span>
                                         </Col>
                                         <Col md={5}></Col>
                                     </Row>

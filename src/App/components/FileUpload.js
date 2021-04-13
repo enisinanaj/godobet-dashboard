@@ -180,6 +180,7 @@ const FileUpload = (props) => {
         variant={"primary"}
         onClick={uploadAvatar}
         disabled={!imageAsFile}
+        className={"float-right"}
       >
         Salva
       </Button>

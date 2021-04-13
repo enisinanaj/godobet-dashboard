@@ -28,7 +28,7 @@ class Default extends React.Component {
   getMyPools = () =>
     this.load(
       `${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.user._links.self.href}&page=0&size=1000`
-    ).then((p) => p._embedded.pools);
+    ).then((p) => p._embedded?.pools);
 
   getStatsForMonth = () =>
     this.load(

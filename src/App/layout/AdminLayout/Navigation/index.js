@@ -58,7 +58,7 @@ class Navigation extends Component {
 
       if (this.props.navFixedLayout && !this.props.headerFixedLayout) {
         window.addEventListener("scroll", this.scroll, true);
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
       } else {
         window.removeEventListener("scroll", this.scroll, false);
       }

@@ -45,8 +45,9 @@ class NavContent extends Component {
     }
   };
 
-  render() {
-    const navItems = this.props.navigation.map((item) => {
+  render() {    
+    const navItems = this.props.navigation
+    .map((item) => {
       switch (item.type) {
         case "group":
           return (
@@ -127,6 +128,7 @@ const mapStateToProps = (state) => {
     layout: state.layout,
     rtlLayout: state.rtlLayout,
     collapseMenu: state.collapseMenu,
+    user: state.user
   };
 };
 
