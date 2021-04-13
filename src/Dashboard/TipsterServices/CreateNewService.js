@@ -23,6 +23,10 @@ const CreateNewService = (props) => {
   const [validFields, setValidFields] = useState(false);
   const [imageAsFile, setImageAsFile] = useState("");
 
+    window.onbeforeunload = function(e) {
+  return "Do you want to exit this page?";
+};
+
   const [newObject, setNewObject] = useState({
     author: "",
     price: "",

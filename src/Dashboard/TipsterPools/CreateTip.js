@@ -29,6 +29,10 @@ const CreateTip = (props) => {
     validateEvents();
   };
 
+  window.onbeforeunload = function(e) {
+  return "Do you want to exit this page?";
+};
+
   useEffect(() => {
     validateEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
