@@ -9,6 +9,7 @@ import NumberFormat from "react-number-format";
 import TokenManager from "../../App/auth/TokenManager";
 import Select from "react-select";
 import config from "../../store/config";
+import Swal from 'sweetalert2'
 
 const CreateTip = (props) => {
   const [description, setDescription] = useState("");
@@ -129,19 +130,31 @@ const CreateTip = (props) => {
             proposal: event.proposal,
             sport: event.sport.value,
             event: event.event,
-            quote: Number(event.quote.replace("_", "")) * 100,
+            quote: Number(event.quote.replace(/_/g, '')) * 100,
             notes: event.notes,
             pool: poolResult._links.self.href,
             competition: event.competition,
             gender: "http://localhost:5005/items/3",
           }),
+        }).then(res => {
+          console.log(res.status)
+          if(res.status === 201) {
+             Promise.all(updateEvents).then((result) => {
+      window.location = "/dashboard/tipster/pools";
+    });
+          } else {
+             
+Swal.fire({
+  type: 'error',
+  title: 'Oops...',
+  text: 'Something went wrong!',
+  footer: '<a href>Why do I have this issue?</a>'
+})
+          }
         })
       );
     });
 
-    Promise.all(updateEvents).then((result) => {
-      window.location = "/dashboard/tipster/pools";
-    });
   };
 
   return (

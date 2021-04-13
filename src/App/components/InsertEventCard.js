@@ -22,6 +22,7 @@ const InsertEventCard = (props) => {
             quote,
             sport
         });
+        console.log(quote)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventDate, competition, event, proposal, quote, props])
 
@@ -103,7 +104,9 @@ const InsertEventCard = (props) => {
                     <Form.Group controlId="quota">
                         <Form.Label>Quota <span className={"text-danger"}>*</span></Form.Label>
                         <InputMask className={"form-control"} mask={"99.99"}
-                            onChange={({ target }) => {setQuote(target.value)}}
+                            onChange={({ target }) => {
+                                setQuote(target.value)
+                            }}
                             name="quota"
                             placeholder="1.98"
                             value={quote} />

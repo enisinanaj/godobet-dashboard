@@ -68,12 +68,12 @@ class SignIn extends React.Component {
 
   addUserStateChangeEvent = () => {
     return auth.onAuthStateChanged((user) => {
-      if (!user.emailVerified) {
-        this.setState({
-          formError: "Per accedere bisognia verificare la propria email",
-        });  
-        return;
-      }
+      // if (!user.emailVerified) {
+      //   this.setState({
+      //     formError: "Per accedere bisognia verificare la propria email",
+      //   });  
+      //   return;
+      // }
       
       if (!user) {
         return;
