@@ -114,7 +114,7 @@ class AdminLayout extends Component {
         <Fullscreen enabled={this.props.isFullScreen}>
           <Navigation />
           <NavBar />
-          {this.props.user._embedded && this.props.user._embedded.services.length > 0 ? <AbsoluteButton /> : null}
+          {this.props.user._embedded && this.props.user._embedded.services && this.props.user._embedded.services.length > 0 ? <AbsoluteButton /> : null}
           <div
             className="pcoded-main-container"
             onClick={() => this.mobileOutClickHandler}
