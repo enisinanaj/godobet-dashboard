@@ -9,6 +9,8 @@ import NumberFormat from "react-number-format";
 import TokenManager from "../../App/auth/TokenManager";
 import Select from "react-select";
 import config from "../../store/config";
+import Swal from "sweetalert2";
+import CustomAlert from "../TipsterServices/CustomAlert";
 
 const CreateTip = (props) => {
   const [description, setDescription] = useState("");
@@ -20,6 +22,7 @@ const CreateTip = (props) => {
   const [services, setServices] = useState();
   const [motivation, setMotivation] = useState("");
   const [motivationCount, setMotivationCount] = useState(1000);
+  const [saving, setSaving] = useState(false);
 
   const updateEvents = (event) => {
     let newEvents = events;
@@ -28,9 +31,13 @@ const CreateTip = (props) => {
     validateEvents();
   };
 
-  window.onbeforeunload = function(e) {
-  return "Do you want to exit this page?";
-};
+  if (props.applicationState.user._embedded.services.length < 1) {
+    window.onbeforeunload = null;
+  } else {
+    window.onbeforeunload = function (e) {
+      return "Do you want to exit this page?";
+    };
+  }
 
   useEffect(() => {
     validateEvents();
@@ -75,7 +82,8 @@ const CreateTip = (props) => {
         event.competition === "" ||
         event.event === "" ||
         event.proposal === "" ||
-        (!event.quote || event.quote && event.quote.replace(".", "").replace("_", "") === "") ||
+        !event.quote ||
+        (event.quote && event.quote.replace(".", "").replace("_", "") === "") ||
         event.quote === "__.__" ||
         event.sport === "" ||
         description === "" ||
@@ -104,6 +112,7 @@ const CreateTip = (props) => {
   };
 
   const saveTip = async () => {
+    setSaving(true);
     let token = await TokenManager.getInstance().getToken();
     let result = await fetch(config.API_URL + "/pools/", {
       method: "POST",
@@ -133,151 +142,169 @@ const CreateTip = (props) => {
             proposal: event.proposal,
             sport: event.sport.value,
             event: event.event,
-            quote: Number(event.quote.replace(/_/g, '')) * 100,
+            quote: Number(event.quote.replace(/_/g, "")) * 100,
             notes: event.notes,
             pool: poolResult._links.self.href,
             competition: event.competition,
             gender: "http://localhost:5005/items/3",
           }),
-        }).then(res => {
-          console.log(res.status)
-          if(res.status === 201) {
-             Promise.all(updateEvents).then((result) => {
-      window.location = "/dashboard/tipster/pools";
-    });
+        }).then((res) => {
+          window.onbeforeunload = null;
+          if (res.status === 201) {
+            Swal.fire("Saved!", "", "success").then(() => {
+              Promise.all(updateEvents).then((result) => {
+                window.location = "/dashboard/tipster/pools";
+              });
+            });
           }
         })
       );
     });
-
   };
 
   return (
     <Aux>
-      <Form>
-        <Row>
-          <Col md={12} sm={12} lg={12} xl={12}>
-            <Card title="Dati tip" className={"p-15"}>
-              <Row>
-                <Col md={12} sm={12} lg={3} xl={3}>
-                  <Form.Group controlId="infirizzo">
-                    <Form.Label>
-                      Servizio <span className={"text-danger"}>*</span>
-                    </Form.Label>
-                    <Select
-                      isClearable
-                      isSearchable
-                      className="basic-single"
-                      classNamePrefix="select"
-                      name="service"
-                      options={services}
-                      value={service}
-                      onChange={(service) => setService(service)}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={12} sm={12} lg={3} xl={3}>
-                  <Form.Group controlId="infirizzo">
-                    <Form.Label>
-                      Descrizione Tip <span className={"text-danger"}>*</span>
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="street"
-                      value={description}
-                      placeholder="Descrizione"
-                      onChange={({ target }) => {
-                        setDescription(target.value);
-                      }}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={12} sm={12} lg={3} xl={3}>
-                  <Form.Group controlId="cap">
-                    <Form.Label>
-                      Stake (%) <span className={"text-danger"}>*</span>
-                    </Form.Label>
-                    <NumberFormat
-                      className={"form-control"}
-                      name="stake"
-                      placeholder="0.0%"
-                      suffix={"%"}
-                      onChange={({ target }) => {
-                        setStake(target.value);
-                      }}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={12} sm={12} lg={3} xl={3}>
-                  <Form.Group controlId="citta">
-                    <Form.Label>
-                      Bookmaker <span className={"text-danger"}>*</span>
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="bookmaker"
-                      placeholder="Bookmaker"
-                      value={bookmaker}
-                      onChange={({ target }) => {
-                        setBookmaker(target.value);
-                      }}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={12} sm={12} lg={12} xl={12}>
-                  <Form.Group controlId="notes">
-                    <Form.Label>
-                      Motivazione <em>(Opzionale)</em>
-                    </Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={4}
-                      name="motivation"
-                      placeholder="Motivazione"
-                      value={motivation}
-                      onChange={({ target }) => {
-                        setMotivation(target.value);
-                      }}
-                    />
-                    <span
-                      className={
-                        "text-muted small float-right " +
-                        (motivationCount < 0 ? "text-danger" : "")
-                      }
-                    >
-                      Caratteri rimanenti {motivationCount}
-                    </span>
-                  </Form.Group>
-                </Col>
-              </Row>
-            </Card>
+      {props.applicationState.user._embedded.services.length > 0 ? (
+        <Form>
+          <Row>
+            <Col md={12} sm={12} lg={12} xl={12}>
+              <Card title="Dati tip" className={"p-15"}>
+                <Row>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group controlId="infirizzo">
+                      <Form.Label>
+                        Servizio <span className={"text-danger"}>*</span>
+                      </Form.Label>
+                      <Select
+                        isClearable
+                        isSearchable
+                        className="basic-single"
+                        classNamePrefix="select"
+                        isDisabled={saving}
+                        name="service"
+                        options={services}
+                        value={service}
+                        onChange={(service) => setService(service)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group controlId="infirizzo">
+                      <Form.Label>
+                        Descrizione Tip <span className={"text-danger"}>*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="street"
+                        disabled={saving}
+                        value={description}
+                        placeholder="Descrizione"
+                        onChange={({ target }) => {
+                          setDescription(target.value);
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group controlId="cap">
+                      <Form.Label>
+                        Stake (%) <span className={"text-danger"}>*</span>
+                      </Form.Label>
+                      <NumberFormat
+                        className={"form-control"}
+                        name="stake"
+                        placeholder="0.0%"
+                        disabled={saving}
+                        suffix={"%"}
+                        onChange={({ target }) => {
+                          setStake(target.value);
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group controlId="citta">
+                      <Form.Label>
+                        Bookmaker <span className={"text-danger"}>*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="bookmaker"
+                        placeholder="Bookmaker"
+                        disabled={saving}
+                        value={bookmaker}
+                        onChange={({ target }) => {
+                          setBookmaker(target.value);
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={12} sm={12} lg={12} xl={12}>
+                    <Form.Group controlId="notes">
+                      <Form.Label>
+                        Motivazione <em>(Opzionale)</em>
+                      </Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={4}
+                        name="motivation"
+                        disabled={saving}
+                        placeholder="Motivazione"
+                        value={motivation}
+                        onChange={({ target }) => {
+                          setMotivation(target.value);
+                        }}
+                      />
+                      <span
+                        className={
+                          "text-muted small float-right " +
+                          (motivationCount < 0 ? "text-danger" : "")
+                        }
+                      >
+                        Caratteri rimanenti {motivationCount}
+                      </span>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card>
 
-            {events.map((e, index) => {
-              return (
-                <InsertEventCard
-                  key={index}
-                  onValueChange={updateEvents}
-                  index={index}
-                  onRemove={removeEvent}
-                />
-              );
-            })}
+              {events.map((e, index) => {
+                return (
+                  <InsertEventCard
+                    key={index}
+                    onValueChange={updateEvents}
+                    index={index}
+                    onRemove={removeEvent}
+                    saving={saving}
+                  />
+                );
+              })}
 
-            <Button onClick={(e) => setEvents([...events, {}])}>
-              + Aggiungi evento
-            </Button>
-            <Button
-              className={"float-right"}
-              disabled={!validEvents || motivationCount < 0}
-              onClick={() => saveTip()}
-            >
-              Salva
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+              <Button
+                onClick={(e) => setEvents([...events, {}])}
+                disabled={saving}
+              >
+                + Aggiungi evento
+              </Button>
+              <Button
+                className={"float-right"}
+                disabled={!validEvents || motivationCount < 0 || saving}
+                onClick={() => saveTip()}
+              >
+                Salva
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      ) : (
+        <CustomAlert
+          message="Non hai alcun servizio."
+          component="Crea servizio"
+          link="/dashboard/tipster/createService"
+        />
+      )}
     </Aux>
   );
 };

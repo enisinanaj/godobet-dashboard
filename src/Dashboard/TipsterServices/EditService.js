@@ -24,15 +24,16 @@ const EditService = (props) => {
   const [descriptionLengthCheck, setDescriptionLengthCheck] = useState(false);
   const [excerptLengthCheck, setExcerptLengthCheck] = useState(false);
   const [currentObject, setCurrentObject] = useState();
+  const [saving, setSaving] = useState(false);
   const [imageAsFile, setImageAsFile] = useState("");
 
   let id = window.location.href.substring(
     window.location.href.lastIndexOf("/") + 1
   );
 
-    window.onbeforeunload = function(e) {
+  window.onbeforeunload = function (e) {
     return "Do you want to exit this page?";
-};
+  };
 
   useEffect(() => {
     TokenManager.getInstance()
@@ -105,6 +106,7 @@ const EditService = (props) => {
       currentObject.excerpt.length >= 50 &&
       currentObject.excerpt.length <= 300
     ) {
+      setSaving(true);
       TokenManager.getInstance()
         .getToken()
         .then((jwt) => {
@@ -133,8 +135,13 @@ const EditService = (props) => {
               Swal.fire({
                 type: "success",
                 title: "Servizio aggiornato!",
+              }).then(() => {
+                window.onbeforeunload = null;
+                uploadServiceCover(e.url);
+                setTimeout(() => {
+                  window.location = "/dashboard/tipster/pools";
+                }, 2000);
               });
-              uploadServiceCover(e.url);
             }
           });
         });
@@ -313,6 +320,7 @@ const EditService = (props) => {
                         placeholder="Titolo"
                         value={currentObject.serviceName}
                         onChange={handleChange}
+                        disabled={saving}
                         name="serviceName"
                         required
                       />
@@ -327,6 +335,7 @@ const EditService = (props) => {
                         type="number"
                         name="price"
                         value={currentObject.price}
+                        disabled={saving}
                         onChange={handleChange}
                         placeholder="Prezzo"
                         required
@@ -343,6 +352,7 @@ const EditService = (props) => {
                         min="0"
                         placeholder="Durata iscrizione"
                         onChange={handleChange}
+                        disabled={saving}
                         value={currentObject.duration}
                         name="duration"
                         required
@@ -358,6 +368,7 @@ const EditService = (props) => {
                       <Form.Control
                         type="number"
                         min="0"
+                        disabled={saving}
                         placeholder="Massimo iscrizioni"
                         value={currentObject.maxSubscribers}
                         onChange={handleChange}
@@ -391,6 +402,7 @@ const EditService = (props) => {
                         placeholder="Descrizione corta"
                         value={currentObject.excerpt}
                         name="excerpt"
+                        disabled={saving}
                         maxLength="300"
                         onChange={handleChange}
                         required
@@ -429,6 +441,7 @@ const EditService = (props) => {
                         placeholder="Descrizione"
                         value={currentObject.description}
                         maxLength="2000"
+                        disabled={saving}
                         name="description"
                         onChange={handleChange}
                         required
@@ -453,7 +466,7 @@ const EditService = (props) => {
                 </Row>
               </Card>
 
-              <Button type="submit" className="float-right">
+              <Button type="submit" className="float-right" disabled={saving}>
                 Salva servizio
               </Button>
             </Col>

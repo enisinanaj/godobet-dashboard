@@ -15,6 +15,7 @@ import PNotify from "pnotify/dist/es/PNotify";
 import "pnotify/dist/es/PNotifyButtons";
 import "pnotify/dist/es/PNotifyConfirm";
 import "pnotify/dist/es/PNotifyCallbacks";
+import CustomAlert from "./CustomAlert";
 
 const CreateNewService = (props) => {
   // const [image, setImage] = useState();
@@ -22,11 +23,6 @@ const CreateNewService = (props) => {
   const [excerptLengthCheck, setExcerptLengthCheck] = useState(false);
   const [validFields, setValidFields] = useState(false);
   const [imageAsFile, setImageAsFile] = useState("");
-
-    window.onbeforeunload = function(e) {
-  return "Do you want to exit this page?";
-};
-
   const [newObject, setNewObject] = useState({
     author: "",
     price: "",
@@ -58,6 +54,10 @@ const CreateNewService = (props) => {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  window.onbeforeunload = function (e) {
+    return "Do you want to exit this page?";
   };
 
   const eventHandlers = {
@@ -246,175 +246,197 @@ const CreateNewService = (props) => {
     );
   };
 
+  if (
+    props.applicationState.user.stripeAccountId !== null &&
+    props.applicationState.user.stripeAccountStatus === "verified"
+  ) {
+    window.onbeforeunload = null;
+  }
+
   return (
     <Aux>
-      <Form>
-        <Row>
-          <Col md={12} sm={12} lg={12} xl={12}>
-            <Card className={"p-15"}>
-              <Row>
-                <Col md={12} style={{ marginBottom: "20px" }}>
-                  <Form.Label>Immagine servizio</Form.Label>
-                  <DropzoneComponent
-                    config={config}
-                    djsConfig={djsConfig}
-                    eventHandlers={eventHandlers}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col md={12} sm={12} lg={3} xl={3}>
-                  <Form.Group controlId="infirizzo">
-                    <Form.Label>
-                      Titolo <span className="text-danger">*</span>
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Titolo"
-                      onChange={handleChange}
-                      name="serviceName"
+      {props.applicationState.user.stripeAccountStatus === "verified" &&
+      props.applicationState.user.stripeAccountId !== null ? (
+        <Row md={12}>
+          <CustomAlert
+            component="impostazioni"
+            message="Devi connettere il tuo account a Stripe per creare servizi. Vai alle"
+            link="/settings"
+          />
+        </Row>
+      ) : (
+        <Form>
+          <Row>
+            <Col md={12} sm={12} lg={12} xl={12}>
+              <Card className={"p-15"}>
+                <Row>
+                  <Col md={12} style={{ marginBottom: "20px" }}>
+                    <Form.Label>Immagine servizio</Form.Label>
+                    <DropzoneComponent
+                      config={config}
+                      djsConfig={djsConfig}
+                      eventHandlers={eventHandlers}
                     />
-                  </Form.Group>
-                </Col>
-                <Col md={12} sm={12} lg={3} xl={3}>
-                  <Form.Group controlId="citta">
-                    <Form.Label>
-                      Prezzo (€) <span className="text-danger">*</span>
-                    </Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="price"
-                      min="0"
-                      onChange={handleChange}
-                      placeholder="Prezzo"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={12} sm={12} lg={3} xl={3}>
-                  <Form.Group>
-                    <Form.Label>
-                      Durata iscrizione (giorni){" "}
-                      <span className="text-danger">*</span>
-                    </Form.Label>
-                    <Form.Control
-                      type="number"
-                      min="0"
-                      placeholder="Durata iscrizione"
-                      onChange={handleChange}
-                      name="duration"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={12} sm={12} lg={3} xl={3}>
-                  <Form.Group>
-                    <Form.Label>
-                      Massimo iscrizioni <span className="text-danger">*</span>
-                    </Form.Label>
-                    <Form.Control
-                      type="number"
-                      min="0"
-                      placeholder="Massimo iscrizioni"
-                      onChange={handleChange}
-                      name="maxSubscribers"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Form.Group controlId="infirizzo">
-                    <Form.Label>
-                      Descrizione corta <span className="text-danger">*</span>
-                    </Form.Label>
-                    <Form.Control
-                      style={
-                        excerptLengthCheck
-                          ? {
-                              borderColor: "red",
-                              minHeight: "100px",
-                              maxHeight: 100,
-                            }
-                          : {
-                              borderColor: "black",
-                              minHeight: "100px",
-                              maxHeight: 100,
-                            }
-                      }
-                      as="textarea"
-                      placeholder="Descrizione corta"
-                      name="excerpt"
-                      maxLength="300"
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    {excerptLengthCheck ? (
-                      <p className="text-danger">Minimo 50 caratteri</p>
-                    ) : (
-                      <span></span>
-                    )}
-                    <span className="text-muted" style={{ fontSize: "11px" }}>
-                      {newObject.excerpt.length} / 300
-                    </span>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Form.Group controlId="infirizzo">
-                    <Form.Label>
-                      Descrizione <span className="text-danger">*</span>
-                    </Form.Label>
-                    <Form.Control
-                      style={
-                        descriptionLengthCheck
-                          ? { borderColor: "red", minHeight: "200px" }
-                          : { borderColor: "black", minHeight: "200px" }
-                      }
-                      as="textarea"
-                      placeholder="Descrizione"
-                      name="description"
-                      maxLength="2000"
-                      onChange={handleChange}
-                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group controlId="infirizzo">
+                      <Form.Label>
+                        Titolo <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Titolo"
+                        onChange={handleChange}
+                        name="serviceName"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group controlId="citta">
+                      <Form.Label>
+                        Prezzo (€) <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="number"
+                        name="price"
+                        min="0"
+                        onChange={handleChange}
+                        placeholder="Prezzo"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group>
+                      <Form.Label>
+                        Durata iscrizione (giorni){" "}
+                        <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="number"
+                        min="0"
+                        placeholder="Durata iscrizione"
+                        onChange={handleChange}
+                        name="duration"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={12} sm={12} lg={3} xl={3}>
+                    <Form.Group>
+                      <Form.Label>
+                        Massimo iscrizioni{" "}
+                        <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="number"
+                        min="0"
+                        placeholder="Massimo iscrizioni"
+                        onChange={handleChange}
+                        name="maxSubscribers"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Group controlId="infirizzo">
+                      <Form.Label>
+                        Descrizione corta <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        style={
+                          excerptLengthCheck
+                            ? {
+                                borderColor: "red",
+                                minHeight: "100px",
+                                maxHeight: 100,
+                              }
+                            : {
+                                borderColor: "black",
+                                minHeight: "100px",
+                                maxHeight: 100,
+                              }
+                        }
+                        as="textarea"
+                        placeholder="Descrizione corta"
+                        name="excerpt"
+                        maxLength="300"
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
                       }}
                     >
-                      {descriptionLengthCheck ? (
-                        <p className="text-danger">Minimo 100 caratteri</p>
+                      {excerptLengthCheck ? (
+                        <p className="text-danger">Minimo 50 caratteri</p>
                       ) : (
                         <span></span>
                       )}
                       <span className="text-muted" style={{ fontSize: "11px" }}>
-                        {newObject.description.length} / 2000
+                        {newObject.excerpt.length} / 300
                       </span>
                     </div>
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Col></Col>
-              </Row>
-            </Card>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Group controlId="infirizzo">
+                      <Form.Label>
+                        Descrizione <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        style={
+                          descriptionLengthCheck
+                            ? { borderColor: "red", minHeight: "200px" }
+                            : { borderColor: "black", minHeight: "200px" }
+                        }
+                        as="textarea"
+                        placeholder="Descrizione"
+                        name="description"
+                        maxLength="2000"
+                        onChange={handleChange}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        {descriptionLengthCheck ? (
+                          <p className="text-danger">Minimo 100 caratteri</p>
+                        ) : (
+                          <span></span>
+                        )}
+                        <span
+                          className="text-muted"
+                          style={{ fontSize: "11px" }}
+                        >
+                          {newObject.description.length} / 2000
+                        </span>
+                      </div>
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col></Col>
+                </Row>
+              </Card>
 
-            <Button
-              onClick={handleCreateCard}
-              className="float-right"
-              disabled={!validFields}
-            >
-              Salva servizio
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+              <Button
+                onClick={handleCreateCard}
+                className="float-right"
+                disabled={!validFields}
+              >
+                Salva servizio
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      )}
     </Aux>
   );
 };
