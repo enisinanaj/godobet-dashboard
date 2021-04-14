@@ -56,9 +56,16 @@ const CreateNewService = (props) => {
     }));
   };
 
-  window.onbeforeunload = function (e) {
-    return "Do you want to exit this page?";
-  };
+  if (
+    props.applicationState.user.stripeAccountId !== null &&
+    props.applicationState.user.stripeAccountStatus === "verified"
+  ) {
+    window.onbeforeunload = null;
+  } else {
+    window.onbeforeunload = function (e) {
+      return "Do you want to exit this page?";
+    };
+  }
 
   const eventHandlers = {
     addedfile: (file) => setImageAsFile(file),
@@ -246,17 +253,10 @@ const CreateNewService = (props) => {
     );
   };
 
-  if (
-    props.applicationState.user.stripeAccountId !== null &&
-    props.applicationState.user.stripeAccountStatus === "verified"
-  ) {
-    window.onbeforeunload = null;
-  }
-
   return (
     <Aux>
-      {props.applicationState.user.stripeAccountStatus === "verified" &&
-      props.applicationState.user.stripeAccountId !== null ? (
+      {props.applicationState.user.stripeAccountStatus !== "verified" &&
+      props.applicationState.user.stripeAccountId === null ? (
         <Row md={12}>
           <CustomAlert
             component="impostazioni"
