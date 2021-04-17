@@ -9,25 +9,28 @@ import TokenManager from "../auth/TokenManager";
 const CreateTipButton = (props) => {
 
     const checkTipCreation = () => {
-        if (!props.applicationState.user.stripeAccountId ||
-            props.applicationState.user.stripeAccountStatus !== 'verified') {
-            Swal.fire({
-                title: 'Account non connesso al sistema di pagamento Stripe.',
-                text: 'Per connettere il proprio account, vai sulle impostazione ed invia i tuoi dati cliccando su "Chiedi l\'attivazione del conto".',
-                type: "warning"
-            })
-            return;
-        }
 
-        if (!props.applicationState.user.services || props.applicationState.user.services.length <= 0) {
-            Swal.fire({
-                title: 'Per publicare una tip devi prima creare un servizio.',
-                text: 'Crea un servizio andando sul menu Gestione e successivamente scegliendo "I miei servizi". Trovi in alto a destra il pulsante "Crea servizio".',
-                type: "warning"
-            })
-        } else {
-            window.location = "/dashboard/tipster/createTip";
-        }
+      console.warn(props.applicationState.user)
+
+      if (!props.applicationState.user.stripeAccountId ||
+          props.applicationState.user.stripeAccountStatus !== 'verified') {
+          Swal.fire({
+              title: 'Account non connesso al sistema di pagamento Stripe.',
+              text: 'Per connettere il proprio account, vai sulle impostazione ed invia i tuoi dati cliccando su "Chiedi l\'attivazione del conto".',
+              type: "warning"
+          })
+          return;
+      }
+
+      if (!props.applicationState.user._embedded || !props.applicationState.user._embedded.services || props.applicationState.user._embedded.services.length <= 0) {
+          Swal.fire({
+              title: 'Per publicare una tip devi prima creare un servizio.',
+              text: 'Crea un servizio andando sul menu Gestione e successivamente scegliendo "I miei servizi". Trovi in alto a destra il pulsante "Crea servizio".',
+              type: "warning"
+          })
+      } else {
+          window.location = "/dashboard/tipster/createTip";
+      }
     }
 
     const reloadUser = () => {
