@@ -81,6 +81,7 @@ const mapStateToProps = (state) => ({
   user: state.user,
   loggedIn: state.loggedIn,
 });
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });

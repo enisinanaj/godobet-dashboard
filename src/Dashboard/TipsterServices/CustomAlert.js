@@ -1,10 +1,10 @@
 import React from "react";
 import { Alert, Col } from "react-bootstrap";
 
-const CustomAlert = ({ message, component, link }) => {
+const CustomAlert = ({ message, component, link, variant }) => {
   return (
     <Col>
-      <Alert variant="light">
+      <Alert variant={variant ? variant : "light"}>
         {message}
         <a href={link}>
           <b> {component}</b>

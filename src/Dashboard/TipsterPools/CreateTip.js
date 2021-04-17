@@ -23,6 +23,7 @@ const CreateTip = (props) => {
   const [motivation, setMotivation] = useState("");
   const [motivationCount, setMotivationCount] = useState(1000);
   const [saving, setSaving] = useState(false);
+  const [submittingToServer, setSubmittingToServer] = useState(false);
 
   const updateEvents = (event) => {
     let newEvents = events;
@@ -113,6 +114,22 @@ const CreateTip = (props) => {
 
   const saveTip = async () => {
     setSaving(true);
+    Swal.fire({
+      title: "Sei sicuro di voler pubblicare?",
+      type: 'question',
+      showConfirmButton: true,
+      confirmButtonText: "Confermo"
+    }, (isConfirm) => {
+      console.warn("test: " + isConfirm)
+    }).then(value => {
+      if (value) {
+        submitTip()
+      }
+    });
+  };
+
+  const submitTip = async () => {
+    setSubmittingToServer(true)
     let token = await TokenManager.getInstance().getToken();
     let result = await fetch(config.API_URL + "/pools/", {
       method: "POST",
@@ -151,8 +168,11 @@ const CreateTip = (props) => {
         }).then((res) => {
           window.onbeforeunload = null;
           if (res.status === 201) {
-            Swal.fire("Saved!", "", "success").then(() => {
-              Promise.all(updateEvents).then((result) => {
+            Promise.all(updateEvents)
+            .then(() => {
+              setSubmittingToServer(false)
+              Swal.fire("Tip salvata!", "", "success")
+              .then(() => {
                 window.location = "/dashboard/tipster/pools";
               });
             });
@@ -160,7 +180,7 @@ const CreateTip = (props) => {
         })
       );
     });
-  };
+  }
 
   return (
     <Aux>
@@ -293,15 +313,16 @@ const CreateTip = (props) => {
                 disabled={!validEvents || motivationCount < 0 || saving}
                 onClick={() => saveTip()}
               >
-                Salva
+                {submittingToServer ? <em class="fa fa-circle-o-notch fa-spin mr-2"></em> : null}
+                Pubblica
               </Button>
             </Col>
           </Row>
         </Form>
       ) : (
         <CustomAlert
-          message="Non hai alcun servizio."
-          component="Crea servizio"
+          message="Non hai ancora nessun servizio."
+          component="Crea un servizio"
           link="/dashboard/tipster/createService"
         />
       )}

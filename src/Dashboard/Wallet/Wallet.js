@@ -14,10 +14,16 @@ import SubscriptionItem from "./SubscriptionItem";
 const Wallet = (props) => {
 
   const [services, setServices] = useState([]);
+  const [userSetUp, setUserSetUp] = useState(false);
   const [balance, setBalance] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
+    if (props.applicationState.user.stripeAccountId && props.applicationState.user.stripeAccountStatus === 'verified') {
+      setUserSetUp(true)
+    }
+
     callUrl(BASE_CONFIG.API_URL + "/users/" + props.applicationState.user.userCode + "/services?page=0&size=1000")
       .then((e) => e.json())
       .then((services) => {
@@ -57,7 +63,7 @@ const Wallet = (props) => {
                 <Card.Title><h4>Bilancio</h4></Card.Title>
                 {/* pt-0 */}
                 {loading && <div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>}
-                { !loading &&
+                { !loading && userSetUp &&
                   <Row>
                     <Col>
                       <h5>Saldo contabile</h5>

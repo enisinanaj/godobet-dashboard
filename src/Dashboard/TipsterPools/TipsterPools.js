@@ -8,6 +8,8 @@ import { connect } from "react-redux";
 import * as actions from '../../store/actions'
 import TokenManager from "../../App/auth/TokenManager";
 import Tip from "./Tip";
+import moment from "moment";
+import CustomAlert from "../TipsterServices/CustomAlert";
 
 const TipsterPools = (props) =>  {
   const [pools, setPools] = useState([]);
@@ -29,7 +31,7 @@ const TipsterPools = (props) =>  {
         })
           .then((e) => e.json())
           .then((pools) => {
-            setPools(pools._embedded.pools);
+            setPools(pools._embedded.pools.sort((a, b) => moment(b.createdOn) - new Date(a.createdOn)));
           });
       });
   }
@@ -38,7 +40,8 @@ const TipsterPools = (props) =>  {
     <Aux>
       <Row>
         <Col sm={12} className="tab-user-card">
-          <Tabs
+          {pools.length <= 0 && <CustomAlert message={"Non hai ancora pubblicato nessuna tip!"} />}
+          {pools.length > 0 && <Tabs
             variant="pills"
             defaultActiveKey="pending"
             id="uncontrolled-tab-example"
@@ -61,7 +64,7 @@ const TipsterPools = (props) =>  {
                 }
               </Row>
             </Tab>
-          </Tabs>
+          </Tabs>}
         </Col>
       </Row>
     </Aux>

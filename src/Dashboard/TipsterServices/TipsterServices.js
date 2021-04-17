@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import BASE_CONFIG from "../../store/config";
+import CustomAlert from "./CustomAlert";
 
 const TipsterServices = (props) => {
   const [services, setServices] = useState([]);
@@ -50,6 +51,7 @@ const TipsterServices = (props) => {
   return (
     <Aux>
       <Row md={12}>
+        {(!services || services.length === 0) && <CustomAlert message={"Non hai nessun servizio in vendita!"} />}
         <ServiceCard services={services} setServices={setServices} />
       </Row>
     </Aux>

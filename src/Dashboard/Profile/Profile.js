@@ -193,13 +193,14 @@ function TipsterProfile(props) {
     const getLatestImage = (media) => {
         if (
           !media._embedded ||
-          media.length === 0 ||
-          !media._embedded.media
+          !media._embedded.media ||
+          media._embedded.media.length === 0 ||
+          media._embedded.media.filter((m) => m.mediaType === "avatar").length === 0
         ) {
           return CoverImage;
         }
     
-        return media._embedded.media.sort((a, b) => b.id - a.id)[0].url;
+        return media._embedded.media.filter((m) => m.mediaType === "avatar").sort((a, b) => b.id - a.id)[0].url;
     };
 
     return (

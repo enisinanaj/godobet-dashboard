@@ -41,7 +41,7 @@ const SubscriptionItem = ({service}) => {
             <Aux>
                 <Col md={3} sm={3} xs={3} lg={3}>
                     {service.media && service.media.length > 0 && <img src={service.media.sort((a, b) => b.mediaIteration - a.mediaIteration)[0].url} style={{width: "80px", height: "80px"}} alt=''/>}
-                    {!service.media || service.media.length <= 0 && <img src={CoverImage} style={{width: "80px", height: "80px"}} alt=''/>}
+                    {(!service.media || service.media.length <= 0) && <img src={CoverImage} style={{width: "80px", height: "80px"}} alt=''/>}
                 </Col>
                 <Col md={9} sm={9} xs={9} lg={8}>
                     { subscriptions

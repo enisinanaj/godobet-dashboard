@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { Row, Col, Form, Button, Card } from "react-bootstrap";
-
+import { Row, Col, Form, Button, Card, Tab, Tabs } from "react-bootstrap";
 import Aux from "../../hoc/_Aux";
-//import Card from "../../App/components/MainCard";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
@@ -16,12 +14,18 @@ import PNotify from "pnotify/dist/es/PNotify";
 import "pnotify/dist/es/PNotifyButtons";
 import "pnotify/dist/es/PNotifyConfirm";
 import "pnotify/dist/es/PNotifyCallbacks";
-import { Tab } from "react-bootstrap";
-import { Tabs } from "react-bootstrap";
+import DatePicker, { registerLocale } from "react-datepicker";
+import Swal from "sweetalert2";
+import moment from "moment";
+import { it } from 'date-fns/esm/locale'
+import CustomAlert from "../TipsterServices/CustomAlert";
+
+registerLocale('it', it);
 
 const Settings = (props) => {
-  const [user, setUser] = useState(props.applicationState.user);
+  const [user, setUser] = useState({...props.applicationState.user, dob: new Date(props.applicationState.user.dob)});
   const [nameChanged, setNameChanged] = useState(false);
+  const [currentTab, setCurrentTab] = useState("profile");
 
   const SHOW_FULL_PROFILE = user.roleValue > 4;
 
@@ -31,31 +35,47 @@ const Settings = (props) => {
           new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime()
       )
     : [];
-  const [address, setAddress] = useState(
-    sortedAddresses.length > 0 ? sortedAddresses[0] : {}
-  );
+  const [address, setAddress] = useState(sortedAddresses.length > 0 ? sortedAddresses[0] : {});
   const [addressChanged, setAddressChanged] = useState(false);
-
   const [email, setEmail] = useState(user.email);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [credentialsChanged, setCredentialsChanged] = useState(false);
   const [emailPasswordError, setEmailPasswordError] = useState("");
-
-  const [bankDataChanged, setBankDataChanged] = useState(false);
   const [bank, setBank] = useState({});
-
   const [documentErrors, setDocumentErrors] = useState("");
   const [documentoIdentitaFronte, setDocumentoIdentita] = useState("");
   const [documentoIdentaRetro, setDocumentoIdentitaRetro] = useState("");
   const [bolletta, setBolletta] = useState("");
-  const [documentNumber, setDocumentNumber] = useState(
-    user.idDocumentNumber || ""
-  );
-  const [documentsChanged, setDocumentsChanged] = useState(false);
+  const [documentNumber, setDocumentNumber] = useState(user.idDocumentNumber || "");
+  const [uploadedFrontDocument, setUploadedFrontDocument] = useState(null);
+  const [uploadedBackDocument, setUploadedBackDocument] = useState(null);
+  const [uploadedBillDocument, setUploadedBillDocument] = useState(null);
   const [activating, setActivating] = useState(false);
   
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    if (user._embedded 
+      && user._embedded.media) {
+        if (user._embedded.media.filter(m => m.mediaType === 'bill').sort((a, b) => a.id - b.id).length > 0) {
+          setUploadedBillDocument(user._embedded.media.filter(m => m.mediaType === 'bill').sort((a, b) => a.id - b.id)[0]);
+        }
+
+        if (user._embedded.media.filter(m => m.mediaType === 'front').sort((a, b) => a.id - b.id).length > 0) {
+          setUploadedFrontDocument(user._embedded.media.filter(m => m.mediaType === 'front').sort((a, b) => a.id - b.id)[0]);
+        }
+        
+        if (user._embedded.media.filter(m => m.mediaType === 'back').sort((a, b) => a.id - b.id).length) {
+          setUploadedBackDocument(user._embedded.media.filter(m => m.mediaType === 'back').sort((a, b) => a.id - b.id)[0]);
+        }
+      }
+  }, [user]);
+
+
   useEffect(() => {
     TokenManager.getInstance()
       .getToken()
@@ -87,7 +107,9 @@ const Settings = (props) => {
           },
         })
           .then((e) => e.json())
-          .then(localUser => setUser({...user, ...localUser}))
+          .then(localUser => {
+            setUser({...user, ...localUser, dob: new Date(localUser.dob)})
+          })
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -112,22 +134,28 @@ const Settings = (props) => {
             setUser({
               ...user,
               ...localUser,
+              dob: new Date(localUser.dob)
             })
           });
       });
   };
 
   const saveProfile = (fields) => {
-    TokenManager.getInstance()
+    let body = {...fields};
+    if (fields.dob) {
+      body = {...fields, dob: moment(fields.dob).format("YYYY-MM-DDTHH:mm:ss.SSS")};
+    }
+
+    return TokenManager.getInstance()
       .getToken()
       .then((jwt) => {
-        fetch(user._links.self.href, {
+        return fetch(user._links.self.href, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             "X-Auth": jwt,
           },
-          body: JSON.stringify(fields),
+          body: JSON.stringify(body),
         })
           .then((e) => e.json())
           .then(() => {
@@ -239,10 +267,10 @@ const Settings = (props) => {
   };
 
   const saveBank = () => {
-    TokenManager.getInstance()
+    return TokenManager.getInstance()
       .getToken()
       .then((jwt) => {
-        fetch(BASE_CONFIG.API_URL + "/bankAccounts", {
+        return fetch(BASE_CONFIG.API_URL + "/bankAccounts", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -253,26 +281,12 @@ const Settings = (props) => {
             owner: props.applicationState.user._links.self.href,
           }),
         })
-          .then((e) => e.json())
-          .then((_) => {
-            // return TokenManager.getInstance()
-            //   .getToken()
-            //   .then((jwt) => {
-            //     return fetch(
-            //       BASE_CONFIG.API_URL + "/pps/accounts/banks/" + user.userCode,
-            //       {
-            //         method: "POST",
-            //         headers: {
-            //           "Content-Type": "application/json",
-            //           "X-Auth": jwt,
-            //         },
-            //       }
-            //     );
-            //   });
-            dynamicNotifyWithAlert("Bank account updated!")
-          })
-          .catch((error) => console.error(error));
-      });
+      })
+      .then((e) => e.json())
+      .then((_) => {
+        dynamicNotifyWithAlert("Bank account updated!")
+      })
+      .catch((error) => console.error(error));
   };
 
   var config = {
@@ -339,16 +353,16 @@ const Settings = (props) => {
     ) {
       setDocumentErrors("Tutti i documenti sono obbligatori!");
     }
-
     setDocumentErrors("");
 
-    saveProfile({
+    return saveProfile({
       idDocumentNumber: documentNumber,
+    }).then(e => {
+      uploadDocument("front", documentoIdentitaFronte);
+      uploadDocument("back", documentoIdentaRetro);
+      uploadDocument("bill", bolletta);
     });
 
-    uploadDocument("front", documentoIdentitaFronte);
-    uploadDocument("back", documentoIdentaRetro);
-    uploadDocument("bill", bolletta);
   };
 
   const uploadDocument = (type, file) => {
@@ -439,10 +453,14 @@ const Settings = (props) => {
     );
   };
 
-  const activatePayments = () => {
+  const activatePayments = (e) => {
     setActivating(true);
-    TokenManager.getInstance()
-      .getToken()
+    saveBank(e);
+    uploadDocuments(e)
+    .then(() => {
+      return TokenManager.getInstance()
+        .getToken()
+      })
       .then((jwt) => {
         return fetch(`${BASE_CONFIG.API_URL}/pps/accounts/${user.userCode}`, {
           method: "POST",
@@ -451,15 +469,20 @@ const Settings = (props) => {
             "X-Auth": jwt,
           },
         })
-          .then((result) => result.json())
-          .then((result) => {
-            setActivating(false);
-            reloadUser();
-          })
-          .catch((error) => {
-            setActivating(false);
-            reloadUser();
-          });
+      })
+      .then((result) => result.json())
+      .then(() => {
+        setActivating(false);
+        Swal.fire({
+          title: 'Richiesta inviata con successo',
+          text: 'La verifica dei dati e dei documenti potrà richiedere qualche ora.',
+          type: "success"
+        })
+        reloadUser();
+      })
+      .catch(() => {
+        setActivating(false);
+        reloadUser();
       });
   };
 
@@ -469,8 +492,9 @@ const Settings = (props) => {
         <Col sm={12} className="tab-user-card">
           <Tabs
             variant="pills"
-            defaultActiveKey="profile"
+            activeKey={currentTab}
             id="uncontrolled-tab-example"
+            onSelect={k => setCurrentTab(k)}
           >
             <Tab eventKey="profile" title="Impostazioni principali">
               <Row>
@@ -515,15 +539,21 @@ const Settings = (props) => {
                             </Form.Group>
                             <Form.Group controlId="formBasicEmail">
                               <Form.Label>Data di nascita</Form.Label>
-                              <Form.Control
-                                type="date"
-                                placeholder="Data di nascita"
-                                value={user.dob}
-                                onChange={({ target }) => {
-                                  setUser({ ...user, dob: target.value });
-                                  setNameChanged(true);
-                                }}
-                              />
+                              <div className={"row"}>
+                                <DatePicker
+                                  locale={'it'}
+                                  dateFormat={"dd/MM/yyyy"}
+                                  placeholderText="Data di nascita"
+                                  selected={user.dob}
+                                  onChange={(e) => {
+                                    setUser({...user, dob: e});
+                                    setNameChanged(true);
+                                  }}
+                                  className={"form-control"}
+                                  wrapperClassName={"col-md-12 col-lg-12 col-sm-12"}
+                                  disabled={props.saving}
+                                />
+                              </div>
                             </Form.Group>
                             <Form.Group controlId="formBasicEmail">
                               <Form.Label>Telefono</Form.Label>
@@ -545,6 +575,7 @@ const Settings = (props) => {
                                   name: user.name,
                                   lastName: user.lastName,
                                   phoneNumber: user.phoneNumber,
+                                  dob: user.dob
                                 })
                               }
                               className={"float-right"}
@@ -724,10 +755,10 @@ const Settings = (props) => {
                               <Form.Control
                                 type="text"
                                 placeholder="Revolut"
+                                disabled={user.stripeAccountStatus === 'verified'}
                                 value={bank.bankName}
                                 onChange={(event) => {
                                   setBank({ ...bank, bankName: event.target.value });
-                                  setBankDataChanged(true);
                                 }}
                               />
                             </Form.Group>
@@ -738,9 +769,9 @@ const Settings = (props) => {
                                 type="text"
                                 placeholder="Via, numero civico, CAP, Città, sigla Provincia"
                                 value={bank.bankAddress}
+                                disabled={user.stripeAccountStatus === 'verified'}
                                 onChange={(event) => {
                                   setBank({ ...bank, bankAddress: event.target.value });
-                                  setBankDataChanged(true);
                                 }}
                               />
                             </Form.Group>
@@ -750,9 +781,9 @@ const Settings = (props) => {
                                 type="text"
                                 placeholder="IBAN del conto"
                                 value={bank.iban}
+                                disabled={user.stripeAccountStatus === 'verified'}
                                 onChange={(event) => {
                                   setBank({ ...bank, iban: event.target.value });
-                                  setBankDataChanged(true);
                                 }}
                               />
                             </Form.Group>
@@ -762,9 +793,9 @@ const Settings = (props) => {
                                 type="text"
                                 placeholder="011683"
                                 value={bank.abiCab}
+                                disabled={user.stripeAccountStatus === 'verified'}
                                 onChange={(event) => {
                                   setBank({ ...bank, abiCab: event.target.value });
-                                  setBankDataChanged(true);
                                 }}
                               />
                             </Form.Group>
@@ -774,21 +805,12 @@ const Settings = (props) => {
                                 type="text"
                                 placeholder="GIBAATWWXXX"
                                 value={bank.swift}
+                                disabled={user.stripeAccountStatus === 'verified'}
                                 onChange={(event) => {
                                   setBank({ ...bank, swift: event.target.value });
-                                  setBankDataChanged(true);
                                 }}
                               />
                             </Form.Group>
-
-                            <Button
-                              variant="primary"
-                              disabled={!bankDataChanged}
-                              onClick={saveBank}
-                              className={"float-right"}
-                            >
-                              Salva
-                            </Button>
                           </Form>
                         </Col>
                       </Row>
@@ -810,60 +832,49 @@ const Settings = (props) => {
                               <Form.Control
                                 type="text"
                                 placeholder="AX 074 JJ"
+                                disabled={user.stripeAccountStatus === 'verified'}
                                 value={documentNumber}
                                 onChange={(event) => {
                                   setDocumentNumber(event.target.value);
-                                  setDocumentsChanged(true);
                                 }}
                               />
                             </Form.Group>
                             <Form.Group controlId="formBasicEmail">
                               <Form.Label>Documento d'identità (Fronte)</Form.Label>
-                              <DropzoneComponent
-                                config={config}
-                                eventHandlers={{
-                                  addedfile: (file) => {
-                                    setDocumentoIdentita(file);
-                                    setDocumentsChanged(true);
-                                  },
-                                }}
-                                djsConfig={djsConfig}
-                              />
+                              {uploadedFrontDocument ? 
+                                <CustomAlert message={"Hai già caricato il tuo documento d'identità."} variant={"success"} component={"Scaricalo qua"} link={uploadedFrontDocument.url} />
+                              :
+                                <DropzoneComponent
+                                  config={config}
+                                  eventHandlers={{addedfile: (file) => setDocumentoIdentita(file)}}
+                                  djsConfig={djsConfig}
+                                />
+                              }
                             </Form.Group>
                             <Form.Group controlId="formBasicEmail">
                               <Form.Label>Documento d'identità (Retro)</Form.Label>
-                              <DropzoneComponent
-                                config={config}
-                                eventHandlers={{
-                                  addedfile: (file) => {
-                                    setDocumentoIdentitaRetro(file);
-                                    setDocumentsChanged(true);
-                                  },
-                                }}
-                                djsConfig={djsConfig}
-                              />
+                              {uploadedBackDocument ? 
+                                <CustomAlert message={"Hai già caricato il retro del tuo documento d'identità."} variant={"success"} component={"Scaricalo qua"} link={uploadedBackDocument.url} />
+                              : 
+                                <DropzoneComponent
+                                  config={config}
+                                  eventHandlers={{addedfile: (file) => setDocumentoIdentitaRetro(file)}}
+                                  djsConfig={djsConfig}
+                                />
+                              }
                             </Form.Group>
                             <Form.Group controlId="formBasicEmail">
                               <Form.Label>Bolletta</Form.Label>
-                              <DropzoneComponent
-                                config={config}
-                                eventHandlers={{
-                                  addedfile: (file) => {
-                                    setBolletta(file);
-                                    setDocumentsChanged(true);
-                                  },
-                                }}
-                                djsConfig={djsConfig}
-                              />
+                              {uploadedBillDocument ? 
+                                <CustomAlert message={"Hai già caricato questo documento."} variant={"success"} component={"Scaricalo qua"} link={uploadedBillDocument.url} />
+                              : 
+                                <DropzoneComponent
+                                  config={config}
+                                  eventHandlers={{addedfile: (file) => setBolletta(file)}}
+                                  djsConfig={djsConfig}
+                                /> 
+                              }
                             </Form.Group>
-                            <Button
-                              variant={"primary"}
-                              disabled={!documentsChanged}
-                              onClick={uploadDocuments}
-                              className={"float-right"}
-                            >
-                              Carica i documenti
-                            </Button>
                           </Form>
                         </Col>
                       </Row>
@@ -874,15 +885,19 @@ const Settings = (props) => {
                         <Col md={12} sm={12}>
                           <Form>
                             <Form.Group controlId="accountState">
-                              {!user.stripeAccountStatus && (
-                                <Form.Label>Conto non ancora attivato</Form.Label>
+                              {!user.stripeAccountStatus && !user.stripeAccountId && (
+                                <blockquote>Conto non ancora attivato</blockquote>
                               )}
-                              {user.stripeAccountStatus && (
+                              {user.stripeAccountStatus && user.stripeAccountId && (
                                 <Form.Label style={{textTransform: "uppercase"}} className={user.stripeAccountStatus !== 'verified' ? 'badge badge-light-danger' : 'badge badge-light-success' } >
                                   {user.stripeAccountStatus}
                                 </Form.Label>
                               )}
                             </Form.Group>
+
+                            {user.stripeAccountStatus !== 'verified' && user.stripeAccountId && (
+                              <CustomAlert message={"Ritorna più tardi in questa pagina per aggiornamenti sullo stato del tuo conto."} />
+                            )}
 
                             {user.stripeAccountStatus !== 'verified' && (
                               <Button variant="primary" onClick={activatePayments}>
@@ -893,7 +908,8 @@ const Settings = (props) => {
                               </Button>
                             )}
                             {user.stripeAccountStatus !== 'verified' && <br />}
-                            {user.stripeAccountStatus !== 'verified' && <span class="text-muted">Registrando l'account per i pagamenti implicitamente accetti le condizioni di servizio di <a href="https://stripe.com/connect-account/legal/full" target="_blank" rel="noopener noreferrer">Stripe Connected Account</a>.</span>}
+                            {user.stripeAccountStatus !== 'verified' && <br />}
+                            {user.stripeAccountStatus !== 'verified' && <small class="text-muted">Registrando l'account per i pagamenti implicitamente accetti le condizioni di servizio di <a href="https://stripe.com/connect-account/legal/full" target="_blank" rel="noopener noreferrer">Stripe Connected Account</a>.</small>}
                           </Form>
                         </Col>
                       </Row>

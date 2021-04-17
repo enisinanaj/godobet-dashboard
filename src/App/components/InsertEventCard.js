@@ -3,9 +3,14 @@ import { Card, Col, Form, Row, Dropdown } from "react-bootstrap";
 import InputMask from "react-input-mask";
 import Select from "react-select";
 import Sports from "../../App/components/Sports";
+import DatePicker, {registerLocale} from "react-datepicker";
+import moment from "moment";
+import {it} from 'date-fns/esm/locale'
+
+registerLocale('it', it);
 
 const InsertEventCard = (props) => {
-  const [eventDate, setEventDate] = useState("");
+  const [eventDate, setEventDate] = useState(moment().toDate());
   const [competition, setCompetition] = useState("");
   const [event, setEvent] = useState("");
   const [proposal, setProposal] = useState("");
@@ -15,7 +20,7 @@ const InsertEventCard = (props) => {
   useEffect(() => {
     props.onValueChange({
       key: props.index,
-      eventDate,
+      eventDate: moment(eventDate).format("YYYY-MM-DDTHH:mm:ss.SSS"),
       competition,
       event,
       proposal,
@@ -52,17 +57,19 @@ const InsertEventCard = (props) => {
               <Form.Label>
                 Data evento <span className={"text-danger"}>*</span>
               </Form.Label>
-              <input
-                type="datetime-local"
-                className={"form-control"}
-                name="eventdate"
-                disabled={props.saving}
-                value={eventDate}
-                onChange={({ target }) => {
-                  setEventDate(target.value);
-                }}
-                placeholder="dd/mm/yyyy hh:mm"
-              />
+              <div className={"row"}>
+                <DatePicker
+                    selected={eventDate}
+                    onChange={(e) => setEventDate(e)}
+                    showTimeInput
+                    placeholderText="Seleziona una data"
+                    disabled={props.saving}
+                    className={"form-control"}
+                    wrapperClassName={"col-md-12 col-lg-12 col-sm-12"}
+                    locale={"it"}
+                    dateFormat="MMMM d, yyyy HH:mm"
+                />
+              </div>
             </Form.Group>
           </Col>
           <Col md={12} sm={12} lg={4} xl={4}>

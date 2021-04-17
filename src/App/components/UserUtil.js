@@ -4,7 +4,8 @@ export const isProfileComplete = (user) => {
         || !user._embedded.addresses 
         || user._embedded.addresses.filter(a => a.addressType === 1).length === 0
         || !user.name || user.name === ""
-        || !user.lastName || user.lastName === "") {
+        || !user.lastName || user.lastName === "" 
+        || !user.dob) {
         return false;
     } else {
         return true;

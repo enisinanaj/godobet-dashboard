@@ -23,6 +23,7 @@ const CreateNewService = (props) => {
   const [excerptLengthCheck, setExcerptLengthCheck] = useState(false);
   const [validFields, setValidFields] = useState(false);
   const [imageAsFile, setImageAsFile] = useState("");
+  const [saving, setSaving] = useState(false);
   const [newObject, setNewObject] = useState({
     author: "",
     price: "",
@@ -63,7 +64,7 @@ const CreateNewService = (props) => {
     window.onbeforeunload = null;
   } else {
     window.onbeforeunload = function (e) {
-      return "Do you want to exit this page?";
+      return "Sei sicuro di voler uscire dalla pagina?";
     };
   }
 
@@ -72,7 +73,7 @@ const CreateNewService = (props) => {
     removedfile: () => setImageAsFile(""),
   };
 
-  const handleCreateCard = () => {
+  const saveService = () => {
     if (
       newObject.description.length < 100 ||
       newObject.description.length > 2000
@@ -93,42 +94,54 @@ const CreateNewService = (props) => {
       newObject.excerpt.length >= 50 &&
       newObject.excerpt.length <= 300
     ) {
-      TokenManager.getInstance()
-        .getToken()
-        .then((jwt) => {
-          fetch(BASE_CONFIG.API_URL + "/services", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Auth": jwt,
-            },
-            body: JSON.stringify({
-              author: props.applicationState.user._links.self.href,
-              price: newObject.price * 100,
-              duration: newObject.duration,
-              description: newObject.description,
-              excerpt: newObject.excerpt,
-              serviceName: newObject.serviceName,
-              maxSubscribers: newObject.maxSubscribers,
-              version: "1",
-            }),
-          }).then((e) => {
-            if (e.status !== 201) {
-              Swal.fire({
-                type: "error",
-                title: "Oops...",
-                text: "C'è stato un problema!",
-              });
-            } else {
-              Swal.fire({
-                type: "success",
-                title: "Servizio creato!",
-              });
-              uploadServiceCover(e.headers.get("Location"));
-            }
-          });
-        });
+      setSaving(true);
+      Swal.fire({
+        title: "Sei sicuro di voler pubblicare un nuovo servizio?",
+        type: 'question',
+        showConfirmButton: true,
+        confirmButtonText: "Confermo"
+      }, (isConfirm) => {
+        console.warn("test: " + isConfirm)
+      }).then(value => {
+        if (value) {
+          handleCreateCard()
+        }
+      });
     }
+  }
+
+  const handleCreateCard = () => {
+    TokenManager.getInstance()
+      .getToken()
+      .then((jwt) => {
+        fetch(BASE_CONFIG.API_URL + "/services", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+          body: JSON.stringify({
+            author: props.applicationState.user._links.self.href,
+            price: newObject.price * 100,
+            duration: newObject.duration,
+            description: newObject.description,
+            excerpt: newObject.excerpt,
+            serviceName: newObject.serviceName,
+            maxSubscribers: newObject.maxSubscribers,
+            version: "1",
+          }),
+        }).then((e) => {
+          if (e.status !== 201) {
+            Swal.fire({
+              type: "error",
+              title: "Oops...",
+              text: "C'è stato un problema!",
+            });
+          } else {
+            uploadServiceCover(e.headers.get("Location"));
+          }
+        });
+      });
   };
 
   const validate = () => {
@@ -238,7 +251,15 @@ const CreateNewService = (props) => {
                     mediaType: "cover",
                   }),
                 })
-                  .then((_) => {
+                  .then(() => {
+                    Swal.fire({
+                      type: "success",
+                      title: "Servizio creato!",
+                    })
+                    .then(() => {
+                      window.location = "/dashboard/tipster/services";
+                    });
+
                     props.callback();
                   })
                   .catch((error) => {
@@ -287,6 +308,7 @@ const CreateNewService = (props) => {
                       </Form.Label>
                       <Form.Control
                         type="text"
+                        disabled={saving}
                         placeholder="Titolo"
                         onChange={handleChange}
                         name="serviceName"
@@ -302,6 +324,7 @@ const CreateNewService = (props) => {
                         type="number"
                         name="price"
                         min="0"
+                        disabled={saving}
                         onChange={handleChange}
                         placeholder="Prezzo"
                       />
@@ -316,6 +339,7 @@ const CreateNewService = (props) => {
                       <Form.Control
                         type="number"
                         min="0"
+                        disabled={saving}
                         placeholder="Durata iscrizione"
                         onChange={handleChange}
                         name="duration"
@@ -331,6 +355,7 @@ const CreateNewService = (props) => {
                       <Form.Control
                         type="number"
                         min="0"
+                        disabled={saving}
                         placeholder="Massimo iscrizioni"
                         onChange={handleChange}
                         name="maxSubscribers"
@@ -361,6 +386,7 @@ const CreateNewService = (props) => {
                         as="textarea"
                         placeholder="Descrizione corta"
                         name="excerpt"
+                        disabled={saving}
                         maxLength="300"
                         onChange={handleChange}
                       />
@@ -399,6 +425,7 @@ const CreateNewService = (props) => {
                         name="description"
                         maxLength="2000"
                         onChange={handleChange}
+                        disabled={saving}
                       />
                       <div
                         style={{
@@ -427,11 +454,11 @@ const CreateNewService = (props) => {
               </Card>
 
               <Button
-                onClick={handleCreateCard}
+                onClick={saveService}
                 className="float-right"
-                disabled={!validFields}
+                disabled={!validFields || saving}
               >
-                Salva servizio
+                Pubblica servizio
               </Button>
             </Col>
           </Row>

@@ -7,15 +7,16 @@ import { withRouter } from "react-router-dom";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import DatePicker from "react-datepicker";
+import DatePicker, {registerLocale} from "react-datepicker";
 import moment from 'moment';
-
+import {it} from 'date-fns/esm/locale'
 import LineInterpolationChart from '../Charts/LineInterpolationChart';
-
 import config from '../../store/config';
 import TokenManager from '../../App/auth/TokenManager';
 import Events from './events';
 import LocaleNumber from "../../App/components/LocaleNumber";
+
+registerLocale('it', it);
 
 class Balance extends Component {
     state = {
@@ -109,16 +110,20 @@ class Balance extends Component {
                                     <Col md={5}>
                                         <Card.Title as="h5">
                                             Dal: <DatePicker
+                                                    locale={'it'}
+                                                    dateFormat={"dd/MM/yyyy"}
                                                     selected={this.state.startDate}
                                                     onChange={(e) => this.handleStartDateChange(e)}
                                                     className="form-control"
                                                     //minDate={moment().add(-32, "day").toDate()}
                                                     maxDate={moment().add(-1, "day").toDate()}
                                                     placeholderText="Seleziona una data"
-                                                />
+                                                    />
                                         </Card.Title>
                                         <Card.Title as="h5">
                                             al: <DatePicker
+                                                    locale={'it'}
+                                                    dateFormat={"dd/MM/yyyy"}
                                                     selected={this.state.endDate}
                                                     onChange={(e) => this.handleEndDateChange(e)}
                                                     className="form-control"
