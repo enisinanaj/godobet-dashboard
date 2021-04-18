@@ -36,7 +36,7 @@ export default {
         },
         {
           id: "active-services",
-          title: "Servizi attivi",
+          title: "Iscrizioni",
           type: "item",
           icon: "feather icon-box",
           url: "/dashboard/my-services",
@@ -49,42 +49,6 @@ export default {
           icon: "feather icon-shopping-cart",
           url: "/dashboard/marketplace",
           role: 3
-        },
-        {
-          id: "manage",
-          title: "Gestione",
-          type: "collapse",
-          icon: "feather icon-settings",
-          role: 5,
-          children: [
-            {
-              id: "my-services",
-              title: "I miei servizi",
-              type: "item",
-              icon: "feather icon-book",
-              url: "/dashboard/tipster/services",
-              role: 5,
-              rightButton: <CreateNewServiceButton />,
-            },
-            {
-              id: "my-tips",
-              title: "I miei Tip",
-              type: "item",
-              icon: "feather icon-bookmark",
-              url: "/dashboard/tipster/pools",
-              role: 5,
-              rightButton: <CreateTipButton />,
-            },
-            {
-              id: "new-tips",
-              title: "Crea tip",
-              type: "item",
-              icon: "feather icon-bookmark",
-              url: "/dashboard/tipster/createTip",
-              hidden: true,
-              role: 5,
-            },
-          ],
         },
         {
           id: "details",
@@ -109,14 +73,6 @@ export default {
               icon: "feather icon-at-sign",
               url: "/settings",
               role: 3,
-            },
-            {
-              id: "wallet",
-              title: "Wallet",
-              type: "item",
-              icon: "feather icon-briefcase",
-              url: "/wallet",
-              role: 5,
             }
           ]
         },
@@ -134,7 +90,7 @@ export default {
               type: "item",
               icon: "feather icon-users",
               url: "/users",
-              role: 5,
+              role: 6,
               hidden: true,
             },
           ],
@@ -159,5 +115,49 @@ export default {
         },
       ],
     },
+    {
+      id: "menu tipster",
+      title: "Menu tipster",
+      type: "group",
+      icon: "icon-navigation",
+      role: 5,
+      children: [
+        {
+          id: "my-services",
+          title: "I miei servizi",
+          type: "item",
+          icon: "feather icon-book",
+          url: "/dashboard/tipster/services",
+          role: 5,
+          rightButton: <CreateNewServiceButton />,
+        },
+        {
+          id: "my-tips",
+          title: "Le mie Tip",
+          type: "item",
+          icon: "feather icon-bookmark",
+          url: "/dashboard/tipster/pools",
+          role: 5,
+          rightButton: <CreateTipButton />,
+        },
+        {
+          id: "new-tips",
+          title: "Crea tip",
+          type: "item",
+          icon: "feather icon-bookmark",
+          url: "/dashboard/tipster/createTip",
+          hidden: true,
+          role: 5,
+        },
+        {
+          id: "wallet",
+          title: "Wallet",
+          type: "item",
+          icon: "feather icon-briefcase",
+          url: "/wallet",
+          role: 5,
+        }
+      ]
+    }
   ],
 };

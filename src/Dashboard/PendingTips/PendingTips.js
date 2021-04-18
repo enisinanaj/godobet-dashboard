@@ -97,9 +97,7 @@ class PendingTips extends Component {
   getExpiredPoolsCards = (pools, filter) => {
     return (
       pools
-        .then((pools) => pools.filter(filter))
-        // .then(this.filterMyPools)
-        // .then(p => p.filter(p1 => !p1.followed) )
+        .then((pools) => pools.filter(filter).sort((a, b) => new Date(b.createdOn) - new Date(a.id)))
         .then((pool) => getTipCards(!filter(pool))(pool))
     );
   };
@@ -117,29 +115,27 @@ class PendingTips extends Component {
           (pool) => !poolsSets[1].find((pp) => pp.references.pool === pool.id)
         )
       )
-      .then((filteredPools) => filteredPools.filter((p) => !p.outcome))
+      //.then((filteredPools) => filteredPools.filter((p) => !p.outcome))
       .then((ongoingPools) => this.setState({ ongoingPools }));
 
     playedPools
       .then((playedPools) => {
         return pools.then((pools) => [pools, playedPools]);
       })
-      .then((poolsSets) =>
-        poolsSets[0].filter((pool) =>
+      .then((poolsSets) => {
+        // expired pools are those that aren't played and have an outcome        
+        this.getExpiredPoolsCards(pools, (pool) => poolsSets[1].find((pp) => pp.references.pool === pool.id) && !!pool.outcome).then((expiredPools) =>
+          this.setState({expiredPools})
+        );
+
+        return poolsSets[0].filter((pool) =>
           poolsSets[1].find(
             (pp) => pp.references.pool === pool.id && pp.direction === FOLLOWED
           )
         )
-      )
-      .then((filteredPools) => filteredPools.filter((p) => !p.outcome))
-      .then((followedPools) => this.setState({ followedPools }));
-
-    this.getExpiredPoolsCards(pools, (p) => !!p.outcome).then((expiredPools) =>
-      this.setState({
-        ...this.state,
-        expiredPools,
       })
-    );
+      .then((filteredPools) => filteredPools.filter((p) => !p.outcome).sort((a, b) => new Date(b.createdOn) - new Date(a.id)))
+      .then((followedPools) => this.setState({ followedPools }));
   }
 
   render() {

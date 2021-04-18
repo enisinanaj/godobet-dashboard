@@ -32,14 +32,6 @@ const CreateTip = (props) => {
     validateEvents();
   };
 
-  if (props.applicationState.user._embedded.services.length < 1) {
-    window.onbeforeunload = null;
-  } else {
-    window.onbeforeunload = function (e) {
-      return "Do you want to exit this page?";
-    };
-  }
-
   useEffect(() => {
     validateEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,7 +201,7 @@ const CreateTip = (props) => {
                     </Form.Group>
                   </Col>
                   <Col md={12} sm={12} lg={3} xl={3}>
-                    <Form.Group controlId="infirizzo">
+                    <Form.Group controlId="descrizione">
                       <Form.Label>
                         Descrizione Tip <span className={"text-danger"}>*</span>
                       </Form.Label>

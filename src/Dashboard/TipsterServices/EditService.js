@@ -31,9 +31,9 @@ const EditService = (props) => {
     window.location.href.lastIndexOf("/") + 1
   );
 
-  window.onbeforeunload = function (e) {
-    return "Do you want to exit this page?";
-  };
+  // window.onbeforeunload = function (e) {
+  //   return "Do you want to exit this page?";
+  // };
 
   useEffect(() => {
     TokenManager.getInstance()

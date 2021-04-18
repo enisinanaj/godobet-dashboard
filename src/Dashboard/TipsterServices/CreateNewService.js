@@ -56,18 +56,7 @@ const CreateNewService = (props) => {
       [name]: value,
     }));
   };
-
-  if (
-    props.applicationState.user.stripeAccountId !== null &&
-    props.applicationState.user.stripeAccountStatus === "verified"
-  ) {
-    window.onbeforeunload = null;
-  } else {
-    window.onbeforeunload = function (e) {
-      return "Sei sicuro di voler uscire dalla pagina?";
-    };
-  }
-
+  
   const eventHandlers = {
     addedfile: (file) => setImageAsFile(file),
     removedfile: () => setImageAsFile(""),
@@ -323,7 +312,7 @@ const CreateNewService = (props) => {
                       <Form.Control
                         type="number"
                         name="price"
-                        min="0"
+                        min="1"
                         disabled={saving}
                         onChange={handleChange}
                         placeholder="Prezzo"

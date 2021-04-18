@@ -5,7 +5,8 @@ export const isProfileComplete = (user) => {
         || user._embedded.addresses.filter(a => a.addressType === 1).length === 0
         || !user.name || user.name === ""
         || !user.lastName || user.lastName === "" 
-        || !user.dob) {
+        || !user.dob
+        || !user.ssn) {
         return false;
     } else {
         return true;

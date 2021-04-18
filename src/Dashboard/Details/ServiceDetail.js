@@ -189,7 +189,7 @@ const ServiceDetail = (props) => {
       Swal.fire({
         type: "error",
         title: "Oops...",
-        text: "È necessario completare il profilo prima di acquistare!",
+        text: "È necessario completare il profilo prima di acquistare! Vai sul menu Impostazioni > Account per completare i dati mancanti.",
       });
 
       setIsProcessing(false);

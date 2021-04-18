@@ -27,12 +27,12 @@ const getDropdown = (clickHandler) => {
       ></Dropdown.Toggle>
       <Dropdown.Menu alignRight className="profile-notification">
         <Dropdown.Item onClick={() => clickHandler(1)}>
-          Tip seguita
+          Segui
         </Dropdown.Item>
         <Dropdown.Item
           onClick={() => {
             Swal.fire({
-              title: "sei sicuro",
+              title: "Sei sicuro di non volerla seguire? Azione irreversibile!",
               type: "warning",
               showCancelButton: true,
               confirmButtonColor: "#56BE7F",
@@ -45,7 +45,7 @@ const getDropdown = (clickHandler) => {
             });
           }}
         >
-          Tip non seguita
+          Ignora
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

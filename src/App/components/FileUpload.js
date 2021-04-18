@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { bindActionCreators } from "redux";
 import * as actions from "../../store/actions";
 import { DropzoneComponent } from "react-dropzone-component";
@@ -6,7 +6,7 @@ import { auth, storage } from "firebase";
 import TokenManager from "../auth/TokenManager";
 import * as API from "../../store/config";
 import { connect } from "react-redux";
-import { Form, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import PNotify from "pnotify/dist/es/PNotify";
 import "pnotify/dist/es/PNotifyButtons";
 import "pnotify/dist/es/PNotifyConfirm";
@@ -14,7 +14,6 @@ import "pnotify/dist/es/PNotifyCallbacks";
 
 const FileUpload = (props) => {
   const { user } = props.applicationState;
-  const [imageAsFile, setImageAsFile] = useState("");
 
   var config = {
     showFiletypeIcon: false,
@@ -24,10 +23,6 @@ const FileUpload = (props) => {
   var djsConfig = {
     addRemoveLinks: true,
     acceptedFiles: "image/jpeg,image/png",
-  };
-
-  const eventHandlers = {
-    addedfile: (file) => setImageAsFile(file),
   };
 
   function dynamicProgressButtonPNotify() {
@@ -43,14 +38,14 @@ const FileUpload = (props) => {
           sticker: false,
         },
       },
+      type: 'success'
     });
 
+    notice.update({type: 'success'});
     return notice;
   }
 
-  const uploadAvatar = (e) => {
-    e.preventDefault();
-
+  const uploadAvatar = (imageAsFile) => {
     if (!imageAsFile || !imageAsFile.name) {
       return;
     }
@@ -138,6 +133,10 @@ const FileUpload = (props) => {
     );
   };
 
+  const eventHandlers = {
+    addedfile: file => uploadAvatar(file),
+  };
+
   return (
     <Form>
       {props.type === "avatar" &&
@@ -176,14 +175,6 @@ const FileUpload = (props) => {
           djsConfig={djsConfig}
         />
       </Form.Group>
-      <Button
-        variant={"primary"}
-        onClick={uploadAvatar}
-        disabled={!imageAsFile}
-        className={"float-right"}
-      >
-        Salva
-      </Button>
     </Form>
   );
 };

@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import { Dropdown } from "react-bootstrap";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import md5 from "md5";
+//import md5 from "md5";
 
 import Aux from "../../../../../hoc/_Aux";
 import * as actions from "../../../../../store/actions";
 import { withRouter } from "react-router-dom";
 import "./nav.css";
 import ConfirmBox from "../../../../../Dashboard/ConfirmBox/ConfirmBox";
+import CoverImage from '../../../../../assets/images/godobet-placeholder.jpg'
 
 class NavRight extends Component {
   state = {
@@ -27,11 +28,12 @@ class NavRight extends Component {
         .filter((m) => m.mediaType === "avatar")
         .sort((a, b) => b.id - a.id)[0].url;
     }
-    return (
-      "http://www.gravatar.com/avatar/" +
-      md5(email.email.toLowerCase().trim()) +
-      "?s=32"
-    );
+    return null;
+    // (
+    //   "http://www.gravatar.com/avatar/" +
+    //   md5(email.email.toLowerCase().trim()) +
+    //   "?s=32"
+    // );
   };
 
   handleLogout = () => {
@@ -68,12 +70,13 @@ class NavRight extends Component {
               </Dropdown.Toggle>
               <Dropdown.Menu alignRight className="profile-notification">
                 <div className="pro-head">
-                  <img
+                  {this.avatar(this.props.user) && <img
                     src={this.avatar(this.props.user)}
                     style={{ objectFit: "cover", height: 40 }}
                     className="img-radius"
                     alt="User Profile"
-                  />
+                  /> }
+                  { !this.avatar(this.props.user) && <CoverImage />}
                   <span>
                     {this.props.user?.name
                       ? this.props.user?.name
@@ -98,7 +101,7 @@ class NavRight extends Component {
                       <i className="feather icon-user" /> Profile
                     </a>
                   </li>
-                  {this.props.user.roleValue >= 5 ? (
+                  {this.props.user.roleValue >= 6 ? (
                     <li>
                       <a href="/users" className="dropdown-item">
                         <i className="feather icon-settings" /> All Users

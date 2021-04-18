@@ -1,0 +1,27 @@
+
+18/04/2021
+
+- [x] Limite inferiore nel prezzo servizio di 1euro
+- [x] Inviate due email all'utente iscritto
+- [x] Non hai i dati necessari per acquistare (Aggiungere link alle impostazioni profilo)
+- [x] Data evento sempre nel futuro
+- [x] Controllare giorni rimanenti
+- [x] Aggiunto evento lato backend che associa un'iscrizione all'utente tipster appena crea un servizio
+- [x] All users solo per i super admin!
+- [x] Aggiungere codice fiscale come dato dell'utente
+- [x] Possibilità di impostare “Live” invece della data
+- [x] Separare menu per i tipster sotto il menu utente [Le mie tip, i miei servizi, Wallet] (Le mie tip, I miei servizi, Wallet)
+- [x] Conferma cambio password
+- [x] Solo un salva per il profilo
+- [x] Synchronise file upload in stripe settings page
+- [x] Reset password does login but no change password
+- [x] Servizi attivi > cambiare in “Iscrizioni”
+- [x] Possibilità di seguire anche le tip refertate
+- [x] Ordine DESC in tutte le pagine (ad esempio tip concluse)
+- [x] Competizione > Placeholder “Serie A” (invece di Juve Napoli)
+- [x] Togliere Ronaldo spacca tutto - cambiare in Juve - Napoli
+- [x] Bolletta -> Prova di residenza (Bolletta, stato di famiglia, estratto conto, ecc.)
+- [x] Il controllo per l'account verificato non c'è più
+- [x] Sei sicuro? = "Sei sicuro di non volerla seguire? Azione irreversibile" quando si clicca su "tip non seguita"
+- [x] Seguita / non seguita -> Segui / Ignora
+- [x] Disabilitare cambio indirizzo email

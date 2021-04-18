@@ -62,6 +62,7 @@ const InsertEventCard = (props) => {
                     selected={eventDate}
                     onChange={(e) => setEventDate(e)}
                     showTimeInput
+                    minDate={new Date()}
                     placeholderText="Seleziona una data"
                     disabled={props.saving}
                     className={"form-control"}
@@ -73,7 +74,7 @@ const InsertEventCard = (props) => {
             </Form.Group>
           </Col>
           <Col md={12} sm={12} lg={4} xl={4}>
-            <Form.Group controlId="infirizzo">
+            <Form.Group controlId="sport">
               <Form.Label>
                 Sport <span className={"text-danger"}>*</span>
               </Form.Label>
@@ -98,7 +99,7 @@ const InsertEventCard = (props) => {
               <Form.Control
                 type="text"
                 name="competition"
-                placeholder="Juve - Nappoli"
+                placeholder="Serie A"
                 disabled={props.saving}
                 value={competition}
                 onChange={({ target }) => {
@@ -116,7 +117,7 @@ const InsertEventCard = (props) => {
                 type="text"
                 name="event"
                 disabled={props.saving}
-                placeholder="Ronaldo spacca tutto"
+                placeholder="Juve - Napoli"
                 value={event}
                 onChange={({ target }) => {
                   setEvent(target.value);
