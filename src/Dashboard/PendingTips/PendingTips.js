@@ -124,8 +124,9 @@ class PendingTips extends Component {
       })
       .then((poolsSets) => {
         // expired pools are those that aren't played and have an outcome        
-        this.getExpiredPoolsCards(pools, (pool) => poolsSets[1].find((pp) => pp.references.pool === pool.id) && !!pool.outcome).then((expiredPools) =>
-          this.setState({expiredPools})
+        this.getExpiredPoolsCards(pools, (pool) => poolsSets[1].find((pp) => pp.references.pool === pool.id) && !!pool.outcome)
+        .then((expiredPools) =>
+          this.setState({expiredPools: expiredPools.filter(pool => new Date(pool.createdOn).getTime() > new Date().getTime() + (30 + 24 + 60 + 60 + 1000))})
         );
 
         return poolsSets[0].filter((pool) =>
