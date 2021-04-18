@@ -8,6 +8,7 @@ import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
 import { auth } from "../../../App/auth/firebase";
 import * as actions from "../../../store/actions";
+import config from '../../../store/config';
 
 class Verify extends React.Component {
   state = {
@@ -41,7 +42,12 @@ class Verify extends React.Component {
   };
 
   componentDidMount = () => {
-    this.handleSubmit();
+    const q = new URLSearchParams(this.props.location.search);
+    if (q.get('mode') !== 'verifyEmail') {
+      window.location.href = `${config.GOOGLE_FIREBASE_ENDPOINT}/auth/action${this.props.location.search}`;
+    } else {
+      this.handleSubmit();
+    }
   }
 
   render() {
