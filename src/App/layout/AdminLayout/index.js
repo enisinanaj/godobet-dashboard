@@ -21,8 +21,16 @@ import Aux from "../../../hoc/_Aux";
 import * as actionTypes from "../../../store/actions";
 import AbsoluteButton from "../../components/AbsoluteButton";
 import Footer from "../Footer/Footer";
+import TokenManager from "../../auth/TokenManager";
+import { bindActionCreators } from "redux";
+import * as actions from '../../../store/actions';
 
 class AdminLayout extends Component {
+
+  state = {
+    loaded: false
+  }
+
   fullScreenExitHandler = () => {
     if (
       !document.fullscreenElement &&
@@ -43,6 +51,31 @@ class AdminLayout extends Component {
       this.props.onUNSAFE_componentWillMount();
     }
   }
+
+  componentDidMount() {
+    this.reloadUser()
+  }
+
+  reloadUser = () => {
+    TokenManager.getInstance()
+      .getToken()
+      .then((jwt) => {
+        fetch(this.props.user._links.self.href, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+        })
+          .then((e) => e.json())
+          .then((localUser) => {
+            this.props.actions.userLogin({
+              ...this.props.user,
+              ...localUser,
+            });
+            this.setState({loaded: true})
+          });
+      });
+  };
 
   mobileOutClickHandler() {
     if (this.props.windowWidth < 992 && this.props.collapseMenu) {
@@ -127,7 +160,8 @@ class AdminLayout extends Component {
                   <Breadcrumb />
                   <div className="main-body">
                     <div className="page-wrapper">
-                      <Suspense fallback={<Loader />}>
+                      {!this.state.loaded && <Loader />}
+                      {this.state.loaded && <Suspense fallback={<Loader />}>
                         <BrowserRouter>
                           <Switch>
                             {menu}
@@ -136,7 +170,7 @@ class AdminLayout extends Component {
                             <Redirect from="/" to={this.props.defaultPath} />
                           </Switch>
                         </BrowserRouter>
-                      </Suspense>
+                      </Suspense>}
                     </div>
                   </div>
                 </div>
@@ -167,6 +201,7 @@ const mapDispatchToProps = (dispatch) => {
     onFullScreenExit: () => dispatch({ type: actionTypes.FULL_SCREEN_EXIT }),
     onUNSAFE_componentWillMount: () =>
       dispatch({ type: actionTypes.COLLAPSE_MENU }),
+    actions: bindActionCreators(actions, dispatch)
   };
 };
 

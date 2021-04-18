@@ -71,17 +71,8 @@ const getTipText = (pool) => {
     <Carousel controls={false} interval={null}>
       {pool.events.map((event) => (
         <Carousel.Item key={event.eventCode}>
-          <div
-            style={{
-              height: 170,
-              marginBottom: 15,
-              padding: "0 20px",
-              flex: 1,
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
-          >
-            <Row className={"hei-110"}>
+          <div style={{ height: 90, flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
+            <Row>
               <Col lg={12} sm={12} xs={12} xl={12}>
                 {Sports.find((s) => s.value === event.sport) ? (
                   Sports.find((s) => s.value === event.sport).icon
@@ -93,34 +84,15 @@ const getTipText = (pool) => {
               <Col lg={6} sm={12} xs={12} xl={6}>
                 <i className="feather icon-play" /> {event.proposal}
               </Col>
-              <Col lg={6} sm={12} xs={12} xl={6}>
+              <Col lg={6} sm={12} xs={12} xl={6} className={"text-right"}>
                 <i className="feather icon-at-sign" />{" "}
                 <LocaleNumber amount={event.quote / 100} symbol={""} />
               </Col>
-              <Col lg={6} sm={12} xs={12} xl={6}>
-                <i className="feather icon-book" /> {pool.bookmaker}
-              </Col>
-              <Col lg={6} sm={12} xs={12} xl={6}>
-                <i className="feather icon-pie-chart" />{" "}
-                <LocaleNumber amount={pool.stake / 100} symbol={"%"} />
-              </Col>
             </Row>
-            <Row
-              style={{
-                justifyContent: "space-between",
-                flex: 1,
-                flexDirection: "row",
-              }}
-            >
-              <Col
-                lg={12}
-                sm={12}
-                xs={12}
-                xl={12}
-                style={{ display: "inline-block" }}
-              >
+            <Row style={{ justifyContent: "space-between", flex: 1, flexDirection: "row", }}>
+              <Col lg={12} sm={12} xs={12} xl={12} style={{ display: "inline-block" }}>
                 <em className="feather icon-clock"></em>{" "}
-                {moment(event.eventDate).format("DD/MM/yyyy HH:mm")}
+                {moment(event.eventDate).format("DD MMM yyyy HH:mm")}
               </Col>
             </Row>
           </div>
@@ -205,34 +177,49 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
           )}
         </Card.Title>
         {getTipText(pool)}
+      </Card.Body>
+      <Card.Footer>
+        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+          <div style={{display: "inline"}}>
+            <i className="feather icon-book" /> {pool.bookmaker}
+          </div>
+          <div style={{display: "inline"}}>
+            <i className="feather icon-pie-chart" />{" "}
+            <LocaleNumber amount={pool.stake / 100} symbol={"%"} />
+          </div>
+          <div style={{display: "inline"}}>
+            <i className="feather icon-at-sign" />{" "}
+            <LocaleNumber amount={pool.quote} symbol={""} />
+          </div>
+        </div>
         {pool.outcome && (
-          <div style={{ display: "inline-block", marginTop: "15px" }}>
+          <div style={{ display: "flex", marginTop: "15px", flexDirection: "row", justifyContent: "space-between"}}>
             <span className={getClassNameForOutcome(pool.outcome)}>
               {pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} />
             </span>
+            <a href={"/dashboard/service/" + pool.serviceId} target="_blank" style={{textDecoration: 'underline'}} rel="noopener noreferrer">
+              {pool.service.serviceName} <em className={"feather icon-external-link"}></em>
+            </a>
           </div>
         )}
-        {pool.motivation && (
-          <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title as="h5">
-                Motivazione Tip - <strong>{pool.description}</strong>
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body style={{ wordBreak: "break-word" }}>
-              {pool.motivation}
-            </Modal.Body>
-            <Modal.Footer>
-              <Button
-                variant="secondary"
-                onClick={() => setShowMotivation(false)}
-              >
-                Close
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        )}
-      </Card.Body>
+      </Card.Footer>
+      {pool.motivation && (
+        <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title as="h5">
+              Motivazione Tip - <strong>{pool.description}</strong>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{ wordBreak: "break-word" }}>
+            {pool.motivation}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowMotivation(false)}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </Card>
   );
 };

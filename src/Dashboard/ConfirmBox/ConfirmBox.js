@@ -10,9 +10,7 @@ const ConfirmBox = ({ title, confirm, callback }) => {
     cancelButtonColor: "#000",
     confirmButtonText: confirm,
   }).then((result) => {
-    if (result.value) {
-      callback();
-    }
+    callback(result.value);
   });
 
   return <div></div>;

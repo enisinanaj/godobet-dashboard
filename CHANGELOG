@@ -1,3 +1,15 @@
+19/04/2021
+
+- [x] Non deve uscire fuori iscriviti se sono già il tipster di quel servizio
+- [x] Servizio accanto al outcome nella tip.
+- [x] Aggiungere quota totale nella card
+- [x] Quota totale, stake, bookmaker sono comuni nella card della Tip
+- [x] Il logout viene fuori diverse volte se fai cancel
+- [x] Al tipster non facciamo vedere i propri servizi nella sezione “iscrizioni”
+- [x] Bilancio non si aggiorna perchè l'utente in redux è fisso
+- [x] Rimuovere l'immagine dei servizi dal wallet, mettere nome e cognome invece del servizio ed il servizio al posto dell’email. 
+- [x] L'evento per il bilancio non funziona
+
 
 18/04/2021
 

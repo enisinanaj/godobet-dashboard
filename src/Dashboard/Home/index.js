@@ -12,22 +12,27 @@ import satisfactionChart from "./charts/pie";
 import LocaleNumber from "../../App/components/LocaleNumber";
 
 class Default extends React.Component {
-  state = {
-    pools: [],
-    playedEvents: [],
-    pendingTipsCount: 0,
-    activeTipsCount: 0,
-    totalProfit: 0,
-    monthProfit: 0,
-    subscribedPools: [],
-    startDate: moment().add(-3, "month").toDate(),
-    endDate: moment().add(-1, "day").toDate(),
-    flotData: [],
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      pools: [],
+      user: this.props.user,
+      playedEvents: [],
+      pendingTipsCount: 0,
+      activeTipsCount: 0,
+      totalProfit: 0,
+      monthProfit: 0,
+      subscribedPools: [],
+      startDate: moment().add(-3, "month").toDate(),
+      endDate: moment().add(-1, "day").toDate(),
+      flotData: [],
+    };
+  }
 
   getMyPools = () =>
     this.load(
-      `${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.user._links.self.href}&page=0&size=1000`
+      `${config.API_URL}/pools/search/subscriberPools?subscriber=${this.state.user._links?.self?.href}&page=0&size=1000`
     ).then((p) => p._embedded?.pools);
 
   getStatsForMonth = () =>
@@ -37,7 +42,7 @@ class Default extends React.Component {
       ).format("YYYY-MM-DDTHH:mm:ss.SSS")}&end=${moment(
         this.state.endDate
       ).format("YYYY-MM-DDTHH:mm:ss.SSS")}&subscriber=${
-        this.props.user._links.self.href
+        this.state.user._links?.self?.href
       }`
     ).then((stats) => {
       console.warn(stats?._embedded?.pools);
@@ -46,16 +51,16 @@ class Default extends React.Component {
 
   getUserSubscriptions = () =>
     this.load(
-      `${config.API_URL}/users/${this.props.user.userCode}/subscriptions?page=0&size=1000`
+      `${config.API_URL}/users/${this.state.user.userCode}/subscriptions?page=0&size=1000`
     ).then((subs) => subs?._embedded?.subscriptions);
 
   getTipsterOpenPools = () =>
     this.load(
-      `${config.API_URL}/users/${this.props.user.userCode}/pools?page=0&size=1000`
+      `${config.API_URL}/users/${this.state.user.userCode}/pools?page=0&size=1000`
     ).then((openPools) => openPools?._embedded?.pools);
 
   getTipsterTotalSubscribers = () =>
-    this.load(`${config.API_URL}/users/${this.props.user.userCode}`).then(
+    this.load(`${config.API_URL}/users/${this.state.user.userCode}`).then(
       (totalSubscribers) => totalSubscribers?.totalSubscribers
     );
 
@@ -77,8 +82,8 @@ class Default extends React.Component {
   getUserStats() {
     const FOLLOWED = 1;
     let activeTipsCount = [];
-    if (this.props.user._embedded && this.props.user._embedded.playedPools) {
-      activeTipsCount = this.props.user._embedded.playedPools;
+    if (this.state.user._embedded && this.state.user._embedded.playedPools) {
+      activeTipsCount = this.state.user._embedded.playedPools;
     }
     Promise.all([
       this.getMyPools(),
@@ -89,7 +94,7 @@ class Default extends React.Component {
     ])
       .then((p) => {
         this.setState({
-          totalProfit: this.props.user.totalProfit,
+          totalProfit: this.state.user.totalProfit,
           pendingTipsCount: p[0].filter((p) => !p.outcome).length,
           subscribedPools: [...activeTipsCount, ...p[0]],
           activeTipsCount: p[1]?.filter((s) => !s.expired && s.captured === 1)
@@ -103,20 +108,14 @@ class Default extends React.Component {
       })
       .then((pendingTips) => {
         return this.load(
-          `${this.props.user._links.self.href}/playedPoolsRel?page=0&size=1000`
+          `${this.state.user._links?.self?.href}/playedPoolsRel?page=0&size=1000`
         ).then((playedPools) => [
           pendingTips.filter((p) => !p.outcome),
           playedPools._embedded.playedPools,
         ]);
       })
       .then((poolsSets) =>
-        poolsSets[0].filter(
-          (pool) =>
-            !poolsSets[1].find(
-              (pp) =>
-                pp.references.pool === pool.id && pp.direction !== FOLLOWED
-            )
-        )
+        poolsSets[0].filter((pool) => !poolsSets[1].find((pp) => pp.references.pool === pool.id && pp.direction !== FOLLOWED))
       )
       .then((pendingTips) =>
         this.setState({ pendingTipsCount: pendingTips.length })
@@ -130,7 +129,7 @@ class Default extends React.Component {
   //creampie is for last
   getCreampieData = () => {
     const data = satisfactionChart;
-    if (!this.props.user._embedded || !this.props.user._embedded.playedPools) {
+    if (!this.state.user._embedded || !this.state.user._embedded.playedPools) {
       return {
         options: {
           labels: [],
@@ -140,7 +139,7 @@ class Default extends React.Component {
       };
     }
 
-    const map = this.props.user._embedded.playedPools.reduce((pie, pool) => {
+    const map = this.state.user._embedded.playedPools.reduce((pie, pool) => {
       const h = { ...pie };
 
       if (!pool.outcome) {
@@ -256,7 +255,7 @@ class Default extends React.Component {
                 </Card>
               </Col>
             </Row>
-            {this.props.user.roleValue >= 5 && (
+            {this.state.user.roleValue >= 5 && (
               <Row md={12}>
                 <Col md={12} lg={12}>
                   <h4>

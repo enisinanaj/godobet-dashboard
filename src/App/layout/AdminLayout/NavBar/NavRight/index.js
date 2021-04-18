@@ -10,6 +10,7 @@ import { withRouter } from "react-router-dom";
 import "./nav.css";
 import ConfirmBox from "../../../../../Dashboard/ConfirmBox/ConfirmBox";
 import CoverImage from '../../../../../assets/images/godobet-placeholder.jpg'
+import TokenManager from "../../../../auth/TokenManager";
 
 class NavRight extends Component {
   state = {
@@ -29,15 +30,38 @@ class NavRight extends Component {
         .sort((a, b) => b.id - a.id)[0].url;
     }
     return null;
-    // (
-    //   "http://www.gravatar.com/avatar/" +
-    //   md5(email.email.toLowerCase().trim()) +
-    //   "?s=32"
-    // );
   };
 
-  handleLogout = () => {
-    this.props.actions.userLogout(null);
+  handleLogout = (value) => {
+    if (value) {
+      this.props.actions.userLogout(null);
+    } else {
+      this.setState({showConfirmBox: false})
+    }
+  };
+
+  componentDidMount() {
+    //this.reloadUser();
+  }
+
+  reloadUser = () => {
+    TokenManager.getInstance()
+      .getToken()
+      .then((jwt) => {
+        fetch(this.props.user._links.self.href, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+        })
+          .then((e) => e.json())
+          .then((localUser) => {
+            this.props.actions.userLogin({
+              ...this.props.user,
+              ...localUser,
+            });
+          });
+      });
   };
 
   render() {
@@ -129,6 +153,7 @@ const mapStateToProps = (state) => ({
   user: state.user,
   loggedIn: state.loggedIn,
 });
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });

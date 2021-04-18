@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Card } from "react-bootstrap";
+import { Row, Col, Card, Button, ButtonGroup } from "react-bootstrap";
 
 import Aux from "../../hoc/_Aux";
 import { withRouter } from "react-router-dom";
@@ -23,9 +23,9 @@ class Balance extends Component {
         pools: [],
         playedEvents: [],
         startDate: moment().add(-1, "month").toDate(),
-        endDate: moment().add(-1, "day").toDate(),
+        endDate: moment().toDate(),
         formattedStartDate: moment(moment().add(-1, "month").toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS"),
-        formattedEndDate: moment(moment().add(-1, "day").toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS"),
+        formattedEndDate: moment(moment().toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS"),
         statusData: [],
         totalProfit: 0
     }
@@ -65,18 +65,60 @@ class Balance extends Component {
         this.setState({
             startDate: e,
             formattedStartDate: moment(e).format("YYYY-MM-DDTHH:mm:ss.SSS")
-        });
-
-        this.loadData();
+        }, this.loadData);
     }
 
     handleEndDateChange(e) {
         this.setState({
             endDate: e,
             formattedEndDate: moment(e).format("YYYY-MM-DDTHH:mm:ss.SSS")
-        });
+        }, this.loadData);
+    }
 
-        this.loadData();
+    loadDataFor(period) {
+        switch (period) {
+            case "24H":
+                this.setState({
+                    startDate: moment().add(-1, "days").toDate(),
+                    endDate: moment().toDate(),
+                    formattedStartDate: moment().add("-1", "days").format("YYYY-MM-DDTHH:mm:ss.SSS"),
+                    formattedEndDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS")
+                }, this.loadData);
+                break;
+            case "1W":
+                this.setState({
+                    startDate: moment().add(-7, "days").toDate(),
+                    endDate: moment().toDate(),
+                    formattedStartDate: moment().add("-7", "days").format("YYYY-MM-DDTHH:mm:ss.SSS"),
+                    formattedEndDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS")
+                }, this.loadData);
+                break;
+            case "1Y":
+                this.setState({
+                    startDate: moment().add(-1, "year").toDate(),
+                    endDate: moment().toDate(),
+                    formattedStartDate: moment().add("-1", "year").format("YYYY-MM-DDTHH:mm:ss.SSS"),
+                    formattedEndDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS")
+                }, this.loadData);
+                break;
+            case "YTD":
+                this.setState({
+                    startDate: moment().set("month", 0).set("dayOfYear", 1).toDate(),
+                    endDate: moment().toDate(),
+                    formattedStartDate: moment().set("month", 0).set("dayOfYear", 1).format("YYYY-MM-DDTHH:mm:ss.SSS"),
+                    formattedEndDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS")
+                }, this.loadData);
+                break;
+            default:
+            case "1M":
+                this.setState({
+                    startDate: moment().add(-1, "months").toDate(),
+                    endDate: moment().toDate(),
+                    formattedStartDate: moment().add("-1", "months").format("YYYY-MM-DDTHH:mm:ss.SSS"),
+                    formattedEndDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS")
+                }, this.loadData);
+                break;
+        }
     }
 
     render() {
@@ -106,9 +148,17 @@ class Balance extends Component {
                         <Card>
                             <Card.Header>
                                 <Row>
-                                    <Col md={7}/>
-                                    <Col md={5}>
-                                        <Card.Title as="h5">
+                                    <Col md={7}>
+                                    <ButtonGroup aria-label="Time" size={"sm"} className={"btn-glow-light"}>
+                                        <Button variant="light" onClick={() => this.loadDataFor("24H")}>24H</Button>
+                                        <Button variant="light" onClick={() => this.loadDataFor("1W")}>1W</Button>
+                                        <Button variant="light" onClick={() => this.loadDataFor("1M")}>1M</Button>
+                                        <Button variant="light" onClick={() => this.loadDataFor("1Y")}>1Y</Button>
+                                        <Button variant="light" onClick={() => this.loadDataFor("YTD")} >YTD</Button>
+                                    </ButtonGroup>
+                                    </Col>
+                                    <Col md={5} style={{flexDirection: "row", justifyContent: "flex-start"}}>
+                                        <div style={{display: 'inline-block'}}>
                                             Dal: <DatePicker
                                                     locale={'it'}
                                                     dateFormat={"dd/MM/yyyy"}
@@ -118,9 +168,10 @@ class Balance extends Component {
                                                     //minDate={moment().add(-32, "day").toDate()}
                                                     maxDate={moment().add(-1, "day").toDate()}
                                                     placeholderText="Seleziona una data"
-                                                    />
-                                        </Card.Title>
-                                        <Card.Title as="h5">
+                                                    wrapperClassName={"wid-110"}
+                                                />
+                                        </div>
+                                        <div style={{display: 'inline-block'}}>
                                             al: <DatePicker
                                                     locale={'it'}
                                                     dateFormat={"dd/MM/yyyy"}
@@ -130,8 +181,9 @@ class Balance extends Component {
                                                     minDate={this.state.startDate}
                                                     maxDate={new Date()}
                                                     placeholderText="Seleziona una data"
+                                                    wrapperClassName={"wid-110"}
                                                 />
-                                        </Card.Title>
+                                        </div>
                                     </Col>
                                 </Row>
                             </Card.Header>

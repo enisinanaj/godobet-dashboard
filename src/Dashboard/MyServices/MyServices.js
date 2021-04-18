@@ -29,10 +29,15 @@ class MyServices extends Component {
   };
 
   componentDidMount = () => {
-    this.getSubscriptions();
+    this.loadMyServices()
+    .then(services => services._embedded.services.map(s => s.id))
+    .then(serviceIds => this.getSubscriptions(serviceIds))
   };
 
-  getSubscriptions = () => {
+  getSubscriptions = (myServices) => {
+
+    console.warn(myServices)
+
     return loadAllSubscriptions(
       config.API_URL +
         `/users/${this.props.user.userCode}/subscriptions?page=0&size=1000`
@@ -41,11 +46,28 @@ class MyServices extends Component {
         this.setState({
           services:
             r._embedded && r._embedded.subscriptions
-              ? r._embedded.subscriptions.filter((s) => s.valid)
+              ? r._embedded.subscriptions.filter((s) => s.valid && myServices.indexOf(s.serviceId) < 0)
               : [],
         });
       })
       .catch(console.error);
+  };
+
+  loadMyServices = () => {
+    if (this.props.user.roleValue < 5) {
+      return new Promise(() => [])
+    }
+  
+    return TokenManager.getInstance()
+      .getToken()
+      .then((jwt) => {
+        return fetch(this.props.user._links.services.href.replace("{?projection}", ""), {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+        }).then((e) => e.json());
+      });
   };
 
   getServicesDom() {
@@ -55,9 +77,11 @@ class MyServices extends Component {
       id: service.serviceId,
       media: [{ ...service.media, mediaIteration: 1 }],
     }));
+
     if (this.state.services.length === 0) {
       return <NoServicesAlert />;
     }
+
     return (
       <ServiceCard
         disableEdit={true}
