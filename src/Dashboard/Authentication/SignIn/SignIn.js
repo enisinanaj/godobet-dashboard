@@ -23,6 +23,7 @@ class SignIn extends React.Component {
     formError: "",
     loginLoading: false,
     loggedIn: false,
+    passwordShown: false,
   };
 
   validateOnChange = (event) => {
@@ -71,10 +72,10 @@ class SignIn extends React.Component {
       if (!user.emailVerified) {
         this.setState({
           formError: "Per accedere bisognia verificare la propria email",
-        });  
+        });
         return;
       }
-      
+
       if (!user) {
         return;
       }
@@ -166,7 +167,7 @@ class SignIn extends React.Component {
                       <TextInput
                         name="password"
                         id="password"
-                        type="password"
+                        type={this.state.passwordShown ? "text" : "password"}
                         placeholder="Password"
                         required
                         pattern="(?=.*[a-z]).{6,}"
@@ -182,6 +183,25 @@ class SignIn extends React.Component {
                       <blockquote className="md-2 text-danger">
                         {this.state.formError}
                       </blockquote>
+                    </div>
+                    <div className="float-left">
+                      <p
+                        className="text-muted"
+                        style={{
+                          fontSize: "10px",
+                          cursor: "pointer",
+                          userSelect: "none",
+                        }}
+                        onClick={() =>
+                          this.setState({
+                            passwordShown: !this.state.passwordShown,
+                          })
+                        }
+                      >
+                        {this.state.passwordShown
+                          ? "Nascondi password"
+                          : "Mostra password"}
+                      </p>
                     </div>
 
                     <button className="btn btn-block btn-primary mb-4">
