@@ -97,8 +97,7 @@ class Default extends React.Component {
           totalProfit: this.state.user.totalProfit,
           pendingTipsCount: p[0].filter((p) => !p.outcome).length,
           subscribedPools: [...activeTipsCount, ...p[0]],
-          activeTipsCount: p[1]?.filter((s) => !s.expired && s.captured === 1)
-            ?.length,
+          activeTipsCount: p[1]?.filter((s) => !s.expired && s.captured === 1)?.length,
           monthProfit: p[2]?.reduce((a, b) => a + b.profit, 0),
           openPools: p[3].filter((p) => !p.outcome).length,
           totalSubscribers: p[4],
