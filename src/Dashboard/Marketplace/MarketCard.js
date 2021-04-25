@@ -78,13 +78,13 @@ const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurc
               <Button className="pull-right" variant="success" onClick={() => {window.location = `/dashboard/service/${item.id}`}}>
                 <em class="feather icon-arrow-right mr-2"></em> Vai al dettaglio
               </Button>
-              {!item.free && canPurchase(item) && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} >
+              {!item.free && canPurchase(item) && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} style={{minWidth: "161px"}} >
                 {inPurchasing === item.id ? (
                   <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
                 ) : null }
                 <em className={"feather icon-shopping-cart mr-2"}></em> Iscriviti
               </Button>}
-              {item.free && canPurchase(item) && <Button className="pull-right" onClick={() => handleFreeSubscription(item)} disabled={inPurchasing} >
+              {item.free && canPurchase(item) && <Button className="pull-right" onClick={() => handleFreeSubscription(item)} disabled={inPurchasing} style={{minWidth: "161px"}} >
                 {inPurchasing === item.id ? (
                   <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
                 ) : null }

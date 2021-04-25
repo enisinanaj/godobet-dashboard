@@ -28,7 +28,20 @@ const getDropdown = (clickHandler) => {
         variant={"light"}
       ></Dropdown.Toggle>
       <Dropdown.Menu alignRight className="profile-notification">
-        <Dropdown.Item onClick={() => clickHandler(1)}>
+        <Dropdown.Item onClick={() => {
+          Swal.fire({
+            title: "Sei sicuro di voler seguire questa tip? Azione irreversibile!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#56BE7F",
+            cancelButtonColor: "#000",
+            confirmButtonText: "si",
+          }).then((result) => {
+            if (result.value) {
+              clickHandler(1);
+            }
+          });
+        }}>
           Segui
         </Dropdown.Item>
         <Dropdown.Item
@@ -242,7 +255,6 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
           </div>
         )}
       </Card.Footer>
-      {pool.motivation && (
         <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>
           <Modal.Header closeButton>
               <Modal.Title as="h4">
@@ -323,12 +335,24 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
                   ))}
               {/* </Carousel> */}
           </Modal.Body>
-          <Modal.Body style={{borderBottom: '1px solid #e8e8e8'}}>
+          {pool.motivation && <Modal.Body style={{borderBottom: '1px solid #e8e8e8'}}>
               <span className={"sectionTitle"}>Motivazione</span>
               {pool.motivation}
-          </Modal.Body>
+          </Modal.Body>}
           <Modal.Footer className={"pt-2"}>
-              {DropdownHiddenState || <Button variant="primary" onClick={() => followTip(1)}>Segui</Button>}
+              {DropdownHiddenState || <Button variant="primary" onClick={() => Swal.fire({
+                  title: "Sei sicuro di voler seguire questa tip? Azione irreversibile!",
+                  type: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#56BE7F",
+                  cancelButtonColor: "#000",
+                  confirmButtonText: "si",
+                }).then((result) => {
+                  if (result.value) {
+                    followTip(1);
+                  }
+                })
+              }>Segui</Button>}
               {DropdownHiddenState || <Button variant="primary" onClick={() => {
                 Swal.fire({
                   title: "Sei sicuro di non volerla seguire? Azione irreversibile!",
@@ -345,7 +369,6 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
               }}>Ignora</Button>}
           </Modal.Footer>
       </Modal>
-      )}
     </Card>
   );
 };

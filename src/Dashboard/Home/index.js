@@ -100,8 +100,6 @@ class Default extends React.Component {
       this.getMyServices(),
     ])
       .then((p) => {
-        console.warn(p[5])
-        console.warn(p[1])
         this.setState({
           totalProfit: this.state.user.totalProfit,
           pendingTipsCount: p[0].filter((p) => !p.outcome).length,

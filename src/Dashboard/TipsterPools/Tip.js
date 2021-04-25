@@ -9,6 +9,7 @@ import { getClassNameForOutcome } from '../PendingTips/TipCard'
 import LocaleNumber from "../../App/components/LocaleNumber";
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import './tipsterCard.css'
+import Swal from "sweetalert2";
 
 moment.locale("it")
 
@@ -65,6 +66,21 @@ const Tip = props => {
           .then((e) => e.json());
     }
 
+    const askForUpdate = (outcome) => {
+        Swal.fire({
+            title: "Sei sicuro di voler refertare questa tip? Azione irreversibile!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#56BE7F",
+            cancelButtonColor: "#000",
+            confirmButtonText: "si",
+        }).then((result) => {
+            if (result.value) {
+              updateTip(outcome);
+            }
+        });
+    }
+
     const updateTip = async (outcome) => {
         let counter = pool.events.length;
 
@@ -108,11 +124,11 @@ const Tip = props => {
                     {!pool.outcome && <Dropdown className="drp-tipster-pool">
                         <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
                         {props.author && <Dropdown.Menu alignRight className="profile-notification">
-                            <Dropdown.Item onClick={() => {updateTip("win")}}>Win</Dropdown.Item>
-                            <Dropdown.Item onClick={() => {updateTip("1/2 win")}}>1/2 Win</Dropdown.Item>
-                            <Dropdown.Item onClick={() => {updateTip("lose")}}>Lose</Dropdown.Item>
-                            <Dropdown.Item onClick={() => {updateTip("1/2 lose")}}>1/2 Lose</Dropdown.Item>
-                            <Dropdown.Item onClick={() => {updateTip("void")}}>Void</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {askForUpdate("win")}}>Win</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {askForUpdate("1/2 win")}}>1/2 Win</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {askForUpdate("lose")}}>Lose</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {askForUpdate("1/2 lose")}}>1/2 Lose</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {askForUpdate("void")}}>Void</Dropdown.Item>
                         </Dropdown.Menu>}
                         {!props.author && <Dropdown.Menu alignRight className="profile-notification">
                             <Dropdown.Item onClick={() => {playTip(pool)}}>Tip seguita</Dropdown.Item>
@@ -169,7 +185,7 @@ const Tip = props => {
                     </a>
                 </div>
             </Card.Footer>
-                {pool.motivation && <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>
+                <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title as="h4">
                             <strong>{pool.description}</strong> {pool.outcome && <span className={getClassNameForOutcome(pool.outcome)} style={{fontSize: '13px'}} >
@@ -249,14 +265,14 @@ const Tip = props => {
                             ))}
                         {/* </Carousel> */}
                     </Modal.Body>
-                    <Modal.Body style={{borderBottom: '1px solid #e8e8e8'}}>
+                    {pool.motivation && <Modal.Body style={{borderBottom: '1px solid #e8e8e8'}}>
                         <span className={"sectionTitle"}>Motivazione</span>
                         {pool.motivation}
-                    </Modal.Body>
+                    </Modal.Body>}
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => setShowMotivation(false)}>Chiudi</Button>
                     </Modal.Footer>
-                </Modal>}
+                </Modal>
         </Card>
     </Col>);
 }

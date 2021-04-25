@@ -71,7 +71,7 @@ class SignIn extends React.Component {
     return auth.onAuthStateChanged((user) => {
       if (!user.emailVerified) {
         this.setState({
-          formError: "Per accedere bisognia verificare la propria email",
+          formError: "Per accedere, verifica l'indirizzo e-mail",
         });
         return;
       }

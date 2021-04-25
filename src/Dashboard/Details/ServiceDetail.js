@@ -393,6 +393,7 @@ const ServiceDetail = (props) => {
               </Card>
             </Col>
           </Row>
+          <h4>Ultime Tips</h4>
           <Row>
             {pools.map(pool => (
               <Tip key={pool.id} pool={pool} author={author.userCode === props.applicationState.user.userCode} />
