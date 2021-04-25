@@ -46,7 +46,7 @@ const TipsterPools = (props) =>  {
             defaultActiveKey="pending"
             id="uncontrolled-tab-example"
           >
-            <Tab eventKey="pending" title="Tip in corso">
+            <Tab eventKey="pending" title="In corso">
               <Row>
                 {
                   pools.filter(p => !p.outcome).map(pool => (
@@ -55,7 +55,7 @@ const TipsterPools = (props) =>  {
                 }
               </Row>
             </Tab>
-            <Tab eventKey="expired" title="Tip concluse">
+            <Tab eventKey="expired" title="Refertate">
               <Row>
                 {
                   pools.filter(p => !!p.outcome).map(pool => (

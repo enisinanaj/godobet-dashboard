@@ -331,7 +331,7 @@ const Settings = (props) => {
             id="uncontrolled-tab-example"
             onSelect={(k) => setCurrentTab(k)}
           >
-            <Tab eventKey="profile" title="Impostazioni principali">
+            <Tab eventKey="profile" title="Generali">
               <Row>
                 <Col>
                   <Card>
@@ -473,7 +473,7 @@ const Settings = (props) => {
               </Row>
             </Tab>
             {SHOW_FULL_PROFILE && (
-              <Tab eventKey="tipster" title="Diventa tipster">
+              <Tab eventKey="tipster" title="Tipster">
                 <Row>
                   <Col md={12} lg={12} sm={12}>
                     <Card>

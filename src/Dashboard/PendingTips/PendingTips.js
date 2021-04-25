@@ -97,8 +97,8 @@ class PendingTips extends Component {
   getExpiredPoolsCards = (pools, filter) => {
     return (
       pools
-        .then((pools) => pools.filter(filter).sort((a, b) => new Date(b.createdOn) - new Date(a.id)))
-        .then(expiredPools => expiredPools.filter(pool => new Date(pool.createdOn).getTime() > new Date().getTime() + (30 + 24 + 60 + 60 + 1000)))
+        .then((pools) => pools.filter(filter).sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn)))
+        .then(expiredPools => expiredPools.filter(pool => new Date(pool.createdOn).getTime() > new Date().getTime() - (30 * 24 * 60 * 60 * 1000)))
         .then((pool) => getTipCards(!filter(pool))(pool))
     );
   };
@@ -152,21 +152,21 @@ class PendingTips extends Component {
               defaultActiveKey="pending"
               id="uncontrolled-tab-example"
             >
-              <Tab eventKey="pending" title="Tip in corso">
+              <Tab eventKey="pending" title="In corso">
                 <Row>
                   <Col md={12} lg={12}>
-                    <h4>Nuove tip</h4>
+                    <h4>Nuove tips</h4>
                   </Col>
                 </Row>
                 <Row>{getTipCards(false)(this.state.ongoingPools)}</Row>
                 <Row>
                   <Col md={12} lg={12} className={"mt-3"}>
-                    <h4>Tip in corso</h4>
+                    <h4>Tips in corso</h4>
                   </Col>
                 </Row>
                 <Row>{getTipCards(true)(this.state.followedPools)}</Row>
               </Tab>
-              <Tab eventKey="expired" title="Tip concluse">
+              <Tab eventKey="expired" title="Concluse">
                 <Row>{this.state.expiredPools}</Row>
               </Tab>
             </Tabs>

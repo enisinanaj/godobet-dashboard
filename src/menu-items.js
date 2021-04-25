@@ -20,9 +20,9 @@ export default {
         },
         {
           id: "pending-tips",
-          title: "Pending Tips",
+          title: "Tips",
           type: "item",
-          icon: "feather icon-clock",
+          icon: "feather icon-inbox",
           url: "/dashboard/pending-tips",
           role: 4,
         },
@@ -30,7 +30,7 @@ export default {
           id: "balance",
           title: "Bilancio",
           type: "item",
-          icon: "feather icon-credit-card",
+          icon: "feather icon-trending-up",
           url: "/dashboard/balance",
           role: 4,
         },
@@ -62,19 +62,10 @@ export default {
         {
           id: "settings",
           title: "Impostazioni",
-          type: "collapse",
+          type: "item",
           icon: "feather icon-user",
           role: 3,
-          children: [
-            {
-              id: "account",
-              title: "Account",
-              type: "item",
-              icon: "feather icon-at-sign",
-              url: "/settings",
-              role: 3,
-            }
-          ]
+          url: "/settings",
         },
         {
           id: "admin",
@@ -133,9 +124,9 @@ export default {
         },
         {
           id: "my-tips",
-          title: "Le mie Tip",
+          title: "Le mie Tips",
           type: "item",
-          icon: "feather icon-bookmark",
+          icon: "fa fa-rss",
           url: "/dashboard/tipster/pools",
           role: 5,
           rightButton: <CreateTipButton />,
@@ -153,7 +144,7 @@ export default {
           id: "wallet",
           title: "Wallet",
           type: "item",
-          icon: "feather icon-briefcase",
+          icon: "feather icon-credit-card",
           url: "/wallet",
           role: 5,
         }

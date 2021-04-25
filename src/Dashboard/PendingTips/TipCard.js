@@ -228,7 +228,7 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
           </div>
           <div style={{display: "inline"}}>
             <i className="feather icon-at-sign" />{" "}
-            <LocaleNumber amount={pool.quote} symbol={""} />
+            <LocaleNumber amount={pool.totalQuote} symbol={""} />
           </div>
         </div>
         {pool.outcome && (
@@ -247,15 +247,11 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
           <Modal.Header closeButton>
               <Modal.Title as="h4">
                   <strong>{pool.description}</strong> {pool.outcome && <span className={getClassNameForOutcome(pool.outcome)} style={{fontSize: '13px'}} >
-                      {pool.outcome} 
+                      {pool.outcome}{' '}
                       <LocaleNumber amount={pool.profit} symbol={"%"} />
                   </span>}
               </Modal.Title>
           </Modal.Header>
-          <Modal.Body style={{borderBottom: '1px solid #e8e8e8'}}>
-              <span className={"sectionTitle"}>Motivazione</span>
-              {pool.motivation}
-          </Modal.Body>
           <Modal.Body style={{marginTop: 0, borderBottom: '1px solid #e8e8e8'}}>
               {/* <span className={"sectionTitle"}>Tipster</span> */}
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -271,7 +267,7 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
                   </div>
                   <div style={{display: "inline"}}>
                       <span className={"sectionTitle"}>Pubblicata il</span>
-                      {moment(pool.createdAt).format("DD MMM YY")}
+                      {moment(pool.createdAt).format("DD MMM YYYY HH:mm")}
                   </div>
                   <div style={{display: "inline"}}>
                       <span className={"sectionTitle"}>Servizio</span>
@@ -281,12 +277,30 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
                   </div>
               </div>
           </Modal.Body>
+          <Modal.Body>
+              <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                  <div style={{display: "inline"}}>
+                      <span className={"sectionTitle"}>Bookmaker</span>
+                      <i className="feather icon-book" /> {pool.bookmaker}
+                  </div>
+                  <div style={{display: "inline"}}>
+                      <span className={"sectionTitle"}>Stake</span>
+                      <i className="feather icon-pie-chart" />{" "}
+                      <LocaleNumber amount={pool.stake / 100} symbol={"%"} />
+                  </div>
+                  <div style={{display: "inline"}}>
+                      <span className={"sectionTitle"}>Quota</span>
+                      <i className="feather icon-at-sign" />{" "}
+                      <LocaleNumber amount={pool.totalQuote} symbol={""} />
+                  </div>
+              </div>
+          </Modal.Body>
           <Modal.Body style={{wordBreak: 'break-word', borderBottom: '1px solid #e8e8e8'}}>
               <span className={"sectionTitle"} style={{marginTop: "-15px", marginBottom: "20px"}}>Eventi</span>
-              <Carousel controls={false} interval={null}>
+              {/* <Carousel controls={false} interval={null}> */}
                   {pool.events.map(event => (
-                      <Carousel.Item key={event.eventCode}>
-                          <div style={{minHeight: "90px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                      <div key={event.eventCode}>
+                          <div style={{minHeight: "90px", flex: 1, flexDirection: 'column', justifyContent: 'space-between', border: "1px solid #e8e8e8"}} className={"p-2 mt-1"}>
                               <Row>
                                   <Col lg={12} sm={12} xs={12} xl={12}>
                                       {Sports.find(s => s.value === event.sport) ? Sports.find(s => s.value === event.sport).icon : <em className={"feather icon-aperture"}></em>}{" "}
@@ -305,27 +319,13 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
                                   </Col>
                               </Row>
                           </div>
-                      </Carousel.Item>
+                      </div>
                   ))}
-              </Carousel>
+              {/* </Carousel> */}
           </Modal.Body>
-          <Modal.Body>
-              <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                  <div style={{display: "inline"}}>
-                      <span className={"sectionTitle"}>Bookmaker</span>
-                      <i className="feather icon-book" /> {pool.bookmaker}
-                  </div>
-                  <div style={{display: "inline"}}>
-                      <span className={"sectionTitle"}>Stake</span>
-                      <i className="feather icon-pie-chart" />{" "}
-                      <LocaleNumber amount={pool.stake / 100} symbol={"%"} />
-                  </div>
-                  <div style={{display: "inline"}}>
-                      <span className={"sectionTitle"}>Quota</span>
-                      <i className="feather icon-at-sign" />{" "}
-                      <LocaleNumber amount={pool.quote} symbol={""} />
-                  </div>
-              </div>
+          <Modal.Body style={{borderBottom: '1px solid #e8e8e8'}}>
+              <span className={"sectionTitle"}>Motivazione</span>
+              {pool.motivation}
           </Modal.Body>
           <Modal.Footer className={"pt-2"}>
               {DropdownHiddenState || <Button variant="primary" onClick={() => followTip(1)}>Segui</Button>}
@@ -342,7 +342,7 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
                     followTip(-1);
                   }
                 });
-              }}>Ignora tip</Button>}
+              }}>Ignora</Button>}
           </Modal.Footer>
       </Modal>
       )}
