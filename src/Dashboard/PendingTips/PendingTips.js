@@ -166,7 +166,7 @@ class PendingTips extends Component {
                 </Row>
                 <Row>{getTipCards(true)(this.state.followedPools)}</Row>
               </Tab>
-              <Tab eventKey="expired" title="Concluse">
+              <Tab eventKey="expired" title="Concluse (Ultimi 30 giorni)">
                 <Row>{this.state.expiredPools}</Row>
               </Tab>
             </Tabs>

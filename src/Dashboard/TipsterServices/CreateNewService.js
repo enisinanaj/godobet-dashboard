@@ -33,7 +33,9 @@ const CreateNewService = (props) => {
     serviceName: "",
     maxSubscribers: "",
     version: "",
+    isFree: false
   });
+
   let config = {
     showFiletypeIcon: false,
     postUrl: "/",
@@ -118,6 +120,7 @@ const CreateNewService = (props) => {
             serviceName: newObject.serviceName,
             maxSubscribers: newObject.maxSubscribers,
             version: "1",
+            free: newObject.isFreeServcie
           }),
         }).then((e) => {
           if (e.status !== 201) {
@@ -137,7 +140,7 @@ const CreateNewService = (props) => {
     if (
       newObject.serviceName &&
       newObject.description &&
-      newObject.price &&
+      (newObject.price || newObject.isFree) &&
       newObject.duration &&
       newObject.excerpt &&
       newObject.maxSubscribers &&
@@ -305,18 +308,26 @@ const CreateNewService = (props) => {
                     </Form.Group>
                   </Col>
                   <Col md={12} sm={12} lg={3} xl={3}>
-                    <Form.Group controlId="citta">
+                    <Form.Group controlId="price" className={"mb-0"} >
                       <Form.Label>
                         Prezzo (€) <span className="text-danger">*</span>
                       </Form.Label>
-                      <Form.Control
+                      {!newObject.isFree && <Form.Control
                         type="number"
                         name="price"
                         min="1"
                         disabled={saving}
                         onChange={handleChange}
                         placeholder="Prezzo"
-                      />
+                      />}
+                    </Form.Group>
+                    <Form.Group controlId="freeService">
+                      <Form.Check 
+                        checked={newObject.isFree} 
+                        title={'Servizio gratuito'} 
+                        value={newObject.isFree} 
+                        label={'Servizio gratuito'}
+                        onChange={e => setNewObject({...newObject, isFree: e.target.checked})} />
                     </Form.Group>
                   </Col>
                   <Col md={12} sm={12} lg={3} xl={3}>

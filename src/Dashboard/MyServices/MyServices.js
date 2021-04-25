@@ -30,19 +30,17 @@ class MyServices extends Component {
 
   componentDidMount = () => {
     this.loadMyServices()
-    .then(services => services._embedded.services.map(s => s.id))
+    .then(services => services._embedded && services._embedded.services ? services._embedded.services.map(s => s.id) : [])
     .then(serviceIds => this.getSubscriptions(serviceIds))
   };
 
   getSubscriptions = (myServices) => {
-
-    console.warn(myServices)
-
     return loadAllSubscriptions(
       config.API_URL +
         `/users/${this.props.user.userCode}/subscriptions?page=0&size=1000`
     )
       .then((r) => {
+        console.warn(r)
         this.setState({
           services:
             r._embedded && r._embedded.subscriptions
@@ -55,7 +53,9 @@ class MyServices extends Component {
 
   loadMyServices = () => {
     if (this.props.user.roleValue < 5) {
-      return new Promise(() => [])
+      return new Promise((resolve) => {
+        resolve([]);
+      })
     }
   
     return TokenManager.getInstance()

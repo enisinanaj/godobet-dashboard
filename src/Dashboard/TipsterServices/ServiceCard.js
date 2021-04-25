@@ -75,7 +75,8 @@ const ServiceCard = (props) => {
 
           <Card.Body>
             <Link to={`/dashboard/service/${item.id}`}>
-              <Card.Title as="h5"> <PriceLabel amount={item.price/100}></PriceLabel> </Card.Title>
+              {!item.free && <Card.Title as="h5"> <PriceLabel amount={item.price/100}></PriceLabel> </Card.Title>}
+              {item.free && <Card.Title as="h5" className={"text-success"}>Gratis</Card.Title>}
             </Link>
             <Card.Text>
               {false && item.maxSubscribers - item.subscribersCount === 0 ? (

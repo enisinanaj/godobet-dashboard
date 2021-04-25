@@ -123,6 +123,7 @@ const EditService = (props) => {
               duration: currentObject.duration,
               excerpt: currentObject.excerpt,
               price: currentObject.price * 100,
+              free: currentObject.free
             }),
           }).then((e) => {
             if (e.status !== 200) {
@@ -139,7 +140,7 @@ const EditService = (props) => {
                 window.onbeforeunload = null;
                 uploadServiceCover(e.url);
                 setTimeout(() => {
-                  window.location = "/dashboard/tipster/pools";
+                  window.location = "/dashboard/tipster/services";
                 }, 2000);
               });
             }
@@ -327,7 +328,7 @@ const EditService = (props) => {
                     </Form.Group>
                   </Col>
                   <Col>
-                    <Form.Group controlId="citta">
+                    <Form.Group controlId="citta" className={"mb-0 mt-4"}>
                       <Form.Label>
                         Prezzo (€) <span className="text-danger">*</span>
                       </Form.Label>
@@ -335,11 +336,19 @@ const EditService = (props) => {
                         type="number"
                         name="price"
                         value={currentObject.price}
-                        disabled={saving}
+                        disabled={saving || currentObject.free}
                         onChange={handleChange}
                         placeholder="Prezzo"
                         required
                       />
+                    </Form.Group>
+                    <Form.Group controlId="freeService">
+                      <Form.Check 
+                        checked={currentObject.free} 
+                        title={'Servizio gratuito'} 
+                        value={currentObject.free} 
+                        label={'Servizio gratuito'}
+                        onChange={e => setCurrentObject({...currentObject, free: e.target.checked})} />
                     </Form.Group>
                   </Col>
                   <Col>
@@ -420,7 +429,7 @@ const EditService = (props) => {
                         <span></span>
                       )}
                       <span className="text-muted" style={{ fontSize: "11px" }}>
-                        {currentObject.excerpt.length} / 300
+                        {currentObject.excerpt?.length} / 300
                       </span>
                     </div>
                   </Col>

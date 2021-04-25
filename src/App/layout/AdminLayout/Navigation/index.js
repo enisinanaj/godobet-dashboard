@@ -10,23 +10,6 @@ import * as actionTypes from "./../../../../store/actions";
 import navigation from "../../../../menu-items";
 
 class Navigation extends Component {
-  // resize = () => {
-  //   const contentWidth = document.getElementById("root").clientWidth;
-
-  //   if (this.props.layout === "horizontal" && contentWidth < 992) {
-  //     this.props.onChangeLayout("vertical");
-  //   }
-  // };
-
-  // componentDidMount() {
-  //   this.resize();
-  //   window.addEventListener("resize", this.resize);
-  // }
-
-  // componentWillUnmount() {
-  //   window.removeEventListener("resize", this.resize);
-  // }
-
   scroll = () => {
     if (this.props.navFixedLayout && this.props.headerFixedLayout === false) {
       const el = document.querySelector(".pcoded-navbar.menupos-fixed");

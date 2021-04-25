@@ -12,6 +12,7 @@ import { useStripe } from "@stripe/react-stripe-js";
 import TokenManager from "../../App/auth/TokenManager";
 import "./Marketplace.css";
 import { isProfileComplete } from "../../App/components/UserUtil";
+import moment from "moment";
 
 const Marketplace = (props) => {
   const [marketData, setMarketData] = useState([]);
@@ -111,6 +112,42 @@ const Marketplace = (props) => {
       });
   };
 
+  const handleFreeSubscription = (item) => {
+    setInPurchasing(item.id);
+
+    if (!isProfileComplete(props.applicationState.user)) {
+      Swal.fire({
+        type: "error",
+        title: "Oops...",
+        text: "È necessario completare il profilo prima di acquistare!",
+      });
+
+      setInPurchasing(false);
+      return;
+    }
+
+    TokenManager.getInstance().getToken()
+    .then(jwt => {
+        fetch(`${BASE_CONFIG.API_URL}/subscriptions`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+          body: JSON.stringify({
+            subscriber: props.applicationState.user._links.self.href,
+            service: `${BASE_CONFIG.API_URL}/services/${item.id}`,
+            captured: 1,
+            paymentSystemToken: 'free-service',
+            subscribedOn: moment(moment().toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS")
+          })
+        })
+        .then(e => {
+          window.location = "/dashboard/my-services";
+        })
+      });
+  };
+
   return (
     <Aux>
       <Row className="mb-5" style={{ marginTop: "-0.85rem" }}>
@@ -129,6 +166,7 @@ const Marketplace = (props) => {
           marketData={marketData}
           inPurchasing={inPurchasing}
           handlePurchase={handlePurchase}
+          handleFreeSubscription={handleFreeSubscription}
           user={props.applicationState.user}
         />
       </Row>

@@ -214,6 +214,42 @@ const ServiceDetail = (props) => {
     })
   };
 
+  const handleFreeServiceSubscription = () => {
+    setIsProcessing(true);
+
+    if (!isProfileComplete(props.applicationState.user)) {
+      Swal.fire({
+        type: "error",
+        title: "Oops...",
+        text: "È necessario completare il profilo prima di acquistare!",
+      });
+
+      setIsProcessing(false);
+      return;
+    }
+
+    TokenManager.getInstance().getToken()
+    .then(jwt => {
+        fetch(`${BASE_CONFIG.API_URL}/subscriptions`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+          body: JSON.stringify({
+            subscriber: props.applicationState.user._links.self.href,
+            service: currentObject._links.self.href,
+            captured: 1,
+            paymentSystemToken: 'free-service',
+            subscribedOn: moment(moment().toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS")
+          })
+        })
+        .then(e => {
+          window.location = "/dashboard/my-services";
+        })
+      });
+  };
+
   return (
     <Aux>
       {currentObject && author.name ? (
@@ -240,13 +276,16 @@ const ServiceDetail = (props) => {
                         <h4 className="mb-2 mt-5 p-1">{currentObject.serviceName}</h4>
                         <Row>
                           <Col style={{textAlign: 'center'}}>
-                            <span>
+                            {!currentObject.free && <span>
                               <span style={{fontSize: '15px'}}> {" "}
                               <i
                                 className="feather icon-dollar-sign"
                                 style={{ paddingRight: "5px" }}
                               />{" "}Prezzo<br /><strong><PriceLabel amount={currentObject.price/100}></PriceLabel></strong></span>
-                            </span>
+                            </span>}
+                            {currentObject.free && <span>
+                              <span style={{fontSize: '15px'}} className={"text-success"}>Gratis</span>
+                            </span>}
                           </Col>
                           <Col style={{textAlign: 'center'}}>
                             <span>
@@ -277,8 +316,16 @@ const ServiceDetail = (props) => {
                         </Row>
                       </Col>
                       <Col md={2}>
-                        {purchasable && <div style={{ display: "flex", justifyContent: "center" }} >
+                        {!currentObject.free && purchasable && <div style={{ display: "flex", justifyContent: "center" }} >
                           <Button onClick={() => handlePurchase(currentObject._links.self.href)} disabled={isProcessing} >
+                            {isProcessing ? (
+                              <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+                            ) : null }{" "}
+                            Iscriviti
+                          </Button>
+                        </div>}
+                        {currentObject.free && purchasable && <div style={{ display: "flex", justifyContent: "center" }} >
+                          <Button onClick={() => handleFreeServiceSubscription(currentObject._links.self.href)} disabled={isProcessing} >
                             {isProcessing ? (
                               <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
                             ) : null }{" "}

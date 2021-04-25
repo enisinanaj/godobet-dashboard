@@ -48,6 +48,10 @@ class NavContent extends Component {
   render() {    
     const navItems = this.props.navigation
     .map((item) => {
+      if (item.role > this.props.user.roleValue) {
+        return false;
+      }
+
       switch (item.type) {
         case "group":
           return (

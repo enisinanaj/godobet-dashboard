@@ -9,7 +9,7 @@ import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import '../../assets/scss/tip.css';
 import BASE_CONFIG from "../../store/config";
 
-const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
+const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurchasing, user }) => {
   const getLatestImage = (media) => {
     if (!media || media.length === 0) {
       return CoverImage;
@@ -22,7 +22,7 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
     callUrl(BASE_CONFIG.API_URL + '/users/' + user.userCode + '/subscriptions?page=0&size=1000')
       .then(e => e.json())
       .then(subscriptions => {
-        setSubscriptions(subscriptions._embedded.subscriptions)
+        setSubscriptions(subscriptions?._embedded?.subscriptions)
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -65,7 +65,8 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
             <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline-block", fontSize: "1.2em"}}>
               <Link to={`/dashboard/service/${item.id}`}>{item.serviceName}</Link>
               <br />
-              <PriceLabel amount={(item.price/100)}></PriceLabel>
+              {!item.free && <PriceLabel amount={(item.price/100)}></PriceLabel>}
+              {item.free && <h5 className={"text-success"}>Gratis</h5>}
             </Card.Title>
           </div>
 
@@ -77,7 +78,13 @@ const MarketCard = ({ marketData, handlePurchase, inPurchasing, user }) => {
               <Button className="pull-right" variant="success" onClick={() => {window.location = `/dashboard/service/${item.id}`}}>
                 <em class="feather icon-arrow-right mr-2"></em> Vai al dettaglio
               </Button>
-              {canPurchase(item) && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} >
+              {!item.free && canPurchase(item) && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} >
+                {inPurchasing === item.id ? (
+                  <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+                ) : null }
+                <em className={"feather icon-shopping-cart mr-2"}></em> Iscriviti
+              </Button>}
+              {item.free && canPurchase(item) && <Button className="pull-right" onClick={() => handleFreeSubscription(item)} disabled={inPurchasing} >
                 {inPurchasing === item.id ? (
                   <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
                 ) : null }
