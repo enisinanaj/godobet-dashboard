@@ -437,10 +437,10 @@ const Settings = (props) => {
                     </Card.Title>
                     <Card.Body>
                       <Autocomplete
-                      defaultValue={`${address.street}, ${address.city}, ${address.state}`}
-                      options={{
-    componentRestrictions: { country: "it" },
-  }}
+                        defaultValue={`${address.street}, ${address.city}, ${address.state}`}
+                        options={{
+                          componentRestrictions: { country: "it" },
+                        }}
                         style={{
                           width: "100%",
                           border: "none",
@@ -448,7 +448,7 @@ const Settings = (props) => {
                           marginBottom: "10px",
                           padding: "5px 0 5px 0",
                         }}
-                        apiKey="AIzaSyC9ffMYd1jG1FdT10ptKpFGN3g0gMMchDk"
+                        apiKey="AIzaSyBJL42CSkxxiKhtilLf-XeYQYrXkRbkOGg"
                         onPlaceSelected={(place) => {
                           console.log(place);
                           setAddressChanged(true);

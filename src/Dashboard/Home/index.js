@@ -45,9 +45,14 @@ class Default extends React.Component {
         this.state.user._links?.self?.href
       }`
     ).then((stats) => {
-      console.warn(stats?._embedded?.pools);
       return stats?._embedded?.pools;
     });
+
+  getMyServices = () => {
+    return this.load(
+      `${config.API_URL}/users/${this.state.user.userCode}/services?page=0&size=1000`
+    ).then((svs) => svs?._embedded?.services.map(s => s.id));
+  }
 
   getUserSubscriptions = () =>
     this.load(
@@ -85,19 +90,23 @@ class Default extends React.Component {
     if (this.state.user._embedded && this.state.user._embedded.playedPools) {
       activeTipsCount = this.state.user._embedded.playedPools;
     }
+
     Promise.all([
       this.getMyPools(),
       this.getUserSubscriptions(),
       this.getStatsForMonth(),
       this.getTipsterOpenPools(),
       this.getTipsterTotalSubscribers(),
+      this.getMyServices(),
     ])
       .then((p) => {
+        console.warn(p[5])
+        console.warn(p[1])
         this.setState({
           totalProfit: this.state.user.totalProfit,
           pendingTipsCount: p[0].filter((p) => !p.outcome).length,
           subscribedPools: [...activeTipsCount, ...p[0]],
-          activeTipsCount: p[1]?.filter((s) => !s.expired && s.captured === 1)?.length,
+          activeTipsCount: p[1]?.filter((s) => !s.expired && s.captured === 1 && (!p[5] || p[5].indexOf(s.serviceId)) < 0)?.length,
           monthProfit: p[2]?.reduce((a, b) => a + b.profit, 0),
           openPools: p[3].filter((p) => !p.outcome).length,
           totalSubscribers: p[4],
