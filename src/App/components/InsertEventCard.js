@@ -133,7 +133,7 @@ const InsertEventCard = (props) => {
               <Form.Control
                 type="text"
                 name="proposta"
-                placeholder="Vincita"
+                placeholder="Goal"
                 disabled={props.saving}
                 value={proposal}
                 onChange={({ target }) => {

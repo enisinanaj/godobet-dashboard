@@ -4,10 +4,10 @@ import { connect } from "react-redux";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
-import Esaurito from '../../App/components/Esaurito'
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import PriceLabel from "../../App/components/PriceLabel";
 import LocaleNumber from "../../App/components/LocaleNumber";
+import '../Marketplace/Marketplace.css'
 
 const ServiceCard = (props) => {
   const getLatestImage = (media) => {
@@ -22,27 +22,19 @@ const ServiceCard = (props) => {
     return (
       <Col md={4} key={index}>
         <Card>
-          <div className="">
+          <div className={"service-header-bar"}>
             <Card.Img
               variant="top"
               src={getLatestImage(item.media)}
               alt="CardImageCap"
-              style={{
-                width: '80px',
-                height: '80px',
-                objectFit: 'cover',
-                margin: '20px',
-                marginBottom: '0',
-                display: 'inline',
-              }}
+              className={"service-image"}
             />
 
-            <Card.Title
-              as="h4"
-              className={'mb-1 mt-4 mr-3 ml-3'}
-              style={{ display: 'inline-block', fontSize: '1.2em' }}
-            >
+            <Card.Title as="h4" className={"p-2 mb-0 mt-3 service-title"}>
               <Link to={`/dashboard/service/${item.id}`}>{item.serviceName}</Link>
+              <br />
+              {!item.free && <PriceLabel amount={(item.price/100)}></PriceLabel>}
+              {item.free && <h5 className={"text-success"}>Gratis</h5>}
             </Card.Title>
 
             <Card.ImgOverlay
@@ -73,17 +65,8 @@ const ServiceCard = (props) => {
             </Card.ImgOverlay>
           </div>
 
-          <Card.Body>
-            <Link to={`/dashboard/service/${item.id}`}>
-              {!item.free && <Card.Title as="h5"> <PriceLabel amount={item.price/100}></PriceLabel> </Card.Title>}
-              {item.free && <Card.Title as="h5" className={"text-success"}>Gratis</Card.Title>}
-            </Link>
-            <Card.Text>
-              {false && item.maxSubscribers - item.subscribersCount === 0 ? (
-                <Esaurito />
-              ) : null}
-            </Card.Text>
-            <Card.Text style={{ overflowY: 'auto', maxHeight: '90px', minHeight: '90px'}}>
+          <Card.Body className={"service-card-body"} style={{minHeight: 160}} >
+            <Card.Text className={"item-excerpt"}>
               {item.excerpt}
             </Card.Text>
           </Card.Body>

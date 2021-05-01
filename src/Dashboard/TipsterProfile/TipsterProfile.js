@@ -16,6 +16,9 @@ import monthlyProfilt1 from "./monthlyProfit";
 import averageStake from "./averageStake";
 import averageOdds from "./averageOdds";
 import Loader from "../../App/layout/Loader";
+import md5 from "md5";
+import PriceLabel from "../../App/components/PriceLabel";
+import LocaleNumber from "../../App/components/LocaleNumber";
 
 function TipsterProfile(props) {
   const [favoriteBook, setFavoriteBook] = useState(null);
@@ -65,6 +68,14 @@ function TipsterProfile(props) {
     findBookmaker();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
+
+  const getAvatar = () => {
+    if (!currentUser._embedded || !currentUser._embedded.media || currentUser._embedded.media.filter(m => m.mediaType === 'avatar').length < 1) {
+      return "http://www.gravatar.com/avatar/" + md5(currentUser.email.toLowerCase().trim()) + "?s=32"
+    }
+
+    return currentUser._embedded.media.filter(m => m.mediaType === 'avatar').sort((a,b) => new Date(b.insertedOn).getTime() - new Date(a.insertedOn).getTime())[0].url;
+  };
 
   const getCreampieData = () => {
     const data = satisfactionChart;
@@ -141,14 +152,6 @@ function TipsterProfile(props) {
       });
   };
 
-  const getLatestImage = (media) => {
-    if (!media._embedded || media.length === 0 || !media._embedded.media) {
-      return CoverImage;
-    }
-
-    return media._embedded.media.sort((a, b) => b.id - a.id)[0].url;
-  };
-
   const findBookmaker = () => {
     if (!currentUser._embedded) {
       return;
@@ -171,11 +174,11 @@ function TipsterProfile(props) {
       {currentUser.name ? (
         <Row md={12}>
           <Col md={4}>
-            <Card style={{ minHeight: "800px" }}>
+            <Card className={"pb-5"}>
               <Row className="pt-5">
                 <Col style={{ textAlign: "center" }}>
                   <img
-                    src={getLatestImage(currentUser)}
+                    src={getAvatar()}
                     height="200px"
                     alt=""
                     width="200px"
@@ -197,7 +200,7 @@ function TipsterProfile(props) {
               <hr />
               <Row style={{ textAlign: "center" }}>
                 <Col>
-                  <h5
+                  <span
                     className={
                       "mb-1" +
                       (currentUser.totalProfit >= 0
@@ -205,59 +208,48 @@ function TipsterProfile(props) {
                         : " text-danger")
                     }
                   >
-                    {currentUser.totalProfit} % Profit{" "}
-                  </h5>
+                    <LocaleNumber amount={currentUser.totalProfit} symbol={"%"} /> Profit
+                  </span>
                 </Col>
                 <Col>
-                  <h5>{winRatio} % Win Ratio </h5>
+                  <span><LocaleNumber amount={winRatio} symbol={"%"} /> ROI </span>
                 </Col>
               </Row>
               <hr />
               <Row style={{ textAlign: "center" }}>
                 <Col>
-                  <h5>
+                  <span>
                     {currentUser._embedded.services
                       ? currentUser._embedded.services.length
                       : 0}{" "}
                     Servizi
-                  </h5>
+                  </span>
                 </Col>
                 <Col>
-                  <h5>
+                  <span>
                     {currentUser._embedded.pools
                       ? currentUser._embedded.pools.length
                       : 0}{" "}
-                    pools
-                  </h5>
+                    Tips
+                  </span>
                 </Col>
-              </Row>
+              </Row>              
               <hr />
               <Row style={{ textAlign: "center" }}>
                 <Col>
-                  <h5>1.8 Avarage Odds</h5>
-                </Col>
-                <Col>
-                  <h5>{avgStake} Average Stake</h5>
-                </Col>
-              </Row>
-              <hr />
-              <Row style={{ textAlign: "center" }}>
-                <Col>
-                  <h5>Bookmaker più utilizzato:</h5>
+                  <span>Bookmaker più utilizzato:</span>
                 </Col>
               </Row>
               <Row style={{ textAlign: "center" }}>
                 <Col>
-                  <h5>{favoriteBook}</h5>
+                  <strong>{favoriteBook}</strong>
                 </Col>
               </Row>
             </Card>
           </Col>
           <Col
             md={8}
-            className="tab-user-card"
-            style={{ maxHeight: "800px", overflowY: "auto" }}
-          >
+            className="tab-user-card">
             <Tabs
               variant="pills"
               defaultActiveKey="services"
@@ -267,6 +259,7 @@ function TipsterProfile(props) {
                 <Row>
                   {userServices.length > 0 ? (
                     <MarketCard
+                      col={6}
                       marketData={userServices}
                       inPurchasing={false}
                       handlePurchase={() => {}}
@@ -275,14 +268,14 @@ function TipsterProfile(props) {
                   ) : (
                     <Col>
                       {" "}
-                      <h4>This user has no services</h4>
+                      <h4>Questo tipster non ha ancora pubblicato servizi</h4>
                     </Col>
                   )}
                 </Row>
               </Tab>
               <Tab eventKey="stats" title="Stats">
                 <Row>
-                  <Col md={6}>
+                  <Col md={12} xl={6}>
                     <Card>
                       <Card.Header>
                         <Card.Title as="h5">Vincita/Perdita</Card.Title>
@@ -292,58 +285,13 @@ function TipsterProfile(props) {
                       </Card.Body>
                     </Card>
                   </Col>
-                  <Col md={6}>
+                  <Col md={12} xl={6}>
                     <Card>
                       <Card.Header>
                         <Card.Title as="h5">Top bookmakers</Card.Title>
                       </Card.Header>
                       <Card.Body>
                         <Chart {...bookmakersPie()} />
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Card>
-                      <Card.Body>
-                        <h2 className="text-center f-w-400 ">$45,567</h2>
-                        <p className="text-center text-muted ">
-                          Monthly Profit
-                        </p>
-                        <Chart {...monthlyProfilt1} />
-                        <div className="m-t-20">
-                          <Row>
-                            <Col className="text-center ">
-                              <h6 className="f-20 f-w-400">$6,234</h6>
-                              <p className="text-muted f-14 m-b-0">Today</p>
-                            </Col>
-                            <Col className="text-center ">
-                              <h6 className="f-20 f-w-400">$4,387</h6>
-                              <p className="text-muted f-14 m-b-0">Yesterday</p>
-                            </Col>
-                          </Row>
-                        </div>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                  <Col>
-                    <Card className="overflow-hidden">
-                      <Card.Body>
-                        <Row className="mt-2">
-                          <Col sm={6}>
-                            <p className="text-muted f-w-600 f-16">
-                              Average odds
-                            </p>
-                            <Chart {...averageOdds} />
-                          </Col>
-                          <Col sm={6}>
-                            <p className="text-muted f-w-600 f-16">
-                              Average stake
-                            </p>
-                            <Chart {...averageStake} />
-                          </Col>
-                        </Row>
                       </Card.Body>
                     </Card>
                   </Col>

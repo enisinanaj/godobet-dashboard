@@ -258,7 +258,7 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
         <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>
           <Modal.Header closeButton>
               <Modal.Title as="h4">
-                  <strong>{pool.description}</strong> {pool.outcome && <span className={getClassNameForOutcome(pool.outcome)} style={{fontSize: '13px'}} >
+                  <strong>{pool.description}</strong> {pool.outcome && <span className={getClassNameForOutcome(pool.outcome)} style={{fontSize: '13px', top: "-5px", position: "relative"}} >
                       {pool.outcome}{' '}
                       <LocaleNumber amount={pool.profit} symbol={"%"} />
                   </span>}
@@ -340,7 +340,9 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
               {pool.motivation}
           </Modal.Body>}
           <Modal.Footer className={"pt-2"}>
-              {DropdownHiddenState || <Button variant="primary" onClick={() => Swal.fire({
+              {DropdownHiddenState || <Button variant="primary" onClick={() => {
+                setShowMotivation(false);
+                Swal.fire({
                   title: "Sei sicuro di voler seguire questa tip? Azione irreversibile!",
                   type: "warning",
                   showCancelButton: true,
@@ -352,8 +354,9 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
                     followTip(1);
                   }
                 })
-              }>Segui</Button>}
+              }}>Segui</Button>}
               {DropdownHiddenState || <Button variant="primary" onClick={() => {
+                setShowMotivation(false);
                 Swal.fire({
                   title: "Sei sicuro di non volerla seguire? Azione irreversibile!",
                   type: "warning",

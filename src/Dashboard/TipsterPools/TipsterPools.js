@@ -40,7 +40,7 @@ const TipsterPools = (props) =>  {
     <Aux>
       <Row>
         <Col sm={12} className="tab-user-card">
-          {pools.length <= 0 && <CustomAlert message={"Non hai ancora pubblicato nessuna tip!"} />}
+          {pools.length <= 0 && <CustomAlert message={"Nessuna tips in corso da refertare al momento"} />}
           {pools.length > 0 && <Tabs
             variant="pills"
             defaultActiveKey="pending"

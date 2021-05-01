@@ -8,3 +8,40 @@
 .modal-content {
   padding: 20px;
 }
+
+.item-excerpt { 
+  overflow-y: auto;
+  max-height: 160px;
+  word-break: break-all;
+}
+
+.service-header-bar {
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.service-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin: 10px 20px 0;
+  margin-bottom: 0;
+  display: inline;
+  align-self: flex-start;
+}
+
+.service-title {
+  display: inline-block;
+  font-size: 1.1em;
+  word-break: break-word
+}
+
+.service-card-body {
+  min-height: 210px;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column
+}

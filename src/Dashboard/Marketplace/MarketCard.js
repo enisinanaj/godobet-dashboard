@@ -7,9 +7,10 @@ import LocaleNumber from '../../App/components/LocaleNumber';
 import PriceLabel from "../../App/components/PriceLabel";
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import '../../assets/scss/tip.css';
+import './Marketplace.css'
 import BASE_CONFIG from "../../store/config";
 
-const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurchasing, user }) => {
+const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurchasing, user, col }) => {
   const getLatestImage = (media) => {
     if (!media || media.length === 0) {
       return CoverImage;
@@ -40,29 +41,22 @@ const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurc
 
   const canPurchase = (item) => {
     const subscription = subscriptions.find(sub => sub.serviceId === Number(item.id) && sub.valid);
-    return !subscription && item.author.userCode !== user.userCode && (item.maxSubscribers - item.subscribersCount) > 0
+    return !subscription && item.author && item.author.userCode !== user.userCode && (item.maxSubscribers - item.subscribersCount) > 0
   }
 
   return marketData.map((item, index) => {
     return (
-      <Col md={4} key={index}>
+      <Col md={col ? col : 4} key={index}>
         <Card>
-          <div className="">
+          <div className={"service-header-bar"}>
             <Card.Img
               variant="top"
               src={getLatestImage(item.media)}
               alt="CardImageCap"
-              style={{
-                width: "80px",
-                height: "80px",
-                objectFit: "cover",
-                margin: "20px",
-                marginBottom: 0,
-                display: "inline",
-              }}
+              className={"service-image"}
             />
             
-            <Card.Title as="h4" className={"mb-1 mt-4 mr-3 ml-3"} style={{display: "inline-block", fontSize: "1.2em"}}>
+            <Card.Title as="h4" className={"p-2 mb-0 mt-3 service-title"}>
               <Link to={`/dashboard/service/${item.id}`}>{item.serviceName}</Link>
               <br />
               {!item.free && <PriceLabel amount={(item.price/100)}></PriceLabel>}
@@ -70,8 +64,8 @@ const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurc
             </Card.Title>
           </div>
 
-          <Card.Body style={{minHeight: "210px", justifyContent: "space-between", display: "flex", flexDirection: "column"}}>
-            <Card.Text style={{ overflowY: "auto", maxHeight: "160px" }}>
+          <Card.Body className={"service-card-body"}>
+            <Card.Text className={"item-excerpt"}>
               {item.excerpt}
             </Card.Text>
             <Row style={{ justifyContent: "space-around" }}>

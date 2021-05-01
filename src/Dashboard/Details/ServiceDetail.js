@@ -355,8 +355,10 @@ const ServiceDetail = (props) => {
                 <Card.Body>
                   <Row style={{textAlign: 'center'}}>
                     <Col>
-                      <img style={{objectFit: "cover", borderRadius: "75px", border: "solid #e0e0e0AA 6px"}} height="150px" width='150px' src={getAvatar()} alt={"User avatar"} />
-                      <h5 className='pt-4'>{author.name} {author.lastName}</h5>
+                      <a href={`/tipsters/${author.userCode}`}>
+                        <img style={{objectFit: "cover", borderRadius: "75px", border: "solid #e0e0e0AA 6px"}} height="150px" width='150px' src={getAvatar()} alt={"User avatar"} />
+                        <h5 className='pt-4'>{author.name} {author.lastName}</h5>
+                      </a>
                     </Col>
                   </Row>
                 </Card.Body>
@@ -368,7 +370,7 @@ const ServiceDetail = (props) => {
                     <p className="text-muted m-b-5">Profitto</p> <strong style={{float: 'right'}} className={"mb-1" + ((author.totalProfit >= 0) ? " text-success" : " text-danger")}><LocaleNumber amount={author.totalProfit} symbol={"%"} /></strong>
                   </Row>
                   <Row style={{justifyContent: "space-between"}}>
-                    <p className="text-muted m-b-5">Percentuale vincite</p> <strong style={{float: 'right'}}><LocaleNumber amount={winRatio} symbol={"%"} /></strong>
+                    <p className="text-muted m-b-5">ROI</p> <strong style={{float: 'right'}}><LocaleNumber amount={winRatio} symbol={"%"} /></strong>
                   </Row>
                 </Card.Footer>
               </Card>
@@ -393,7 +395,7 @@ const ServiceDetail = (props) => {
               </Card>
             </Col>
           </Row>
-          <h4>Ultime Tips</h4>
+          {pools && <h4>Ultime Tips</h4>}
           <Row>
             {pools.map(pool => (
               <Tip key={pool.id} pool={pool} author={author.userCode === props.applicationState.user.userCode} />
