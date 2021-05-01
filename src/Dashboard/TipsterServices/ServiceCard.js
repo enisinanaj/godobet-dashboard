@@ -31,10 +31,12 @@ const ServiceCard = (props) => {
             />
 
             <Card.Title as="h4" className={"p-2 mb-0 mt-3 service-title"}>
-              <Link to={`/dashboard/service/${item.id}`}>{item.serviceName}</Link>
-              <br />
-              {!item.free && <PriceLabel amount={(item.price/100)}></PriceLabel>}
-              {item.free && <h5 className={"text-success"}>Gratis</h5>}
+              <Link to={`/dashboard/service/${item.id}`}>
+                {item.serviceName}
+                <br />
+                {!item.free && <PriceLabel amount={(item.price/100)}></PriceLabel>}
+                {item.free && <h5 className={"text-success"}>Gratis</h5>}
+              </Link>
             </Card.Title>
 
             <Card.ImgOverlay

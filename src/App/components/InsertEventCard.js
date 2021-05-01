@@ -16,6 +16,7 @@ const InsertEventCard = (props) => {
   const [proposal, setProposal] = useState("");
   const [quote, setQuote] = useState("");
   const [sport, setSport] = useState("");
+  const [liveEvent, setLiveEvent] = useState(false);
 
   useEffect(() => {
     props.onValueChange({
@@ -26,15 +27,25 @@ const InsertEventCard = (props) => {
       proposal,
       quote,
       sport,
+      liveEvent,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventDate, competition, event, proposal, quote, props]);
+  }, [eventDate, competition, event, proposal, quote, props, liveEvent]);
 
   return (
     <Card className={"p-15"}>
       <Card.Body>
         <Card.Title>
           Inserisci i dati dell'evento
+          <Form.Group controlId="notes" className={"ml-3"} style={{ display: "inline-block" }}>
+            <div className="switch switch-danger d-inline m-r-10">
+                <Form.Control type="checkbox" id={"checked-danger" + props.index} defaultChecked={liveEvent} onChange={e => setLiveEvent(e.target.checked)} />
+                <Form.Label htmlFor={"checked-danger" + props.index} className="cr" />
+            </div>
+            <Form.Label>
+              Evento live
+            </Form.Label>
+          </Form.Group>
           <Dropdown className="drp-tipster-pool">
             <Dropdown.Toggle
               style={{ display: "inline", float: "right" }}
@@ -55,7 +66,7 @@ const InsertEventCard = (props) => {
           <Col md={12} sm={12} lg={4} xl={4}>
             <Form.Group controlId="infirizzo">
               <Form.Label>
-                Data evento <span className={"text-danger"}>*</span>
+                Data evento {liveEvent || <span className={"text-danger"}>*</span>}
               </Form.Label>
               <div className={"row"}>
                 <DatePicker
@@ -64,7 +75,7 @@ const InsertEventCard = (props) => {
                     showTimeInput
                     minDate={new Date()}
                     placeholderText="Seleziona una data"
-                    disabled={props.saving}
+                    disabled={props.saving || liveEvent}
                     className={"form-control"}
                     wrapperClassName={"col-md-12 col-lg-12 col-sm-12"}
                     locale={"it"}

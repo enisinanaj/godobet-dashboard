@@ -107,7 +107,8 @@ const getTipText = (pool) => {
             <Row style={{ justifyContent: "space-between", flex: 1, flexDirection: "row", }}>
               <Col lg={12} sm={12} xs={12} xl={12} style={{ display: "inline-block" }}>
                 <em className="feather icon-clock"></em>{" "}
-                {moment(event.eventDate).format("DD MMM yyyy HH:mm")}
+                {!event.live && moment(event.eventDate).format("DD MMM yyyy HH:mm")}
+                {event.live && <span className={"badge badge-light-info pulse pulsate"}>LIVE</span>}
               </Col>
             </Row>
           </div>
@@ -327,7 +328,9 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
                               </Row>
                               <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
                                   <Col  lg={12} sm={12} xs={12} xl={12} style={{display: 'inline'}}>
-                                      <em className="feather icon-clock"></em> {moment(event.eventDate).format("DD MMM yyyy HH:mm")}
+                                      <em className="feather icon-clock"></em> {" "}
+                                      {!event.live && moment(event.eventDate).format("DD MMM yyyy HH:mm")}
+                                      {event.live && <span className={"badge badge-light-info pulse pulsate"}>LIVE</span>}
                                   </Col>
                               </Row>
                           </div>

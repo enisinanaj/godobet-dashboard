@@ -395,10 +395,10 @@ const ServiceDetail = (props) => {
               </Card>
             </Col>
           </Row>
-          {pools && <h4>Ultime Tips</h4>}
+          {pools && pools.length > 0 && <h4>Ultime Tips</h4>}
           <Row>
             {pools.map(pool => (
-              <Tip key={pool.id} pool={pool} author={author.userCode === props.applicationState.user.userCode} />
+              <Tip key={pool.id} pool={pool} author={author.userCode === props.applicationState.user.userCode} user={author} />
             ))}
           </Row>
         </div>

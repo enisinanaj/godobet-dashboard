@@ -71,7 +71,7 @@ const CreateTip = (props) => {
 
     let errors = events.filter((event) => {
       if (
-        event.eventDate === "" ||
+        (event.eventDate === "" && !event.liveEvent) ||
         event.competition === "" ||
         event.event === "" ||
         event.proposal === "" ||
@@ -151,6 +151,7 @@ const CreateTip = (props) => {
             proposal: event.proposal,
             sport: event.sport.value,
             event: event.event,
+            live: event.liveEvent,
             quote: Number(event.quote.replace(/_/g, "")) * 100,
             notes: event.notes,
             pool: poolResult._links.self.href,

@@ -17,20 +17,11 @@ const Tip = props => {
     let {pool} = props;
 
     const [showMotivation, setShowMotivation] = useState(false);
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(props.user);
 
     useEffect(() => {
-        loadUser(pool.author.userCode)
+        //loadUser(pool.author.userCode)
     }, [])
-
-    const updateEvent = async (event, outcome) => {
-        var token = await TokenManager.getInstance().getToken();
-        await fetch(config.API_URL + "/events/" + event.eventCode, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json", "X-Auth": token },
-            body: JSON.stringify({outcome}),
-        })
-    };
 
     const avatar = () => {
         if (
@@ -47,8 +38,7 @@ const Tip = props => {
     };
 
     const loadUser = (userCode) => {
-        load(`${config.API_URL}/users/${userCode}`)
-            .then(setUser)
+        load(`${config.API_URL}/users/${userCode}`).then(setUser)
     }
 
     const load = (url, args = {}) => {
@@ -82,36 +72,14 @@ const Tip = props => {
     }
 
     const updateTip = async (outcome) => {
-        let counter = pool.events.length;
-
-        pool.events.forEach(async (event) => {
-            await updateEvent(event, outcome);
-            counter--;
-        });
-
-        let i = setInterval(() => {
-            if (counter === 0) {
-                props.callback();
-                clearInterval(i);
-            }
-        }, 250)
-    };
-
-    const playTip = (event) => {
-        pool.events.forEach(async (event) => {
-            await markAsPlayed(event);
-        });
-
-        props.callback()
-    };
-
-    const markAsPlayed = async (event) => {
         var token = await TokenManager.getInstance().getToken();
-        await fetch(config.API_URL + "/played/" + props.user.userCode + "/" + event.eventCode, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "X-Auth": token }
-        });
-    }
+        await fetch(config.API_URL + "/ops/pools/status/" + pool.id + "/" + outcome, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Auth": token },
+            body: JSON.stringify({outcome}),
+        })
+        .then(() => props.callback());
+    };
 
     return (
     <Col key={pool.id} md={4} lg={4} xl={4} xs={12} sm={6}>
@@ -125,13 +93,10 @@ const Tip = props => {
                         <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
                         {props.author && <Dropdown.Menu alignRight className="profile-notification">
                             <Dropdown.Item onClick={() => {askForUpdate("win")}}>Win</Dropdown.Item>
-                            <Dropdown.Item onClick={() => {askForUpdate("1/2 win")}}>1/2 Win</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {askForUpdate("12win")}}>1/2 Win</Dropdown.Item>
                             <Dropdown.Item onClick={() => {askForUpdate("lose")}}>Lose</Dropdown.Item>
-                            <Dropdown.Item onClick={() => {askForUpdate("1/2 lose")}}>1/2 Lose</Dropdown.Item>
+                            <Dropdown.Item onClick={() => {askForUpdate("12lose")}}>1/2 Lose</Dropdown.Item>
                             <Dropdown.Item onClick={() => {askForUpdate("void")}}>Void</Dropdown.Item>
-                        </Dropdown.Menu>}
-                        {!props.author && <Dropdown.Menu alignRight className="profile-notification">
-                            <Dropdown.Item onClick={() => {playTip(pool)}}>Tip seguita</Dropdown.Item>
                         </Dropdown.Menu>}
                     </Dropdown>}
                     <span onClick={() => setShowMotivation(true)} className={"badge badge-light-info float-right mr-2"} style={{ cursor: 'pointer' }} >
@@ -156,7 +121,9 @@ const Tip = props => {
                             </Row>
                             <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
                                 <Col  lg={12} sm={12} xs={12} xl={12} style={{display: 'inline'}}>
-                                    <em className="feather icon-clock"></em> {moment(event.eventDate).format("DD MMM yyyy HH:mm")}
+                                    <em className="feather icon-clock"></em> {" "}
+                                    {!event.live && moment(event.eventDate).format("DD MMM yyyy HH:mm")}
+                                    {event.live && <span className={"badge badge-light-info pulse pulsate"}>LIVE</span>}
                                 </Col>
                             </Row>
                         </div>
@@ -257,7 +224,9 @@ const Tip = props => {
                                         </Row>
                                         <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
                                             <Col  lg={12} sm={12} xs={12} xl={12} style={{display: 'inline'}}>
-                                                <em className="feather icon-clock"></em> {moment(event.eventDate).format("DD MMM yyyy HH:mm")}
+                                                <em className="feather icon-clock"></em> {" "}
+                                                {!event.live && moment(event.eventDate).format("DD MMM yyyy HH:mm")}
+                                                {event.live && <span className={"badge badge-light-info pulse pulsate"}>LIVE</span>}
                                             </Col>
                                         </Row>
                                     </div>
