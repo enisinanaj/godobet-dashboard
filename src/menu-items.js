@@ -132,6 +132,15 @@ export default {
           rightButton: <CreateTipButton />,
         },
         {
+          id: "create-service",
+          title: "Pubblica un servizio",
+          type: "item",
+          icon: "feather icon-book",
+          url: "/dashboard/tipster/createService",
+          role: 5,
+          hidden: true
+        },
+        {
           id: "new-tips",
           title: "Crea tip",
           type: "item",

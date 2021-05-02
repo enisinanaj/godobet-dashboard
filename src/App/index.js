@@ -23,7 +23,7 @@ import "../App/auth/firebase";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe("pk_test_g2QpCxDpmX4hqHITjM9H8SSW007aHlBbV3");
+const stripePromise = loadStripe("pk_live_00k3jSbq2rs4KbY3FeKH72gv00hEDAP1JJ");
 
 const AdminLayout = Loadable({
   loader: () => import("./layout/AdminLayout"),
