@@ -17,7 +17,6 @@ import Sports from "../../App/components/Sports";
 import * as actions from "../../store/actions";
 import config from "../../store/config";
 import Swal from "sweetalert2";
-import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import '../TipsterPools/tipsterCard.css'
 
 const getDropdown = (clickHandler) => {
@@ -275,7 +274,13 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
                           className="img-radius"
                           alt="User Profile"
                       /> }
-                      { !avatar() && <CoverImage />}
+                      { !avatar() 
+                        && <img
+                        src={require('../../assets/images/godobet-placeholder.jpg')}
+                        style={{ objectFit: "cover", height: 40, width: 40, borderRadius: 20 }}
+                        className="img-radius"
+                        alt="User Profile"
+                      />}
                       <span className={"ml-2"}>{ tipAuthor && tipAuthor.name }</span>
                   </div>
                   <div style={{display: "inline"}}>

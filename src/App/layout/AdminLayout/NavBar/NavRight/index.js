@@ -9,7 +9,6 @@ import * as actions from "../../../../../store/actions";
 import { withRouter } from "react-router-dom";
 import "./nav.css";
 import ConfirmBox from "../../../../../Dashboard/ConfirmBox/ConfirmBox";
-import CoverImage from '../../../../../assets/images/godobet-placeholder.jpg'
 import TokenManager from "../../../../auth/TokenManager";
 
 class NavRight extends Component {
@@ -100,7 +99,8 @@ class NavRight extends Component {
                     className="img-radius"
                     alt="User Profile"
                   /> }
-                  { !this.avatar(this.props.user) && <CoverImage />}
+                  { !this.avatar(this.props.user) 
+                    && <img src={require('../../../../../assets/images/godobet-placeholder.jpg')} className={"img-radius"} style={{ objectFit: 'cover', height: 40}} />}
                   <span>
                     {this.props.user?.name
                       ? this.props.user?.name

@@ -7,7 +7,6 @@ import config from "../../store/config";
 import Sports from '../../App/components/Sports'
 import { getClassNameForOutcome } from '../PendingTips/TipCard'
 import LocaleNumber from "../../App/components/LocaleNumber";
-import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import './tipsterCard.css'
 import Swal from "sweetalert2";
 
@@ -171,7 +170,12 @@ const Tip = props => {
                                     className="img-radius"
                                     alt="User Profile"
                                 /> }
-                                { !avatar() && <CoverImage />}
+                                { !avatar() && <img
+                                    src={require('../../assets/images/godobet-placeholder.jpg')}
+                                    style={{ objectFit: "cover", height: 40, width: 40, borderRadius: 20 }}
+                                    className="img-radius"
+                                    alt="User Profile"
+                                /> }
                                 <span className={"ml-2"}>{ user && user.name }</span>
                             </div>
                             <div style={{display: "inline"}}>
