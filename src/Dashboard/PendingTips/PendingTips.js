@@ -113,7 +113,7 @@ class PendingTips extends Component {
       })
       .then((poolsSets) =>
         poolsSets[0].filter(
-          (pool) => !poolsSets[1].find((pp) => pp.references.pool === pool.id)
+          (pool) => !poolsSets[1].find((pp) => pp.references.pool === pool.id || pool.outcome)
         )
       )
       //.then((filteredPools) => filteredPools.filter((p) => !p.outcome))
@@ -138,7 +138,7 @@ class PendingTips extends Component {
           )
         )
       })
-      .then((filteredPools) => filteredPools.filter((p) => !p.outcome).sort((a, b) => new Date(b.createdOn) - new Date(a.id)))
+      .then((filteredPools) => filteredPools.filter((p) => !p.outcome).sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn)))
       .then((followedPools) => this.setState({ followedPools }));
   }
 

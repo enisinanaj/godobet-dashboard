@@ -1,3 +1,12 @@
+09/05/2021
+
+- [x] Tendina segui/ignora nella pagina del servizio
+- [x] Tips refertate vanno in concluse e ignorate in automatico dall’utente se non aveva fatto segui.
+- [x] Titolo tip invece di descrizione tip nella form di creazione delle Tip E poi un placeholder “Raddoppio del giorno”
+- [x] Rendere l’immagine del profilo come campo non obbligatorio (al momento se non ne hai impostata una non ti fa iscrivere ai servizi)
+- [x] Aggiungere: Vai al dettaglio nei servizi in "Iscrizioni"
+
+
 19/04/2021
 
 - [x] Non deve uscire fuori iscriviti se sono già il tipster di quel servizio

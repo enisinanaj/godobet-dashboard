@@ -40,6 +40,32 @@ const Tip = props => {
         load(`${config.API_URL}/users/${userCode}`).then(setUser)
     }
 
+    const followTip = (direction) => {
+        let followLink;
+        if (direction === 1) {
+          followLink = config.API_URL + `/played-pools/${user.userCode}/${pool.id}`;
+        } else if (direction === -1) {
+          followLink =
+            config.API_URL + `/unplayed-pools/${user.userCode}/${pool.id}`;
+        }
+    
+        postFollow(followLink);
+    };
+
+    const postFollow = (url) => {
+        return TokenManager.getInstance()
+            .getToken()
+            .then((jwt) => {
+                return fetch(url, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Auth": jwt,
+                    },
+                    method: "POST",
+                });
+            });
+    };
+
     const load = (url, args = {}) => {
         return TokenManager.getInstance()
           .getToken()
@@ -88,15 +114,54 @@ const Tip = props => {
                 {/* className={'text-white'} */}
                 <Card.Title as="h5">
                     {pool.description}
-                    {!pool.outcome && <Dropdown className="drp-tipster-pool">
+                    {!pool.outcome && props.author && <Dropdown className="drp-tipster-pool">
                         <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
-                        {props.author && <Dropdown.Menu alignRight className="profile-notification">
+                        <Dropdown.Menu alignRight className="profile-notification">
                             <Dropdown.Item onClick={() => {askForUpdate("win")}}>Win</Dropdown.Item>
                             <Dropdown.Item onClick={() => {askForUpdate("12win")}}>1/2 Win</Dropdown.Item>
                             <Dropdown.Item onClick={() => {askForUpdate("lose")}}>Lose</Dropdown.Item>
                             <Dropdown.Item onClick={() => {askForUpdate("12lose")}}>1/2 Lose</Dropdown.Item>
                             <Dropdown.Item onClick={() => {askForUpdate("void")}}>Void</Dropdown.Item>
-                        </Dropdown.Menu>}
+                        </Dropdown.Menu>
+                    </Dropdown>}
+                    {!props.author && !props.played && <Dropdown className="drp-tipster-pool">
+                        <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
+                        <Dropdown.Menu alignRight className="profile-notification">
+                                <Dropdown.Item onClick={() => {
+                                    Swal.fire({
+                                        title: "Sei sicuro di voler seguire questa tip? Azione irreversibile!",
+                                        type: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonColor: "#56BE7F",
+                                        cancelButtonColor: "#000",
+                                        confirmButtonText: "si",
+                                    }).then((result) => {
+                                        if (result.value) {
+                                        followTip(1);
+                                        }
+                                    });
+                                }}>
+                                    Segui
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    onClick={() => {
+                                        Swal.fire({
+                                            title: "Sei sicuro di non volerla seguire? Azione irreversibile!",
+                                            type: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonColor: "#56BE7F",
+                                            cancelButtonColor: "#000",
+                                            confirmButtonText: "si",
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                followTip(-1);
+                                            }
+                                        });
+                                    }}
+                                >
+                                    Ignora
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
                     </Dropdown>}
                     <span onClick={() => setShowMotivation(true)} className={"badge badge-light-info float-right mr-2"} style={{ cursor: 'pointer' }} >
                         DETTAGLI    
@@ -180,7 +245,7 @@ const Tip = props => {
                             </div>
                             <div style={{display: "inline"}}>
                                 <span className={"sectionTitle"}>Pubblicata il</span>
-                                {moment(pool.createdAt).format("DD MMM YYYY HH:mm")}
+                                {moment(pool.createdOn).format("DD MMM YYYY HH:mm")}
                             </div>
                             <div style={{display: "inline"}}>
                                 <span className={"sectionTitle"}>Servizio</span>

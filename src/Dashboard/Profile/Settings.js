@@ -295,23 +295,24 @@ const Settings = (props) => {
     let city;
     if(address_components) {
       address_components.forEach((component) => {
-      if (component.types.includes("street_number")) {
-        num = component.long_name;
-      } else if (component.types.includes("route")) {
-        console.log(component.long_name);
-        street = component.long_name + " " + (num ? num : "");
-      } else if (component.types.includes("postal_code")) {
-        zipCode = component.long_name
-      } else if (component.types.includes("administrative_area_level_2")) {
-        state = component.long_name;
-      } else if (
-        component.types.includes("administrative_area_level_3") ||
-        component.types.includes("locality")
-      ) {
-        city = component.long_name;
-      }
-    });
+        if (component.types.includes("street_number")) {
+          num = component.long_name;
+        } else if (component.types.includes("route")) {
+          console.log(component.long_name);
+          street = component.long_name + " " + (num ? num : "");
+        } else if (component.types.includes("postal_code")) {
+          zipCode = component.long_name
+        } else if (component.types.includes("administrative_area_level_2")) {
+          state = component.long_name;
+        } else if (
+          component.types.includes("administrative_area_level_3") ||
+          component.types.includes("locality")
+        ) {
+          city = component.long_name;
+        }
+      });
     }
+    
     setAddress({
       ...address,
       street: street,

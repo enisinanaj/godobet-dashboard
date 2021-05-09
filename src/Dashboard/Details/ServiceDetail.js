@@ -80,6 +80,7 @@ const ServiceDetail = (props) => {
   const [purchasable, setPurchasable] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentObject, setCurrentObject] = useState();
+  const [playedPoolIds, setPlayedPoolIds] = useState([]);
   const [author, setAuthor] = useState({
     name: '',
     lastName: '',
@@ -149,6 +150,9 @@ const ServiceDetail = (props) => {
         let percentage = ((winRatioVar?.length / author._embedded.playedPools?.length) * 100)
         setWinRatio(percentage)
       })
+      .then(() => {
+        getPlayReference();
+      })
 
     if (props.applicationState.user.roleValue >= 4) {
       callUrl(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/subscriptions')
@@ -169,6 +173,8 @@ const ServiceDetail = (props) => {
           }
         });
     }
+
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentObject])
 
@@ -217,17 +223,6 @@ const ServiceDetail = (props) => {
   const handleFreeServiceSubscription = () => {
     setIsProcessing(true);
 
-    if (!isProfileComplete(props.applicationState.user)) {
-      Swal.fire({
-        type: "error",
-        title: "Oops...",
-        text: "È necessario completare il profilo prima di acquistare!",
-      });
-
-      setIsProcessing(false);
-      return;
-    }
-
     TokenManager.getInstance().getToken()
     .then(jwt => {
         fetch(`${BASE_CONFIG.API_URL}/subscriptions`, {
@@ -248,6 +243,41 @@ const ServiceDetail = (props) => {
           window.location = "/dashboard/my-services";
         })
       });
+  };
+
+  const loadAllPools = (url, args = {}) => {
+    return TokenManager.getInstance()
+      .getToken()
+      .then((jwt) => {
+        return fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+          ...args,
+        })
+          .then((e) => e.json())
+          .then((json) =>
+            json._embedded && json._embedded.pools
+              ? json._embedded.pools
+              : json._embedded && json._embedded.playedPools
+              ? json._embedded.playedPools
+              : []
+          );
+      });
+  };
+
+  const getPlayReference = () => {
+    return loadAllPools(
+      `${props.applicationState.user._links.self.href}/playedPoolsRel?page=0&size=1000`
+    )
+    .then((playedPools) => {
+      return playedPools.map(pp => pp.references.pool);
+    })
+    .then((playedPoolIds) =>
+      setPlayedPoolIds(playedPoolIds)
+    )
+    .catch(console.error);
   };
 
   return (
@@ -398,7 +428,7 @@ const ServiceDetail = (props) => {
           {pools && pools.length > 0 && <h4>Ultime Tips</h4>}
           <Row>
             {pools.map(pool => (
-              <Tip key={pool.id} pool={pool} author={author.userCode === props.applicationState.user.userCode} user={author} />
+              <Tip key={pool.id} pool={pool} author={author.userCode === props.applicationState.user.userCode} played={playedPoolIds.indexOf(pool.id) >= 0} user={author} />
             ))}
           </Row>
         </div>

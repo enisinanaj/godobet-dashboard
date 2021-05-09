@@ -244,16 +244,16 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
             <LocaleNumber amount={pool.totalQuote} symbol={""} />
           </div>
         </div>
-        {pool.outcome && (
-          <div style={{ display: "flex", marginTop: "15px", flexDirection: "row", justifyContent: "space-between"}}>
+        <div style={{ display: "flex", marginTop: "15px", flexDirection: "row", justifyContent: "space-between"}}>
+          {pool.outcome && (
             <span className={getClassNameForOutcome(pool.outcome)}>
               {pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} />
             </span>
-            <a href={"/dashboard/service/" + pool.serviceId} target="_blank" style={{textDecoration: 'underline'}} rel="noopener noreferrer">
-              {pool.service.serviceName} <em className={"feather icon-external-link"}></em>
-            </a>
-          </div>
-        )}
+          )}
+          <a href={"/dashboard/service/" + pool.serviceId} target="_blank" style={{textDecoration: 'underline'}} rel="noopener noreferrer">
+            {pool.service.serviceName} <em className={"feather icon-external-link"}></em>
+          </a>
+        </div>
       </Card.Footer>
         <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>
           <Modal.Header closeButton>
@@ -285,7 +285,7 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
                   </div>
                   <div style={{display: "inline"}}>
                       <span className={"sectionTitle"}>Pubblicata il</span>
-                      {moment(pool.createdAt).format("DD MMM YYYY HH:mm")}
+                      {moment(pool.createdOn).format("DD MMM YYYY HH:mm")}
                   </div>
                   <div style={{display: "inline"}}>
                       <span className={"sectionTitle"}>Servizio</span>

@@ -156,7 +156,7 @@ const CreateTip = (props) => {
             notes: event.notes,
             pool: poolResult._links.self.href,
             competition: event.competition,
-            gender: "http://localhost:5005/items/3",
+            //gender: "http://localhost:5005/items/3",
           }),
         }).then((res) => {
           window.onbeforeunload = null;
@@ -204,14 +204,14 @@ const CreateTip = (props) => {
                   <Col md={12} sm={12} lg={3} xl={3}>
                     <Form.Group controlId="descrizione">
                       <Form.Label>
-                        Descrizione Tip <span className={"text-danger"}>*</span>
+                        Titolo Tip <span className={"text-danger"}>*</span>
                       </Form.Label>
                       <Form.Control
                         type="text"
                         name="street"
                         disabled={saving}
                         value={description}
-                        placeholder="Descrizione"
+                        placeholder="Raddoppio del giorno"
                         onChange={({ target }) => {
                           setDescription(target.value);
                         }}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
@@ -71,6 +71,11 @@ const ServiceCard = (props) => {
             <Card.Text className={"item-excerpt"}>
               {item.excerpt}
             </Card.Text>
+            <Row style={{ justifyContent: "space-around" }}>
+              <Button className="pull-right" variant="success" onClick={() => {window.location = `/dashboard/service/${item.id}`}}>
+                <em class="feather icon-arrow-right mr-2"></em> Vai al dettaglio
+              </Button>
+            </Row>
           </Card.Body>
 
           <Card.Footer>
