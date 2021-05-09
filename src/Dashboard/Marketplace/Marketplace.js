@@ -89,7 +89,7 @@ const Marketplace = (props) => {
       Swal.fire({
         type: "error",
         title: "Oops...",
-        text: "È necessario completare il profilo prima di acquistare!",
+        text: "È necessario completare il profilo prima di acquistare! Vai in Impostazioni -> Generali” e completa i campi mancanti",
       });
 
       setInPurchasing(false);
@@ -114,17 +114,6 @@ const Marketplace = (props) => {
 
   const handleFreeSubscription = (item) => {
     setInPurchasing(item.id);
-
-    if (!isProfileComplete(props.applicationState.user)) {
-      Swal.fire({
-        type: "error",
-        title: "Oops...",
-        text: "È necessario completare il profilo prima di acquistare!",
-      });
-
-      setInPurchasing(false);
-      return;
-    }
 
     TokenManager.getInstance().getToken()
     .then(jwt => {

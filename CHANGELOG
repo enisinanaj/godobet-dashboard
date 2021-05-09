@@ -5,6 +5,11 @@
 - [x] Titolo tip invece di descrizione tip nella form di creazione delle Tip E poi un placeholder “Raddoppio del giorno”
 - [x] Rendere l’immagine del profilo come campo non obbligatorio (al momento se non ne hai impostata una non ti fa iscrivere ai servizi)
 - [x] Aggiungere: Vai al dettaglio nei servizi in "Iscrizioni"
+- [x] Sistemare layout pagina servizio con il titolo e il prezzo (fare tutto centrato o portare titolo e prezzo accanto a foto)
+- [x] Se non hai completato il profilo, nel modal aggiungere “vai in impostazioni -> generali” e completa i campi mancanti
+- [x] Parole spezzate non ne vogliamo (nelle tips ma anche altrove)
+- [x] Aggiungere: Vai al dettaglio nei servizi in "Iscrizioni"
+- [x] Le mie tips > Il messaggio di avviso che non ci sono tips sparisce e si sovrascrive con le tab
 
 
 19/04/2021

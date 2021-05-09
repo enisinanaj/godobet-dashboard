@@ -303,7 +303,9 @@ const ServiceDetail = (props) => {
                         </div>
                       </Col>
                       <Col md={7} className={"mb-2"}>
-                        <h4 className="mb-2 mt-5 p-1">{currentObject.serviceName}</h4>
+                        <Row>
+                          <h4 className="mb-2 mt-5 p-1">{currentObject.serviceName}</h4>
+                        </Row>
                         <Row>
                           <Col style={{textAlign: 'center'}}>
                             {!currentObject.free && <span>
@@ -314,7 +316,11 @@ const ServiceDetail = (props) => {
                               />{" "}Prezzo<br /><strong><PriceLabel amount={currentObject.price/100}></PriceLabel></strong></span>
                             </span>}
                             {currentObject.free && <span>
-                              <span style={{fontSize: '15px'}} className={"text-success"}>Gratis</span>
+                              <span style={{fontSize: '15px'}}><i
+                                className="feather icon-dollar-sign"
+                                style={{ paddingRight: "5px" }}
+                              />{" "}Prezzo<br /></span>
+                              <span className={"text-success"}>Gratis</span>
                             </span>}
                           </Col>
                           <Col style={{textAlign: 'center'}}>

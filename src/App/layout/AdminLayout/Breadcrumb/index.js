@@ -65,7 +65,7 @@ class Breadcrumb extends Component {
       </div>
     );
 
-    let title = "Welcome";
+    let title = "Benvenuti";
     if (this.state.main && this.state.main.type === "collapse") {
       main = (
         <li className="breadcrumb-item">

@@ -40,7 +40,6 @@ const TipsterPools = (props) =>  {
     <Aux>
       <Row>
         <Col sm={12} className="tab-user-card">
-          {pools.length <= 0 && <CustomAlert message={"Nessuna tips in corso da refertare al momento"} />}
           {pools.length > 0 && <Tabs
             variant="pills"
             defaultActiveKey="pending"
@@ -53,6 +52,7 @@ const TipsterPools = (props) =>  {
                     <Tip key={pool.id} pool={pool} callback={loadPools} user={props.applicationState.user} author={true} />
                   ))
                 }
+                {pools.filter(p => !p.outcome).length <= 0 && <CustomAlert message={"Nessuna tips in corso da refertare al momento"} />}
               </Row>
             </Tab>
             <Tab eventKey="expired" title="Refertate">
@@ -62,6 +62,7 @@ const TipsterPools = (props) =>  {
                     <Tip key={pool.id} pool={pool} callback={loadPools} user={props.applicationState.user} author={true} />
                   ))
                 }
+                {pools.filter(p => !!p.outcome).length <= 0 && <CustomAlert message={"Nessuna tips in corso da refertare al momento"} />}
               </Row>
             </Tab>
           </Tabs>}
