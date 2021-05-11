@@ -27,6 +27,8 @@ class Balance extends Component {
         formattedStartDate: moment(moment().add(-1, "month").toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS"),
         formattedEndDate: moment(moment().toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS"),
         statusData: [],
+        cumulativeData: [],
+        type: 'cumulative',
         totalProfit: 0
     }
     
@@ -47,9 +49,22 @@ class Balance extends Component {
     loadData() {
         this.getUserPools()
         .then(pools => {
+            var balance = [];
+            
+            pools.reduce((previous, current, index, array) => {
+                if (!previous) {
+                    balance.push({y: current.profit, x: moment(current.updatedOn).format("DD MMM YYYY")})
+                    return {y: current.profit, x: moment(current.updatedOn).format("DD MMM YYYY")}
+                } else {
+                    balance.push({y: previous.y + current.profit, x: moment(current.updatedOn).format("DD MMM YYYY")})
+                    return {y: previous.y + current.profit, x: moment(current.updatedOn).format("DD MMM YYYY")}
+                }
+            }, {y: pools[0].profit, x: moment(pools[0].updatedOn).format("DD MMM YYYY")})
+
             this.setState({
                 pools,
-                statusData: pools.map(p => ({y: p.profit.toFixed(2), x: moment(p.updatedOn).format("DD MMM YYYY")}))
+                statusData: pools.map(p => ({y: p.profit.toFixed(2), x: moment(p.updatedOn).format("DD MMM YYYY")})),
+                cumulativeData: balance.map(p => ({y: p.y.toFixed(2), x: p.x}))
             })
         })
     }
@@ -121,6 +136,17 @@ class Balance extends Component {
         }
     }
 
+    changeType(type) {
+        switch(type) {
+            case 'cumulative':
+                this.setState({type: type});
+                break;
+            case 'day2day':
+                this.setState({type: type});
+                break;
+        }
+    }
+
     render() {
         return (
             <Aux>
@@ -156,6 +182,10 @@ class Balance extends Component {
                                         <Button variant="light" onClick={() => this.loadDataFor("1Y")}>1Y</Button>
                                         <Button variant="light" onClick={() => this.loadDataFor("YTD")} >YTD</Button>
                                     </ButtonGroup>
+                                    <ButtonGroup aria-label="Type" size={"sm"} className={"btn-glow-light"}>
+                                        <Button variant="light" onClick={() => this.changeType("cumulative")}>Cumulativo</Button>
+                                        <Button variant="light" onClick={() => this.changeType("day2day")}>Andamento giornaliero</Button>
+                                    </ButtonGroup>
                                     </Col>
                                     <Col md={5} style={{flexDirection: "row", justifyContent: "flex-start"}}>
                                         <div style={{display: 'inline-block'}}>
@@ -188,7 +218,7 @@ class Balance extends Component {
                                 </Row>
                             </Card.Header>
                             <Card.Body>
-                                <LineInterpolationChart data={this.state.statusData} />
+                                <LineInterpolationChart data={this.state.type === 'cumulative' ? this.state.cumulativeData : this.state.statusData} />
                             </Card.Body>
                         </Card>
                     </Col>

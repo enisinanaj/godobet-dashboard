@@ -23,6 +23,8 @@ class events extends Component {
             const eventCount = d.events.length;
             let tipHandled = false;
 
+            console.warn(d)
+
             d.events.forEach(e => {
                 if (!e.outcome || !d.outcome) {
                     return false;

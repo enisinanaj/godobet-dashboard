@@ -184,7 +184,7 @@ class SignUp extends React.Component {
                     <div className="card-body">
                       <h3>Grazie per  esserti registrato!</h3>
                       <br/>
-                      <blockquote>Riceverai un'email di conferma per attivare l'account.</blockquote>
+                      <blockquote>Riceverai un'<strong>email di conferma</strong> per attivare l'account.</blockquote>
                       <p className="mb-2">
                         Vai alla pagina di{" "}
                         <NavLink to="/auth/signin-1" className="f-w-400">

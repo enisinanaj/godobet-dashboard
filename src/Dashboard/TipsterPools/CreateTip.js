@@ -11,6 +11,7 @@ import Select from "react-select";
 import config from "../../store/config";
 import Swal from "sweetalert2";
 import CustomAlert from "../TipsterServices/CustomAlert";
+import Bookmakers from "../../App/components/Bookmakers";
 
 const CreateTip = (props) => {
   const [description, setDescription] = useState("");
@@ -240,15 +241,16 @@ const CreateTip = (props) => {
                       <Form.Label>
                         Bookmaker <span className={"text-danger"}>*</span>
                       </Form.Label>
-                      <Form.Control
-                        type="text"
+                      <Select
+                        isClearable
+                        isSearchable
+                        className="basic-single"
+                        classNamePrefix="select"
                         name="bookmaker"
-                        placeholder="Bookmaker"
-                        disabled={saving}
+                        isDisabled={saving}
+                        options={Bookmakers}
                         value={bookmaker}
-                        onChange={({ target }) => {
-                          setBookmaker(target.value);
-                        }}
+                        onChange={(bookmaker) => setBookmaker(bookmaker)}
                       />
                     </Form.Group>
                   </Col>
