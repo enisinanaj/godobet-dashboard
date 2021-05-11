@@ -65,7 +65,7 @@ class Breadcrumb extends Component {
       </div>
     );
 
-    let title = "Benvenuti";
+    let title = "Benvenuto";
     if (this.state.main && this.state.main.type === "collapse") {
       main = (
         <li className="breadcrumb-item">
@@ -76,15 +76,15 @@ class Breadcrumb extends Component {
 
     if (this.state.item && this.state.item.type === "item") {
       title = this.state.item.title;
-      if (this.state.item.hidden) {
-        item = "";
-      } else {
+      // if (this.state.item.hidden) {
+      //   item = "";
+      // } else {
         item = (
           <li className="breadcrumb-item">
             <a href={DEMO.BLANK_LINK}>{title}</a>
           </li>
         );
-      }
+      // }
       
       document.title = title + " | GODOBET";
     }
@@ -105,9 +105,9 @@ class Breadcrumb extends Component {
       </Aux>;
     }
 
-    if (this.state.item.hidden) {
-      return null;
-    }
+    // if (this.state.item.hidden) {
+    //   return null;
+    // }
 
     return (<Aux>{breadcrumb(
       <Aux>
