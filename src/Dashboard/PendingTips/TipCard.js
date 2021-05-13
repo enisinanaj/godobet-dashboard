@@ -85,30 +85,35 @@ const getTipText = (pool) => {
     <Carousel controls={false} interval={null}>
       {pool.events.map((event) => (
         <Carousel.Item key={event.eventCode}>
-          <div style={{ height: 90, flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
+          <div style={{ height: 120, flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
             <Row>
-              <Col lg={12} sm={12} xs={12} xl={12}>
+              <Col lg={12} sm={12} xs={12} xl={12} className={"mb-1"} style={{whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>
                 {Sports.find((s) => s.value === event.sport) ? (
                   Sports.find((s) => s.value === event.sport).icon
                 ) : (
                   <em className={"feather icon-aperture"}></em>
                 )}{" "}
-                {event.competition} / {event.event}
+                <span>
+                  {event.competition}
+                </span>
               </Col>
-              <Col lg={6} sm={12} xs={12} xl={6}>
+              <Col lg={6} sm={12} xs={12} xl={6} className={"mb-1"}>
+                {event.event}
+              </Col>
+              <Col lg={6} sm={12} xs={12} xl={6} className={"mb-1"}>
                 <i className="feather icon-play" /> {event.proposal}
               </Col>
-              <Col lg={6} sm={12} xs={12} xl={6} className={"text-right"}>
+              <Col lg={6} sm={5} xs={5} xl={6} className={"mb-1"}>
                 <i className="feather icon-at-sign" />{" "}
                 <LocaleNumber amount={event.quote / 100} symbol={""} />
               </Col>
-            </Row>
-            <Row style={{ justifyContent: "space-between", flex: 1, flexDirection: "row", }}>
-              <Col lg={12} sm={12} xs={12} xl={12} style={{ display: "inline-block" }}>
+              <Col lg={6} sm={7} xs={7} xl={6} style={{ display: "inline-block" }} className={"text-right"}>
                 <em className="feather icon-clock"></em>{" "}
-                {!event.live && moment(event.eventDate).format("DD MMM yyyy HH:mm")}
+                {!event.live && moment(event.eventDate).format("DD/MM/YY HH:mm")}
                 {event.live && <span className={"badge badge-light-info pulse pulsate"}>LIVE</span>}
               </Col>
+            </Row>
+            <Row style={{ justifyContent: "space-between", flex: 1, flexDirection: "row", }}>
             </Row>
           </div>
         </Carousel.Item>
@@ -220,13 +225,11 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
             <span className={"badge badge-light-danger"}>{pool.id}</span>
           ) : null}
           {DropdownHiddenState || getDropdown(followTip)}
-          <span
-            onClick={() => setShowMotivation(true)}
-            className={"badge badge-light-info float-right mr-2"}
-            style={{ cursor: "pointer" }}
-          >
-            DETTAGLI
-          </span>
+          {pool.outcome && (
+            <span className={getClassNameForOutcome(pool.outcome) + " pull-right"}>
+              {pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} />
+            </span>
+          )}
         </Card.Title>
         {getTipText(pool)}
       </Card.Body>
@@ -245,11 +248,13 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
           </div>
         </div>
         <div style={{ display: "flex", marginTop: "15px", flexDirection: "row", justifyContent: "space-between"}}>
-          {pool.outcome && (
-            <span className={getClassNameForOutcome(pool.outcome)}>
-              {pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} />
-            </span>
-          )}
+          <span
+            onClick={() => setShowMotivation(true)}
+            className={"badge badge-light-default float-right mr-2"}
+            style={{ cursor: "pointer" }}
+          >
+            DETTAGLI
+          </span>
           <a href={"/dashboard/service/" + pool.serviceId} target="_blank" style={{textDecoration: 'underline'}} rel="noopener noreferrer">
             {pool.service.serviceName} <em className={"feather icon-external-link"}></em>
           </a>

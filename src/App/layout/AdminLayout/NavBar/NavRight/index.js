@@ -82,7 +82,7 @@ class NavRight extends Component {
             >
               <i className="fas fa-shopping-cart f-18"></i>
               <span className="d-none d-lg-inline-block m-l-10">
-                Marketplace
+                Servizi
               </span>
             </a>
           </li>

@@ -6,6 +6,7 @@ import ServiceDetail from "./Dashboard/Details/ServiceDetail";
 import CreateTip from "./Dashboard/TipsterPools/CreateTip";
 import TipsterProfile from "./Dashboard/TipsterProfile/TipsterProfile";
 import Wallet from "./Dashboard/Wallet/Wallet";
+import BookmakersTable from "./Dashboard/Bookmakers/BookmakersTable";
 
 window.jQuery = $;
 window.$ = $;
@@ -133,6 +134,13 @@ const routes = [
     name: "Wallet",
     component: Wallet,
     role: 5,
+  },
+  {
+    path: "/bookmakersTable",
+    exact: true,
+    name: "Bookmakers",
+    component: BookmakersTable,
+    role: 0,
   },
   {
     path: "/tipsters",

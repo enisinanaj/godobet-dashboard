@@ -184,7 +184,7 @@ class Balance extends Component {
                                     </ButtonGroup>
                                     <ButtonGroup aria-label="Type" size={"sm"} className={"btn-glow-light"}>
                                         <Button variant="light" onClick={() => this.changeType("cumulative")}>Cumulativo</Button>
-                                        <Button variant="light" onClick={() => this.changeType("day2day")}>Andamento giornaliero</Button>
+                                        <Button variant="light" onClick={() => this.changeType("day2day")}>Giornaliero</Button>
                                     </ButtonGroup>
                                     </Col>
                                     <Col md={5} style={{flexDirection: "row", justifyContent: "flex-start"}}>

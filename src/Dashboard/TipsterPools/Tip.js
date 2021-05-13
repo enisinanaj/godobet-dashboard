@@ -172,23 +172,25 @@ const Tip = props => {
                     <Carousel.Item key={event.eventCode}>
                         <div style={{minHeight: "90px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
                             <Row>
-                                <Col lg={12} sm={12} xs={12} xl={12}>
+                                <Col lg={12} sm={12} xs={12} xl={12} style={{whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}} className={"mb-1"}>
                                     {Sports.find(s => s.value === event.sport) ? Sports.find(s => s.value === event.sport).icon : <em className={"feather icon-aperture"}></em>}{" "}
-                                    {event.competition} / {event.event}
+                                    <span>
+                                        {event.competition} / {event.event}
+                                    </span>
                                 </Col>
-                                <Col lg={6} sm={12} xs={12} xl={6}>
+                                <Col lg={6} sm={12} xs={12} xl={6} className={"mb-1"}>
                                     <i className="feather icon-play" /> {event.proposal}
                                 </Col>
-                                <Col lg={6} sm={12} xs={12} xl={6}>
+                                <Col lg={6} sm={5} xs={5} xl={6} className={"mb-1"}>
                                     <i className="feather icon-at-sign" /> <LocaleNumber amount={(event.quote / 100)} symbol={""} />
                                 </Col>
-                            </Row>
-                            <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
-                                <Col  lg={12} sm={12} xs={12} xl={12} style={{display: 'inline'}}>
+                                <Col  lg={6} sm={7} xs={7} xl={6} style={{display: 'inline'}}>
                                     <em className="feather icon-clock"></em> {" "}
                                     {!event.live && moment(event.eventDate).format("DD MMM yyyy HH:mm")}
                                     {event.live && <span className={"badge badge-light-info pulse pulsate"}>LIVE</span>}
                                 </Col>
+                            </Row>
+                            <Row style={{justifyContent: 'space-between', flex: 1, flexDirection: 'row'}}>
                             </Row>
                         </div>
                     </Carousel.Item>

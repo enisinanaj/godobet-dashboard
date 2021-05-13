@@ -179,7 +179,7 @@ class Default extends React.Component {
               <Col md={12} lg={12}>
                 <h4>
                   Iscrizioni{" "}
-                  <small style={{ fontSize: "12px" }}>
+                  <small style={{ fontSize: "12px", display: "block", marginBottom: "13px" }}>
                     (Statistiche sui servizi a cui sei iscritto)
                   </small>
                 </h4>
@@ -266,7 +266,7 @@ class Default extends React.Component {
                 <Col md={12} lg={12}>
                   <h4>
                     Gestione{" "}
-                    <small style={{ fontSize: "12px" }}>
+                    <small style={{ fontSize: "12px", display: "block", marginBottom: "13px" }}>
                       (Panoramica dei servizi che hai creato e gestisci)
                     </small>
                   </h4>
@@ -315,7 +315,7 @@ class Default extends React.Component {
               <Col md={12} lg={12}>
                 <h4>
                   Tip seguite{" "}
-                  <small style={{ fontSize: "12px" }}>
+                  <small style={{ fontSize: "12px", display: "block", marginBottom: "13px" }}>
                     (Distribuzione dell'esito delle tip che hai seguito)
                   </small>
                 </h4>

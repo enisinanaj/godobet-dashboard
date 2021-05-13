@@ -23,7 +23,7 @@ const ServiceCard = (props) => {
       <Col md={4} key={index}>
         <Card>
           <div className={"service-header-bar"}>
-            <Card.Img
+            <img
               variant="top"
               src={getLatestImage(item.media)}
               alt="CardImageCap"

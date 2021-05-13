@@ -43,14 +43,6 @@ export default {
           role: 4,
         },
         {
-          id: "marketplace",
-          title: "Marketplace",
-          type: "item",
-          icon: "feather icon-shopping-cart",
-          url: "/dashboard/marketplace",
-          role: 3
-        },
-        {
           id: "details",
           title: "Detaglio Servizio",
           type: "item",
@@ -107,6 +99,38 @@ export default {
       ],
     },
     {
+      id: "menu-generica",
+      title: "Sfoglia",
+      type: "group",
+      icon: "icon-navigation",
+      children: [
+        {
+          id: "marketplace",
+          title: "Servizi",
+          type: "item",
+          icon: "feather icon-shopping-cart",
+          url: "/dashboard/marketplace",
+          role: 3
+        },
+        {
+          id: "tipsters",
+          title: "Tipsters",
+          type: "item",
+          icon: "feather icon-users",
+          role: 0,
+          url: "/tipsters",
+        },
+        {
+          id: "bookmakerstable",
+          title: "Bookmakers",
+          type: "item",
+          icon: "feather icon-book",
+          role: 0,
+          url: "/bookmakersTable",
+        },
+      ]
+    },
+    {
       id: "menu tipster",
       title: "Menu tipster",
       type: "group",
@@ -117,7 +141,7 @@ export default {
           id: "my-services",
           title: "I miei servizi",
           type: "item",
-          icon: "feather icon-book",
+          icon: "feather icon-package",
           url: "/dashboard/tipster/services",
           role: 5,
           rightButton: <CreateNewServiceButton />,

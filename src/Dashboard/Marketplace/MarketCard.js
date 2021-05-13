@@ -49,7 +49,7 @@ const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurc
       <Col md={col ? col : 4} key={index}>
         <Card>
           <div className={"service-header-bar"}>
-            <Card.Img
+            <img
               variant="top"
               src={getLatestImage(item.media)}
               alt="CardImageCap"
