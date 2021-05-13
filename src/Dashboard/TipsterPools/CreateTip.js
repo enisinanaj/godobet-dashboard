@@ -130,7 +130,7 @@ const CreateTip = (props) => {
       body: JSON.stringify({
         service: service.value,
         description,
-        bookmaker,
+        bookmaker: bookmaker.value,
         motivation,
         events: [],
         author: props.applicationState.user._links.self.href,

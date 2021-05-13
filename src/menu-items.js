@@ -80,7 +80,7 @@ export default {
         },
         {
           id: "profile",
-          title: "Profilo",
+          title: "",
           type: "item",
           icon: "feather icon-user",
           url: "/profile",

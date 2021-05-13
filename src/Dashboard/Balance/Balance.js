@@ -29,7 +29,8 @@ class Balance extends Component {
         statusData: [],
         cumulativeData: [],
         type: 'cumulative',
-        totalProfit: 0
+        totalProfit: 0,
+        chartLength: '1M'
     }
     
     load(url, args = {}) {
@@ -94,6 +95,7 @@ class Balance extends Component {
         switch (period) {
             case "24H":
                 this.setState({
+                    chartLength: period,
                     startDate: moment().add(-1, "days").toDate(),
                     endDate: moment().toDate(),
                     formattedStartDate: moment().add("-1", "days").format("YYYY-MM-DDTHH:mm:ss.SSS"),
@@ -102,6 +104,7 @@ class Balance extends Component {
                 break;
             case "1W":
                 this.setState({
+                    chartLength: period,
                     startDate: moment().add(-7, "days").toDate(),
                     endDate: moment().toDate(),
                     formattedStartDate: moment().add("-7", "days").format("YYYY-MM-DDTHH:mm:ss.SSS"),
@@ -110,6 +113,7 @@ class Balance extends Component {
                 break;
             case "1Y":
                 this.setState({
+                    chartLength: period,
                     startDate: moment().add(-1, "year").toDate(),
                     endDate: moment().toDate(),
                     formattedStartDate: moment().add("-1", "year").format("YYYY-MM-DDTHH:mm:ss.SSS"),
@@ -118,6 +122,7 @@ class Balance extends Component {
                 break;
             case "YTD":
                 this.setState({
+                    chartLength: period,
                     startDate: moment().set("month", 0).set("dayOfYear", 1).toDate(),
                     endDate: moment().toDate(),
                     formattedStartDate: moment().set("month", 0).set("dayOfYear", 1).format("YYYY-MM-DDTHH:mm:ss.SSS"),
@@ -127,6 +132,7 @@ class Balance extends Component {
             default:
             case "1M":
                 this.setState({
+                    chartLength: period,
                     startDate: moment().add(-1, "months").toDate(),
                     endDate: moment().toDate(),
                     formattedStartDate: moment().add("-1", "months").format("YYYY-MM-DDTHH:mm:ss.SSS"),
@@ -176,15 +182,13 @@ class Balance extends Component {
                                 <Row>
                                     <Col md={7}>
                                     <ButtonGroup aria-label="Time" size={"sm"} className={"btn-glow-light"}>
-                                        <Button variant="light" onClick={() => this.loadDataFor("24H")}>24H</Button>
-                                        <Button variant="light" onClick={() => this.loadDataFor("1W")}>1W</Button>
-                                        <Button variant="light" onClick={() => this.loadDataFor("1M")}>1M</Button>
-                                        <Button variant="light" onClick={() => this.loadDataFor("1Y")}>1Y</Button>
-                                        <Button variant="light" onClick={() => this.loadDataFor("YTD")} >YTD</Button>
-                                    </ButtonGroup>
-                                    <ButtonGroup aria-label="Type" size={"sm"} className={"btn-glow-light"}>
-                                        <Button variant="light" onClick={() => this.changeType("cumulative")}>Cumulativo</Button>
-                                        <Button variant="light" onClick={() => this.changeType("day2day")}>Giornaliero</Button>
+                                        <Button variant="light" onClick={() => this.loadDataFor("24H")} className={this.state.chartLength === '24H' ? 'active' : ''}>24H</Button>
+                                        <Button variant="light" onClick={() => this.loadDataFor("1W")} className={this.state.chartLength === '1W' ? 'active' : ''}>1W</Button>
+                                        <Button variant="light" onClick={() => this.loadDataFor("1M")} className={this.state.chartLength === '1M' ? 'active' : ''}>1M</Button>
+                                        <Button variant="light" onClick={() => this.loadDataFor("1Y")} className={this.state.chartLength === '1Y' ? 'active' : ''}>1Y</Button>
+                                        <Button variant="light" onClick={() => this.loadDataFor("YTD")}  className={this.state.chartLength === 'YTD' ? 'active' : ''}>YTD</Button>
+                                        <Button variant="light" onClick={() => this.changeType("cumulative")} className={this.state.type === 'cumulative' ? 'active' : ''}>Cumulativo</Button>
+                                        <Button variant="light" onClick={() => this.changeType("day2day")} className={this.state.type === 'day2day' ? 'active' : ''}>Giornaliero</Button>
                                     </ButtonGroup>
                                     </Col>
                                     <Col md={5} style={{flexDirection: "row", justifyContent: "flex-start"}}>

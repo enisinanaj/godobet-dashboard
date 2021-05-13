@@ -113,7 +113,9 @@ const Tip = props => {
             <Card.Body>
                 {/* className={'text-white'} */}
                 <Card.Title as="h5">
-                    {pool.description}
+                    <span onClick={() => setShowMotivation(true)}>
+                        {pool.description}
+                    </span>
                     {!pool.outcome && props.author && <Dropdown className="drp-tipster-pool">
                         <Dropdown.Toggle style={{display: "inline", float: "right"}} variant={"light"}></Dropdown.Toggle>
                         <Dropdown.Menu alignRight className="profile-notification">
@@ -163,11 +165,11 @@ const Tip = props => {
                                 </Dropdown.Item>
                             </Dropdown.Menu>
                     </Dropdown>}
-                    <span onClick={() => setShowMotivation(true)} className={"badge badge-light-info float-right mr-2"} style={{ cursor: 'pointer' }} >
-                        DETTAGLI    
+                    <span className={"badge badge-light-info float-right mr-2"} style={{ cursor: 'pointer' }} >
+                        {pool.outcome && <span className={getClassNameForOutcome(pool.outcome)} >{pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} /></span>}
                     </span>
                 </Card.Title>
-                <Carousel controls={false} interval={null}>
+                <Carousel controls={false} interval={null} onClick={() => setShowMotivation(true)}>
                 {pool.events.map(event => (
                     <Carousel.Item key={event.eventCode}>
                         <div style={{minHeight: "90px", flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
@@ -175,10 +177,13 @@ const Tip = props => {
                                 <Col lg={12} sm={12} xs={12} xl={12} style={{whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}} className={"mb-1"}>
                                     {Sports.find(s => s.value === event.sport) ? Sports.find(s => s.value === event.sport).icon : <em className={"feather icon-aperture"}></em>}{" "}
                                     <span>
-                                        {event.competition} / {event.event}
+                                        {event.competition}
                                     </span>
                                 </Col>
-                                <Col lg={6} sm={12} xs={12} xl={6} className={"mb-1"}>
+                                <Col lg={12} sm={12} xs={12} xl={12} className={"mb-1"}>
+                                    {event.event}
+                                </Col>
+                                <Col lg={12} sm={12} xs={12} xl={12} className={"mb-1"}>
                                     <i className="feather icon-play" /> {event.proposal}
                                 </Col>
                                 <Col lg={6} sm={5} xs={5} xl={6} className={"mb-1"}>
@@ -197,7 +202,7 @@ const Tip = props => {
                 ))}
                 </Carousel>
             </Card.Body>
-            <Card.Footer>
+            <Card.Footer onClick={() => setShowMotivation(true)}>
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
                     <div style={{display: "inline"}}>
                         <i className="feather icon-book" /> {pool.bookmaker}
@@ -210,12 +215,6 @@ const Tip = props => {
                         <i className="feather icon-at-sign" />{" "}
                         <LocaleNumber amount={pool.totalQuote} symbol={""} />
                     </div>
-                </div>
-                <div style={{ display: "flex", marginTop: "15px", flexDirection: "row", justifyContent: "space-between"}}>
-                    {pool.outcome && <span className={getClassNameForOutcome(pool.outcome)} >{pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} /></span>}
-                    <a href={"/dashboard/service/" + pool.serviceId} target="_blank" style={{textDecoration: 'underline'}} rel="noopener noreferrer">
-                        {pool.service.serviceName} <em className={"feather icon-external-link"}></em>
-                    </a>
                 </div>
             </Card.Footer>
                 <Modal show={showMotivation} onHide={() => setShowMotivation(false)}>

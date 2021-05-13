@@ -7,7 +7,7 @@ class LineInterpolationChart extends React.Component {
     const data = () => {
       return {
           type: 'area',
-          height: "600px",
+          height: "600px",        
           options: {
               maintainAspectRatio: false,
               chart: {
@@ -77,19 +77,6 @@ class LineInterpolationChart extends React.Component {
                   }]
               }
           },
-            plugins: [{
-                beforeRender: function(graph) {
-                let gradient = graph.ctx.createLinearGradient(0, 0, 0, graph.height),         //create a gradient for the background
-                    zero_line = graph.scales[`y-axis-0`].getPixelForValue(0) / graph.height;  //calculate where the zero line is plotted on the graph
-
-                gradient.addColorStop(0, `rgba(0,200,0,.2)`);         //good color faded out
-                gradient.addColorStop(zero_line, `rgba(0,200,0,.8)`); //good color at zero line
-                gradient.addColorStop(zero_line, `rgba(200,0,0,.8)`); //bad color at zero line
-                gradient.addColorStop(1, `rgba(200,0,0,.2)`);         //bad color faded out
-
-                graph.data.datasets[0]._meta[0].$filler.el._model.backgroundColor = gradient; //set the graphs background to the gradient we just made
-                }
-            }],
           series: [{
               data: this.props.data
           }]
