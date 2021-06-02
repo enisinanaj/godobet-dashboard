@@ -198,6 +198,7 @@ const Settings = (props) => {
       name: user.name,
       lastName: user.lastName,
       phoneNumber: user.phoneNumber,
+      username: user.username,
       dob: user.dob,
       ssn: user.ssn,
     });
@@ -347,6 +348,21 @@ const Settings = (props) => {
                             user={user}
                             callback={reloadUser}
                           />
+                        </Col>
+                        <Col md={12} sm={12}>
+                          <Form.Group controlId="formBasicEmail">
+                            <Form.Label>Nome utente</Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Nome utente"
+                              value={user.username}
+                              onChange={({ target }) => {
+                                setUser({ ...user, username: target.value });
+                                setNameChanged(true);
+                              }}
+                            />
+                            <span className={"text-danger"}>Il nome utente selezionato non è disponibile.</span>
+                          </Form.Group>
                         </Col>
                       </Row>
                     </Card.Body>

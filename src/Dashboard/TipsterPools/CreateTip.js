@@ -39,7 +39,7 @@ const CreateTip = (props) => {
   }, [stake, description, bookmaker, service]);
 
   useEffect(() => {
-    setMotivationCount(1000 - motivation.length);
+    setMotivationCount(3000 - motivation.length);
   }, [motivation]);
 
   useEffect(() => {
@@ -114,7 +114,7 @@ const CreateTip = (props) => {
       confirmButtonText: "Confermo"
     }, (isConfirm) => {
       console.warn("test: " + isConfirm)
-    }).then(value => {
+    }).then(({value}) => {
       if (value) {
         submitTip()
       }

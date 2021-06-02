@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Tabs } from "react-bootstrap";
-import { Tab } from "bootstrap";
+import { Alert, Tab } from "bootstrap";
 import Chart from "react-apexcharts";
 import Aux from "../../hoc/_Aux";
 import { bindActionCreators } from "redux";
@@ -8,17 +8,13 @@ import { connect } from "react-redux";
 import * as actions from "../../store/actions";
 import BASE_CONFIG from "../../store/config";
 import TokenManager from "../../App/auth/TokenManager";
-import CoverImage from "../../assets/images/godobet-placeholder.jpg";
 import MarketCard from "../Marketplace/MarketCard";
 import satisfactionChart from "../Home/charts/pie";
 import bookmakersChart from "../Home/charts/bookmakers";
-import monthlyProfilt1 from "./monthlyProfit";
-import averageStake from "./averageStake";
-import averageOdds from "./averageOdds";
 import Loader from "../../App/layout/Loader";
 import md5 from "md5";
-import PriceLabel from "../../App/components/PriceLabel";
 import LocaleNumber from "../../App/components/LocaleNumber";
+import CustomAlert from "../TipsterServices/CustomAlert";
 
 function TipsterProfile(props) {
   const [favoriteBook, setFavoriteBook] = useState(null);
@@ -44,20 +40,19 @@ function TipsterProfile(props) {
           .then((e) => e.json())
           .then((user) => {
             setCurrentUser(user);
-            const winRatioVar = user._embedded.playedPools.filter((res) => {
-              return res.outcome === "win";
-            });
-            let percentage =
-              (winRatioVar.length / user._embedded.playedPools.length) * 100;
-            setWinRatio(percentage);
-
-            const stakesArray = user._embedded.playedPools.map((pool) => {
-              return pool.stake;
-            });
-
-            let averageStake =
-              stakesArray.reduce((a, b) => a + b) / stakesArray.length / 100;
-            setAvgStake(averageStake);
+            if (user._embedded) {
+              const winRatioVar = user._embedded.playedPools.filter((res) => {
+                return res.outcome === "win";
+              });
+              let percentage = (winRatioVar.length / user._embedded.playedPools.length) * 100;
+              setWinRatio(percentage);
+  
+              const stakesArray = user._embedded.playedPools.map((pool) => {
+                return pool.stake;
+              });
+              let averageStake = stakesArray.reduce((a, b) => a + b) / stakesArray.length / 100;
+              setAvgStake(averageStake);
+            }
           });
       });
     getServices();
@@ -148,7 +143,7 @@ function TipsterProfile(props) {
           },
         })
           .then((e) => e.json())
-          .then((res) => setUserServices(res._embedded.services));
+          .then((res) => setUserServices(res._embedded ? res._embedded.services : []));
       });
   };
 
@@ -171,7 +166,8 @@ function TipsterProfile(props) {
 
   return (
     <Aux>
-      {currentUser.name ? (
+      {!currentUser.username && <CustomAlert message={"Questo tipster non ha impostato un nome utente."} /> }
+      {currentUser.username ? (
         <Row md={12}>
           <Col md={4}>
             <Card className={"pb-5"}>
@@ -186,7 +182,7 @@ function TipsterProfile(props) {
                   />
                   <div className="p-4">
                     <h3>
-                      {currentUser.name} {currentUser.lastName}
+                      {currentUser.username}
                     </h3>
                   </div>
                 </Col>

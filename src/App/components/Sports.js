@@ -78,8 +78,13 @@ const Sports = [
     },
     {
         "icon": "🎱",
-        "label": "🎱  Bigliardo",
+        "label": "🎱  Snooker",
         "value": "pool 8 ball"
+    },
+    {
+        "icon": "",
+        "label": "Cilcismo",
+        "value": "ciclismo"
     }
 ];
 

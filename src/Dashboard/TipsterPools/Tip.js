@@ -165,9 +165,7 @@ const Tip = props => {
                                 </Dropdown.Item>
                             </Dropdown.Menu>
                     </Dropdown>}
-                    <span className={"badge badge-light-info float-right mr-2"} style={{ cursor: 'pointer' }} >
-                        {pool.outcome && <span className={getClassNameForOutcome(pool.outcome)} >{pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} /></span>}
-                    </span>
+                    {pool.outcome && <span className={getClassNameForOutcome(pool.outcome) + " pull-right"} >{pool.outcome} <LocaleNumber amount={pool.profit} symbol={"%"} /></span>}
                 </Card.Title>
                 <Carousel controls={false} interval={null} onClick={() => setShowMotivation(true)}>
                 {pool.events.map(event => (
@@ -189,8 +187,8 @@ const Tip = props => {
                                 <Col lg={6} sm={5} xs={5} xl={6} className={"mb-1"}>
                                     <i className="feather icon-at-sign" /> <LocaleNumber amount={(event.quote / 100)} symbol={""} />
                                 </Col>
-                                <Col  lg={6} sm={7} xs={7} xl={6} style={{display: 'inline'}}>
-                                    <em className="feather icon-clock"></em> {" "}
+                                <Col  lg={6} sm={7} xs={7} xl={6} style={{display: 'inline'}} className={"text-right"} >
+                                    {!event.live && <em className="feather icon-clock"></em>} {" "}
                                     {!event.live && moment(event.eventDate).format("DD MMM yyyy HH:mm")}
                                     {event.live && <span className={"badge badge-light-info pulse pulsate"}>LIVE</span>}
                                 </Col>

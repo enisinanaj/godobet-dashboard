@@ -93,7 +93,7 @@ const CreateNewService = (props) => {
         confirmButtonText: "Confermo"
       }, (isConfirm) => {
         console.warn("test: " + isConfirm)
-      }).then(value => {
+      }).then(({value}) => {
         if (value) {
           handleCreateCard()
         }
@@ -120,7 +120,7 @@ const CreateNewService = (props) => {
             serviceName: newObject.serviceName,
             maxSubscribers: newObject.maxSubscribers,
             version: "1",
-            free: newObject.isFreeServcie
+            free: newObject.isFree
           }),
         }).then((e) => {
           if (e.status !== 201) {

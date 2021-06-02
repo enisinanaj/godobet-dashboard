@@ -137,13 +137,15 @@ const ServiceDetail = (props) => {
   };
 
   useEffect(() => {
-    callUrl(BASE_CONFIG.API_URL + '/services/' + id + '/author')
-      .then(e => e.json()).then(author => {
-        setAuthor(author)
-        if (author.userCode === props.applicationState.user.userCode) {
-          setPurchasable(false);
-        }
 
+    if (!currentObject) {
+      return;
+    }
+
+    callUrl(BASE_CONFIG.API_URL + '/services/' + id + '/author')
+      .then(e => e.json())
+      .then(author => {
+        setAuthor(author)
         const winRatioVar = author._embedded.playedPools?.filter(res => {
           return res.outcome === 'win'
         })
@@ -156,10 +158,17 @@ const ServiceDetail = (props) => {
 
     if (props.applicationState.user.roleValue >= 4) {
       callUrl(BASE_CONFIG.API_URL + '/users/' + props.applicationState.user.userCode + '/subscriptions')
-        .then(e => e.json()).then(subscriptions => {
+        .then(e => e.json())
+        .then(subscriptions => {
+          let subscribable = true;
+          if (author.userCode === props.applicationState.user.userCode || currentObject.subscribersCount >= currentObject.maxSubscribers ) {
+            subscribable = false;
+            setPurchasable(false);
+          }
+
           if(currentObject && currentObject._links) {
             const subscription = subscriptions._embedded.subscriptions.find(sub => sub.serviceId === Number(id) && sub.valid);
-            if (!subscription) {
+            if (!subscription && subscribable) {
               setPurchasable(true);
             } else {
              callUrl(BASE_CONFIG.API_URL + '/services/' + id + '/pools')
@@ -393,7 +402,7 @@ const ServiceDetail = (props) => {
                     <Col>
                       <a href={`/tipsters/${author.userCode}`}>
                         <img style={{objectFit: "cover", borderRadius: "75px", border: "solid #e0e0e0AA 6px"}} height="150px" width='150px' src={getAvatar()} alt={"User avatar"} />
-                        <h5 className='pt-4'>{author.name} {author.lastName}</h5>
+                        <h5 className='pt-4'>{author.username}</h5>
                       </a>
                     </Col>
                   </Row>

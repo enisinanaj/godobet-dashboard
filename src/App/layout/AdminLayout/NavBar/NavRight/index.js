@@ -102,8 +102,8 @@ class NavRight extends Component {
                   { !this.avatar(this.props.user) 
                     && <img src={require('../../../../../assets/images/godobet-placeholder.jpg')} className={"img-radius"} style={{ objectFit: 'cover', height: 40}} />}
                   <span>
-                    {this.props.user?.name
-                      ? this.props.user?.name
+                    {this.props.user?.username
+                      ? this.props.user?.username
                       : this.props.user?.email}
                   </span>
                   <a

@@ -53,10 +53,6 @@ function TipsterProfile(props) {
         }
     },[currentUser]);
 
-    useEffect(() => {
-        console.warn(userServices)
-    }, [userServices])
-
     const load = (url, args = {}) => {
         return TokenManager.getInstance()
           .getToken()
@@ -87,7 +83,7 @@ function TipsterProfile(props) {
 
     return (
         <Aux>
-        {currentUser.name ? (<Row md={12} className={"mb-n4"} style={{marginTop: "-6.25rem"}}>
+        {currentUser.username || currentUser.name ? (<Row md={12} className={"mb-n4"} style={{marginTop: "-6.25rem"}}>
             <Col md={12} className={"mt-4"}>
                 <Card className={"user-card"}>
                     <Card.Body className='pt-0 pb-0'>
@@ -96,7 +92,7 @@ function TipsterProfile(props) {
                                 <Col style={{textAlign: 'center'}} md={4}>
                                     <img src={getLatestImage(currentUser)} height='150px' alt='' width='150px' style={{objectFit: 'cover', borderRadius: '50%', border: "solid #e5e5e5aa 6px"}} />
                                     <div className='p-4'>
-                                        <h5>{currentUser.name} {currentUser.lastName}</h5>
+                                        <h5>{currentUser.username || currentUser.name}</h5>
                                     </div>
                                 </Col>
                             
