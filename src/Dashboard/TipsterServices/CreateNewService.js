@@ -44,6 +44,7 @@ const CreateNewService = (props) => {
   let djsConfig = {
     addRemoveLinks: true,
     acceptedFiles: "image/jpeg,image/png,application/pdf",
+    maxSize: 4194304
   };
 
   useEffect(() => {

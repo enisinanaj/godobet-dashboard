@@ -311,11 +311,9 @@ const ServiceDetail = (props) => {
                           />
                         </div>
                       </Col>
-                      <Col md={7} className={"mb-2"}>
-                        <Row>
-                          <h4 className="mb-2 mt-5 p-1">{currentObject.serviceName}</h4>
-                        </Row>
-                        <Row>
+                      <Col md={12} className={"mb-2 text-center"}>
+                        <Col className={"mb-3"}>
+                          <h4 className="mb-2 mt-2 p-1">{currentObject.serviceName}</h4>
                           <Col style={{textAlign: 'center'}}>
                             {!currentObject.free && <span>
                               <span style={{fontSize: '15px'}}> {" "}
@@ -332,6 +330,8 @@ const ServiceDetail = (props) => {
                               <span className={"text-success"}>Gratis</span>
                             </span>}
                           </Col>
+                        </Col>
+                        <Row>
                           <Col style={{textAlign: 'center'}}>
                             <span>
                               <span style={{fontSize: '15px'}}> {" "}
@@ -358,25 +358,25 @@ const ServiceDetail = (props) => {
                               />{" "}
                               Profitto<br /><strong><LocaleNumber amount={currentObject.totalProfit} symbol={"%"}></LocaleNumber></strong> </span>
                           </Col>
+                          <Col className={"mt-3"}>
+                            {!currentObject.free && purchasable && <div style={{ display: "flex", justifyContent: "center" }} >
+                              <Button onClick={() => handlePurchase(currentObject._links.self.href)} disabled={isProcessing} >
+                                {isProcessing ? (
+                                  <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+                                ) : null }{" "}
+                                Iscriviti
+                              </Button>
+                            </div>}
+                            {currentObject.free && purchasable && <div style={{ display: "flex", justifyContent: "center" }} >
+                              <Button onClick={() => handleFreeServiceSubscription(currentObject._links.self.href)} disabled={isProcessing} >
+                                {isProcessing ? (
+                                  <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
+                                ) : null }{" "}
+                                Iscriviti
+                              </Button>
+                            </div>}
+                          </Col>
                         </Row>
-                      </Col>
-                      <Col md={2}>
-                        {!currentObject.free && purchasable && <div style={{ display: "flex", justifyContent: "center" }} >
-                          <Button onClick={() => handlePurchase(currentObject._links.self.href)} disabled={isProcessing} >
-                            {isProcessing ? (
-                              <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
-                            ) : null }{" "}
-                            Iscriviti
-                          </Button>
-                        </div>}
-                        {currentObject.free && purchasable && <div style={{ display: "flex", justifyContent: "center" }} >
-                          <Button onClick={() => handleFreeServiceSubscription(currentObject._links.self.href)} disabled={isProcessing} >
-                            {isProcessing ? (
-                              <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
-                            ) : null }{" "}
-                            Iscriviti
-                          </Button>
-                        </div>}
                       </Col>
                     </Row>
                     <Row style={{paddingLeft: "25px", paddingRight: "25px", textAlign: 'left'}} className={"pl-2"}>

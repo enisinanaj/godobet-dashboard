@@ -62,7 +62,7 @@ const Wallet = (props) => {
               <Card.Body className="">
                 <Card.Title><h4>Bilancio</h4></Card.Title>
                 {/* pt-0 */}
-                {loading && <div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>}
+                {loading && <div className="d-flex justify-content-center"><div className="spinner-border" role="status"><span className="sr-only">Loading...</span></div></div>}
                 { !loading && userSetUp &&
                   <Row>
                     <Col>
@@ -84,7 +84,7 @@ const Wallet = (props) => {
                 <Card.Title><h4>Iscritti negli ultimi 30 giorni</h4></Card.Title>
                   {services.filter(service => service.subscriptions.filter(sub => sub.paymentSystemToken !== "self" && sub.valid).length > 0).map(service => {
                   return (
-                    <SubscriptionItem service={service} />
+                    <SubscriptionItem service={service} key={service.id} />
                   )}
                 )}
               </Card.Body>

@@ -7,6 +7,8 @@ import CreateTip from "./Dashboard/TipsterPools/CreateTip";
 import TipsterProfile from "./Dashboard/TipsterProfile/TipsterProfile";
 import Wallet from "./Dashboard/Wallet/Wallet";
 import BookmakersTable from "./Dashboard/Bookmakers/BookmakersTable";
+import UserPayments from "./Dashboard/UserPayments/UserPayments";
+import TipDetail from "./Dashboard/PendingTips/TipDetail";
 
 window.jQuery = $;
 window.$ = $;
@@ -136,6 +138,13 @@ const routes = [
     role: 5,
   },
   {
+    path: "/profile/payments",
+    exact: true,
+    name: "Storico Pagamenti",
+    component: UserPayments,
+    role: 3,
+  },
+  {
     path: "/bookmakersTable",
     exact: true,
     name: "Bookmakers",
@@ -147,6 +156,13 @@ const routes = [
     exact: false,
     name: "Tipster Profile",
     component: TipsterProfile,
+    role: 3,
+  },
+  {
+    path: "/tip/detail",
+    exact: false,
+    name: "Dettaglio Tip",
+    component: TipDetail,
     role: 3,
   },
 ];

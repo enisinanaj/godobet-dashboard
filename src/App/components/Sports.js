@@ -82,8 +82,8 @@ const Sports = [
         "value": "pool 8 ball"
     },
     {
-        "icon": "",
-        "label": "Cilcismo",
+        "icon": "🚴🏻‍♂️",
+        "label": "🚴🏻‍♂️  Cilcismo",
         "value": "ciclismo"
     }
 ];

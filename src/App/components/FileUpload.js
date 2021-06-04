@@ -23,6 +23,7 @@ const FileUpload = (props) => {
   var djsConfig = {
     addRemoveLinks: true,
     acceptedFiles: "image/jpeg,image/png",
+    maxSize: 4194304
   };
 
   function dynamicProgressButtonPNotify() {

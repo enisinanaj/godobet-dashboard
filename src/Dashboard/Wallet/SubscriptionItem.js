@@ -35,7 +35,7 @@ const SubscriptionItem = ({service}) => {
 
     return (
         <Row className={"mb-4 pt-2"} style={{borderTop: "1px solid #f5f5f5"}}>
-            {loading && <div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>}
+            {loading && <div className="d-flex justify-content-center"><div className="spinner-border" role="status"><span className="sr-only">Loading...</span></div></div>}
             { !loading &&
             <Aux>
                 <Col md={12} sm={12} xs={12} lg={12}>
@@ -43,7 +43,7 @@ const SubscriptionItem = ({service}) => {
                         .filter(sub => sub.paymentSystemToken !== "self" && sub.valid && new Date() - new Date(sub.subscribedOn) <= 30 * 24 * 60 * 60 * 1000)
                         .sort((a,b) => new Date(b.subscribedOn) - new Date(a.subscribedOn))
                         .map(sub => {
-                            return (<Row className={"mb-3 pb-2"}>
+                            return (<Row className={"mb-3 pb-2"} key={sub.id}>
                                 <Col md={8} sm={8} xs={8} lg={8}>
                                     <span style={{margin: 0, textTransform: 'uppercase', fontSize: 12}} className={"text-success"} >QUOTA RICEVUTA</span>
                                     <div style={{margin: 0, textDecoration: 'underline', fontSize: 14}}>

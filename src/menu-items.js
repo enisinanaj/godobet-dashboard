@@ -52,10 +52,35 @@ export default {
           hidden: true
         },
         {
+          id: "details",
+          title: "Detaglio Tip",
+          type: "item",
+          icon: "feather icon-user",
+          url: "/tip/detail",
+          role: 0,
+          hidden: true
+        },
+        {
+          id: "payments",
+          title: "Storico Pagamenti",
+          type: "item",
+          icon: "fa fa-history",
+          url: "/profile/payments",
+          role: 0,
+        },
+        {
+          id: "profile",
+          title: "Profilo",
+          type: "item",
+          icon: "feather icon-user",
+          url: "/profile",
+          role: 0,
+        },
+        {
           id: "settings",
           title: "Impostazioni",
           type: "item",
-          icon: "feather icon-user",
+          icon: "feather icon-settings",
           role: 3,
           url: "/settings",
         },
@@ -77,15 +102,6 @@ export default {
               hidden: true,
             },
           ],
-        },
-        {
-          id: "profile",
-          title: "",
-          type: "item",
-          icon: "feather icon-user",
-          url: "/profile",
-          role: 0,
-          hidden: true,
         },
         {
           id: "account",

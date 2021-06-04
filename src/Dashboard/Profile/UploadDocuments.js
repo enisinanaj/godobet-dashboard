@@ -70,7 +70,8 @@ const UploadDocuments = ({user, applicationState, onDocumentsUploaded}) => {
     var djsConfig = {
         addRemoveLinks: true,
         autoProcessQueue: true,
-        acceptedFiles: "image/jpeg,image/png,application/pdf"
+        acceptedFiles: "image/jpeg,image/png,application/pdf",
+        maxSize: 4194304
     };
     
     const uploadDocument = (type, file) => {

@@ -15,6 +15,7 @@ import { ValidationForm, TextInput } from "react-bootstrap4-form-validation";
 import config from "../../../store/config";
 import * as actions from "../../../store/actions";
 import { bindActionCreators } from "redux";
+import { Form } from "react-bootstrap";
 
 class SignUp extends React.Component {
   state = {
@@ -163,10 +164,18 @@ class SignUp extends React.Component {
                           autoComplete="off"
                         />
                       </div>
+                      <div className="input-group mb-4">
+                        <Form.Check 
+                          checked={this.state.formRegister.terms} 
+                          value={this.state.formRegister.terms} 
+                          label={"Accetto i termini e le condizioni d'uso"}
+                          name={"terms"}
+                          onChange={this.validateOnChange}/>
+                      </div>
                       <blockquote className="mb-2 text-danger">
                         {this.state.errorMessage}
                       </blockquote>
-                      <button className="btn btn-primary btn-block mb-4">
+                      <button className="btn btn-primary btn-block mb-4" disabled={!this.state.formRegister.terms}>
                         Registrati
                       </button>
                       <p className="mb-2">
@@ -194,6 +203,19 @@ class SignUp extends React.Component {
                     </div>
                   </div>
                 }
+              </div>
+              <div className="footer">
+                <div className="footer-links" style={{flexDirection: "row", justifyContent: "flex-start", flex: 1, display: "flex", padding: "0 20px"}}>
+                  <a href="https://godobet.it/privacy-policy">
+                    <span className="footer-item">Privacy Policy</span>
+                  </a>
+                  <a href="https://godobet.it/terms-of-service" style={{marginLeft: "15px"}}>
+                    <span className="footer-item">Termini di servizio</span>
+                  </a>
+                </div>
+                <div className="footer-footer" style={{flexDirection: "row", justifyContent: "flex-start", flex: 1, display: "flex", padding: "0 20px"}}>
+                  <span className="text-muted">{"\u00a9"} GODOBET 2021</span>
+                </div>
               </div>
             </div>
           </div>

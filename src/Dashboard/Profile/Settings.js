@@ -586,8 +586,8 @@ const Settings = (props) => {
                                 !user.stripeAccountId && (
                                   <small class="text-muted">
                                     Registrando l'account per i pagamenti
-                                    implicitamente accetti le condizioni di
-                                    servizio di{" "}
+                                    implicitamente accetti le <a href="https://godobet.it/terms-of-service">condizioni di
+                                    servizio</a> di Godobet e le condizioni di servizio {" "}
                                     <a
                                       href="https://stripe.com/connect-account/legal/full"
                                       target="_blank"
