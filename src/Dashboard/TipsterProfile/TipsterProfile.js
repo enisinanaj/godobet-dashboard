@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Tabs } from "react-bootstrap";
-import { Alert, Tab } from "bootstrap";
+import { Tab } from "bootstrap";
 import Chart from "react-apexcharts";
 import Aux from "../../hoc/_Aux";
 import { bindActionCreators } from "redux";

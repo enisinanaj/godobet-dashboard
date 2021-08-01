@@ -13,7 +13,6 @@ import { connect } from "react-redux";
 import Swal from 'sweetalert2';
 import { Button } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
-import { BlockPicker } from 'react-color';
 
 const TipDetail = (props) => {
     const [pool, setPool] = useState({service: {}, events: [], author: {}});
@@ -41,6 +40,7 @@ const TipDetail = (props) => {
 
             setSubscriptions(subscriptions._embedded ? subscriptions._embedded.subscriptions : [])
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -52,7 +52,7 @@ const TipDetail = (props) => {
             .then(r => r.json())
             .then(pool => {
                 if(services.indexOf(pool._embedded.service.id) >= 0) {
-                    if(pool._embedded.service.author.userCode == props.applicationState.user.userCode) {
+                    if(pool._embedded.service.author.userCode === props.applicationState.user.userCode) {
                         setAmAuthor(true);
                         setMotivation(pool.motivation);
                     }
@@ -66,7 +66,7 @@ const TipDetail = (props) => {
             })
             .then(() => setLoading(false));
         }
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [subscriptions, services]);
 
     const callUrl = (url) => {

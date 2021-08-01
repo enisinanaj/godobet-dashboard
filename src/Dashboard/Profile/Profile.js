@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {Row, Col, Card, Tabs} from 'react-bootstrap';
-import { Tab } from 'bootstrap';
+import {Row, Col, Card} from 'react-bootstrap';
 import Aux from "../../hoc/_Aux";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -10,10 +9,7 @@ import TokenManager from '../../App/auth/TokenManager';
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import Loader from "../../App/layout/Loader";
 import LocaleNumber from '../../App/components/LocaleNumber';
-import MarketCard from '../Marketplace/MarketCard';
 import ServiceCard from '../TipsterServices/ServiceCard';
-
-const FOLLOWED = 1;
 
 function TipsterProfile(props) {
     const [currentUser, setCurrentUser] = useState({})
@@ -51,6 +47,7 @@ function TipsterProfile(props) {
                 })));
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[currentUser]);
 
     const load = (url, args = {}) => {

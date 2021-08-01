@@ -16,6 +16,7 @@ const  UserCards = (props) => {
       return;
     }
     submitSearch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const submitSearch = () => {

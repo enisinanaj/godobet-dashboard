@@ -160,6 +160,7 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
 
   useEffect(() => {
     loadUser(pool.author.userCode)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const avatar = () => {

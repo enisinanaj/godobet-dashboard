@@ -15,9 +15,9 @@ export default class TokenManager {
   }
 
   getToken() {
-    // if (this.token && new Date().getTime() - this.lastToken < (30 * 1000 * 60)) {
-    //   return new Promise(() => this.token, _ => {});
-    // }
+    if (this.token && new Date().getTime() - this.lastToken < (30 * 1000 * 60)) {
+      return new Promise((resolve) => resolve(this.token));
+    }
 
     var loginInfo = { username: "admin", password: "admin" };
     return fetch(config.API_URL + "/token", {

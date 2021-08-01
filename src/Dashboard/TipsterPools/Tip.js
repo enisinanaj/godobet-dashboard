@@ -36,6 +36,7 @@ const Tip = props => {
         return null;
     };
 
+    // eslint-disable-next-line
     const loadUser = (userCode) => {
         load(`${config.API_URL}/users/${userCode}`).then(setUser)
     }

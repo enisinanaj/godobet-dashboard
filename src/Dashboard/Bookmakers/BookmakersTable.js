@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardColumns, Col, Row } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import Aux from "../../hoc/_Aux";
 import { withRouter } from "react-router-dom";
 
@@ -7,7 +7,7 @@ import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-const BookmakersTable = (props) => {
+const BookmakersTable = () => {
 
   return (
     <Aux>

@@ -60,6 +60,7 @@ const UploadDocuments = ({user, applicationState, onDocumentsUploaded}) => {
     useEffect(() => {
         console.warn("done is: " + JSON.stringify(uploadedBackDocument && uploadedBillDocument && uploadedFrontDocument))
         onDocumentsUploaded(uploadedBackDocument && uploadedBillDocument && uploadedFrontDocument)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [uploadedBackDocument, uploadedBillDocument, uploadedFrontDocument])
 
     var config = {

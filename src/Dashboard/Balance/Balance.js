@@ -144,10 +144,11 @@ class Balance extends Component {
 
     changeType(type) {
         switch(type) {
-            case 'cumulative':
+            case 'day2day':
                 this.setState({type: type});
                 break;
-            case 'day2day':
+            default:
+            case 'cumulative':
                 this.setState({type: type});
                 break;
         }
