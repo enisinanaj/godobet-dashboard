@@ -1,7 +1,12 @@
 FROM node:10.16-alpine as packages
 RUN mkdir -p /app
 WORKDIR /app
-RUN ["apk", "add", "git"]
+RUN apk add --no-cache --virtual .gyp \
+        python \
+        make \
+        g++ \
+        git \
+    && apk del .gyp
 COPY package.json package.json
 RUN npm install
 

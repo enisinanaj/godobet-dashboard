@@ -8,6 +8,7 @@ import Aux from "../../../../../hoc/_Aux";
 import NavGroup from "./NavGroup";
 import DEMO from "../../../../../store/constant";
 import * as actionTypes from "../../../../../store/actions";
+import { Card } from "react-bootstrap";
 
 class NavContent extends Component {
   state = {
@@ -15,6 +16,19 @@ class NavContent extends Component {
     prevDisable: true,
     nextDisable: false,
   };
+
+  psRef = null;
+
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.psRef) {
+        console.warn("updating scrollbar")
+        //this.psRef.update()
+        this.psRef.updateScroll()
+      }
+    },
+    1000);
+  }
 
   scrollPrevHandler = () => {
     const wrapperWidth = document.getElementById("sidenav-wrapper").clientWidth;
@@ -114,9 +128,21 @@ class NavContent extends Component {
     } else {
       mainContent = (
         <div className="navbar-content next-scroll">
-          <PerfectScrollbar>
+          <PerfectScrollbar options={{ wheelSpeed: 2, swipeEasing: true }} ref={psRef => this.psRef = psRef}>
             <ul className="nav pcoded-inner-navbar" id="nav-ps-next">
               {navItems}
+              <li>
+                  <Card className="text-center">
+                      <Card.Body>
+                          <i className="feather icon-sunset f-40" />
+                          <h6 className="mt-3">Aiuto?</h6>
+                          <p>Contattaci via email se hai bisogno di aiuto.</p>
+                          <a href={"mailto:support@godobet.it"} rel="noopener noreferrer" className="btn btn-primary btn-sm text-white m-0">
+                              Supporto
+                          </a>
+                      </Card.Body>
+                  </Card>
+              </li>
             </ul>
           </PerfectScrollbar>
         </div>

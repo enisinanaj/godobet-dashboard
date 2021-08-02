@@ -85,6 +85,16 @@ const Sports = [
         "icon": "🚴🏻‍♂️",
         "label": "🚴🏻‍♂️  Cilcismo",
         "value": "ciclismo"
+    },
+    {
+        "icon": "⚽️",
+        "label": "⚽️  Futsal",
+        "value": "futsal"
+    },
+    {
+        "icon": "🎮",
+        "label": "🎮  esports",
+        "value": "esports"
     }
 ];
 
