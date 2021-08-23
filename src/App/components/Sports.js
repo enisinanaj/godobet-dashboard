@@ -32,6 +32,11 @@ const Sports = [
         "value": "volleyball"
     },
     {
+        "icon": "🏖🏐",
+        "label": "🏖🏐  Beach Volley",
+        "value": "beachvolley"
+    },
+    {
         "icon": "🏈",
         "label": "🏈  Football Americano",
         "value": "american football"
