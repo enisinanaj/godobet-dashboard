@@ -131,7 +131,7 @@ const Wallet = (props) => {
                     </Col>
                   </Row>
                 }
-                { !loading && userSetUp && //balance.available[0].amount > 0 &&
+                { !loading && userSetUp && balance.available[0].amount > 0 &&
                   <Row style={{marginTop: 20, flexDirection: 'row', justifyContent: 'flex-start', padding: "0 20px"}}>
                     <Button variant="primary" style={{flex: 1}} onClick={startWithdrawalProcedure} >
                       <em className={"fa fa-money"} style={{marginRight: 10}}></em>
