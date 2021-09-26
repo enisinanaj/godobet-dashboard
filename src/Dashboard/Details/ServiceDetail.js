@@ -121,7 +121,10 @@ const ServiceDetail = (props) => {
       .then((object) => {
         setCurrentObject(object);
       })
-      .catch(() => window.location = "/maintenance/error");
+      .catch(() => Swal.fire({
+        type: 'error',
+        text: "C'è stato un errore di sistema. Se l'error persiste, ti preghiamo di contattare il supporto via telegram o email."
+      }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

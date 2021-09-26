@@ -9,6 +9,7 @@ import { getClassNameForOutcome } from '../PendingTips/TipCard'
 import LocaleNumber from "../../App/components/LocaleNumber";
 import './tipsterCard.css'
 import Swal from "sweetalert2";
+import { withRouter } from "react-router-dom";
 
 moment.locale("it")
 
@@ -107,6 +108,10 @@ const Tip = props => {
         .then(() => props.callback());
     };
 
+    const editTip = () => {
+        props.history.push('/tip/detail/?p=' + pool.id);
+    };
+
     return (
     <Col key={pool.id} md={4} lg={4} xl={4} xs={12} sm={6}>
         {/* style={{background: "#e83e8c"}} */}
@@ -125,6 +130,8 @@ const Tip = props => {
                             <Dropdown.Item onClick={() => {askForUpdate("lose")}}>Lose</Dropdown.Item>
                             <Dropdown.Item onClick={() => {askForUpdate("12lose")}}>1/2 Lose</Dropdown.Item>
                             <Dropdown.Item onClick={() => {askForUpdate("void")}}>Void</Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item onClick={editTip}>Modifica motivazione</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>}
                     {!props.author && !props.played && <Dropdown className="drp-tipster-pool">
@@ -315,4 +322,4 @@ const Tip = props => {
     </Col>);
 }
 
-export default Tip;
+export default withRouter(Tip);

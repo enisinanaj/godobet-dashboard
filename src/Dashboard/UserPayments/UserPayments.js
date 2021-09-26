@@ -8,6 +8,7 @@ import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import PaymentItem from "./PaymentItem";
+import Swal from "sweetalert2";
 
 const UserPayments = (props) => {
 
@@ -21,7 +22,10 @@ const UserPayments = (props) => {
         setSubscriptions(subscriptions._embedded ? subscriptions._embedded.subscriptions : []);
         setLoading(false);
       })
-      .catch(e => window.location = "/maintenance/error");
+      .catch(e => Swal.fire({
+        type: 'error',
+        text: "C'è stato un errore di sistema. Se l'error persiste, ti preghiamo di contattare il supporto via telegram o email."
+      }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

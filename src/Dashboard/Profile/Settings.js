@@ -34,6 +34,7 @@ const Settings = (props) => {
   const [documentNumber, setDocumentNumber] = useState(
     user.idDocumentNumber || ""
   );
+  const [usernameError, setUsernameError] = useState(false);
 
   const SHOW_FULL_PROFILE = user.roleValue > 4;
 
@@ -361,7 +362,7 @@ const Settings = (props) => {
                                 setNameChanged(true);
                               }}
                             />
-                            <span className={"text-danger"}>Il nome utente selezionato non è disponibile.</span>
+                            {usernameError && <span className={"text-danger"}>Il nome utente selezionato non è disponibile.</span>}
                           </Form.Group>
                         </Col>
                       </Row>

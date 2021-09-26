@@ -145,6 +145,14 @@ const TipDetail = (props) => {
             });
         }).then(() => {
             setSaving(false)
+            Swal.fire({
+                title: "Aggiornamento salvato con successo!",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonColor: "#56BE7F",
+                // cancelButtonColor: "#000",
+                // confirmButtonText: "si",
+            })
         });
     }
     
@@ -276,14 +284,14 @@ const TipDetail = (props) => {
                                                     setMotivation(target.value);
                                                 }}
                                             />
-                                            <div style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', display: 'flex'}}>
-                                                <Button variant="primary" className={'btn-sm'} style={{borderRadius: "60px", marginTop: "-32px"}} disabled={saving} onClick={() => {
+                                            <Row style={{wordBreak: 'break-word', borderBottom: '1px solid #e8e8e8', padding: '20px', flexDirection: 'row', flex: 1, justifyContent: 'space-between'}}>
+                                            <Button variant="primary" style={{flex: 1, margin: '0 5px'}} disabled={saving} onClick={() => {
                                                     updateTip()
-                                                }}><em className={saving ? "fa fa-check" : "fa fa-check"} /></Button>
-                                            </div>
+                                                }}><em className={saving ? "fa fa-circle-o-notch fa-spin" : "fa fa-check"} /> Salva</Button>
+                                            </Row>
                                         </Row>}
 
-                                        <Row style={{wordBreak: 'break-word', borderBottom: '1px solid #e8e8e8', padding: '20px', flexDirection: 'row', flex: 1, justifyContent: 'space-between'}}>
+                                        {!amAuthor && <Row style={{wordBreak: 'break-word', borderBottom: '1px solid #e8e8e8', padding: '20px', flexDirection: 'row', flex: 1, justifyContent: 'space-between'}}>
                                             <Button variant="primary" style={{flex: 1, margin: '0 5px'}} onClick={() => {
                                                     Swal.fire({
                                                         title: "Sei sicuro di voler seguire questa tip? Azione irreversibile!",
@@ -313,7 +321,7 @@ const TipDetail = (props) => {
                                                     }
                                                 });
                                             }}><em className={"fa fa-times"} />   Ignora</Button>
-                                        </Row>
+                                        </Row>}
                                     </Col>
                                 </Row>
                             </Card.Body>
