@@ -16,6 +16,7 @@ export default {
           type: "item",
           icon: "feather icon-home",
           url: "/dashboard/default",
+          classes: "ni",
           role: 4,
         },
         {
@@ -24,6 +25,7 @@ export default {
           type: "item",
           icon: "feather icon-inbox",
           url: "/dashboard/pending-tips",
+          classes: "ni",
           role: 4,
         },
         {
@@ -32,6 +34,7 @@ export default {
           type: "item",
           icon: "feather icon-trending-up",
           url: "/dashboard/balance",
+          classes: "ni",
           role: 4,
         },
         {
@@ -40,6 +43,7 @@ export default {
           type: "item",
           icon: "feather icon-box",
           url: "/dashboard/my-services",
+          classes: "ni",
           role: 4,
         },
         {
@@ -48,6 +52,7 @@ export default {
           type: "item",
           icon: "feather icon-user",
           url: "/dashboard/details",
+          classes: "ni",
           role: 0,
           hidden: true
         },
@@ -57,6 +62,7 @@ export default {
           type: "item",
           icon: "feather icon-user",
           url: "/tip/detail",
+          classes: "ni",
           role: 0,
           hidden: true
         },
@@ -66,6 +72,7 @@ export default {
           type: "item",
           icon: "fa fa-history",
           url: "/profile/payments",
+          classes: "ni",
           role: 0,
         },
         {
@@ -74,6 +81,7 @@ export default {
           type: "item",
           icon: "feather icon-user",
           url: "/profile",
+          classes: "ni",
           role: 0,
         },
         {
@@ -81,6 +89,7 @@ export default {
           title: "Impostazioni",
           type: "item",
           icon: "feather icon-settings",
+          classes: "ni",
           role: 3,
           url: "/settings",
         },
@@ -89,6 +98,7 @@ export default {
           title: "Amministratore",
           type: "collapse",
           icon: "feather icon-settings",
+          classes: "ni",
           hidden: true,
           role: 5,
           children: [
@@ -97,6 +107,7 @@ export default {
               title: "Utenti",
               type: "item",
               icon: "feather icon-users",
+              classes: "ni",
               url: "/users",
               role: 6,
               hidden: true,
@@ -108,6 +119,7 @@ export default {
           title: "Impostazioni profilo",
           type: "item",
           icon: "feather icon-user",
+          classes: "ni",
           url: "/settings",
           role: 0,
           hidden: true,
@@ -125,6 +137,7 @@ export default {
           title: "Servizi",
           type: "item",
           icon: "feather icon-shopping-cart",
+          classes: "ni",
           url: "/dashboard/marketplace",
           role: 3
         },
@@ -135,12 +148,14 @@ export default {
           icon: "feather icon-users",
           role: 0,
           url: "/tipsters",
+          classes: "ni",
         },
         {
           id: "bookmakerstable",
           title: "Bookmakers",
           type: "item",
           icon: "feather icon-book",
+          classes: "ni",
           role: 0,
           url: "/bookmakersTable",
         },
@@ -150,12 +165,14 @@ export default {
       id: "menu tipster",
       title: "Menu tipster",
       type: "group",
+      classes: "ni",
       icon: "icon-navigation",
       role: 5,
       children: [
         {
           id: "my-services",
           title: "I miei servizi",
+          classes: "ni",
           type: "item",
           icon: "feather icon-package",
           url: "/dashboard/tipster/services",
@@ -165,6 +182,7 @@ export default {
         {
           id: "my-tips",
           title: "Le mie Tips",
+          classes: "ni",
           type: "item",
           icon: "fa fa-rss",
           url: "/dashboard/tipster/pools",
@@ -175,6 +193,7 @@ export default {
           id: "create-service",
           title: "Pubblica un servizio",
           type: "item",
+          classes: "ni",
           icon: "feather icon-book",
           url: "/dashboard/tipster/createService",
           role: 5,
@@ -185,6 +204,7 @@ export default {
           title: "Crea tip",
           type: "item",
           icon: "feather icon-bookmark",
+          classes: "ni",
           url: "/dashboard/tipster/createTip",
           hidden: true,
           role: 5,
@@ -194,6 +214,7 @@ export default {
           title: "Wallet",
           type: "item",
           icon: "feather icon-credit-card",
+          classes: "ni",
           url: "/wallet",
           role: 5,
         }

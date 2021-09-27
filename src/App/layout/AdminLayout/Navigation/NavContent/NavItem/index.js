@@ -61,14 +61,14 @@ class NavItem extends Component {
       if (this.props.windowWidth < 992) {
         mainContent = (
           <li
-            className={this.props.item.classes}
+            className={"nav-item " + this.props.item.classes}
             onClick={this.props.onItemClick}
           >
             {subContent}
           </li>
         );
       } else {
-        mainContent = <li className={this.props.item.classes}>{subContent}</li>;
+        mainContent = <li className={"nav-item " + this.props.item.classes}>{subContent}</li>;
       }
     }
 

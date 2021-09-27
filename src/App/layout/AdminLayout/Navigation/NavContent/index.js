@@ -127,8 +127,8 @@ class NavContent extends Component {
       );
     } else {
       mainContent = (
-        <div className="navbar-content next-scroll">
-          <PerfectScrollbar options={{ wheelSpeed: 2, swipeEasing: true }} ref={psRef => this.psRef = psRef}>
+        <div className="navbar-content next-scroll ps">
+          <PerfectScrollbar options={{ wheelSpeed: 2, swipeEasing: true }}>
             <ul className="nav pcoded-inner-navbar" id="nav-ps-next">
               {navItems}
               <li>
@@ -137,7 +137,7 @@ class NavContent extends Component {
                           <i className="feather icon-sunset f-40" />
                           <h6 className="mt-3">Aiuto?</h6>
                           <p>Contattaci via email se hai bisogno di aiuto.</p>
-                          <a href={"mailto:support@godobet.it"} rel="noopener noreferrer" className="btn btn-primary btn-sm text-white m-0">
+                          <a href={"mailto:info@godobet.it"} rel="noopener noreferrer" className="btn btn-primary btn-sm text-white m-0">
                               Supporto
                           </a>
                       </Card.Body>

@@ -2,7 +2,7 @@ version: "3"
 
 services:
   portainer:
-    image: "registry.e2n.me/godobet-dashboard:latest"
+    image: "registry.e2n.me/godobet-dashboard:prod"
     restart: unless-stopped
     environment:
       - VIRTUAL_HOST=dashboard.godobet.it

@@ -11,19 +11,25 @@ import navigation from "../../../../menu-items";
 
 class Navigation extends Component {
   scroll = () => {
-    if (this.props.navFixedLayout && this.props.headerFixedLayout === false) {
-      const el = document.querySelector(".pcoded-navbar.menupos-fixed");
+    if (this.props.navFixedLayout && !this.props.headerFixedLayout) {
+      const el = document.querySelector('.pcoded-navbar.menupos-fixed');
+      if (!el)
+          return;
       const scrollPosition = window.pageYOffset;
       if (scrollPosition > 60) {
-        el.style.position = "fixed";
-        el.style.transition = "none";
-        el.style.marginTop = "0";
-      } else {
-        el.style.position = "absolute";
-        el.style.marginTop = "60px";
+          el.style.position = 'fixed';
+          el.style.transition = 'none';
+          el.style.marginTop = '0';
       }
-    } else {
-      document.querySelector(".pcoded-navbar").removeAttribute("style");
+      else {
+          el.style.position = 'absolute';
+          el.style.marginTop = '50px';
+      }
+    }
+    else {
+        const navBarDom = document.querySelector('.pcoded-navbar');
+        if (navBarDom)
+            navBarDom.removeAttribute('style');
     }
   };
 
