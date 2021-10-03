@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter, Link } from "react-router-dom";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -12,7 +12,7 @@ const AbsoluteButton = (props) => {
   return props.applicationState.user.roleValue >= 5 ? (
     <div className="absolute-div">
       <h5 className={hover ? 'crea-tip-text hover' : 'crea-tip-text'}>Crea tip</h5>
-      <a href="/dashboard/tipster/createTip">
+      <Link to="/dashboard/tipster/createTip">
         <button
           onClick={() => setActive(!active)}
           onMouseOver={() => setHover(true)}
@@ -22,7 +22,7 @@ const AbsoluteButton = (props) => {
         >
           +
         </button>
-      </a>
+      </Link>
     </div>
   ) : null;
 };

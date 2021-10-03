@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 
 import Aux from "../../../../../hoc/_Aux";
 import * as actions from "../../../../../store/actions";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import "./nav.css";
 import ConfirmBox from "../../../../../Dashboard/ConfirmBox/ConfirmBox";
 import TokenManager from "../../../../auth/TokenManager";
@@ -75,8 +75,8 @@ class NavRight extends Component {
         ) : null}
         <ul className="navbar-nav ml-auto">
           <li>
-            <a
-              href="/dashboard/marketplace"
+            <Link
+              to="/dashboard/marketplace"
               aria-expanded="false"
               className="nav-link has-ripple"
             >
@@ -84,7 +84,7 @@ class NavRight extends Component {
               <span className="d-none d-lg-inline-block m-l-10">
                 Servizi
               </span>
-            </a>
+            </Link>
           </li>
           <li>
             <Dropdown className="drp-user">
@@ -121,23 +121,23 @@ class NavRight extends Component {
                 </div>
                 <ul className="pro-body">
                   <li>
-                    <a href="/profile" className="dropdown-item">
+                    <Link to="/profile" className="dropdown-item">
                       <i className="feather icon-user" /> Profile
-                    </a>
+                    </Link>
                   </li>
                   {this.props.user.roleValue >= 6 ? (
                     <li>
-                      <a href="/users" className="dropdown-item">
+                      <Link to="/users" className="dropdown-item">
                         <i className="feather icon-settings" /> All Users
-                      </a>
+                      </Link>
                     </li>
                   ) : (
                     <></>
                   )}
                   <li>
-                    <a href="/settings" className="dropdown-item">
+                    <Link to="/settings" className="dropdown-item">
                       <i className="feather icon-settings" /> Impostazioni
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </Dropdown.Menu>

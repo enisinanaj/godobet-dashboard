@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Col, Form, Card, Row, Button } from "react-bootstrap";
 import { DropzoneComponent } from "react-dropzone-component";
 import Swal from "sweetalert2";
+import { withRouter } from "react-router-dom";
 
 import TokenManager from "../../App/auth/TokenManager";
 import { connect } from "react-redux";
@@ -250,7 +251,7 @@ const CreateNewService = (props) => {
                       title: "Servizio creato!",
                     })
                     .then(() => {
-                      window.location = "/dashboard/tipster/services";
+                      props.history.push("/dashboard/tipster/services");
                     });
 
                     props.callback();
@@ -474,4 +475,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateNewService);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreateNewService));

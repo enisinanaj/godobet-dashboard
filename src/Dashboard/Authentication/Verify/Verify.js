@@ -44,7 +44,7 @@ class Verify extends React.Component {
   componentDidMount = () => {
     const q = new URLSearchParams(this.props.location.search);
     if (q.get('mode') !== 'verifyEmail') {
-      window.location.href = `${config.GOOGLE_FIREBASE_ENDPOINT}/auth/action${this.props.location.search}`;
+      this.props.history.push(`${config.GOOGLE_FIREBASE_ENDPOINT}/auth/action${this.props.location.search}`);
     } else {
       this.handleSubmit();
     }

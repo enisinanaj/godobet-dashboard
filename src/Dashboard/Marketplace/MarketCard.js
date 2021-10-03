@@ -9,6 +9,7 @@ import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import '../../assets/scss/tip.css';
 import './Marketplace.css'
 import BASE_CONFIG from "../../store/config";
+import { withRouter } from "react-router-dom";
 
 const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurchasing, user, col }) => {
   const getLatestImage = (media) => {
@@ -69,9 +70,11 @@ const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurc
               {item.excerpt}
             </Card.Text>
             <Row style={{ justifyContent: "space-around" }}>
-              <Button className="pull-right" variant="success" onClick={() => {window.location = `/dashboard/service/${item.id}`}}>
-                <em class="feather icon-arrow-right mr-2"></em> Vai al dettaglio
-              </Button>
+              <Link to={`/dashboard/service/${item.id}`}>
+                <Button className="pull-right" variant="success">
+                  <em class="feather icon-arrow-right mr-2"></em> Vai al dettaglio
+                </Button>
+              </Link>
               {!item.free && canPurchase(item) && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} style={{minWidth: "161px"}} >
                 {inPurchasing === item.id ? (
                   <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
@@ -115,4 +118,4 @@ const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurc
   });
 };
 
-export default MarketCard;
+export default withRouter(MarketCard);

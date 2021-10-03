@@ -132,7 +132,7 @@ const Marketplace = (props) => {
           })
         })
         .then(e => {
-          window.location = "/dashboard/my-services";
+          props.history.push("/dashboard/my-services");
         })
       });
   };

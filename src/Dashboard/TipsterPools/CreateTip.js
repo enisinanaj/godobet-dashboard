@@ -12,6 +12,7 @@ import config from "../../store/config";
 import Swal from "sweetalert2";
 import CustomAlert from "../TipsterServices/CustomAlert";
 import Bookmakers from "../../App/components/Bookmakers";
+import { withRouter } from "react-router-dom";
 
 const CreateTip = (props) => {
   const [description, setDescription] = useState("");
@@ -167,7 +168,7 @@ const CreateTip = (props) => {
               setSubmittingToServer(false)
               Swal.fire("Tip salvata!", "", "success")
               .then(() => {
-                window.location = "/dashboard/tipster/pools";
+                props.history.push("/dashboard/tipster/pools");
               });
             });
           }
@@ -330,4 +331,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateTip);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreateTip));
