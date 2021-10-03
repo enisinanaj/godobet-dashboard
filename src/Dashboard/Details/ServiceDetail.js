@@ -173,15 +173,15 @@ const ServiceDetail = (props) => {
             const subscription = subscriptions._embedded.subscriptions.find(sub => sub.serviceId === Number(id) && sub.valid);
             if (!subscription && subscribable) {
               setPurchasable(true);
-            } else {
-             callUrl(BASE_CONFIG.API_URL + '/services/' + id + '/pools')
-              .then(e => e.json().then(pools => {
-                setPools(pools._embedded.pools);
-                let last30dPools = pools._embedded.pools.filter(p => (new Date() - new Date(p.updatedOn)) <= (30 * 24 * 60 * 60 * 1000))
-                const profit = last30dPools.map(pool => ({y: pool.profit.toFixed(2), x: moment(pool.updatedOn).format("DD MMM YYYY")}))
-                setSeries([{data: profit}])
-              }))
             }
+            
+            callUrl(BASE_CONFIG.API_URL + '/services/' + id + '/pools')
+            .then(e => e.json().then(pools => {
+              setPools(pools._embedded.pools);
+              let last30dPools = pools._embedded.pools.filter(p => (new Date() - new Date(p.updatedOn)) <= (30 * 24 * 60 * 60 * 1000))
+              const profit = last30dPools.map(pool => ({y: pool.profit.toFixed(2), x: moment(pool.updatedOn).format("DD MMM YYYY")}))
+              setSeries([{data: profit}])
+            }))
           }
         });
     }
@@ -252,7 +252,7 @@ const ServiceDetail = (props) => {
           })
         })
         .then(e => {
-          window.location = "/dashboard/my-services";
+          props.history.push("/dashboard/my-services");
         })
       });
   };
@@ -443,9 +443,9 @@ const ServiceDetail = (props) => {
               </Card>
             </Col>
           </Row>
-          {pools && pools.length > 0 && <h4>Ultime Tips</h4>}
+          {!purchasable && pools && pools.length > 0 && <h4>Ultime Tips</h4>}
           <Row>
-            {pools.map(pool => (
+            {!purchasable && pools.map(pool => (
               <Tip key={pool.id} pool={pool} author={author.userCode === props.applicationState.user.userCode} played={playedPoolIds.indexOf(pool.id) >= 0} user={author} />
             ))}
           </Row>

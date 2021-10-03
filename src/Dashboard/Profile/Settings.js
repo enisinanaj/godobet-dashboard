@@ -352,7 +352,7 @@ const Settings = (props) => {
                         </Col>
                         <Col md={12} sm={12}>
                           <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Nome utente</Form.Label>
+                            <Form.Label>Nome utente <span className={"text-danger"}>*</span></Form.Label>
                             <Form.Control
                               type="text"
                               placeholder="Nome utente"
@@ -479,7 +479,7 @@ const Settings = (props) => {
                       <Button
                         variant="primary"
                         className={"float-right"}
-                        disabled={!nameChanged && !addressChanged}
+                        disabled={(!nameChanged && !addressChanged) || !user.username}
                         onClick={saveAccount}
                       >
                         Salva
