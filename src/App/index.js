@@ -3,7 +3,6 @@ import {
   Switch,
   Route,
   Redirect,
-  BrowserRouter,
   withRouter,
 } from "react-router-dom";
 import Loadable from "react-loadable";
@@ -15,6 +14,7 @@ import Aux from "../hoc/_Aux";
 import ScrollToTop from "./layout/ScrollToTop";
 import AuthRoutes from "../route.auth";
 import MaintenanceRoutes from "../route.maintenance";
+import AdminRoutes from "../routes.admin";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as actions from "../store/actions";
@@ -61,7 +61,8 @@ class App extends Component {
         <Elements stripe={stripePromise}>
           <ScrollToTop>
             <Suspense fallback={<Loader />}>
-              <BrowserRouter>
+              {/* <BrowserRouter> */}
+              <Route path={AuthRoutes.map(el => el.path).concat(MaintenanceRoutes.map(el => el.path)).concat(AdminRoutes.map(el => el.path))}>
                 <Switch>
                   {menu}
                   {maintenance}
@@ -73,7 +74,8 @@ class App extends Component {
                     )}
                   </Route>
                 </Switch>
-              </BrowserRouter>
+              </Route>
+              {/* </BrowserRouter> */}
             </Suspense>
           </ScrollToTop>
         </Elements>

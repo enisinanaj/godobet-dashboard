@@ -40,7 +40,6 @@ class MyServices extends Component {
         `/users/${this.props.user.userCode}/subscriptions?page=0&size=1000`
     )
       .then((r) => {
-        console.warn(r)
         this.setState({
           services:
             r._embedded && r._embedded.subscriptions

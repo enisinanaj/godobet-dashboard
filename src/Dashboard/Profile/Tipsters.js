@@ -6,9 +6,8 @@ import Aux from "../../hoc/_Aux";
 import LocaleNumber from "../../App/components/LocaleNumber";
 import md5 from "md5";
 
-const  Tipsters = (props) => {
+const  Tipsters = () => {
   const [users, setUsers] = useState([]);
-  const [winRatio, setWinRatio] = useState(0);
   
   useEffect(() => {
     TokenManager.getInstance()

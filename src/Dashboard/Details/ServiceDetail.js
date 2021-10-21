@@ -20,6 +20,7 @@ import LocaleNumber from "../../App/components/LocaleNumber";
 import moment from "moment";
 import { isProfileComplete } from "../../App/components/UserUtil";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const ServiceDetail = (props) => {
   const [winRatio, setWinRatio] = useState(0)
@@ -421,10 +422,10 @@ const ServiceDetail = (props) => {
                 <Card.Body>
                   <Row style={{textAlign: 'center'}}>
                     <Col>
-                      <a href={`/tipsters/${author.userCode}`}>
+                      <Link to={`/tipsters/${author.userCode}`}>
                         <img style={{objectFit: "cover", borderRadius: "75px", border: "solid #e0e0e0AA 6px"}} height="150px" width='150px' src={getAvatar()} alt={"User avatar"} />
                         <h5 className='pt-4'>{author.username}</h5>
-                      </a>
+                      </Link>
                     </Col>
                   </Row>
                 </Card.Body>

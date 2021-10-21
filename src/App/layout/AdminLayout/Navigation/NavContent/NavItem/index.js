@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-// import {NavLink} from 'react-router-dom';
 import { withRouter } from "react-router-dom";
 import windowSize from "react-window-size";
 
@@ -8,6 +7,7 @@ import Aux from "../../../../../../hoc/_Aux";
 import NavIcon from "./../NavIcon";
 import NavBadge from "./../NavBadge";
 import * as actionTypes from "../../../../../../store/actions";
+import { Link } from "react-router-dom";
 
 class NavItem extends Component {
   render() {
@@ -36,22 +36,14 @@ class NavItem extends Component {
       );
     } else if (!this.props.item.hidden) {
       subContent = (
-        // <NavLink to={this.props.item.url} className="nav-link" exact={true} target={itemTarget}>
-        <a
-          href={this.props.item.url}
-          className={
-            "nav-link" +
-            (this.props.location.pathname === this.props.item.url
-              ? " active"
-              : "")
-          }
-          target={itemTarget}
-        >
+        <Link to={this.props.item.url} className={"nav-link" +
+        (this.props.location.pathname === this.props.item.url
+          ? " active"
+          : "")} exact={this.props.item.exact || true} target={itemTarget}>
           <NavIcon items={this.props.item} />
           {itemTitle}
           <NavBadge layout={this.props.layout} items={this.props.item} />
-        </a>
-        // </NavLink>
+        </Link>
       );
     }
     let mainContent = "";

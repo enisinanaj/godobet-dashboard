@@ -58,7 +58,7 @@ class Balance extends Component {
         .then(pools => {
             var balance = [];
 
-            if (pools.length == 0) {
+            if (pools.length === 0) {
                 return;
             }
             

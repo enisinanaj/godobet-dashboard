@@ -3,7 +3,6 @@ import {
   Route,
   Switch,
   Redirect,
-  BrowserRouter,
   withRouter,
 } from "react-router-dom";
 import { connect } from "react-redux";
@@ -162,14 +161,14 @@ class AdminLayout extends Component {
                     <div className="page-wrapper">
                       {!this.state.loaded && <Loader />}
                       {this.state.loaded && <Suspense fallback={<Loader />}>
-                        <BrowserRouter>
+                        {/* <BrowserRouter> */}
                           <Switch>
                             {menu}
                             {admin}
                             {demo}
                             <Redirect from="/" to={this.props.defaultPath} />
                           </Switch>
-                        </BrowserRouter>
+                        {/* </BrowserRouter> */}
                       </Suspense>}
                     </div>
                   </div>

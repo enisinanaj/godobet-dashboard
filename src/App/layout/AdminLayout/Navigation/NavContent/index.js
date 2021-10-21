@@ -22,8 +22,6 @@ class NavContent extends Component {
   componentDidMount() {
     setTimeout(() => {
       if (this.psRef) {
-        console.warn("updating scrollbar")
-        //this.psRef.update()
         this.psRef.updateScroll()
       }
     },
@@ -130,7 +128,7 @@ class NavContent extends Component {
         <div className="navbar-content next-scroll ps">
           <PerfectScrollbar options={{ wheelSpeed: 2, swipeEasing: true }}>
             <ul className="nav pcoded-inner-navbar" id="nav-ps-next">
-              {navItems}
+              { navItems }
               <li>
                   <Card className="text-center">
                       <Card.Body>
