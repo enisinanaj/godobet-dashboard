@@ -39,7 +39,7 @@ class NavItem extends Component {
         <Link to={this.props.item.url} className={"nav-link" +
         (this.props.location.pathname === this.props.item.url
           ? " active"
-          : "")} exact={this.props.item.exact || true} target={itemTarget}>
+          : "")} target={itemTarget}>
           <NavIcon items={this.props.item} />
           {itemTitle}
           <NavBadge layout={this.props.layout} items={this.props.item} />

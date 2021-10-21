@@ -61,7 +61,6 @@ class App extends Component {
         <Elements stripe={stripePromise}>
           <ScrollToTop>
             <Suspense fallback={<Loader />}>
-              {/* <BrowserRouter> */}
               <Route path={AuthRoutes.map(el => el.path).concat(MaintenanceRoutes.map(el => el.path)).concat(AdminRoutes.map(el => el.path))}>
                 <Switch>
                   {menu}
@@ -75,7 +74,6 @@ class App extends Component {
                   </Route>
                 </Switch>
               </Route>
-              {/* </BrowserRouter> */}
             </Suspense>
           </ScrollToTop>
         </Elements>
