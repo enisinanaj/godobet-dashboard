@@ -1,29 +1,47 @@
 import React, { Component } from "react";
-import { Card } from "react-bootstrap";
-
 import Aux from "../../hoc/_Aux";
-
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Table } from "react-bootstrap";
+import { Table, Card } from "react-bootstrap";
 import moment from 'moment';
 import {getClassNameForOutcome} from '../../Dashboard/PendingTips/TipCard';
 
 import Sports from '../../App/components/Sports'
 import LocaleNumber from "../../App/components/LocaleNumber";
 
-class events extends Component {
-    
+import $ from 'jquery';
+window.jQuery = $;
+window.$ = $;
+global.jQuery = $;
+
+
+$.DataTable = require( 'datatables.net-bs' );
+require( 'jszip' );
+require('pdfmake/build/pdfmake.js');
+require('pdfmake/build/vfs_fonts.js');
+require( 'datatables.net-autofill' );
+require( 'datatables.net-buttons-bs' );
+require( 'datatables.net-buttons/js/buttons.colVis.js' );
+require( 'datatables.net-buttons/js/buttons.flash.js' );
+require( 'datatables.net-buttons/js/buttons.html5.js' );
+require( 'datatables.net-buttons/js/buttons.print.js' );
+require( 'datatables.net-colreorder' );
+require( 'datatables.net-keytable' );
+require( 'datatables.net-responsive-bs' );
+require( 'datatables.net-rowgroup' );
+require( 'datatables.net-rowreorder' );
+require( 'datatables.net-scroller' );
+require( 'datatables.net-select' );
+require( 'datatables.net-fixedcolumns' );
+require( 'datatables.net-fixedheader' );
+
+class events extends Component {    
     getRows() {
         const rows = [];
-        
         this.props.data.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn)).forEach((d, index) => {
-
             const eventCount = d.events.length;
             let tipHandled = false;
-
-            console.warn(d)
 
             d.events.forEach(e => {
                 if (!e.outcome || !d.outcome) {
@@ -50,9 +68,9 @@ class events extends Component {
                         </em></a></td>}
                     </tr>)
                 )
-                tipHandled = true;
-            })
 
+                tipHandled = true;
+            });
         })
         return rows;
     }
@@ -67,7 +85,7 @@ class events extends Component {
                             <Card.Title as='h5'>Eventi giocati nel periodo</Card.Title>
                         </Card.Header>
                         <Card.Body>
-                            <Table responsive className='mb-0'>
+                            <Table ref="tbl" striped hover responsive bordered className="table table-condensed mb-0" id="data-table-responsive">
                                 <thead>
                                     <tr>
                                         <th>Data evento</th>

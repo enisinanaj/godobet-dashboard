@@ -292,7 +292,7 @@ const TipCard = ({ pool, user, dropdownHidden, actions, debug }) => {
                       className="img-radius"
                       alt="User Profile"
                     />}
-                    <span className={"ml-2"}>{ tipAuthor && tipAuthor.name }</span>
+                    { tipAuthor && <span className={"ml-2"}> { tipAuthor.username || tipAuthor.name }</span> }
                 </div>
                 <div style={{display: "inline"}}>
                     <span className={"sectionTitle"}>Pubblicata il</span>

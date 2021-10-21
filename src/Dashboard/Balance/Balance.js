@@ -48,9 +48,19 @@ class Balance extends Component {
     }
 
     loadData() {
+        this.setState({
+            pools: [],
+            statusData: [],
+            cumulativeData: []
+        });
+
         this.getUserPools()
         .then(pools => {
             var balance = [];
+
+            if (pools.length == 0) {
+                return;
+            }
             
             pools.reduce((previous, current, index, array) => {
                 if (!previous) {
@@ -66,7 +76,7 @@ class Balance extends Component {
                 pools,
                 statusData: pools.map(p => ({y: p.profit.toFixed(2), x: moment(p.updatedOn).format("DD MMM YYYY")})),
                 cumulativeData: balance.map(p => ({y: p.y.toFixed(2), x: p.x}))
-            })
+            });
         })
     }
 
@@ -180,19 +190,22 @@ class Balance extends Component {
                     <Col md={12}>
                         <Card>
                             <Card.Header>
-                                <Row>
-                                    <Col md={7}>
-                                    <ButtonGroup aria-label="Time" size={"sm"} className={"btn-glow-light"}>
-                                        <Button variant="light" onClick={() => this.loadDataFor("24H")} className={this.state.chartLength === '24H' ? 'active' : ''}>24H</Button>
-                                        <Button variant="light" onClick={() => this.loadDataFor("1W")} className={this.state.chartLength === '1W' ? 'active' : ''}>1W</Button>
-                                        <Button variant="light" onClick={() => this.loadDataFor("1M")} className={this.state.chartLength === '1M' ? 'active' : ''}>1M</Button>
-                                        <Button variant="light" onClick={() => this.loadDataFor("1Y")} className={this.state.chartLength === '1Y' ? 'active' : ''}>1Y</Button>
-                                        <Button variant="light" onClick={() => this.loadDataFor("YTD")}  className={this.state.chartLength === 'YTD' ? 'active' : ''}>YTD</Button>
-                                        <Button variant="light" onClick={() => this.changeType("cumulative")} className={this.state.type === 'cumulative' ? 'active' : ''}>Cumulativo</Button>
-                                        <Button variant="light" onClick={() => this.changeType("day2day")} className={this.state.type === 'day2day' ? 'active' : ''}>Giornaliero</Button>
-                                    </ButtonGroup>
+                                <Row >
+                                    <Col md={3} sm={12} style={{justifyContent: 'space-between'}}>
+                                        <ButtonGroup aria-label="Time" size={"sm"} className={"btn-glow-light"} style={{display: 'flex'}}>
+                                            <Button variant="light" onClick={() => this.loadDataFor("24H")} className={this.state.chartLength === '24H' ? 'active' : ''}>24H</Button>
+                                            <Button variant="light" onClick={() => this.loadDataFor("1W")} className={this.state.chartLength === '1W' ? 'active' : ''}>1W</Button>
+                                            <Button variant="light" onClick={() => this.loadDataFor("1M")} className={this.state.chartLength === '1M' ? 'active' : ''}>1M</Button>
+                                            <Button variant="light" onClick={() => this.loadDataFor("1Y")} className={this.state.chartLength === '1Y' ? 'active' : ''}>1Y</Button>
+                                            <Button variant="light" onClick={() => this.loadDataFor("YTD")}  className={this.state.chartLength === 'YTD' ? 'active' : ''}>YTD</Button>
+                                        </ButtonGroup>
+
+                                        <ButtonGroup aria-label="Time" size={"sm"} className={"btn-glow-light mt-1"} style={{display: 'flex'}}>
+                                            <Button variant="light" onClick={() => this.changeType("cumulative")} className={this.state.type === 'cumulative' ? 'active' : ''}>Cumulativo</Button>
+                                            <Button variant="light" onClick={() => this.changeType("day2day")} className={this.state.type === 'day2day' ? 'active' : ''}>Giornaliero</Button>
+                                        </ButtonGroup>
                                     </Col>
-                                    <Col md={5} style={{flexDirection: "row", justifyContent: "flex-start"}}>
+                                    <Col md={3} style={{flexDirection: "row", justifyContent: "flex-end"}}>
                                         <div style={{display: 'inline-block'}}>
                                             Dal: <DatePicker
                                                     locale={'it'}

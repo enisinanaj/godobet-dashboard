@@ -32,6 +32,9 @@ const TipsterServices = React.lazy(() =>
 const TipsterPools = React.lazy(() =>
   import("./Dashboard/TipsterPools/TipsterPools")
 );
+const Tipsters = React.lazy(() =>
+  import("./Dashboard/Profile/Tipsters")
+);
 
 const Settings = React.lazy(() => import("./Dashboard/Profile/Settings"));
 const Profile = React.lazy(() => import("./Dashboard/Profile/Profile"));
@@ -157,6 +160,13 @@ const routes = [
     name: "Tipster Profile",
     component: TipsterProfile,
     role: 3,
+  },
+  {
+    path: "/all-tipsters",
+    exact: true,
+    name: "Tipsters",
+    component: Tipsters,
+    role: 0,
   },
   {
     path: "/tip/detail",

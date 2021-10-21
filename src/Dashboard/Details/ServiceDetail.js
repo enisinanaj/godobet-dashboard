@@ -35,28 +35,41 @@ const ServiceDetail = (props) => {
             enabled: false
         },
     },
+    annotations: {
+      position: 'front' ,
+      yaxis: [{
+          y: 0,
+          y2: -9999,
+          strokeDashArray: 0,
+          borderColor: undefined,
+          fillColor: '#ffdddd',
+          opacity: 0.3,
+          offsetX: 0,
+          width: '100%',
+          yAxisIndex: 0
+      }]
+    },
+    theme: {
+      monochrome: {
+          enabled: true,
+          color: '#4CAF50',
+          shadeTo: 'light',
+          shadeIntensity: 0.65
+      }
+    },
     dataLabels: {
-        enabled: true
+      enabled: false
     },
     colors: ['#4680ff'],
-    plotOptions: {
-        bar: {
-            colors: {
-                ranges: [{
-                    from: -99999,
-                    to: 0,
-                    color: '#b70505'
-                }, {
-                    from: 0,
-                    to: 9999999,
-                    color: '#37ad1d'
-                }]
-            },
-            columnWidth: '50%',
-        }
-    },
     xaxis: {
         categories: [],
+    },
+    yaxis: {
+      labels: {
+        formatter: function (y) {
+          return y.toFixed(2) + "%";
+        }
+      }
     },
     tooltip: {
         fixed: {
@@ -67,7 +80,7 @@ const ServiceDetail = (props) => {
         },
         y: {
             title: {
-                formatter: (_) => 'Profit: '
+                formatter: (_) => 'Profitto '
             }
         },
         marker: {
@@ -149,11 +162,15 @@ const ServiceDetail = (props) => {
       .then(e => e.json())
       .then(author => {
         setAuthor(author)
-        const winRatioVar = author._embedded.playedPools?.filter(res => {
-          return res.outcome === 'win'
-        })
-        let percentage = ((winRatioVar?.length / author._embedded.playedPools?.length) * 100)
-        setWinRatio(percentage)
+        if (author._embedded.services) {
+          let pools = [];
+          author._embedded.services.forEach(service => service.pools.forEach(pool => pools.push(pool)));
+          const winRatioVar = pools?.filter(res => {
+            return res.outcome === 'win'
+          })
+          let percentage = ((winRatioVar?.length / pools?.length) * 100)
+          setWinRatio(percentage)
+        }
       })
       .then(() => {
         getPlayReference();
@@ -176,7 +193,8 @@ const ServiceDetail = (props) => {
             }
             
             callUrl(BASE_CONFIG.API_URL + '/services/' + id + '/pools')
-            .then(e => e.json().then(pools => {
+            .then(e => e.json()
+            .then(pools => {
               setPools(pools._embedded.pools);
               let last30dPools = pools._embedded.pools.filter(p => (new Date() - new Date(p.updatedOn)) <= (30 * 24 * 60 * 60 * 1000))
               const profit = last30dPools.map(pool => ({y: pool.profit.toFixed(2), x: moment(pool.updatedOn).format("DD MMM YYYY")}))
@@ -302,8 +320,8 @@ const ServiceDetail = (props) => {
                 <Card.Body className="pt-0">
                   <div className="user-about-block">
                     <Row className="align-items-center mb-4">
-                      <Col md={3}>
-                        <div className="change-profile">
+                      <Col>
+                        <div className="change-profile" style={{justifyContent: "center", flexDirection: "row", display: "flex"}}>
                           <img
                             width="150px"
                             height="150px"
@@ -361,8 +379,8 @@ const ServiceDetail = (props) => {
                               />{" "}
                               Profitto<br /><strong><LocaleNumber amount={currentObject.totalProfit} symbol={"%"}></LocaleNumber></strong> </span>
                           </Col>
-                          <Col className={"mt-3"}>
-                            {!currentObject.free && purchasable && <div style={{ display: "flex", justifyContent: "center" }} >
+                          {purchasable && <Col className={"mt-3"}>
+                            {!currentObject.free && <div style={{ display: "flex", justifyContent: "center" }} >
                               <Button onClick={() => handlePurchase(currentObject._links.self.href)} disabled={isProcessing} >
                                 {isProcessing ? (
                                   <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
@@ -370,7 +388,7 @@ const ServiceDetail = (props) => {
                                 Iscriviti
                               </Button>
                             </div>}
-                            {currentObject.free && purchasable && <div style={{ display: "flex", justifyContent: "center" }} >
+                            {currentObject.free && <div style={{ display: "flex", justifyContent: "center" }} >
                               <Button onClick={() => handleFreeServiceSubscription(currentObject._links.self.href)} disabled={isProcessing} >
                                 {isProcessing ? (
                                   <div class="spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">In caricamento...</span></div>
@@ -378,7 +396,7 @@ const ServiceDetail = (props) => {
                                 Iscriviti
                               </Button>
                             </div>}
-                          </Col>
+                          </Col>}
                         </Row>
                       </Col>
                     </Row>
@@ -415,7 +433,7 @@ const ServiceDetail = (props) => {
                     <p className="text-muted m-b-5">Iscritti</p> <strong style={{float: 'right'}}>{author.totalSubscribers}</strong>
                   </Row>
                   <Row style={{justifyContent: "space-between"}}>
-                    <p className="text-muted m-b-5">Profitto</p> <strong style={{float: 'right'}} className={"mb-1" + ((author.totalProfit >= 0) ? " text-success" : " text-danger")}><LocaleNumber amount={author.totalProfit} symbol={"%"} /></strong>
+                    <p className="text-muted m-b-5">Profitto</p> <strong style={{float: 'right'}} className={"mb-1" + ((author.profitFromServices >= 0) ? " text-success" : " text-danger")}><LocaleNumber amount={author.profitFromServices} symbol={"%"} /></strong>
                   </Row>
                   <Row style={{justifyContent: "space-between"}}>
                     <p className="text-muted m-b-5">ROI</p> <strong style={{float: 'right'}}><LocaleNumber amount={winRatio} symbol={"%"} /></strong>
@@ -436,7 +454,7 @@ const ServiceDetail = (props) => {
                   </Row>
                   <Row className="justify-content-center">
                     <Col sm={8}>
-                      <Chart series={series} options={options} type='bar' width="100%" height='296px' />
+                      <Chart series={series} options={options} type='area' width="100%" height='296px' />
                     </Col>
                   </Row>
                 </Card.Body>

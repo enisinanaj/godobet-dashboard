@@ -22,7 +22,6 @@ const Wallet = (props) => {
   const [showWithdrawalProcedure, setShowWithdrawalProcedure] = useState(false);
 
   useEffect(() => {
-
     if (props.applicationState.user.stripeAccountId && props.applicationState.user.stripeAccountStatus === 'verified') {
       setUserSetUp(true)
     }

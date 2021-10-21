@@ -100,7 +100,17 @@ const Sports = [
         "icon": "🎮",
         "label": "🎮  esports",
         "value": "esports"
-    }
+    },
+    {
+        "icon": "🎯",
+        "label": "🎯  Darts",
+        "value": "darts"
+    },
+    {
+        "icon": "🤽‍♀️",
+        "label": "🤽‍♀️  Pallanuoto",
+        "value": "waterpolo"
+    },
 ];
 
 

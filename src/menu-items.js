@@ -147,7 +147,7 @@ export default {
           type: "item",
           icon: "feather icon-users",
           role: 0,
-          url: "/tipsters",
+          url: "/all-tipsters",
           classes: "ni",
         },
         {

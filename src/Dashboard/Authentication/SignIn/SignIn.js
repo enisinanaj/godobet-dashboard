@@ -51,7 +51,7 @@ class SignIn extends React.Component {
 
     auth
       .signInWithEmailAndPassword(
-        this.state.formUserLogin.email,
+        this.state.formUserLogin.email.toLowerCase(),
         this.state.formUserLogin.password
       )
       .then(this.addUserStateChangeEvent)

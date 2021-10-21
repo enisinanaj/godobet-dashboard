@@ -8,10 +8,13 @@ export default {
             offsetY: 50,
         },
         theme: {
+            palette: 'palette2', 
             monochrome: {
                 enabled: false,
-                color: '#4680ff',
-            }
+                color: '#255aee',
+                shadeTo: 'light',
+                shadeIntensity: 0.65
+            },
         },
         responsive: [{
             breakpoint: 768,

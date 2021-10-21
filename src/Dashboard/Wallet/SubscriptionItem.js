@@ -1,16 +1,17 @@
 import React from 'react';
 import { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Col, Modal, Row } from "react-bootstrap";
 import TokenManager from "../../App/auth/TokenManager";
 import PriceLabel from "../../App/components/PriceLabel";
 import Aux from "../../hoc/_Aux";
 import moment from "moment";
-
+import InvoiceBasic from "./InvoiceBasic";
 
 const SubscriptionItem = ({service}) => {
-
     const [loading, setLoading] = useState(true)
     const [subscriptions, setSubscriptions] = useState([])
+    const [selectedSub, setSelectedSub] = useState();
+    const [showInvoice, setShowInvoice] = useState(false);
 
     useEffect(() => {
         callUrl(service._links.subscriptions.href.replace("{?projection}", "") + "?page=0&size=1000")
@@ -21,6 +22,12 @@ const SubscriptionItem = ({service}) => {
         .then(_ => setLoading(false))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useEffect(() => {
+        if (selectedSub) {
+            setShowInvoice(true);
+        }
+    }, [selectedSub]);
 
     const callUrl = (url) => {
         return TokenManager.getInstance().getToken().then(jwt => {
@@ -44,8 +51,8 @@ const SubscriptionItem = ({service}) => {
                         .sort((a,b) => new Date(b.subscribedOn) - new Date(a.subscribedOn))
                         .map(sub => {
                             return (<Row className={"mb-3 pb-2"} key={sub.id}>
-                                <Col md={8} sm={8} xs={8} lg={8}>
-                                    <span style={{margin: 0, textTransform: 'uppercase', fontSize: 12}} className={"text-success"} >QUOTA RICEVUTA</span>
+                                <Col md={6} sm={6} xs={6} lg={6}>
+                                    <span style={{margin: 0, textTransform: 'uppercase', fontSize: 12}} className={"text-success"} >QUOTA RICEVUTA </span>
                                     <div style={{margin: 0, textDecoration: 'underline', fontSize: 14}}>
                                         <a href={"/dashboard/service/" + sub.serviceId} target="_blank" rel="noopener noreferrer">
                                             {service.serviceName}{" "}
@@ -58,10 +65,23 @@ const SubscriptionItem = ({service}) => {
                                     <h4 style={{margin: 0}} className={"p-1"} ><PriceLabel amount={service.price/100} /></h4>
                                     <small className={"text-muted"}>{moment(sub.subscribedOn).format("DD MMM YYYY")}</small>
                                 </Col>
+                                <Col md={2} sm={2} lg={2} xs={2} className={"text-center"} style={{flex: 1, justifyContent: "center", flexDirection: "column", display: "flex"}} >
+                                    <span onClick={() => setSelectedSub(sub)} style={{textAlign: "center", fontSize: "16px", cursor: "pointer"}}>
+                                        <i className={"feather icon-download"} />
+                                    </span>
+                                </Col>
                             </Row>)
                         })
                     }
                 </Col>
+                <Modal show={showInvoice} onHide={() => setShowInvoice(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title as="h4">Scontrino</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <InvoiceBasic subscription={selectedSub} close={() => setShowInvoice(false)}></InvoiceBasic>
+                    </Modal.Body>
+                </Modal>
             </Aux>
             }
         </Row>

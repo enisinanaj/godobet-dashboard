@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Row } from "react-bootstrap";
+import { Button, Card, Col, Dropdown, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import TokenManager from "../../App/auth/TokenManager";
 import Esaurito from '../../App/components/Esaurito';
@@ -9,6 +9,36 @@ import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import '../../assets/scss/tip.css';
 import './Marketplace.css'
 import BASE_CONFIG from "../../store/config";
+import Swal from "sweetalert2";
+
+const getDropdown = () => {
+  return (
+    <Dropdown className="drp-tipster-pool">
+      <Dropdown.Toggle
+        style={{ display: "inline", float: "right" }}
+        variant={"light"}
+      ></Dropdown.Toggle>
+      <Dropdown.Menu alignRight className="profile-notification">
+        <Dropdown.Item onClick={() => {
+          Swal.fire({
+            title: "Sei sicuro di voler seguire questa tip? Azione irreversibile!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#56BE7F",
+            cancelButtonColor: "#000",
+            confirmButtonText: "si",
+          }).then((result) => {
+            if (result.value) {
+              //todo: do thing here
+            }
+          });
+        }}>
+          Elimina servizio
+        </Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
+  );
+};
 
 const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurchasing, user, col }) => {
   const getLatestImage = (media) => {
@@ -70,7 +100,7 @@ const MarketCard = ({ marketData, handlePurchase, handleFreeSubscription, inPurc
             </Card.Text>
             <Row style={{ justifyContent: "space-around" }}>
               <Button className="pull-right" variant="success" onClick={() => {window.location = `/dashboard/service/${item.id}`}}>
-                <em class="feather icon-arrow-right mr-2"></em> Vai al dettaglio
+                <em className="feather icon-arrow-right mr-2"></em> Vai al dettaglio
               </Button>
               {!item.free && canPurchase(item) && <Button className="pull-right" onClick={() => handlePurchase(item)} disabled={inPurchasing} style={{minWidth: "161px"}} >
                 {inPurchasing === item.id ? (

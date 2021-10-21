@@ -38,31 +38,34 @@ function TipsterProfile(props) {
           },
         })
           .then((e) => e.json())
-          .then((user) => {
-            setCurrentUser(user);
-            if (user._embedded) {
-              const winRatioVar = user._embedded.playedPools.filter((res) => {
-                return res.outcome === "win";
-              });
-              let percentage = (winRatioVar.length / user._embedded.playedPools.length) * 100;
-              setWinRatio(percentage);
-  
-              const stakesArray = user._embedded.playedPools.map((pool) => {
-                return pool.stake;
-              });
-              let averageStake = stakesArray.reduce((a, b) => a + b) / stakesArray.length / 100;
-              setAvgStake(averageStake);
-            }
-          });
+          .then((user) => setCurrentUser(user));
       });
     getServices();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    findBookmaker();
+  useEffect(() => {    
+    let bookmakers = [];
+    let pools = [];
+    userServices.forEach(service => service.pools.forEach(pool => pools.push(pool)));
+    pools.forEach(pool => bookmakers.push(pool.bookmaker));
+
+    const mostUsed = bookmakers.sort((a, b) => bookmakers.filter((v) => v === a).length - bookmakers.filter((v) => v === b).length).pop();
+    setFavoriteBook(mostUsed);
+
+    const winRatioVar = pools.filter((res) => {
+      return res.outcome === "win";
+    });
+    let percentage = (winRatioVar.length / pools.length) * 100;
+    setWinRatio(percentage);
+
+    const stakesArray = pools.map((pool) => {
+      return pool.stake;
+    });
+    let averageStake = stakesArray.length > 0 ? stakesArray.reduce((a, b) => a + b) / stakesArray.length / 100 : 0;
+    setAvgStake(averageStake);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
+  }, [userServices]);
 
   const getAvatar = () => {
     if (!currentUser._embedded || !currentUser._embedded.media || currentUser._embedded.media.filter(m => m.mediaType === 'avatar').length < 1) {
@@ -74,7 +77,7 @@ function TipsterProfile(props) {
 
   const getCreampieData = () => {
     const data = satisfactionChart;
-    if (!currentUser._embedded || !currentUser._embedded.playedPools) {
+    if (!userServices) {
       return {
         options: {
           labels: [],
@@ -84,7 +87,9 @@ function TipsterProfile(props) {
       };
     }
 
-    const map = currentUser._embedded.playedPools.reduce((pie, pool) => {
+    let pools = [];
+    userServices.forEach(service => service.pools.forEach(pool => pools.push(pool)));
+    const map = pools.reduce((pie, pool) => {
       const h = { ...pie };
 
       if (!pool.outcome) {
@@ -103,7 +108,8 @@ function TipsterProfile(props) {
 
   const bookmakersPie = () => {
     const data = bookmakersChart;
-    if (!currentUser._embedded || !currentUser._embedded.playedPools) {
+
+    if (!userServices) {
       return {
         options: {
           labels: [],
@@ -113,7 +119,9 @@ function TipsterProfile(props) {
       };
     }
 
-    const map = currentUser._embedded.playedPools.reduce((pie, pool) => {
+    let pools = [];
+    userServices.forEach(service => service.pools.forEach(pool => pools.push(pool)));
+    const map = pools.reduce((pie, pool) => {
       const h = { ...pie };
 
       if (!pool.bookmaker) {
@@ -145,23 +153,6 @@ function TipsterProfile(props) {
           .then((e) => e.json())
           .then((res) => setUserServices(res._embedded ? res._embedded.services : []));
       });
-  };
-
-  const findBookmaker = () => {
-    if (!currentUser._embedded) {
-      return;
-    }
-    let bookmakers = currentUser._embedded.playedPools.map(
-      (pool) => pool.bookmaker
-    );
-    const mostUsed = bookmakers
-      .sort(
-        (a, b) =>
-          bookmakers.filter((v) => v === a).length -
-          bookmakers.filter((v) => v === b).length
-      )
-      .pop();
-    setFavoriteBook(mostUsed);
   };
 
   return (
@@ -199,12 +190,12 @@ function TipsterProfile(props) {
                   <span
                     className={
                       "mb-1" +
-                      (currentUser.totalProfit >= 0
+                      (currentUser.profitFromServices >= 0
                         ? " text-success"
                         : " text-danger")
                     }
                   >
-                    <LocaleNumber amount={currentUser.totalProfit} symbol={"%"} /> Profit
+                    Profitto <LocaleNumber amount={currentUser.profitFromServices} symbol={"%"} />
                   </span>
                 </Col>
                 <Col>
