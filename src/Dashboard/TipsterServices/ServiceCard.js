@@ -3,7 +3,7 @@ import { Button, Card, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
 import { bindActionCreators } from "redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import CoverImage from '../../assets/images/godobet-placeholder.jpg'
 import PriceLabel from "../../App/components/PriceLabel";
 import LocaleNumber from "../../App/components/LocaleNumber";
@@ -72,7 +72,7 @@ const ServiceCard = (props) => {
               {item.excerpt}
             </Card.Text>
             <Row style={{ justifyContent: "space-around" }}>
-              <Button className="pull-right" variant="success" onClick={() => {window.location = `/dashboard/service/${item.id}`}}>
+              <Button className="pull-right" variant="success" onClick={() => {props.history.push(`/dashboard/service/${item.id}`)}}>
                 <em className="feather icon-arrow-right mr-2"></em> Vai al dettaglio
               </Button>
             </Row>
@@ -129,4 +129,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ServiceCard);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ServiceCard));

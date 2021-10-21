@@ -140,7 +140,7 @@ const EditService = (props) => {
                 window.onbeforeunload = null;
                 uploadServiceCover(e.url);
                 setTimeout(() => {
-                  window.location = "/dashboard/tipster/services";
+                  props.history.push("/dashboard/tipster/services");
                 }, 2000);
               });
             }
@@ -494,5 +494,5 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(EditService)
+  connect(mapStateToProps, mapDispatchToProps)(withRouter(EditService))
 );

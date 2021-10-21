@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import Swal from "sweetalert2";
 import * as actions from "../../store/actions";
 import TokenManager from "../auth/TokenManager";
+import { withRouter } from "react-router-dom";
 
 const CreateTipButton = (props) => {
 
@@ -29,7 +30,7 @@ const CreateTipButton = (props) => {
               type: "warning"
           })
       } else {
-          window.location = "/dashboard/tipster/createTip";
+          props.history.push("/dashboard/tipster/createTip");
       }
     }
 
@@ -63,4 +64,4 @@ const CreateTipButton = (props) => {
 const mapStateToProps = state => ({applicationState: state});
 const mapDispatchToProps = dispatch => ({actions: bindActionCreators(actions, dispatch)});
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateTipButton);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreateTipButton));

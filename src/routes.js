@@ -86,7 +86,7 @@ const routes = [
   {
     path: "/dashboard/tipster/createService",
     exact: true,
-    name: "Create new",
+    name: "Create new service",
     component: CreateNewService,
     role: 4,
   },

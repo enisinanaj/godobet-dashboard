@@ -9,7 +9,7 @@ import DEMO from "../../../../store/constant";
 import * as actionTypes from "../../../../store/actions";
 
 import logoNegative from "../../../../assets/images/godobet_negative.png";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
 
 class NavBar extends Component {
@@ -81,7 +81,7 @@ class NavBar extends Component {
           >
             <span />
           </a>
-          <a href="/dashboard/default" className="b-brand">
+          <Link to="/dashboard/default" className="b-brand">
             <img
               id="main-logo"
               src={mainLogo}
@@ -89,7 +89,7 @@ class NavBar extends Component {
               className="logo"
               style={{ width: 140 }}
             />
-          </a>
+          </Link>
           <a
             onClick={() => this.props.actions.userLogout(null)}
             href="#logout"

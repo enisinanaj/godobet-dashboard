@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Swal from "sweetalert2";
 import * as actions from '../../store/actions';
+import { withRouter } from "react-router-dom";
 
 const CreateNewServiceButton = (props) => {
 
@@ -16,7 +17,7 @@ const CreateNewServiceButton = (props) => {
           type: "warning"
         })
       } else {
-        window.location = "/dashboard/tipster/createService";
+        props.history.push("/dashboard/tipster/createService");
       }
   };
 
@@ -30,4 +31,4 @@ const CreateNewServiceButton = (props) => {
 const mapStateToProps = state => ({applicationState: state});
 const mapDispatchToProps = dispatch => ({ actions: bindActionCreators(actions, dispatch)});
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateNewServiceButton);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreateNewServiceButton));
