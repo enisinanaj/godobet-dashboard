@@ -5,6 +5,7 @@ import BASE_CONFIG from "../../store/config";
 import Aux from "../../hoc/_Aux";
 import LocaleNumber from "../../App/components/LocaleNumber";
 import md5 from "md5";
+import { Link, withRouter } from "react-router-dom";
 
 const  Tipsters = () => {
   const [users, setUsers] = useState([]);
@@ -58,7 +59,7 @@ const  Tipsters = () => {
         {users && users
           .filter(user => user.totalSubscribers >= 0 && user._embedded && user._embedded.services && user._embedded.services.length && user.username)
           .map(author => (<Col sm={4} className="tab-user-card"  key={author.id}>
-            <a href={`/tipsters/${author.userCode}`}>
+            <Link to={`/tipsters/${author.userCode}`}>
               <Card>
                 <Card.Body>
                   <div className="media align-items-center p-0">
@@ -84,11 +85,11 @@ const  Tipsters = () => {
                   </Row>
                 </Card.Footer>
               </Card>
-            </a>
+            </Link>
           </Col>))}
       </Row>
     </Aux>
   );
 }
 
-export default Tipsters;
+export default withRouter(Tipsters);
